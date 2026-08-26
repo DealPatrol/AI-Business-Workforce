@@ -1,10 +1,10 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import { useConversation } from '@elevenlabs/react';
+import { ConversationProvider, useConversation } from '@elevenlabs/react';
 import { Phone, PhoneOff, Sparkles, UserRound, CheckCircle2, Loader2 } from 'lucide-react';
 
-export default function ReceptionistDemo(){
+function ReceptionistDemoContent(){
  const [industry,setIndustry]=useState('Landscaping');
  const [business,setBusiness]=useState('Your Business');
  const [error,setError]=useState('');
@@ -35,4 +35,8 @@ export default function ReceptionistDemo(){
  <section className="ava-stage"><div className="wrap"><div className="sectionhead"><span>WHAT AVA DOES</span><h2>More than answer the phone.</h2></div><div className="ava-flow"><article><b>01</b><h3>Answer naturally</h3><p>“Thanks for calling {business || 'your business'}, this is Ava. How can I help you today?”</p></article><article><b>02</b><h3>Understand the job</h3><p>She asks one useful question at a time and adapts to {industry.toLowerCase()} callers instead of reading a rigid script.</p></article><article><b>03</b><h3>Qualify & capture</h3><p>Name, phone, address, requested service, urgency, preferred timing and other business-specific details.</p></article><article><b>04</b><h3>Take the next action</h3><p>Request an appointment, transfer urgent calls, answer approved FAQs or send the lead into follow-up.</p></article></div></div></section>
  <section className="section wrap ava-result"><div><div className="eyebrow">AFTER EVERY CALL</div><h2>Your team gets the useful part.</h2><p>No listening through voicemail. Ava turns the conversation into a structured lead record.</p></div><div className="ava-lead"><div className="ava-lead-head"><span><CheckCircle2/> NEW QUALIFIED LEAD</span><b>High intent</b></div><h3>Landscape renovation request</h3><dl><div><dt>Customer</dt><dd>Sarah M.</dd></div><div><dt>Service</dt><dd>Front-yard redesign</dd></div><div><dt>Timing</dt><dd>Within 2–3 weeks</dd></div><div><dt>Next step</dt><dd>Estimate requested</dd></div></dl><p>Caller wants a cleaner front-yard design with new beds and low-maintenance plants. Homeowner is available Thursday afternoon for an estimate.</p></div></section>
  <section className="vc-final"><div className="wrap"><h2>Talk to the receptionist before you buy it.</h2><p>Ava now uses a secure realtime ElevenLabs voice session. The next phase connects completed calls to lead records and a real business phone number.</p></div></section></main>
+}
+
+export default function ReceptionistDemo() {
+ return <ConversationProvider><ReceptionistDemoContent /></ConversationProvider>;
 }
