@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServer } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     if (!body.summary) return NextResponse.json({ error: 'summary is required' }, { status: 400 });
-    const supabase = createSupabaseServer();
+    const supabase = await createClient();
     const payload = {
       conversation_id: body.conversationId || null,
       business_name: body.businessName || null,
@@ -27,8 +27,12 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
-  const supabase = createSupabaseServer();
-  const { data, error } = await supabase.from('ava_call_leads').select('*').order('created_at', { ascending: false }).limit(100);
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ leads: data || [] });
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase.from('ava_call_leads').select('*').order('created_at', { ascending: false }).limit(100);
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ leads: data || [] });
+  } catch (error) {
+    return NextResponse.json({ error: error instanceof Error ? error.message : 'Unable to load leads' }, { status: 500 });
+  }
 }
