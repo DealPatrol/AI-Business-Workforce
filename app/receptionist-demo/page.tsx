@@ -1,15 +1,112 @@
 'use client';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ConversationProvider, useConversation } from '@elevenlabs/react';
-import { Phone, PhoneOff, Sparkles, UserRound, CheckCircle2, Loader2 } from 'lucide-react';
-type CallState='idle'|'connecting'|'connected'|'ending'|'processing';
+import { ArrowRight, BellRing, Check, CheckCircle2, Clock3, DollarSign, Headphones, Loader2, Mic2, Phone, PhoneCall, PhoneOff, ShieldCheck, Sparkles, UserRound } from 'lucide-react';
+
+type CallState='idle'|'preparing'|'ready'|'connecting'|'connected'|'ending'|'processing';
+
+const plans=[
+ {name:'Starter',price:'99',desc:'A simple 24/7 receptionist for smaller service businesses.',minutes:'150 voice minutes / month',items:['One Ava receptionist','Lead capture + summaries','Email lead notifications','Business-specific greeting & FAQs'],cta:'Start Starter'},
+ {name:'Growth',price:'249',desc:'For businesses that rely on the phone for steady new jobs.',minutes:'500 voice minutes / month',items:['Everything in Starter','More custom call flows','Multiple service types','Priority setup changes','Advanced lead qualification'],cta:'Choose Growth',featured:true},
+ {name:'Pro',price:'499',desc:'For higher-volume teams that want a deeply customized front desk.',minutes:'1,200 voice minutes / month',items:['Everything in Growth','Multiple call experiences','Advanced routing logic','Priority support','Deeper business customization'],cta:'Choose Pro'}
+];
+
 function ReceptionistDemoContent(){
- const [industry,setIndustry]=useState('Landscaping'); const [business,setBusiness]=useState('Your Business'); const [error,setError]=useState(''); const [callState,setCallState]=useState<CallState>('idle'); const [saved,setSaved]=useState(false); const conversationId=useRef<string|null>(null);
- const conversation=useConversation({onConnect:()=>{setError('');setCallState('connected')},onDisconnect:()=>{if(callState!=='processing')setCallState('idle')},onError:(m:any)=>{setError(typeof m==='string'?m:'Ava could not continue the call.');setCallState('idle')}});
- const active=callState==='connected'||conversation.status==='connected'; const connecting=callState==='connecting'; const ending=callState==='ending';
- async function startCall(){if(callState!=='idle')return;setSaved(false);setError('');setCallState('connecting');try{await navigator.mediaDevices.getUserMedia({audio:true});const res=await fetch('/api/ava/elevenlabs',{cache:'no-store'});const data=await res.json();if(!res.ok||!data.signedUrl)throw new Error(data?.error||data?.next||'Could not create Ava voice session.');conversationId.current=data.conversationId||null;await conversation.startSession({signedUrl:data.signedUrl,dynamicVariables:{business_name:business||'Your Business',business_type:industry}});setCallState('connected')}catch(e:any){setError(e?.message||'Unable to start Ava.');setCallState('idle')}}
- async function captureLead(){const id=conversationId.current;if(!id)return;setCallState('processing');for(let i=0;i<8;i++){await new Promise(r=>setTimeout(r,i===0?1500:2500));const r=await fetch(`/api/ava/conversation?conversationId=${encodeURIComponent(id)}`,{cache:'no-store'});if(r.status===202)continue;const d=await r.json();if(!r.ok)throw new Error(d.error||'Could not process Ava conversation.');const save=await fetch('/api/ava/leads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({conversationId:id,businessName:business,businessType:industry,name:d.lead?.name,phone:d.lead?.phone,serviceJobType:d.lead?.serviceJobType,address:d.lead?.address,intentUrgency:d.lead?.intentUrgency,summary:d.summary,transcript:d.transcript})});const s=await save.json();if(!save.ok)throw new Error(s.error||'Could not save lead.');setSaved(true);conversationId.current=null;return}throw new Error('ElevenLabs is still processing the call. The lead was not saved yet.')}
- async function endCall(){if(callState==='idle'||ending)return;setCallState('ending');setError('');try{await conversation.endSession();await captureLead()}catch(e:any){setError(e?.message||'Call ended, but lead capture needs attention.')}finally{setCallState('idle')}}
- return <main className="ava-page"><nav className="nav"><Link className="brand" href="/"><span className="logo"><Sparkles size={18}/></span> Workforce<span>AI</span></Link><Link className="ghost" href="/leads">View Leads</Link></nav><section className="ava-hero wrap"><div><div className="eyebrow">MEET YOUR FIRST AI EMPLOYEE</div><h1>Meet <em>Ava.</em><br/>She never misses a call.</h1><p className="lede">Ava answers customers, qualifies opportunities, captures job details and now saves completed calls into your lead dashboard.</p><div className="ava-pills"><span>24/7 answering</span><span>Lead qualification</span><span>Call summaries</span><span>Lead capture</span></div></div><div className="ava-card"><div className="ava-avatar"><UserRound size={52}/><i/></div><h2>Ava</h2><p>AI Receptionist · {active?'Live now':connecting?'Connecting':callState==='processing'?'Saving lead':'Demo'}</p><label>Business name<input value={business} onChange={e=>setBusiness(e.target.value)} disabled={callState!=='idle'}/></label><label>Business type<select value={industry} onChange={e=>setIndustry(e.target.value)} disabled={callState!=='idle'}><option>Landscaping</option><option>Roofing</option><option>HVAC</option><option>Plumbing</option><option>Electrical</option><option>Pressure Washing</option><option>Fencing</option></select></label>{active?<button className="ava-call active" onClick={endCall} disabled={ending}>{ending?<><Loader2 className="spin"/> Ending Call...</>:<><PhoneOff/> End Call</>}</button>:<button className="ava-call" onClick={startCall} disabled={connecting||callState==='processing'}>{connecting||callState==='processing'?<><Loader2 className="spin"/> {callState==='processing'?'Saving Lead...':'Connecting Ava...'}</>:<><Phone/> Talk to Ava</>}</button>}<small>{active?(conversation.isSpeaking?'Ava is speaking…':'Ava is listening…'):saved?'Lead saved — open View Leads.':'Configure the business, then allow microphone access.'}</small>{error&&<p style={{color:'#a83232',fontSize:12,marginTop:10}}>{error}</p>}</div></section><section className="ava-stage"><div className="wrap"><div className="sectionhead"><span>POST-CALL CAPTURE</span><h2>Hang up. Ava organizes the opportunity.</h2></div><div className="ava-flow"><article><b>01</b><h3>Conversation ends</h3><p>The ElevenLabs session closes cleanly.</p></article><article><b>02</b><h3>Transcript analyzed</h3><p>Ava's post-call transcript and analysis are retrieved securely.</p></article><article><b>03</b><h3>Lead structured</h3><p>Name, phone, service, address, urgency and summary are collected when available.</p></article><article><b>04</b><h3>Saved for follow-up</h3><p>The opportunity appears in the built-in Leads dashboard for manual follow-up.</p></article></div></div></section><section className="section wrap ava-result"><div><div className="eyebrow">LEADS DASHBOARD</div><h2>One place for Ava's calls.</h2><p>This phase captures and stores leads only. Automated customer follow-up remains intentionally disabled.</p><Link className="primary" href="/leads">Open Leads Dashboard</Link></div><div className="ava-lead"><div className="ava-lead-head"><span><CheckCircle2/> CAPTURE + NOTIFY</span><b>Phase 1</b></div><h3>Structured after every completed call</h3><p>Caller details, requested service, address, urgency, transcript and conversation summary are stored in Supabase. Email notification is the final integration for this phase.</p></div></section></main>}
+ const [industry,setIndustry]=useState('Landscaping');
+ const [business,setBusiness]=useState('Your Business');
+ const [error,setError]=useState('');
+ const [callState,setCallState]=useState<CallState>('preparing');
+ const [saved,setSaved]=useState(false);
+ const conversationId=useRef<string|null>(null);
+ const signedUrl=useRef<string|null>(null);
+ const preparedConversationId=useRef<string|null>(null);
+
+ const conversation=useConversation({
+  onConnect:()=>{setError('');setCallState('connected')},
+  onDisconnect:()=>{setCallState(s=>s==='processing'?s:'ready')},
+  onError:(m:any)=>{setError(typeof m==='string'?m:'Ava could not continue the call.');setCallState(s=>s==='processing'?s:'ready')}
+ });
+
+ async function prepareSession(){
+  setCallState('preparing'); setError('');
+  try{
+   const started=performance.now();
+   const res=await fetch('/api/ava/elevenlabs',{cache:'no-store'});
+   const data=await res.json();
+   console.info('[Ava timing] signed session',Math.round(performance.now()-started),'ms');
+   if(!res.ok||!data.signedUrl) throw new Error(data?.error||data?.next||'Could not prepare Ava.');
+   signedUrl.current=data.signedUrl;
+   preparedConversationId.current=data.conversationId||null;
+   setCallState('ready');
+  }catch(e:any){setError(e?.message||'Ava could not prepare. Refresh and try again.');setCallState('idle')}
+ }
+ useEffect(()=>{prepareSession()},[]);
+
+ const active=callState==='connected'||conversation.status==='connected';
+ const ending=callState==='ending';
+
+ async function startCall(){
+  if(!['ready','idle'].includes(callState)) return;
+  setSaved(false); setError(''); setCallState('connecting');
+  const clickStart=performance.now();
+  try{
+   if(!signedUrl.current){await prepareSession(); if(!signedUrl.current)throw new Error('Ava is still preparing. Try once more.')}
+   const micStart=performance.now();
+   await navigator.mediaDevices.getUserMedia({audio:true});
+   console.info('[Ava timing] mic permission',Math.round(performance.now()-micStart),'ms');
+   conversationId.current=preparedConversationId.current;
+   const sessionStart=performance.now();
+   await conversation.startSession({signedUrl:signedUrl.current!,dynamicVariables:{business_name:business||'Your Business',business_type:industry}});
+   console.info('[Ava timing] ElevenLabs connect',Math.round(performance.now()-sessionStart),'ms','total click',Math.round(performance.now()-clickStart),'ms');
+   signedUrl.current=null; preparedConversationId.current=null; setCallState('connected');
+  }catch(e:any){setError(e?.message||'Unable to start Ava.');setCallState('ready')}
+ }
+ async function captureLead(){
+  const id=conversationId.current;if(!id)return;setCallState('processing');
+  for(let i=0;i<8;i++){
+   await new Promise(r=>setTimeout(r,i===0?1500:2500));
+   const r=await fetch(`/api/ava/conversation?conversationId=${encodeURIComponent(id)}`,{cache:'no-store'});
+   if(r.status===202)continue;
+   const d=await r.json();if(!r.ok)throw new Error(d.error||'Could not process Ava conversation.');
+   const save=await fetch('/api/ava/leads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({conversationId:id,businessName:business,businessType:industry,name:d.lead?.name,phone:d.lead?.phone,serviceJobType:d.lead?.serviceJobType,address:d.lead?.address,intentUrgency:d.lead?.intentUrgency,summary:d.summary,transcript:d.transcript})});
+   const s=await save.json();if(!save.ok)throw new Error(s.error||'Could not save lead.');
+   setSaved(true);conversationId.current=null;await prepareSession();return;
+  }
+  throw new Error('ElevenLabs is still processing the call. The lead was not saved yet.')
+ }
+ async function endCall(){
+  if(!active||ending)return;setCallState('ending');setError('');
+  try{await conversation.endSession();await captureLead()}
+  catch(e:any){setError(e?.message||'Call ended, but lead capture needs attention.');await prepareSession()}
+ }
+
+ return <main className="ava-sales">
+  <nav className="ava-nav"><Link className="ava-brand" href="/"><span><Sparkles size={17}/></span> Workforce AI</Link><div><a href="#how">How It Works</a><a href="#savings">Savings</a><a href="#pricing">Pricing</a></div><a className="nav-cta" href="#live-demo">Try Ava Live</a></nav>
+
+  <section className="sales-hero">
+   <div className="hero-copy"><span className="kicker">AI RECEPTIONIST FOR SERVICE BUSINESSES</span><h1>Stop losing jobs because <em>nobody answered.</em></h1><p>Ava answers calls 24/7, sounds natural, qualifies the customer, captures the job details and sends you the lead—without adding another full-time employee to payroll.</p><div className="hero-actions"><a className="sales-btn" href="#live-demo"><PhoneCall size={18}/> Test Ava Right Now</a><a className="sales-btn secondary" href="#how">See How It Works <ArrowRight size={18}/></a></div><div className="trust-row"><span><Check/> 24/7 coverage</span><span><Check/> Custom voice & personality</span><span><Check/> Lead summaries by email</span></div></div>
+   <div className="hero-proof"><div className="proof-phone"><div className="phone-top"><span className="pulse"/><b>Incoming customer call</b><small>7:42 PM</small></div><div className="caller"><UserRound/><div><b>Potential Customer</b><span>Needs an estimate</span></div></div><div className="call-path"><span><Phone/> Ava answers</span><span><Headphones/> Qualifies request</span><span><BellRing/> Sends lead</span></div><div className="proof-result"><CheckCircle2/><div><small>NEW QUALIFIED LEAD</small><b>Estimate requested for Friday</b></div></div></div></div>
+  </section>
+
+  <section className="logo-strip"><span>Built for:</span><b>Landscaping</b><b>Roofing</b><b>HVAC</b><b>Plumbing</b><b>Fencing</b><b>Home Services</b></section>
+
+  <section id="live-demo" className="demo-shell"><div className="demo-copy"><span className="kicker">DON'T TAKE OUR WORD FOR IT</span><h2>Call your AI receptionist before you buy her.</h2><p>Enter your business name and industry. Ava will answer like she's already part of your team.</p><ul><li><Check/> Ask her for an estimate</li><li><Check/> Give her your name, phone and address</li><li><Check/> Interrupt her or change your mind</li><li><Check/> See the lead appear after the call</li></ul><p className="demo-note"><ShieldCheck/> This is the same live voice system a customer would use.</p></div>
+   <div className="live-card"><div className="ava-head"><div className="avatar"><UserRound size={38}/><i/></div><div><h3>Ava</h3><p>AI Receptionist · {active?'Live now':callState==='preparing'?'Preparing':callState==='ready'?'Ready':callState==='connecting'?'Connecting':callState==='processing'?'Saving lead':'Ready'}</p></div></div><label>Business name<input value={business} onChange={e=>setBusiness(e.target.value)} disabled={active||callState==='connecting'}/></label><label>Business type<select value={industry} onChange={e=>setIndustry(e.target.value)} disabled={active||callState==='connecting'}><option>Landscaping</option><option>Roofing</option><option>HVAC</option><option>Plumbing</option><option>Electrical</option><option>Pressure Washing</option><option>Fencing</option></select></label>{active?<button className="talk-btn hangup" onClick={endCall} disabled={ending}>{ending?<><Loader2 className="spin"/> Ending Call...</>:<><PhoneOff/> End Call</>}</button>:<button className="talk-btn" onClick={startCall} disabled={callState==='preparing'||callState==='connecting'||callState==='processing'}>{callState==='preparing'?<><Loader2 className="spin"/> Preparing Ava...</>:callState==='connecting'?<><Loader2 className="spin"/> Connecting...</>:callState==='processing'?<><Loader2 className="spin"/> Saving Lead...</>:<><Mic2/> Talk to Ava Live</>}</button>}<small>{active?(conversation.isSpeaking?'Ava is speaking…':'Ava is listening…'):saved?'Lead saved and notification sent.':'No credit card. Try a real conversation.'}</small>{error&&<p className="call-error">{error}</p>}</div>
+  </section>
+
+  <section id="how" className="how-section"><div className="section-title"><span className="kicker">FROM RING TO READY-TO-CALL LEAD</span><h2>Ava handles the front desk while you handle the work.</h2></div><div className="steps-grid"><article><span>01</span><PhoneCall/><h3>Customer calls</h3><p>Ava answers immediately—even after hours, while you're on a job, or when your team is busy.</p></article><article><span>02</span><Headphones/><h3>Ava qualifies them</h3><p>She learns what they need, where the job is, how urgent it is and what should happen next.</p></article><article><span>03</span><BellRing/><h3>You get the lead</h3><p>The call becomes a structured summary with the customer details delivered to your dashboard and inbox.</p></article><article><span>04</span><DollarSign/><h3>You close the job</h3><p>You follow up with a customer who has already explained what they need—without listening to voicemail.</p></article></div></section>
+
+  <section id="savings" className="savings"><div><span className="kicker">THE BUSINESS CASE</span><h2>Receptionist coverage without another full-time payroll.</h2><p>The U.S. median wage for receptionists and information clerks was about <strong>$39,460/year</strong> in May 2025—before employer payroll taxes, benefits, recruiting, training or coverage outside normal hours.</p><div className="saving-points"><span><Clock3/> Ava can answer 24/7</span><span><DollarSign/> Plans start at $99/month</span><span><Phone/> No missed calls during jobs</span></div><small>Wage comparison uses U.S. Bureau of Labor Statistics national wage data. Ava is a software service, not a replacement for every task a human receptionist performs.</small></div><div className="compare-card"><div className="compare-head"><span>Typical full-time receptionist wage</span><b>$39,460/yr</b></div><div className="compare-row"><span>Monthly wage equivalent</span><b>≈ $3,288</b></div><div className="compare-row highlight"><span>Ava Starter</span><b>$99/mo</b></div><div className="compare-save"><small>WAGE-ONLY DIFFERENCE</small><strong>≈ $3,189/month</strong><span>before taxes, benefits and other employee costs</span></div></div></section>
+
+  <section className="customize"><div className="section-title"><span className="kicker">BUILT AROUND YOUR BUSINESS</span><h2>We set Ava up with you—not hand you another app to figure out.</h2><p>Tell us exactly how you want your receptionist to sound and behave. We configure it, test it with you and make changes as you learn what your customers need.</p></div><div className="custom-grid"><article><Mic2/><h3>Your voice, or a voice you love</h3><p>Choose from different professional voices or explore a voice modeled around your own when the required voice-consent setup is completed.</p></article><article><Sparkles/><h3>Your personality</h3><p>Friendly, direct, Southern, professional, energetic or calm—we tailor the speaking style to fit the business.</p></article><article><PhoneCall/><h3>Your call flow</h3><p>Decide what Ava should ask, which services she should qualify and when a caller needs a human.</p></article><article><CheckCircle2/><h3>Changes included</h3><p>We help refine greetings, questions, knowledge and call behavior instead of making you rebuild it yourself.</p></article></div></section>
+
+  <section id="pricing" className="pricing"><div className="section-title"><span className="kicker">SIMPLE PRICING</span><h2>Start small. Upgrade when Ava proves herself.</h2><p>No need to hire a full front-office team just to find out whether missed calls are costing you jobs.</p></div><div className="plan-grid">{plans.map(p=><article className={p.featured?'plan featured':'plan'} key={p.name}>{p.featured&&<span className="popular">MOST POPULAR</span>}<h3>{p.name}</h3><p>{p.desc}</p><div className="price"><strong>${p.price}</strong><span>/month</span></div><small>{p.minutes}</small><ul>{p.items.map(i=><li key={i}><Check/>{i}</li>)}</ul><a className="plan-btn" href="mailto:colecollins763@gmail.com?subject=I%20want%20Ava%20AI%20Receptionist&body=I%20want%20to%20get%20started%20with%20Ava.%20Please%20contact%20me%20about%20setup.">{p.cta}</a></article>)}</div><div className="setup-offer"><div><small>OPTIONAL ONE-TIME SETUP</small><h3>$299 Founding Setup</h3><p>We configure Ava with your business information, customize the voice and call flow, test it with you and get it ready for customers.</p></div><a className="sales-btn" href="mailto:colecollins763@gmail.com?subject=Ava%20Founding%20Setup">Reserve My Setup <ArrowRight/></a></div><p className="usage-note">Voice-minute allowances are starting plan targets and should be finalized against live telephony/ElevenLabs costs before public checkout is enabled. Higher usage can be quoted separately.</p></section>
+
+  <section className="final-cta"><span className="kicker">YOUR NEXT CUSTOMER MAY CALL AFTER HOURS</span><h2>Let Ava answer before they call somebody else.</h2><p>Test the receptionist now. If you like what you hear, we'll customize one around your business.</p><div><a className="sales-btn light" href="#live-demo"><PhoneCall/> Talk to Ava Live</a><a className="sales-btn outline" href="mailto:colecollins763@gmail.com?subject=Build%20Ava%20for%20my%20business">Build Ava for My Business <ArrowRight/></a></div></section>
+
+  <footer className="sales-footer"><Link className="ava-brand" href="/"><span><Sparkles size={17}/></span> Workforce AI</Link><p>AI receptionists and automation built around business outcomes.</p><Link href="/leads">Lead Dashboard</Link></footer>
+ </main>
+}
+
 export default function ReceptionistDemo(){return <ConversationProvider><ReceptionistDemoContent/></ConversationProvider>}
