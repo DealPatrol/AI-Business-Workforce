@@ -1,10 +1,16 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ConversationProvider, useConversation } from '@elevenlabs/react';
-import { ArrowRight, BellRing, Check, CheckCircle2, Clock3, DollarSign, Headphones, Loader2, Mic2, Phone, PhoneCall, PhoneOff, ShieldCheck, Sparkles, UserRound } from 'lucide-react';
+import { ArrowRight, BellRing, Check, CheckCircle2, Clock3, DollarSign, Headphones, Loader2, MessageSquare, Mic2, Phone, PhoneCall, PhoneOff, Send, ShieldCheck, Sparkles, UserRound } from 'lucide-react';
 
 type CallState='idle'|'preparing'|'ready'|'connecting'|'connected'|'ending'|'processing';
+type TextMessage={from:'ava'|'visitor';text:string};
+
+const textPrompts=[
+ 'What name and phone number should your receptionist capture?',
+ 'What property address or service area should she ask for?',
+];
 
 const plans=[
  {name:'Starter',price:'99',desc:'A simple 24/7 receptionist for smaller service businesses.',minutes:'150 voice minutes / month',items:['One Ava receptionist','Lead capture + summaries','Email lead notifications','Business-specific greeting & FAQs'],cta:'Start Starter'},
@@ -18,6 +24,10 @@ function ReceptionistDemoContent(){
  const [error,setError]=useState('');
  const [callState,setCallState]=useState<CallState>('preparing');
  const [saved,setSaved]=useState(false);
+ const [textMode,setTextMode]=useState(false);
+ const [textInput,setTextInput]=useState('');
+ const [textStep,setTextStep]=useState(0);
+ const [textMessages,setTextMessages]=useState<TextMessage[]>([{from:'ava',text:`Hi, thanks for calling ${business}. How can I help today?`}]);
  const conversationId=useRef<string|null>(null);
  const signedUrl=useRef<string|null>(null);
  const preparedConversationId=useRef<string|null>(null);
@@ -60,7 +70,30 @@ function ReceptionistDemoContent(){
    await conversation.startSession({signedUrl:signedUrl.current!,dynamicVariables:{business_name:business||'Your Business',business_type:industry}});
    console.info('[Ava timing] ElevenLabs connect',Math.round(performance.now()-sessionStart),'ms','total click',Math.round(performance.now()-clickStart),'ms');
    signedUrl.current=null; preparedConversationId.current=null; setCallState('connected');
-  }catch(e:any){setError(e?.message||'Unable to start Ava.');setCallState('ready')}
+  }catch(e:any){
+   if(e?.name==='NotFoundError'||e?.name==='DevicesNotFoundError'){
+    setError('');setTextMode(true);setCallState('ready');return;
+   }
+   setError(e?.message||'Unable to start Ava.');setCallState('ready')
+  }
+ }
+ function startTextPreview(){
+  setError('');
+  setTextMode(true);
+  setTextStep(0);
+  setTextMessages([{from:'ava',text:`Hi, thanks for contacting ${business||'your business'}. How can I help today?`}]);
+ }
+ function sendTextMessage(e:FormEvent<HTMLFormElement>){
+  e.preventDefault();
+  const message=textInput.trim();
+  if(!message)return;
+  const nextStep=textStep+1;
+  const reply=nextStep<=textPrompts.length
+   ?textPrompts[nextStep-1]
+   :'Thanks — I have the details a receptionist would capture. In a configured Ava workflow, this summary is reviewed and routed to your team.';
+  setTextMessages(messages=>[...messages,{from:'visitor',text:message},{from:'ava',text:reply}]);
+  setTextInput('');
+  setTextStep(nextStep);
  }
  async function captureLead(){
   const id=conversationId.current;if(!id)return;setCallState('processing');
@@ -92,7 +125,7 @@ function ReceptionistDemoContent(){
   <section className="logo-strip"><span>Built for:</span><b>Landscaping</b><b>Roofing</b><b>HVAC</b><b>Plumbing</b><b>Fencing</b><b>Home Services</b></section>
 
   <section id="live-demo" className="demo-shell"><div className="demo-copy"><span className="kicker">DON'T TAKE OUR WORD FOR IT</span><h2>Call your AI receptionist before you buy her.</h2><p>Enter your business name and industry. Ava will answer like she's already part of your team.</p><ul><li><Check/> Ask her for an estimate</li><li><Check/> Give her your name, phone and address</li><li><Check/> Interrupt her or change your mind</li><li><Check/> See the lead appear after the call</li></ul><p className="demo-note"><ShieldCheck/> This is the same live voice system a customer would use.</p></div>
-   <div className="live-card"><div className="ava-head"><div className="avatar"><UserRound size={38}/><i/></div><div><h3>Ava</h3><p>AI Receptionist · {active?'Live now':callState==='preparing'?'Preparing':callState==='ready'?'Ready':callState==='connecting'?'Connecting':callState==='processing'?'Saving lead':'Ready'}</p></div></div><label>Business name<input value={business} onChange={e=>setBusiness(e.target.value)} disabled={active||callState==='connecting'}/></label><label>Business type<select value={industry} onChange={e=>setIndustry(e.target.value)} disabled={active||callState==='connecting'}><option>Landscaping</option><option>Roofing</option><option>HVAC</option><option>Plumbing</option><option>Electrical</option><option>Pressure Washing</option><option>Fencing</option></select></label>{active?<button className="talk-btn hangup" onClick={endCall} disabled={ending}>{ending?<><Loader2 className="spin"/> Ending Call...</>:<><PhoneOff/> End Call</>}</button>:<button className="talk-btn" onClick={startCall} disabled={callState==='preparing'||callState==='connecting'||callState==='processing'}>{callState==='preparing'?<><Loader2 className="spin"/> Preparing Ava...</>:callState==='connecting'?<><Loader2 className="spin"/> Connecting...</>:callState==='processing'?<><Loader2 className="spin"/> Saving Lead...</>:<><Mic2/> Talk to Ava Live</>}</button>}<small>{active?(conversation.isSpeaking?'Ava is speaking…':'Ava is listening…'):saved?'Lead saved and notification sent.':'No credit card. Try a real conversation.'}</small>{error&&<p className="call-error">{error}</p>}</div>
+   <div className="live-card"><div className="ava-head"><div className="avatar"><UserRound size={38}/><i/></div><div><h3>Ava</h3><p>AI Receptionist · {active?'Live now':textMode?'Text preview':callState==='preparing'?'Preparing':callState==='ready'?'Ready':callState==='connecting'?'Connecting':callState==='processing'?'Saving lead':'Ready'}</p></div></div><label>Business name<input value={business} onChange={e=>setBusiness(e.target.value)} disabled={active||callState==='connecting'}/></label><label>Business type<select value={industry} onChange={e=>setIndustry(e.target.value)} disabled={active||callState==='connecting'}><option>Landscaping</option><option>Roofing</option><option>HVAC</option><option>Plumbing</option><option>Electrical</option><option>Pressure Washing</option><option>Fencing</option></select></label>{textMode?<div className="text-preview"><div className="text-messages" aria-live="polite">{textMessages.map((message,index)=><p className={message.from} key={`${message.from}-${index}`}>{message.text}</p>)}</div>{textStep<=textPrompts.length?<form onSubmit={sendTextMessage}><input aria-label="Reply to Ava" value={textInput} onChange={e=>setTextInput(e.target.value)} placeholder="Type your reply…"/><button type="submit" aria-label="Send reply"><Send/></button></form>:<Link className="text-next" href="/founding?interest=ava">Build Ava for my business <ArrowRight/></Link>}<button className="text-switch" type="button" onClick={()=>setTextMode(false)}><Mic2/> Try voice instead</button><small>Guided text preview — no microphone or account required.</small></div>:<>{active?<button className="talk-btn hangup" onClick={endCall} disabled={ending}>{ending?<><Loader2 className="spin"/> Ending Call...</>:<><PhoneOff/> End Call</>}</button>:<button className="talk-btn" onClick={startCall} disabled={callState==='preparing'||callState==='connecting'||callState==='processing'}>{callState==='preparing'?<><Loader2 className="spin"/> Preparing Ava...</>:callState==='connecting'?<><Loader2 className="spin"/> Connecting...</>:callState==='processing'?<><Loader2 className="spin"/> Saving Lead...</>:<><Mic2/> Talk to Ava Live</>}</button>}<button className="text-fallback" type="button" onClick={startTextPreview}><MessageSquare/> No microphone? Use text</button><small>{active?(conversation.isSpeaking?'Ava is speaking…':'Ava is listening…'):saved?'Lead saved and notification sent.':'No credit card. Try a real conversation.'}</small>{error&&<p className="call-error">{error}</p>}</>}</div>
   </section>
 
   <section id="how" className="how-section"><div className="section-title"><span className="kicker">FROM RING TO READY-TO-CALL LEAD</span><h2>Ava handles the front desk while you handle the work.</h2></div><div className="steps-grid"><article><span>01</span><PhoneCall/><h3>Customer calls</h3><p>Ava answers immediately—even after hours, while you're on a job, or when your team is busy.</p></article><article><span>02</span><Headphones/><h3>Ava qualifies them</h3><p>She learns what they need, where the job is, how urgent it is and what should happen next.</p></article><article><span>03</span><BellRing/><h3>You get the lead</h3><p>The call becomes a structured summary with the customer details delivered to your dashboard and inbox.</p></article><article><span>04</span><DollarSign/><h3>You close the job</h3><p>You follow up with a customer who has already explained what they need—without listening to voicemail.</p></article></div></section>
