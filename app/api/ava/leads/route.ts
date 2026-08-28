@@ -33,7 +33,10 @@ export async function POST(req: NextRequest) {
       transcript: Array.isArray(body.transcript) ? body.transcript : [],
     };
     const { data, error } = await supabase.from('ava_call_leads').upsert(payload, { onConflict: 'conversation_id' }).select().single();
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) {
+      console.error('Unable to save Ava lead', error);
+      return NextResponse.json({ error: 'Lead capture is not available right now.' }, { status: 503 });
+    }
 
     // Only notify once per saved call. This protects against browser/API retries creating duplicate alerts.
     let notification={ sent:Boolean(data.notified_at), skipped:Boolean(data.notified_at) } as any;
@@ -48,17 +51,11 @@ export async function POST(req: NextRequest) {
     }
     return NextResponse.json({ lead: data, notification });
   } catch (error) {
-    return NextResponse.json({ error: error instanceof Error ? error.message : 'Unable to save lead' }, { status: 500 });
+    console.error('Unable to save Ava lead', error);
+    return NextResponse.json({ error: 'Lead capture is not available right now.' }, { status: 503 });
   }
 }
 
 export async function GET() {
-  try {
-    const supabase = await createClient();
-    const { data, error } = await supabase.from('ava_call_leads').select('*').order('created_at', { ascending: false }).limit(100);
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-    return NextResponse.json({ leads: data || [] });
-  } catch (error) {
-    return NextResponse.json({ error: error instanceof Error ? error.message : 'Unable to load leads' }, { status: 500 });
-  }
+  return NextResponse.json({ error: 'Not found.' }, { status: 404 });
 }
