@@ -49,7 +49,11 @@ function ReceptionistDemoContent(){
    signedUrl.current=data.signedUrl;
    preparedConversationId.current=data.conversationId||null;
    setCallState('ready');
-  }catch(e:any){setError(e?.message||'Ava could not prepare. Refresh and try again.');setCallState('idle')}
+  }catch{
+   setError('');
+   setTextMode(true);
+   setCallState('idle');
+  }
  }
  useEffect(()=>{prepareSession()},[]);
 
