@@ -10,7 +10,7 @@ const CONTACT_EMAIL = 'colecollins763@gmail.com';
 function buildEmailFallback(form: HTMLFormElement) {
   const data = new FormData(form);
   const subject = encodeURIComponent(
-    `Workforce AI founding request — ${String(data.get('business') || 'New business')}`,
+    `YardProof founding request — ${String(data.get('business') || 'New business')}`,
   );
   const body = encodeURIComponent(
     [
@@ -85,7 +85,7 @@ function FoundingRequestForm() {
           <ArrowLeft /> Back
         </Link>
         <b>
-          <Sparkles /> Workforce AI
+          <Sparkles /> YardProof
         </b>
       </nav>
       <section>
@@ -110,7 +110,7 @@ function FoundingRequestForm() {
           </div>
           <small>
             Prefer email?{' '}
-            <a href={`mailto:${CONTACT_EMAIL}?subject=Workforce%20AI%20founding%20request`}>
+            <a href={`mailto:${CONTACT_EMAIL}?subject=YardProof%20founding%20request`}>
               {CONTACT_EMAIL}
             </a>
           </small>

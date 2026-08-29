@@ -96,11 +96,11 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Workforce AI <onboarding@resend.dev>',
+        from: 'YardProof <onboarding@resend.dev>',
         to: [NOTIFICATION_EMAIL],
         reply_to: fields.email,
         subject: `Founding customer request — ${fields.business}`,
-        html: `<div style="font-family:Arial,sans-serif;max-width:680px;margin:auto;color:#17211b"><h1>New Workforce AI founding request</h1><table style="border-collapse:collapse;width:100%">${htmlRows}</table></div>`,
+        html: `<div style="font-family:Arial,sans-serif;max-width:680px;margin:auto;color:#17211b"><h1>New YardProof founding request</h1><table style="border-collapse:collapse;width:100%">${htmlRows}</table></div>`,
       }),
     });
     const result = await response.json().catch(() => ({}));

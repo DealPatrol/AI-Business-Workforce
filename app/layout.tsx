@@ -1,9 +1,24 @@
 import './globals.css';
 import type { Metadata } from 'next';
 
+const title = 'YardProof | Personalized Property Postcards';
+const description =
+  'Create realistic before-and-after property concepts, personalized postcards, and QR landing pages for local service businesses.';
+
 export const metadata: Metadata = {
-  title: 'Workforce AI | Personalized Property Postcards',
-  description: 'Create realistic before-and-after property concepts, personalized postcards, and QR landing pages for local service businesses.'
+  title,
+  description,
+  openGraph: {
+    title,
+    description,
+    siteName: 'YardProof',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title,
+    description,
+  },
 };
 
 export const viewport = {

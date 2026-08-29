@@ -119,7 +119,7 @@ function ReceptionistDemoContent(){
  }
 
  return <main className="ava-sales">
-  <nav className="ava-nav"><Link className="ava-brand" href="/"><span><Sparkles size={17}/></span> Workforce AI</Link><div><a href="#how">How It Works</a><a href="#savings">Savings</a><a href="#pricing">Pricing</a></div><a className="nav-cta" href="#live-demo">Try Ava Live</a></nav>
+  <nav className="ava-nav"><Link className="ava-brand" href="/"><span><Sparkles size={17}/></span> YardProof</Link><div><a href="#how">How It Works</a><a href="#savings">Savings</a><a href="#pricing">Pricing</a></div><a className="nav-cta" href="#live-demo">Try Ava Live</a></nav>
 
   <section className="sales-hero">
    <div className="hero-copy"><span className="kicker">AI RECEPTIONIST FOR SERVICE BUSINESSES</span><h1>Stop losing jobs because <em>nobody answered.</em></h1><p>Ava answers calls 24/7, sounds natural, qualifies the customer, captures the job details and sends you the lead—without adding another full-time employee to payroll.</p><div className="hero-actions"><a className="sales-btn" href="#live-demo"><PhoneCall size={18}/> Test Ava Right Now</a><a className="sales-btn secondary" href="#how">See How It Works <ArrowRight size={18}/></a></div><div className="trust-row"><span><Check/> 24/7 coverage</span><span><Check/> Custom voice & personality</span><span><Check/> Lead summaries by email</span></div></div>
@@ -142,7 +142,7 @@ function ReceptionistDemoContent(){
 
   <section className="final-cta"><span className="kicker">YOUR NEXT CUSTOMER MAY CALL AFTER HOURS</span><h2>Let Ava answer before they call somebody else.</h2><p>Test the receptionist now. If you like what you hear, we'll customize one around your business.</p><div><a className="sales-btn light" href="#live-demo"><PhoneCall/> Talk to Ava Live</a><Link className="sales-btn outline" href="/founding?interest=ava">Build Ava for My Business <ArrowRight/></Link></div></section>
 
-  <footer className="sales-footer"><Link className="ava-brand" href="/"><span><Sparkles size={17}/></span> Workforce AI</Link><p>AI receptionists and automation built around business outcomes.</p><Link href="/founding?interest=ava">Contact Cole</Link></footer>
+  <footer className="sales-footer"><Link className="ava-brand" href="/"><span><Sparkles size={17}/></span> YardProof</Link><p>AI receptionists and automation built around business outcomes.</p><Link href="/founding?interest=ava">Contact Cole</Link></footer>
  </main>
 }
 
