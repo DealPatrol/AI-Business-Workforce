@@ -4,6 +4,7 @@ import { FormEvent, Suspense, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Check, Loader2, Mail, Sparkles } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
+import { FOUNDING_PAYMENT_LINK } from '@/lib/payments';
 
 const CONTACT_EMAIL = 'colecollins763@gmail.com';
 
@@ -108,8 +109,11 @@ function FoundingRequestForm() {
               <Check /> Materials, margin, and campaign setup tailored to your business
             </p>
           </div>
+          <a className="payment-link" href={FOUNDING_PAYMENT_LINK}>
+            Pay $299 — Reserve Founding Setup
+          </a>
           <small>
-            Prefer email?{' '}
+            Want to confirm fit first?{' '}
             <a href={`mailto:${CONTACT_EMAIL}?subject=Workforce%20AI%20founding%20request`}>
               {CONTACT_EMAIL}
             </a>
@@ -199,7 +203,7 @@ function FoundingRequestForm() {
                   <Loader2 className="spin" /> Sending…
                 </>
               ) : (
-                'Request My Founding Spot'
+                'Send My Details to Cole'
               )}
             </button>
             {status === 'email' && (
@@ -216,7 +220,7 @@ function FoundingRequestForm() {
         )}
       </section>
       <style jsx>{`
-        .founding-page{min-height:100vh;background:#f4f7f3;color:#17201a;padding-bottom:70px}.founding-page nav{height:72px;background:#fff;border-bottom:1px solid #dfe5df;display:flex;align-items:center;justify-content:space-between;padding:0 max(20px,calc((100vw - 980px)/2))}.founding-page nav a,.founding-page nav b{display:flex;align-items:center;gap:7px;color:inherit;text-decoration:none;font-size:13px}.founding-page nav svg{width:17px;color:#2e8b57}.founding-page section{width:min(980px,calc(100% - 40px));margin:70px auto;display:grid;grid-template-columns:.85fr 1.15fr;gap:70px;align-items:start}.request-copy>span{font-size:10px;letter-spacing:.13em;font-weight:900;color:#2e8b57}.request-copy h1{font:500 50px/1.03 Georgia,serif;letter-spacing:-.03em;margin:14px 0 20px}.request-copy>p{color:#657168;line-height:1.65}.request-copy>div{margin:28px 0;display:grid;gap:10px}.request-copy>div p{display:flex;align-items:flex-start;gap:8px;margin:0;font-size:13px}.request-copy svg{width:17px;color:#2e8b57;flex:none}.request-copy small{color:#758078}.request-copy small a{color:#205c39;font-weight:750}.founding-page form,.success{background:#fff;border:1px solid #dce3dc;border-radius:16px;padding:30px;box-shadow:0 18px 50px rgba(25,53,35,.08)}.founding-page form{display:grid;gap:17px}.founding-page label{display:grid;gap:7px;font-size:11px;font-weight:800;color:#526057}.founding-page input,.founding-page select,.founding-page textarea{width:100%;border:1px solid #d5ddd6;border-radius:8px;padding:12px;background:#fff;color:#17201a;font:inherit}.founding-page textarea{resize:vertical}.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}.founding-page button{border:0;border-radius:9px;padding:14px;background:#205c39;color:#fff;font-weight:850;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}.founding-page button:disabled{opacity:.65}.founding-page button svg{width:18px}.honeypot{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;overflow:hidden!important}.privacy{display:flex;align-items:center;justify-content:center;gap:6px;color:#7d877f}.privacy svg{width:14px}.notice{background:#edf5ef;color:#315f43;padding:12px;border-radius:8px;font-size:12px;line-height:1.5;margin:0}.notice a{font-weight:800}.error{color:#a83232;font-size:12px;margin:0}.success{text-align:center;padding:55px 30px}.success>svg{width:52px;height:52px;color:#2e8b57}.success h2{font:500 35px Georgia,serif}.success p{color:#68736b}.success a{color:#205c39;font-weight:800}.spin{animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}@media(max-width:760px){.founding-page section{grid-template-columns:1fr;gap:35px;margin-top:45px}.request-copy h1{font-size:42px}.two{grid-template-columns:1fr}.founding-page form{padding:22px}}
+        .founding-page{min-height:100vh;background:#f4f7f3;color:#17201a;padding-bottom:70px}.founding-page nav{height:72px;background:#fff;border-bottom:1px solid #dfe5df;display:flex;align-items:center;justify-content:space-between;padding:0 max(20px,calc((100vw - 980px)/2))}.founding-page nav a,.founding-page nav b{display:flex;align-items:center;gap:7px;color:inherit;text-decoration:none;font-size:13px}.founding-page nav svg{width:17px;color:#2e8b57}.founding-page section{width:min(980px,calc(100% - 40px));margin:70px auto;display:grid;grid-template-columns:.85fr 1.15fr;gap:70px;align-items:start}.request-copy>span{font-size:10px;letter-spacing:.13em;font-weight:900;color:#2e8b57}.request-copy h1{font:500 50px/1.03 Georgia,serif;letter-spacing:-.03em;margin:14px 0 20px}.request-copy>p{color:#657168;line-height:1.65}.request-copy>div{margin:28px 0;display:grid;gap:10px}.request-copy>div p{display:flex;align-items:flex-start;gap:8px;margin:0;font-size:13px}.request-copy svg{width:17px;color:#2e8b57;flex:none}.request-copy small{color:#758078}.request-copy small a{color:#205c39;font-weight:750}.payment-link{display:flex;align-items:center;justify-content:center;background:#205c39;color:#fff!important;border-radius:9px;padding:14px;margin:0 0 14px;text-decoration:none;font-weight:850}.founding-page form,.success{background:#fff;border:1px solid #dce3dc;border-radius:16px;padding:30px;box-shadow:0 18px 50px rgba(25,53,35,.08)}.founding-page form{display:grid;gap:17px}.founding-page label{display:grid;gap:7px;font-size:11px;font-weight:800;color:#526057}.founding-page input,.founding-page select,.founding-page textarea{width:100%;border:1px solid #d5ddd6;border-radius:8px;padding:12px;background:#fff;color:#17201a;font:inherit}.founding-page textarea{resize:vertical}.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}.founding-page button{border:0;border-radius:9px;padding:14px;background:#205c39;color:#fff;font-weight:850;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}.founding-page button:disabled{opacity:.65}.founding-page button svg{width:18px}.honeypot{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;overflow:hidden!important}.privacy{display:flex;align-items:center;justify-content:center;gap:6px;color:#7d877f}.privacy svg{width:14px}.notice{background:#edf5ef;color:#315f43;padding:12px;border-radius:8px;font-size:12px;line-height:1.5;margin:0}.notice a{font-weight:800}.error{color:#a83232;font-size:12px;margin:0}.success{text-align:center;padding:55px 30px}.success>svg{width:52px;height:52px;color:#2e8b57}.success h2{font:500 35px Georgia,serif}.success p{color:#68736b}.success a{color:#205c39;font-weight:800}.spin{animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}@media(max-width:760px){.founding-page section{grid-template-columns:1fr;gap:35px;margin-top:45px}.request-copy h1{font-size:42px}.two{grid-template-columns:1fr}.founding-page form{padding:22px}}
       `}</style>
     </main>
   );
