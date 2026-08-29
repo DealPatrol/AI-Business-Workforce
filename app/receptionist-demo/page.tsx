@@ -1,10 +1,16 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ConversationProvider, useConversation } from '@elevenlabs/react';
-import { ArrowRight, BellRing, Check, CheckCircle2, Clock3, DollarSign, Headphones, Loader2, Mic2, Phone, PhoneCall, PhoneOff, ShieldCheck, Sparkles, UserRound } from 'lucide-react';
+import { ArrowRight, BellRing, Check, CheckCircle2, Clock3, DollarSign, Headphones, Loader2, MessageSquare, Mic2, Phone, PhoneCall, PhoneOff, Send, ShieldCheck, Sparkles, UserRound } from 'lucide-react';
 
 type CallState='idle'|'preparing'|'ready'|'connecting'|'connected'|'ending'|'processing';
+type TextMessage={from:'ava'|'visitor';text:string};
+
+const textPrompts=[
+ 'What name and phone number should your receptionist capture?',
+ 'What property address or service area should she ask for?',
+];
 
 const plans=[
  {name:'Starter',price:'99',desc:'A simple 24/7 receptionist for smaller service businesses.',minutes:'150 voice minutes / month',items:['One Ava receptionist','Lead capture + summaries','Email lead notifications','Business-specific greeting & FAQs'],cta:'Start Starter'},
@@ -17,7 +23,11 @@ function ReceptionistDemoContent(){
  const [business,setBusiness]=useState('Your Business');
  const [error,setError]=useState('');
  const [callState,setCallState]=useState<CallState>('preparing');
- const [saved,setSaved]=useState(false);
+ const [savedMessage,setSavedMessage]=useState('');
+ const [textMode,setTextMode]=useState(false);
+ const [textInput,setTextInput]=useState('');
+ const [textStep,setTextStep]=useState(0);
+ const [textMessages,setTextMessages]=useState<TextMessage[]>([{from:'ava',text:`Hi, thanks for calling ${business}. How can I help today?`}]);
  const conversationId=useRef<string|null>(null);
  const signedUrl=useRef<string|null>(null);
  const preparedConversationId=useRef<string|null>(null);
@@ -39,7 +49,11 @@ function ReceptionistDemoContent(){
    signedUrl.current=data.signedUrl;
    preparedConversationId.current=data.conversationId||null;
    setCallState('ready');
-  }catch(e:any){setError(e?.message||'Ava could not prepare. Refresh and try again.');setCallState('idle')}
+  }catch{
+   setError('');
+   setTextMode(true);
+   setCallState('idle');
+  }
  }
  useEffect(()=>{prepareSession()},[]);
 
@@ -48,7 +62,7 @@ function ReceptionistDemoContent(){
 
  async function startCall(){
   if(!['ready','idle'].includes(callState)) return;
-  setSaved(false); setError(''); setCallState('connecting');
+  setSavedMessage(''); setError(''); setCallState('connecting');
   const clickStart=performance.now();
   try{
    if(!signedUrl.current){await prepareSession(); if(!signedUrl.current)throw new Error('Ava is still preparing. Try once more.')}
@@ -60,7 +74,30 @@ function ReceptionistDemoContent(){
    await conversation.startSession({signedUrl:signedUrl.current!,dynamicVariables:{business_name:business||'Your Business',business_type:industry}});
    console.info('[Ava timing] ElevenLabs connect',Math.round(performance.now()-sessionStart),'ms','total click',Math.round(performance.now()-clickStart),'ms');
    signedUrl.current=null; preparedConversationId.current=null; setCallState('connected');
-  }catch(e:any){setError(e?.message||'Unable to start Ava.');setCallState('ready')}
+  }catch(e:any){
+   if(e?.name==='NotFoundError'||e?.name==='DevicesNotFoundError'){
+    setError('');setTextMode(true);setCallState('ready');return;
+   }
+   setError(e?.message||'Unable to start Ava.');setCallState('ready')
+  }
+ }
+ function startTextPreview(){
+  setError('');
+  setTextMode(true);
+  setTextStep(0);
+  setTextMessages([{from:'ava',text:`Hi, thanks for contacting ${business||'your business'}. How can I help today?`}]);
+ }
+ function sendTextMessage(e:FormEvent<HTMLFormElement>){
+  e.preventDefault();
+  const message=textInput.trim();
+  if(!message)return;
+  const nextStep=textStep+1;
+  const reply=nextStep<=textPrompts.length
+   ?textPrompts[nextStep-1]
+   :'Thanks — I have the details a receptionist would capture. In a configured Ava workflow, this summary is reviewed and routed to your team.';
+  setTextMessages(messages=>[...messages,{from:'visitor',text:message},{from:'ava',text:reply}]);
+  setTextInput('');
+  setTextStep(nextStep);
  }
  async function captureLead(){
   const id=conversationId.current;if(!id)return;setCallState('processing');
@@ -71,7 +108,7 @@ function ReceptionistDemoContent(){
    const d=await r.json();if(!r.ok)throw new Error(d.error||'Could not process Ava conversation.');
    const save=await fetch('/api/ava/leads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({conversationId:id,businessName:business,businessType:industry,name:d.lead?.name,phone:d.lead?.phone,serviceJobType:d.lead?.serviceJobType,address:d.lead?.address,intentUrgency:d.lead?.intentUrgency,summary:d.summary,transcript:d.transcript})});
    const s=await save.json();if(!save.ok)throw new Error(s.error||'Could not save lead.');
-   setSaved(true);conversationId.current=null;await prepareSession();return;
+   setSavedMessage(s.notification?.sent?'Lead saved and email notification sent.':'Lead saved for follow-up.');conversationId.current=null;await prepareSession();return;
   }
   throw new Error('ElevenLabs is still processing the call. The lead was not saved yet.')
  }
@@ -92,7 +129,7 @@ function ReceptionistDemoContent(){
   <section className="logo-strip"><span>Built for:</span><b>Landscaping</b><b>Roofing</b><b>HVAC</b><b>Plumbing</b><b>Fencing</b><b>Home Services</b></section>
 
   <section id="live-demo" className="demo-shell"><div className="demo-copy"><span className="kicker">DON'T TAKE OUR WORD FOR IT</span><h2>Call your AI receptionist before you buy her.</h2><p>Enter your business name and industry. Ava will answer like she's already part of your team.</p><ul><li><Check/> Ask her for an estimate</li><li><Check/> Give her your name, phone and address</li><li><Check/> Interrupt her or change your mind</li><li><Check/> See the lead appear after the call</li></ul><p className="demo-note"><ShieldCheck/> This is the same live voice system a customer would use.</p></div>
-   <div className="live-card"><div className="ava-head"><div className="avatar"><UserRound size={38}/><i/></div><div><h3>Ava</h3><p>AI Receptionist · {active?'Live now':callState==='preparing'?'Preparing':callState==='ready'?'Ready':callState==='connecting'?'Connecting':callState==='processing'?'Saving lead':'Ready'}</p></div></div><label>Business name<input value={business} onChange={e=>setBusiness(e.target.value)} disabled={active||callState==='connecting'}/></label><label>Business type<select value={industry} onChange={e=>setIndustry(e.target.value)} disabled={active||callState==='connecting'}><option>Landscaping</option><option>Roofing</option><option>HVAC</option><option>Plumbing</option><option>Electrical</option><option>Pressure Washing</option><option>Fencing</option></select></label>{active?<button className="talk-btn hangup" onClick={endCall} disabled={ending}>{ending?<><Loader2 className="spin"/> Ending Call...</>:<><PhoneOff/> End Call</>}</button>:<button className="talk-btn" onClick={startCall} disabled={callState==='preparing'||callState==='connecting'||callState==='processing'}>{callState==='preparing'?<><Loader2 className="spin"/> Preparing Ava...</>:callState==='connecting'?<><Loader2 className="spin"/> Connecting...</>:callState==='processing'?<><Loader2 className="spin"/> Saving Lead...</>:<><Mic2/> Talk to Ava Live</>}</button>}<small>{active?(conversation.isSpeaking?'Ava is speaking…':'Ava is listening…'):saved?'Lead saved and notification sent.':'No credit card. Try a real conversation.'}</small>{error&&<p className="call-error">{error}</p>}</div>
+   <div className="live-card"><div className="ava-head"><div className="avatar"><UserRound size={38}/><i/></div><div><h3>Ava</h3><p>AI Receptionist · {active?'Live now':textMode?'Text preview':callState==='preparing'?'Preparing':callState==='ready'?'Ready':callState==='connecting'?'Connecting':callState==='processing'?'Saving lead':'Ready'}</p></div></div><label>Business name<input value={business} onChange={e=>setBusiness(e.target.value)} disabled={active||callState==='connecting'}/></label><label>Business type<select value={industry} onChange={e=>setIndustry(e.target.value)} disabled={active||callState==='connecting'}><option>Landscaping</option><option>Roofing</option><option>HVAC</option><option>Plumbing</option><option>Electrical</option><option>Pressure Washing</option><option>Fencing</option></select></label>{textMode?<div className="text-preview"><div className="text-messages" aria-live="polite">{textMessages.map((message,index)=><p className={message.from} key={`${message.from}-${index}`}>{message.text}</p>)}</div>{textStep<=textPrompts.length?<form onSubmit={sendTextMessage}><input aria-label="Reply to Ava" value={textInput} onChange={e=>setTextInput(e.target.value)} placeholder="Type your reply…"/><button type="submit" aria-label="Send reply"><Send/></button></form>:<Link className="text-next" href="/founding?interest=ava">Build Ava for my business <ArrowRight/></Link>}<button className="text-switch" type="button" onClick={()=>setTextMode(false)}><Mic2/> Try voice instead</button><small>Guided text preview — no microphone or account required.</small></div>:<>{active?<button className="talk-btn hangup" onClick={endCall} disabled={ending}>{ending?<><Loader2 className="spin"/> Ending Call...</>:<><PhoneOff/> End Call</>}</button>:<button className="talk-btn" onClick={startCall} disabled={callState==='preparing'||callState==='connecting'||callState==='processing'}>{callState==='preparing'?<><Loader2 className="spin"/> Preparing Ava...</>:callState==='connecting'?<><Loader2 className="spin"/> Connecting...</>:callState==='processing'?<><Loader2 className="spin"/> Saving Lead...</>:<><Mic2/> Talk to Ava Live</>}</button>}<button className="text-fallback" type="button" onClick={startTextPreview}><MessageSquare/> No microphone? Use text</button><small>{active?(conversation.isSpeaking?'Ava is speaking…':'Ava is listening…'):savedMessage||'No credit card. Try a real conversation.'}</small>{error&&<p className="call-error">{error}</p>}</>}</div>
   </section>
 
   <section id="how" className="how-section"><div className="section-title"><span className="kicker">FROM RING TO READY-TO-CALL LEAD</span><h2>Ava handles the front desk while you handle the work.</h2></div><div className="steps-grid"><article><span>01</span><PhoneCall/><h3>Customer calls</h3><p>Ava answers immediately—even after hours, while you're on a job, or when your team is busy.</p></article><article><span>02</span><Headphones/><h3>Ava qualifies them</h3><p>She learns what they need, where the job is, how urgent it is and what should happen next.</p></article><article><span>03</span><BellRing/><h3>You get the lead</h3><p>The call becomes a structured summary with the customer details delivered to your dashboard and inbox.</p></article><article><span>04</span><DollarSign/><h3>You close the job</h3><p>You follow up with a customer who has already explained what they need—without listening to voicemail.</p></article></div></section>
@@ -101,11 +138,11 @@ function ReceptionistDemoContent(){
 
   <section className="customize"><div className="section-title"><span className="kicker">BUILT AROUND YOUR BUSINESS</span><h2>We set Ava up with you—not hand you another app to figure out.</h2><p>Tell us exactly how you want your receptionist to sound and behave. We configure it, test it with you and make changes as you learn what your customers need.</p></div><div className="custom-grid"><article><Mic2/><h3>Your voice, or a voice you love</h3><p>Choose from different professional voices or explore a voice modeled around your own when the required voice-consent setup is completed.</p></article><article><Sparkles/><h3>Your personality</h3><p>Friendly, direct, Southern, professional, energetic or calm—we tailor the speaking style to fit the business.</p></article><article><PhoneCall/><h3>Your call flow</h3><p>Decide what Ava should ask, which services she should qualify and when a caller needs a human.</p></article><article><CheckCircle2/><h3>Changes included</h3><p>We help refine greetings, questions, knowledge and call behavior instead of making you rebuild it yourself.</p></article></div></section>
 
-  <section id="pricing" className="pricing"><div className="section-title"><span className="kicker">SIMPLE PRICING</span><h2>Start small. Upgrade when Ava proves herself.</h2><p>No need to hire a full front-office team just to find out whether missed calls are costing you jobs.</p></div><div className="plan-grid">{plans.map(p=><article className={p.featured?'plan featured':'plan'} key={p.name}>{p.featured&&<span className="popular">MOST POPULAR</span>}<h3>{p.name}</h3><p>{p.desc}</p><div className="price"><strong>${p.price}</strong><span>/month</span></div><small>{p.minutes}</small><ul>{p.items.map(i=><li key={i}><Check/>{i}</li>)}</ul><a className="plan-btn" href="mailto:colecollins763@gmail.com?subject=I%20want%20Ava%20AI%20Receptionist&body=I%20want%20to%20get%20started%20with%20Ava.%20Please%20contact%20me%20about%20setup.">{p.cta}</a></article>)}</div><div className="setup-offer"><div><small>OPTIONAL ONE-TIME SETUP</small><h3>$299 Founding Setup</h3><p>We configure Ava with your business information, customize the voice and call flow, test it with you and get it ready for customers.</p></div><a className="sales-btn" href="mailto:colecollins763@gmail.com?subject=Ava%20Founding%20Setup">Reserve My Setup <ArrowRight/></a></div><p className="usage-note">Voice-minute allowances are starting plan targets and should be finalized against live telephony/ElevenLabs costs before public checkout is enabled. Higher usage can be quoted separately.</p></section>
+  <section id="pricing" className="pricing"><div className="section-title"><span className="kicker">SIMPLE PRICING</span><h2>Start small. Upgrade when Ava proves herself.</h2><p>No need to hire a full front-office team just to find out whether missed calls are costing you jobs.</p></div><div className="plan-grid">{plans.map(p=><article className={p.featured?'plan featured':'plan'} key={p.name}>{p.featured&&<span className="popular">MOST POPULAR</span>}<h3>{p.name}</h3><p>{p.desc}</p><div className="price"><strong>${p.price}</strong><span>/month</span></div><small>{p.minutes}</small><ul>{p.items.map(i=><li key={i}><Check/>{i}</li>)}</ul><Link className="plan-btn" href="/founding?interest=ava">{p.cta}</Link></article>)}</div><div className="setup-offer"><div><small>ONE-TIME FOUNDING LAUNCH</small><h3>$299 Founding Setup</h3><p>We configure Ava with your business information, customize the voice and call flow, test it with you and get it ready for customers.</p></div><Link className="sales-btn" href="/founding?interest=ava">Reserve My Setup <ArrowRight/></Link></div><p className="usage-note">Voice-minute allowances are starting plan targets and should be finalized against live telephony/ElevenLabs costs before public checkout is enabled. Higher usage can be quoted separately.</p></section>
 
-  <section className="final-cta"><span className="kicker">YOUR NEXT CUSTOMER MAY CALL AFTER HOURS</span><h2>Let Ava answer before they call somebody else.</h2><p>Test the receptionist now. If you like what you hear, we'll customize one around your business.</p><div><a className="sales-btn light" href="#live-demo"><PhoneCall/> Talk to Ava Live</a><a className="sales-btn outline" href="mailto:colecollins763@gmail.com?subject=Build%20Ava%20for%20my%20business">Build Ava for My Business <ArrowRight/></a></div></section>
+  <section className="final-cta"><span className="kicker">YOUR NEXT CUSTOMER MAY CALL AFTER HOURS</span><h2>Let Ava answer before they call somebody else.</h2><p>Test the receptionist now. If you like what you hear, we'll customize one around your business.</p><div><a className="sales-btn light" href="#live-demo"><PhoneCall/> Talk to Ava Live</a><Link className="sales-btn outline" href="/founding?interest=ava">Build Ava for My Business <ArrowRight/></Link></div></section>
 
-  <footer className="sales-footer"><Link className="ava-brand" href="/"><span><Sparkles size={17}/></span> Workforce AI</Link><p>AI receptionists and automation built around business outcomes.</p><Link href="/leads">Lead Dashboard</Link></footer>
+  <footer className="sales-footer"><Link className="ava-brand" href="/"><span><Sparkles size={17}/></span> Workforce AI</Link><p>AI receptionists and automation built around business outcomes.</p><Link href="/founding?interest=ava">Contact Cole</Link></footer>
  </main>
 }
 
