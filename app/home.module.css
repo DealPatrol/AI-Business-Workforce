@@ -1,0 +1,755 @@
+.page {
+  min-height: 100vh;
+  background: #f7f8f5;
+  color: #17201a;
+}
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  height: 72px;
+  padding: 0 max(20px, calc((100vw - 1160px) / 2));
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  border-bottom: 1px solid #e0e6e0;
+  background: rgba(247, 248, 245, 0.94);
+  backdrop-filter: blur(12px);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #17201a;
+  text-decoration: none;
+  font-size: 19px;
+  font-weight: 820;
+  white-space: nowrap;
+}
+
+.brand > span {
+  width: 31px;
+  height: 31px;
+  margin-right: 2px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: #183f2a;
+  color: #fff;
+}
+
+.brand b {
+  color: #2e8b57;
+}
+
+.navLinks {
+  display: flex;
+  gap: 25px;
+  margin-left: auto;
+}
+
+.navLinks a {
+  color: #5b675e;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.navCta,
+.primaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 9px;
+  background: #205c39;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 820;
+  box-shadow: 0 8px 22px rgba(32, 92, 57, 0.16);
+}
+
+.navCta {
+  padding: 11px 16px;
+  font-size: 13px;
+}
+
+.hero {
+  width: min(1160px, calc(100% - 40px));
+  margin: auto;
+  padding: 78px 0 68px;
+  display: grid;
+  grid-template-columns: 1.04fr 0.96fr;
+  gap: 68px;
+  align-items: center;
+}
+
+.eyebrow,
+.sectionHeading > span,
+.packageCopy > span,
+.questions span {
+  color: #2e8b57;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.hero h1 {
+  max-width: 680px;
+  margin: 16px 0 22px;
+  font: 500 clamp(51px, 6vw, 78px) / 0.98 Georgia, serif;
+  letter-spacing: -0.045em;
+}
+
+.lede {
+  max-width: 650px;
+  color: #5f6b62;
+  font-size: 18px;
+  line-height: 1.65;
+}
+
+.priceLine {
+  margin-top: 26px;
+  display: flex;
+  align-items: baseline;
+  gap: 11px;
+}
+
+.priceLine strong {
+  color: #1f5d39;
+  font: 600 28px Georgia, serif;
+}
+
+.priceLine span {
+  color: #68736b;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.heroActions {
+  margin-top: 24px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.primaryButton {
+  padding: 15px 20px;
+}
+
+.secondaryButton {
+  padding: 14px 18px;
+  border: 1px solid #bdc9bf;
+  border-radius: 9px;
+  color: #284332;
+  text-decoration: none;
+  font-weight: 800;
+  background: #fff;
+}
+
+.heroNote {
+  margin-top: 18px;
+  color: #6f7a72;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.postcard {
+  min-height: 385px;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  background: #fff;
+  box-shadow: 0 25px 65px rgba(28, 50, 34, 0.16);
+  transform: rotate(1deg);
+}
+
+.postcardImage {
+  position: relative;
+  min-height: 365px;
+  overflow: hidden;
+  background: #dce5df;
+}
+
+.postcardImage img {
+  object-fit: cover;
+}
+
+.postcardImage > span,
+.exampleImage > span {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 1;
+  padding: 7px 9px;
+  border-radius: 5px;
+  background: #173d28;
+  color: #fff;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.postcardCopy {
+  padding: 27px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.postcardCopy > small,
+.takeoff > span,
+.offerCard > small:first-child,
+.avaSection small {
+  color: #2e8b57;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.11em;
+}
+
+.postcardCopy h2 {
+  margin: 9px 0;
+  font: 500 29px/1.05 Georgia, serif;
+}
+
+.postcardCopy > p {
+  color: #6e796f;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.qrExample {
+  margin-top: 17px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  color: #173d28;
+}
+
+.qrExample span {
+  display: grid;
+  gap: 3px;
+  font-size: 10px;
+}
+
+.qrExample small {
+  color: #77827a;
+  font-size: 8px;
+}
+
+.trustBar {
+  min-height: 72px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 34px;
+  border-top: 1px solid #dde5dd;
+  border-bottom: 1px solid #dde5dd;
+  background: #fff;
+}
+
+.trustBar span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #556158;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.trustBar svg {
+  width: 16px;
+  color: #2e8b57;
+}
+
+.section {
+  width: min(1160px, calc(100% - 40px));
+  margin: auto;
+  padding: 100px 0;
+}
+
+.sectionHeading {
+  max-width: 690px;
+  margin-bottom: 42px;
+}
+
+.sectionHeading h2,
+.takeoff h2,
+.packageCopy h2,
+.questions h2,
+.avaSection h2 {
+  margin: 11px 0;
+  font: 500 clamp(39px, 4.5vw, 53px) / 1.06 Georgia, serif;
+  letter-spacing: -0.025em;
+}
+
+.sectionHeading p,
+.packageCopy > p,
+.questions p,
+.avaSection p {
+  color: #68736b;
+  line-height: 1.65;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 13px;
+}
+
+.steps article {
+  min-height: 220px;
+  padding: 23px;
+  border: 1px solid #dce3dc;
+  border-radius: 13px;
+  background: #fff;
+}
+
+.steps article > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.steps article svg {
+  color: #2e8b57;
+}
+
+.steps article > div span {
+  color: #d2ded4;
+  font: 600 28px Georgia, serif;
+}
+
+.steps h3 {
+  margin: 30px 0 8px;
+  font-size: 17px;
+}
+
+.steps p {
+  color: #707b73;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.exampleSection {
+  padding: 90px 20px;
+  background: #e7eee6;
+}
+
+.exampleGrid {
+  width: min(1100px, 100%);
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  overflow: hidden;
+  border: 1px solid #d3ddd4;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 16px 50px rgba(28, 50, 34, 0.08);
+}
+
+.exampleVisual {
+  padding: 24px;
+  background: #f0f3ed;
+}
+
+.exampleImage {
+  position: relative;
+  min-height: 430px;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.exampleImage img {
+  object-fit: cover;
+}
+
+.takeoff {
+  padding: 43px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.takeoff h2 {
+  font-size: 43px;
+}
+
+.takeoff > p {
+  color: #68736b;
+  line-height: 1.6;
+}
+
+.takeoffLines {
+  margin: 17px 0 23px;
+  border-top: 1px solid #e0e5e0;
+}
+
+.takeoffLines div {
+  padding: 13px 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid #e0e5e0;
+  color: #4e5d52;
+  font-size: 12px;
+}
+
+.takeoff a,
+.avaSection > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #23613c;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.packageSection {
+  width: min(1080px, calc(100% - 40px));
+  margin: auto;
+  padding: 105px 0;
+  display: grid;
+  grid-template-columns: 1fr 0.9fr;
+  gap: 70px;
+  align-items: center;
+}
+
+.honesty {
+  margin-top: 25px;
+  padding: 16px 18px;
+  border-left: 3px solid #2e8b57;
+  background: #eaf2e9;
+}
+
+.honesty p {
+  margin: 6px 0 0;
+  color: #607065;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.offerCard {
+  padding: 32px;
+  border: 1px solid #d7dfd7;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 20px 55px rgba(28, 50, 34, 0.1);
+}
+
+.offerPrice {
+  margin-top: 5px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.offerPrice strong {
+  font: 500 59px Georgia, serif;
+}
+
+.offerPrice span {
+  color: #637067;
+  font-weight: 750;
+}
+
+.offerCard > p {
+  margin: 0;
+  color: #6c776e;
+  font-size: 13px;
+}
+
+.offerCard ul {
+  margin: 25px 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+  list-style: none;
+}
+
+.offerCard li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #455248;
+  font-size: 13px;
+}
+
+.offerCard li svg {
+  flex: none;
+  color: #2e8b57;
+}
+
+.offerCard .primaryButton {
+  width: 100%;
+}
+
+.disclosure {
+  margin-top: 12px;
+  display: block;
+  color: #7b857e;
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+.questions {
+  width: min(1080px, calc(100% - 40px));
+  margin: 0 auto 90px;
+  padding: 37px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 35px;
+  border-radius: 15px;
+  background: #173d28;
+  color: #fff;
+}
+
+.questions h2 {
+  margin: 7px 0;
+  font-size: 34px;
+}
+
+.questions p {
+  margin: 0;
+  color: #b6c8bb;
+  font-size: 12px;
+}
+
+.questions > a {
+  flex: none;
+  padding: 13px 17px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border-radius: 8px;
+  background: #fff;
+  color: #173d28;
+  text-decoration: none;
+  font-weight: 850;
+}
+
+.avaSection {
+  padding: 55px max(20px, calc((100vw - 1080px) / 2));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 35px;
+  border-top: 1px solid #dfe5df;
+  background: #f0f3ee;
+}
+
+.avaSection h2 {
+  margin: 6px 0;
+  font-size: 31px;
+}
+
+.avaSection p {
+  margin: 0;
+  font-size: 12px;
+}
+
+.footer {
+  min-height: 115px;
+  padding: 25px max(20px, calc((100vw - 1160px) / 2));
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  border-top: 1px solid #e0e5e0;
+  background: #fff;
+}
+
+.footer p {
+  margin-left: auto;
+  color: #667168;
+  font-size: 12px;
+}
+
+.footerPay {
+  color: #205c39;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+@media (max-width: 860px) {
+  .navLinks {
+    display: none;
+  }
+
+  .navCta {
+    margin-left: auto;
+  }
+
+  .hero {
+    padding: 55px 0;
+    grid-template-columns: 1fr;
+    gap: 42px;
+  }
+
+  .hero h1 {
+    font-size: clamp(46px, 12vw, 64px);
+  }
+
+  .postcard {
+    transform: none;
+  }
+
+  .trustBar {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .steps {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .exampleGrid,
+  .packageSection {
+    grid-template-columns: 1fr;
+  }
+
+  .packageSection {
+    gap: 35px;
+  }
+}
+
+@media (max-width: 560px) {
+  .nav {
+    height: 66px;
+  }
+
+  .brand {
+    font-size: 16px;
+  }
+
+  .brand > span {
+    width: 28px;
+    height: 28px;
+  }
+
+  .navCta {
+    padding: 10px 13px;
+    font-size: 12px;
+  }
+
+  .hero {
+    width: min(100% - 32px, 1160px);
+    padding-top: 42px;
+  }
+
+  .hero h1 {
+    margin-top: 12px;
+    font-size: 44px;
+  }
+
+  .lede {
+    font-size: 16px;
+  }
+
+  .priceLine {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .heroActions {
+    display: grid;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    width: 100%;
+  }
+
+  .postcard {
+    min-height: auto;
+    grid-template-columns: 1fr;
+  }
+
+  .postcardImage {
+    min-height: 255px;
+  }
+
+  .postcardCopy {
+    padding: 24px;
+  }
+
+  .section {
+    width: min(100% - 32px, 1160px);
+    padding: 75px 0;
+  }
+
+  .steps {
+    grid-template-columns: 1fr;
+  }
+
+  .steps article {
+    min-height: 180px;
+  }
+
+  .exampleSection {
+    padding: 70px 16px;
+  }
+
+  .exampleVisual {
+    padding: 10px;
+  }
+
+  .exampleImage {
+    min-height: 285px;
+  }
+
+  .exampleImage > span {
+    right: 12px;
+    left: 12px;
+    line-height: 1.4;
+  }
+
+  .takeoff {
+    padding: 28px 22px;
+  }
+
+  .takeoff h2 {
+    font-size: 36px;
+  }
+
+  .packageSection {
+    width: min(100% - 32px, 1080px);
+    padding: 75px 0;
+  }
+
+  .offerCard {
+    padding: 24px 20px;
+  }
+
+  .questions {
+    width: min(100% - 32px, 1080px);
+    margin-bottom: 70px;
+    padding: 28px 22px;
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .questions > a {
+    justify-content: center;
+  }
+
+  .avaSection {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .footer p {
+    margin: 0;
+  }
+}

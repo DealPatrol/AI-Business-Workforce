@@ -1,31 +1,276 @@
-'use client';
+import Image from 'next/image';
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
-import { ArrowRight, Bot, CalendarCheck, Check, Home, Mail, MessageSquare, Phone, Search, Sparkles, Target, WandSparkles } from 'lucide-react';
+import {
+  ArrowRight,
+  Check,
+  Mail,
+  MapPin,
+  Palette,
+  QrCode,
+  ShieldCheck,
+  Sparkles,
+} from 'lucide-react';
 import { FOUNDING_PAYMENT_LINK } from '@/lib/payments';
+import styles from './home.module.css';
 
-const agents = [
-  ['Lead Machine', 'Find and qualify prospects automatically', Search, '/leads'],
-  ['AI Receptionist', 'Answer, qualify and route calls 24/7', Phone, '/receptionist-demo'],
-  ['Follow-Up Machine', 'Keep leads moving until they book', MessageSquare, '#audit'],
-  ['Neighborhood Canvasser', 'Find properties and create personalized offers', Home, '/visual-canvasser'],
-  ['Marketing Department', 'Create campaigns, content and landing pages', Target, '#audit'],
-  ['Custom AI Employee', 'Describe a repetitive job. We build the workflow.', Bot, '#audit'],
+const CONTACT_EMAIL = 'colecollins763@gmail.com';
+
+const steps = [
+  {
+    icon: MapPin,
+    number: '01',
+    title: 'Pick the streets',
+    detail: 'Tell Cole the neighborhoods and landscaping jobs you want more of.',
+  },
+  {
+    icon: Palette,
+    number: '02',
+    title: 'Build the concepts',
+    detail: 'We prepare clearly labeled yard project ideas for you to review.',
+  },
+  {
+    icon: Mail,
+    number: '03',
+    title: 'Approve the postcard',
+    detail: 'You approve the concept, message, audience, and costs before anything mails.',
+  },
+  {
+    icon: QrCode,
+    number: '04',
+    title: 'Turn scans into estimates',
+    detail: 'Each QR page gives the homeowner a direct way to request an estimate.',
+  },
 ];
-const workflow = [
-  ['1', 'Find opportunity', 'Identify properties or prospects that fit your rules.'],['2', 'Create the vision', 'AI generates realistic Clean, Upgraded and Premium concepts.'],['3', 'Build the takeoff', 'Match the concept to supplier products, quantities and material costs.'],['4', 'Price for profit', 'Apply your labor, overhead and target gross margin.'],['5', 'Personalize outreach', 'Create a postcard + QR landing page showing that exact transformation.'],['6', 'Convert the lead', 'Capture interest, follow up, book the estimate and track the opportunity.'],
+
+const packageItems = [
+  'Target campaign setup',
+  'Up to 25 property concepts*',
+  'Personalized postcard creative',
+  'Unique QR project-page structure',
+  'Lead and response tracking setup',
+  'Campaign review before launch',
 ];
-const materials = [['Dwarf Boxwood',7,34.98],['Hydrangea',4,36.98],['Seasonal color',8,9.98],['Black mulch',16,4.98],['Landscape edging',65,1.42]];
-export default function HomePage(){
- const [margin,setMargin]=useState(40); const [labor,setLabor]=useState(1150); const [postcode,setPostcode]=useState('35077'); const qrUrl=`https://ai-business-workforce.vercel.app/property/${postcode}`; const materialCost=useMemo(()=>materials.reduce((s,[,q,p])=>s+Number(q)*Number(p),0),[]); const cost=materialCost+labor+208; const sell=cost/(1-margin/100);
- return <main><nav className="nav"><Link className="brand" href="/"><span className="logo"><Sparkles size={18}/></span> Workforce<span>AI</span></Link><div className="navlinks"><a href="#workforce">AI Workforce</a><Link href="/visual-canvasser">Property AI</Link><a href="#pricing">Pricing</a></div><a className="button small" href="#audit">Start Free AI Audit</a></nav>
- <section className="hero wrap"><div className="eyebrow"><span>●</span> SHOW HOMEOWNERS THEIR YARD — REDESIGNED</div><h1>Turn any address into a<br/><em>priced project conversation.</em></h1><p className="lede">AI finds properties in your service area, generates a realistic before-and-after for each one, prices it against your real material costs and margin, and mails a personalized postcard. The homeowner scans a QR code and sees their own house.</p><div className="actions"><Link className="button" href="/property/35077">Try the priced property demo <ArrowRight size={18}/></Link><Link className="ghost" href="/receptionist-demo">Try the AI receptionist <ArrowRight size={18}/></Link></div><div className="proof"><span><Check/> Built for outcomes, not tech</span><span><Check/> You approve sensitive actions</span><span><Check/> Start with a paid pilot</span></div></section>
- <section className="metrics wrap" aria-label="Illustrative demo scenario"><div><b>Demo</b><span>illustrative campaign scenario</span></div><div><b>25</b><span>sample properties</span></div><div><b>3</b><span>concept levels</span></div><div><b>1</b><span>priced takeoff workflow</span></div><div className="accent"><b>You</b><span>approve before launch</span></div></section>
- <section id="workforce" className="section wrap"><div className="sectionhead"><span>ALSO INCLUDED</span><h2>More AI employees when you&apos;re ready to scale.</h2><p>The Neighborhood Canvasser leads the way. Add the rest of your AI workforce once you&apos;ve sold the job.</p></div><div className="cards">{agents.filter(([name])=>name !== 'Neighborhood Canvasser').map(([name,desc,Icon,href]:any)=><article className="card" key={name}><div className="icon"><Icon size={22}/></div><h3>{name}</h3><p>{desc}</p><Link href={href}>View workflow <ArrowRight size={15}/></Link></article>)}</div></section>
- <section id="canvasser" className="dark"><div className="wrap"><div className="tag">FEATURED WORKFORCE</div><div className="split intro"><div><h2>The AI Neighborhood<br/><em>Canvasser</em></h2><p>Turn a homeowner&apos;s actual property into a personalized sales opportunity—from prospect discovery to a priced project concept and postcard.</p><Link className="button" href="/visual-canvasser">Open Property AI Demo <ArrowRight size={18}/></Link></div><div className="mini"><WandSparkles/><div><b>Designed to sell realistic work</b><span>Clean & Simple is the default. Homeowners can also explore Upgraded and Premium options.</span></div></div></div><div className="flow">{workflow.map(([n,t,d])=><div className="flowrow" key={n}><span>{n}</span><div><b>{t}</b><p>{d}</p></div></div>)}</div></div></section>
- <section className="section wrap"><div className="sectionhead left"><span>DESIGN → MATERIALS → PRICE</span><h2>A pretty rendering becomes a sellable project.</h2></div><div className="estimator"><div className="design"><div className="house"><img src="/postcard-yard.png" alt="Landscaping concept"/><div className="before">CURRENT</div><div className="after">FUTURE CONCEPT</div></div><div className="options"><button className="active">Clean & Simple</button><button>Upgraded</button><button>Premium</button></div></div><div className="quote"><div className="qtop"><div><small>PROJECT TAKEOFF</small><h3>Materials used in this design</h3></div><span>DEMO DATA</span></div>{materials.map(([m,q,p])=><div className="line" key={String(m)}><span>{m}<small>{q} × ${Number(p).toFixed(2)}</small></span><b>${(Number(q)*Number(p)).toFixed(2)}</b></div>)}<div className="controls"><label>Estimated labor <input type="number" value={labor} onChange={e=>setLabor(Number(e.target.value))}/></label><label>Your target gross margin <div className="range"><input type="range" min="10" max="70" value={margin} onChange={e=>setMargin(Number(e.target.value))}/><b>{margin}%</b></div></label></div><div className="totals"><span>Estimated direct cost <b>${cost.toFixed(0)}</b></span><span className="recommended">Recommended selling price <b>${sell.toFixed(0)}</b></span></div></div></div></section>
- <section className="postcard"><div className="wrap split"><div><span className="tag light">PERSONALIZED DIRECT MAIL</span><h2>Don&apos;t tell them.<br/><em>Show them.</em></h2><p>Each prospect can receive a postcard showing a realistic concept for their property.</p><div className="chain"><span><Mail/> Personalized postcard</span><ArrowRight/><span><Home/> Property page</span><ArrowRight/><span><CalendarCheck/> Estimate request</span></div><Link className="button" href="/visual-canvasser">Build a Property Campaign <ArrowRight size={18}/></Link></div><div className="postcardmock"><div className="pcphoto"><img src="/postcard-yard.png" alt="Landscaping postcard"/><span>Your property. Reimagined.</span></div><div className="pcbody"><div className="stamp">PROPERTY PREVIEW</div><b>We redesigned your front yard.</b><p>See a realistic idea created for your property and request a no-pressure estimate.</p><img className="qr" src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&margin=8&data=${encodeURIComponent(qrUrl)}`} alt="Personalized QR code"/><small>SCAN TO SEE YOUR TRANSFORMATION</small><label className="qrinput">Personalize ZIP code<input value={postcode} onChange={e=>setPostcode(e.target.value.replace(/[^0-9A-Za-z -]/g,'').slice(0,10))}/></label></div></div></div></section>
- <section id="audit" className="section wrap audit"><div><span className="eyebrow">FREE AI BUSINESS AUDIT</span><h2>Where is your business<br/>leaving money on the table?</h2><p>Choose a live demo now, or send Cole enough context to start a useful conversation.</p><div className="actions"><Link className="button" href="/receptionist-demo">Test AI Receptionist</Link><Link className="ghost" href="/property/35077">Test Property AI</Link></div></div><form action="/founding" method="get"><label>What type of business do you run?<select name="industry" defaultValue=""><option value="" disabled>Select your business</option><option>Landscaping / Lawn Care</option><option>Roofing</option><option>HVAC</option><option>Plumbing</option><option>Other Service Business</option></select></label><label>What do you want AI to help with?<select name="goal"><option>Get me more customers</option><option>Stop leads from falling through</option><option>Save me office time</option></select></label><label>ZIP / primary service area<input name="serviceArea" placeholder="35077"/></label><button className="button" type="submit">Continue My Request <ArrowRight size={18}/></button></form></section>
- <section id="pricing" className="founding"><div className="wrap"><div className="sectionhead"><span>FOUNDING CUSTOMER PROGRAM</span><h2>We&apos;ll build your first AI employee with you.</h2></div><div className="pricecard"><div><small>FOUNDING PILOT</small><h3>$299 <span>setup</span></h3><p>then $99/month for the initial managed automation</p></div><ul><li><Check/> Business automation audit</li><li><Check/> One custom AI workflow</li><li><Check/> Dashboard + outcome tracking</li></ul><a className="button" href={FOUNDING_PAYMENT_LINK}>Pay $299 — Reserve My Founding Spot <ArrowRight size={18}/></a></div></div></section>
- <footer className="wrap"><Link className="brand" href="/"><span className="logo"><Sparkles size={18}/></span> Workforce<span>AI</span></Link><p>AI employees built around business outcomes.</p><Link href="/founding">Contact Cole</Link></footer></main>;
+
+export default function HomePage() {
+  return (
+    <main className={styles.page}>
+      <nav className={styles.nav}>
+        <Link className={styles.brand} href="/">
+          <span>
+            <Sparkles size={17} />
+          </span>
+          Workforce <b>AI</b>
+        </Link>
+        <div className={styles.navLinks}>
+          <a href="#how">How it works</a>
+          <a href="#package">What you get</a>
+          <Link href="/visual-canvasser">See examples</Link>
+        </div>
+        <a className={styles.navCta} href={FOUNDING_PAYMENT_LINK}>
+          Pay $299
+        </a>
+      </nav>
+
+      <section className={styles.hero}>
+        <div className={styles.heroCopy}>
+          <span className={styles.eyebrow}>FOUNDING CAMPAIGN FOR LOCAL SERVICE BUSINESSES</span>
+          <h1>Show homeowners the yard project you could build for them.</h1>
+          <p className={styles.lede}>
+            We help you choose the streets, prepare yard concepts, and mail a postcard with a QR
+            page where the homeowner can request an estimate.
+          </p>
+          <div className={styles.priceLine}>
+            <strong>$299 setup</strong>
+            <span>then $99/month</span>
+          </div>
+          <div className={styles.heroActions}>
+            <a className={styles.primaryButton} href={FOUNDING_PAYMENT_LINK}>
+              Pay $299 — Start My Campaign <ArrowRight size={18} />
+            </a>
+            <a className={styles.secondaryButton} href="#how">
+              See how it works
+            </a>
+          </div>
+          <p className={styles.heroNote}>
+            Built with Cole as a managed first campaign. You approve everything before it mails.
+          </p>
+        </div>
+
+        <div className={styles.postcard} aria-label="Labeled example postcard">
+          <div className={styles.postcardImage}>
+            <Image
+              src="/postcard-yard.png"
+              alt="Clearly labeled landscaping concept example"
+              fill
+              priority
+              sizes="(max-width: 800px) 100vw, 46vw"
+            />
+            <span>DEMO YARD CONCEPT</span>
+          </div>
+          <div className={styles.postcardCopy}>
+            <small>EXAMPLE POSTCARD</small>
+            <h2>A fresh idea for your front yard.</h2>
+            <p>See the project concept and request a no-pressure estimate.</p>
+            <div className={styles.qrExample}>
+              <QrCode size={58} />
+              <span>
+                <b>Scan to view</b>
+                <small>QR opens the estimate page</small>
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.trustBar}>
+        <span>
+          <ShieldCheck /> You approve before mailing
+        </span>
+        <span>
+          <Check /> No surprise pass-through costs
+        </span>
+        <span>
+          <Check /> Built for landscaping and home services
+        </span>
+      </section>
+
+      <section className={styles.section} id="how">
+        <div className={styles.sectionHeading}>
+          <span>HOW IT WORKS</span>
+          <h2>From a few streets to estimate requests.</h2>
+          <p>A focused first campaign, set up with you instead of another app to figure out.</p>
+        </div>
+        <div className={styles.steps}>
+          {steps.map(({ icon: Icon, number, title, detail }) => (
+            <article key={number}>
+              <div>
+                <Icon size={21} />
+                <span>{number}</span>
+              </div>
+              <h3>{title}</h3>
+              <p>{detail}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className={styles.exampleSection}>
+        <div className={styles.exampleGrid}>
+          <div className={styles.exampleVisual}>
+            <div className={styles.exampleImage}>
+              <Image
+                src="/postcard-yard.png"
+                alt="Demo landscaping concept used to explain the campaign"
+                fill
+                sizes="(max-width: 800px) 100vw, 52vw"
+              />
+              <span>ILLUSTRATIVE CONCEPT — NOT A LIVE ADDRESS LOOKUP</span>
+            </div>
+          </div>
+          <div className={styles.takeoff}>
+            <span>DEMO TAKEOFF EXAMPLE</span>
+            <h2>Sell a project, not just a pretty picture.</h2>
+            <p>
+              A campaign concept can be paired with an estimated scope so your outreach stays
+              grounded in work you actually want to sell.
+            </p>
+            <div className={styles.takeoffLines}>
+              <div>
+                <span>Compact evergreen shrubs</span>
+                <b>7</b>
+              </div>
+              <div>
+                <span>Flowering hydrangeas</span>
+                <b>4</b>
+              </div>
+              <div>
+                <span>Fresh mulch and edging</span>
+                <b>Demo scope</b>
+              </div>
+            </div>
+            <Link href="/property-demo">
+              Explore the labeled project demo <ArrowRight size={16} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.packageSection} id="package">
+        <div className={styles.packageCopy}>
+          <span>FOUNDING CUSTOMER PACKAGE</span>
+          <h2>Your first campaign, built with Cole.</h2>
+          <p>
+            We are onboarding a small number of north-Alabama landscapers and home-service
+            businesses while the full workflow is being automated.
+          </p>
+          <div className={styles.honesty}>
+            <b>Honest launch boundary</b>
+            <p>
+              First campaigns are managed and may be human-assisted. We will not claim live
+              address-to-render or automatic mailing until those connections are tested.
+            </p>
+          </div>
+        </div>
+        <div className={styles.offerCard}>
+          <small>FOUNDING LAUNCH</small>
+          <div className={styles.offerPrice}>
+            <strong>$299</strong>
+            <span>setup</span>
+          </div>
+          <p>then $99/month for the initial managed campaign</p>
+          <ul>
+            {packageItems.map((item) => (
+              <li key={item}>
+                <Check size={16} /> {item}
+              </li>
+            ))}
+          </ul>
+          <a className={styles.primaryButton} href={FOUNDING_PAYMENT_LINK}>
+            Pay $299 — Reserve My Campaign <ArrowRight size={18} />
+          </a>
+          <small className={styles.disclosure}>
+            *Final mailed quantity and printing, postage, or property-data costs are confirmed
+            before launch. No unapproved pass-through costs.
+          </small>
+        </div>
+      </section>
+
+      <section className={styles.questions}>
+        <div>
+          <span>WANT TO TALK FIRST?</span>
+          <h2>Ask Cole if this fits your service area.</h2>
+          <p>No sales maze. Email the person who will help set up the campaign.</p>
+        </div>
+        <a href={`mailto:${CONTACT_EMAIL}?subject=Question%20about%20the%20Workforce%20AI%20founding%20campaign`}>
+          <Mail size={18} /> Email Cole
+        </a>
+      </section>
+
+      <section className={styles.avaSection}>
+        <div>
+          <small>ALSO AVAILABLE</small>
+          <h2>Missing calls while you&apos;re on a job?</h2>
+          <p>Ava is our separate AI receptionist demo. It is not required for the postcard campaign.</p>
+        </div>
+        <Link href="/receptionist-demo">
+          Meet Ava <ArrowRight size={16} />
+        </Link>
+      </section>
+
+      <footer className={styles.footer}>
+        <Link className={styles.brand} href="/">
+          <span>
+            <Sparkles size={17} />
+          </span>
+          Workforce <b>AI</b>
+        </Link>
+        <p>
+          Cole · <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+        </p>
+        <a className={styles.footerPay} href={FOUNDING_PAYMENT_LINK}>
+          Pay $299
+        </a>
+      </footer>
+    </main>
+  );
 }
