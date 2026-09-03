@@ -18,6 +18,15 @@ AI-powered business automation platform focused on measurable outcomes for servi
 - OpenAI for AI workflows and visual/design intelligence
 - Modular integrations for communications, payments, direct mail, suppliers, and future agent tools
 
+## Sales week (HVAC & plumbing)
+
+One offer: Ava answers missed and after-hours calls, handles common questions, captures job details, and sends the owner a qualified lead summary.
+
+- **$250 setup**, then **$299/month** after a **14-day pilot** · 300 voice minutes · cancel anytime
+- Personalized demos: `/demo/acexperts`, `/demo/family-comfort-hvac`, `/demo/after-hours-hvacr`, `/demo/underwood-hvac`, `/demo/posey-family-plumbing`
+- Offer page: `/ava-pilot` · video script: `/video` · tracker: `/sales`
+- Prospect list and outreach copy: `sales/prospect-list.md`, `sales/outreach-templates.md`
+
 ## Build principle
 
 Show demo/sample data clearly until the corresponding integration is connected. Emphasize leads, appointments, pipeline, revenue opportunities, automation spend, and ROI rather than technical AI metrics.
