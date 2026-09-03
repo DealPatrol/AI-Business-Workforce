@@ -252,7 +252,7 @@ export default function HomePage() {
           <h2>Missing calls while you&apos;re on a job?</h2>
           <p>Ava is our separate AI receptionist demo. It is not required for the postcard campaign.</p>
         </div>
-        <Link href="/receptionist-demo">
+        <Link href="/ava-pilot">
           Meet Ava <ArrowRight size={16} />
         </Link>
       </section>

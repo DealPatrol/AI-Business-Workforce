@@ -5,7 +5,11 @@ The application code is designed to degrade safely when integrations are not con
 ## Supabase
 
 1. Create/select the Supabase project.
-2. Run `supabase/migrations/001_initial_schema.sql` in the SQL editor or through your normal migration workflow.
+2. Run these files in the SQL editor (or your migration workflow), in order:
+   - `supabase/migrations/001_initial_schema.sql`
+   - `supabase/migrations/002_ava_call_leads.sql`
+   - `supabase/migrations/003_sales_tracking.sql`
+   - `supabase/migrations/004_sales_event_policies.sql`
 3. Add these Vercel environment variables for Production, Preview, and Development as appropriate:
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`

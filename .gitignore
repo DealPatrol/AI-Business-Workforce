@@ -7,3 +7,6 @@ out
 .vercel
 *.log
 .DS_Store
+tsconfig.tsbuildinfo
+scripts/sales-video/build/
+
