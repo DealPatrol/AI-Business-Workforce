@@ -26,6 +26,7 @@ One offer: Ava answers missed and after-hours calls, handles common questions, c
 - Personalized demos: `/demo/acexperts`, `/demo/family-comfort-hvac`, `/demo/after-hours-hvacr`, `/demo/underwood-hvac`, `/demo/posey-family-plumbing`
 - Offer page: `/ava-pilot` · video script: `/video` · tracker: `/sales`
 - Prospect list and outreach copy: `sales/prospect-list.md`, `sales/outreach-templates.md`
+- Supabase events: `sales_prospect_events` + `sales_prospect_status` via `/api/sales/events`. Apply migrations `003` and `004`.
 
 ## Build principle
 

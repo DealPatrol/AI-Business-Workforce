@@ -13,6 +13,7 @@ import {
 import './sales.css';
 
 type TrackedEvent = {
+  id?: string;
   prospect_slug: string;
   event_type: string;
   metadata: Record<string, unknown>;
@@ -47,6 +48,7 @@ export default function SalesTrackerPage() {
   const [events, setEvents] = useState<TrackedEvent[]>([]);
   const [statuses, setStatuses] = useState<StoredStatus[]>([]);
   const [available, setAvailable] = useState(true);
+  const [storageReason, setStorageReason] = useState('');
   const [loading, setLoading] = useState(true);
   const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
   const [updatingSlug, setUpdatingSlug] = useState<string | null>(null);
@@ -54,11 +56,12 @@ export default function SalesTrackerPage() {
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/sales/track', { cache: 'no-store' });
+      const res = await fetch('/api/sales/events', { cache: 'no-store' });
       const data = await res.json();
       setEvents(data.events ?? []);
       setStatuses(data.statuses ?? []);
       setAvailable(Boolean(data.available));
+      setStorageReason(data.reason || '');
     } finally {
       setLoading(false);
     }
@@ -103,14 +106,19 @@ export default function SalesTrackerPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prospectSlug: slug, status }),
       });
-      if (status === 'contacted' || status === 'demo_sent') {
-        await fetch('/api/sales/track', {
+      const eventType =
+        status === 'opened'
+          ? 'demo_open'
+          : status === 'called_ava'
+            ? 'call_started'
+            : status === 'queued' || status === 'passed'
+              ? null
+              : status;
+      if (eventType) {
+        await fetch('/api/sales/events', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            prospectSlug: slug,
-            eventType: status === 'demo_sent' ? 'contacted' : 'contacted',
-          }),
+          body: JSON.stringify({ prospectSlug: slug, eventType }),
         });
       }
       await loadData();
@@ -150,9 +158,15 @@ export default function SalesTrackerPage() {
         </p>
         {!available && (
           <p className="warn">
-            Supabase tracking not connected — status updates work locally but events won&apos;t
-            persist until migration 003 is applied.
+            Supabase events are not live yet. Add <code>NEXT_PUBLIC_SUPABASE_URL</code> plus{' '}
+            <code>SUPABASE_SECRET_KEY</code> (or the publishable key) and run{' '}
+            <code>supabase/migrations/003_sales_tracking.sql</code> and{' '}
+            <code>004_sales_event_policies.sql</code> in the SQL editor.
+            {storageReason ? ` (${storageReason})` : ''}
           </p>
+        )}
+        {available && (
+          <p className="ok">Supabase events connected — demo opens, Ava calls, and status changes persist.</p>
         )}
       </header>
 
@@ -268,6 +282,23 @@ export default function SalesTrackerPage() {
             </tbody>
           </table>
         </div>
+      </section>
+
+      <section className="event-log">
+        <h2>Recent Supabase events</h2>
+        {events.length === 0 ? (
+          <p>No events stored yet. Open a demo or update a prospect status to write the first row.</p>
+        ) : (
+          <ol>
+            {events.slice(0, 25).map((event) => (
+              <li key={event.id ?? `${event.prospect_slug}-${event.created_at}`}>
+                <strong>{event.event_type.replaceAll('_', ' ')}</strong>
+                <span>{event.prospect_slug}</span>
+                <time>{new Date(event.created_at).toLocaleString()}</time>
+              </li>
+            ))}
+          </ol>
+        )}
       </section>
 
       <section className="outreach-template">

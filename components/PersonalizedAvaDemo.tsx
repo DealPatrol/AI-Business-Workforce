@@ -37,7 +37,7 @@ async function trackEvent(
   metadata?: Record<string, unknown>,
 ) {
   try {
-    await fetch('/api/sales/track', {
+    await fetch('/api/sales/events', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prospectSlug: slug, eventType, metadata }),
