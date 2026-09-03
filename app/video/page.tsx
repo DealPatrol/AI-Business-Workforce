@@ -70,12 +70,31 @@ export default function SalesVideoPage() {
         </p>
       </header>
 
+      <section className="video-player">
+        <video
+          controls
+          playsInline
+          preload="metadata"
+          poster="/ava-hvac-pilot-poster.png"
+          src="/ava-hvac-pilot.mp4"
+        >
+          Your browser cannot play this video.
+        </video>
+        <p>
+          76 seconds. Missed call → Ava answers → lead summary → 14-day pilot → demo link. Send this
+          with the personalized demo.
+        </p>
+        <a className="download" href="/ava-hvac-pilot.mp4" download>
+          Download MP4
+        </a>
+      </section>
+
       <section className="video-placeholder">
         <Play size={48} />
-        <h2>Record this video</h2>
+        <h2>How this video is structured</h2>
         <p>
-          Use the scene breakdown below. Film job-site B-roll, screen-record a live Ava call, and
-          hold on the lead summary card. No AI explainer needed.
+          Outcome first: a realistic after-hours AC call, then the lead summary an owner would
+          receive. Pricing is short. It ends on Call Ava and the demo URL.
         </p>
         <div className="video-flow">
           <span>

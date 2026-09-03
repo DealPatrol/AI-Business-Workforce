@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Ava sales video scenes</title>
+  <style>
+    html, body { margin: 0; padding: 0; background: #07110c; }
+    .scene {
+      display: none;
+      width: 1920px;
+      height: 1080px;
+      box-sizing: border-box;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      color: #f6f8f5;
+      background: radial-gradient(1200px 700px at 20% 10%, #143322 0%, #07110c 55%);
+      padding: 72px 96px;
+      position: relative;
+      overflow: hidden;
+    }
+    .scene.on { display: block; }
+    .kicker { font-size: 18px; letter-spacing: .16em; font-weight: 800; color: #8fe66f; text-transform: uppercase; }
+    h1 { font: 600 84px/1.02 Georgia, serif; letter-spacing: -.04em; margin: 22px 0 24px; max-width: 1400px; }
+    h1 em { color: #8fe66f; font-style: normal; }
+    .sub { font-size: 32px; line-height: 1.45; color: #b7c3bb; max-width: 1100px; }
+    .phone {
+      width: 520px;
+      background: linear-gradient(160deg, #12281c, #0a1711);
+      border: 1px solid #31503d;
+      border-radius: 36px;
+      padding: 36px;
+      box-shadow: 0 40px 90px rgba(0,0,0,.4);
+    }
+    .row { display: flex; gap: 80px; align-items: center; height: 100%; }
+    .dot { width: 14px; height: 14px; border-radius: 50%; background: #8fe66f; box-shadow: 0 0 0 10px rgba(143,230,111,.12); }
+    .caller { display: flex; gap: 16px; align-items: center; margin: 28px 0; }
+    .avatar { width: 72px; height: 72px; border-radius: 50%; background: #1b3627; display: grid; place-items: center; font-weight: 800; color: #8fe66f; font-size: 22px; }
+    .bubble { background: #102419; border: 1px solid #274536; border-radius: 16px; padding: 16px 18px; margin: 10px 0; font-size: 22px; line-height: 1.4; }
+    .bubble.ava { border-color: #346a43; }
+    .bubble.cust { margin-left: 40px; background: #173722; }
+    .lead {
+      width: 820px;
+      background: #0f2117;
+      border: 1px solid #346a43;
+      border-radius: 28px;
+      padding: 36px 40px;
+      box-shadow: 0 30px 80px rgba(0,0,0,.35);
+    }
+    .lead small { color: #8fe66f; font-size: 14px; font-weight: 800; letter-spacing: .1em; }
+    .lead h2 { font: 600 40px/1.1 Georgia, serif; margin: 8px 0 22px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 28px; }
+    .grid span { display: block; color: #7f8e85; font-size: 14px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+    .grid b { display: block; font-size: 22px; margin-top: 4px; }
+    .urgent { color: #f5b942; }
+    .summary { margin-top: 24px; font-size: 22px; line-height: 1.5; color: #c9d4cc; }
+    .next { margin-top: 22px; background: #173722; border: 1px solid #346a43; border-radius: 14px; padding: 16px 18px; font-size: 22px; }
+    .price-row { display: flex; gap: 28px; margin-top: 36px; }
+    .price { background: #0f2117; border: 1px solid #31503d; border-radius: 20px; padding: 28px 32px; min-width: 280px; }
+    .price small { color: #8fe66f; font-weight: 800; letter-spacing: .08em; }
+    .price strong { display: block; font: 600 64px Georgia, serif; margin-top: 8px; }
+    .btn { display: inline-block; background: #8fe66f; color: #07110c; font-weight: 850; font-size: 28px; padding: 18px 28px; border-radius: 14px; margin-top: 28px; }
+    .url { margin-top: 22px; font-size: 28px; color: #8fe66f; font-weight: 750; }
+    .brand { position: absolute; top: 36px; left: 96px; font-weight: 850; letter-spacing: .02em; color: #9fb0a6; }
+    .missed { color: #e35d5d; font-weight: 800; }
+  </style>
+</head>
+<body>
+  <article class="scene" data-scene="1">
+    <div class="brand">AVA · HVAC & PLUMBING</div>
+    <div style="padding-top: 180px;">
+      <div class="kicker">The missed-call problem</div>
+      <h1>What happens when a customer calls <em>while you’re on a job?</em></h1>
+      <p class="sub">The phone is in your pocket. The customer needs an emergency. They call the next company that answers.</p>
+    </div>
+  </article>
+
+  <article class="scene" data-scene="2">
+    <div class="row">
+      <div>
+        <div class="kicker">6:15 PM · Technician on site</div>
+        <h1>They called.<br><span class="missed">Nobody answered.</span></h1>
+        <p class="sub">Most HVAC and plumbing shops lose that job to whoever picks up first.</p>
+      </div>
+      <div class="phone">
+        <div style="display:flex;align-items:center;gap:12px;color:#8aa196;font-size:18px;"><span class="dot" style="background:#e35d5d;box-shadow:0 0 0 10px rgba(227,93,93,.12)"></span> Incoming call · declined</div>
+        <div class="caller"><div class="avatar">KM</div><div><b style="font-size:28px">Karen Mitchell</b><div style="color:#8aa196;margin-top:4px">AC not cooling</div></div></div>
+        <div class="bubble">Voicemail: “Hi, nobody’s answering. I’ll try someone else.”</div>
+      </div>
+    </div>
+  </article>
+
+  <article class="scene" data-scene="3">
+    <div class="row">
+      <div>
+        <div class="kicker">Ava answers immediately</div>
+        <h1>Same call.<br><em>Someone picks up.</em></h1>
+        <p class="sub">Ava answers for your business, handles the common questions, and captures the job details.</p>
+      </div>
+      <div class="phone">
+        <div style="display:flex;align-items:center;gap:12px;color:#8aa196;font-size:18px;"><span class="dot"></span> Live · ACExperts</div>
+        <div class="caller"><div class="avatar">A</div><div><b style="font-size:28px">Ava</b><div style="color:#8aa196;margin-top:4px">Receptionist for ACExperts</div></div></div>
+        <div class="bubble ava">Hi, thanks for calling ACExperts. How can I help you today?</div>
+        <div class="bubble cust">My upstairs AC is blowing warm air. I have an elderly parent in the house.</div>
+      </div>
+    </div>
+  </article>
+
+  <article class="scene" data-scene="4">
+    <div class="row">
+      <div>
+        <div class="kicker">Qualified on the call</div>
+        <h1>Name. Address.<br>Urgency. Done.</h1>
+        <p class="sub">Ava asks what a good receptionist would ask — then gets off the phone so you can do the work.</p>
+      </div>
+      <div class="phone">
+        <div class="bubble ava">I can take that. What’s the best callback number and the service address?</div>
+        <div class="bubble cust">251-555-0142. 1247 Bayview Drive in Daphne.</div>
+        <div class="bubble ava">Got it. I’ll send this to Landon right now so he can call you back.</div>
+      </div>
+    </div>
+  </article>
+
+  <article class="scene" data-scene="5">
+    <div class="row">
+      <div>
+        <div class="kicker">The outcome that matters</div>
+        <h1>You get the lead.<br>Not a voicemail.</h1>
+        <p class="sub">Call back with the full context and close the job.</p>
+      </div>
+      <div class="lead">
+        <small>NEW QUALIFIED LEAD · ACEXPERTS</small>
+        <h2>Karen Mitchell</h2>
+        <div class="grid">
+          <div><span>Phone</span><b>(251) 555-0142</b></div>
+          <div><span>Service</span><b>AC not cooling — upstairs unit</b></div>
+          <div><span>Address</span><b>1247 Bayview Dr, Daphne, AL</b></div>
+          <div><span>Urgency</span><b class="urgent">Same-day · elderly parent in home</b></div>
+        </div>
+        <div class="summary">Called at 6:15 PM while the crew was on a Fairhope job. Upstairs unit running but blowing warm air. Ava captured the callback number and flagged this as a comfort emergency.</div>
+        <div class="next"><b>Recommended:</b> Call Karen within 30 minutes and schedule a diagnostic.</div>
+      </div>
+    </div>
+  </article>
+
+  <article class="scene" data-scene="6">
+    <div style="padding-top: 140px;">
+      <div class="kicker">14-day paid pilot</div>
+      <h1>Prove it on your real missed calls.</h1>
+      <div class="price-row">
+        <div class="price"><small>SETUP</small><strong>$250</strong></div>
+        <div class="price"><small>AFTER 14 DAYS</small><strong>$299/mo</strong></div>
+        <div class="price"><small>INCLUDED</small><strong style="font-size:36px;padding-top:18px">300 minutes</strong></div>
+      </div>
+      <p class="sub" style="margin-top:36px">Cancel anytime. No long-term contract.</p>
+    </div>
+  </article>
+
+  <article class="scene" data-scene="7">
+    <div style="padding-top: 160px;">
+      <div class="kicker">Hear it on your business</div>
+      <h1>I built a demo using your company.</h1>
+      <p class="sub">Tap the link. Press Call Ava. Pretend you’re a customer with an emergency.</p>
+      <div class="btn">Call Ava</div>
+      <div class="url">ai-business-workforce.vercel.app/demo/acexperts</div>
+    </div>
+  </article>
+
+  <script>
+    const id = new URLSearchParams(location.search).get('scene') || '1';
+    const scene = document.querySelector('[data-scene="' + id + '"]');
+    if (scene) scene.classList.add('on');
+  </script>
+</body>
+</html>

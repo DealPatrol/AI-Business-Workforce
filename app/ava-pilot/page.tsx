@@ -170,14 +170,22 @@ export default function AvaPilotPage() {
 
       <section id="video" className="pilot-section video-cta">
         <div>
-          <span className="pilot-kicker">60-SECOND SALES VIDEO</span>
+          <span className="pilot-kicker">76-SECOND SALES VIDEO</span>
           <h2>Show the call-to-lead outcome — not the AI.</h2>
           <p>
-            &ldquo;What happens when a customer calls while you&apos;re on a job?&rdquo; → Ava
-            answers → lead summary → 14-day pilot → personalized demo link.
+            Missed call → Ava answers a real AC emergency → lead summary → 14-day pilot →
+            personalized demo link.
           </p>
+          <video
+            controls
+            playsInline
+            preload="metadata"
+            poster="/ava-hvac-pilot-poster.png"
+            src="/ava-hvac-pilot.mp4"
+            style={{ width: '100%', borderRadius: 14, margin: '22px 0', border: '1px solid #2a4234' }}
+          />
           <Link className="pilot-btn secondary" href="/video">
-            View video script & storyboard <ArrowRight size={16} />
+            Open full video page <ArrowRight size={16} />
           </Link>
         </div>
       </section>
