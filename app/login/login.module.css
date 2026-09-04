@@ -1,0 +1,115 @@
+.page {
+  min-height: 100vh;
+  padding: 30px;
+  display: grid;
+  place-items: center;
+  background: #edf2ec;
+}
+
+.card {
+  width: min(440px, 100%);
+  padding: 38px;
+  display: grid;
+  gap: 14px;
+  border: 1px solid #d7e0d7;
+  border-radius: 15px;
+  background: white;
+  box-shadow: 0 22px 60px rgba(27, 54, 35, 0.12);
+}
+
+.brand {
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #17201a;
+  text-decoration: none;
+  font-size: 19px;
+  font-weight: 850;
+}
+
+.brand > span {
+  width: 34px;
+  height: 34px;
+  margin-right: 3px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: #173d28;
+  color: white;
+}
+
+.brand b,
+.eyebrow {
+  color: #2e8b57;
+}
+
+.eyebrow {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.card h1 {
+  margin: 0;
+  font: 500 40px Georgia, serif;
+}
+
+.card > p {
+  margin: 0 0 12px;
+  color: #69746c;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.form {
+  display: grid;
+  gap: 16px;
+}
+
+.form label {
+  display: grid;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.form input {
+  padding: 13px;
+  border: 1px solid #d3dcd3;
+  border-radius: 8px;
+  background: #fbfcfa;
+  font: inherit;
+}
+
+.form button {
+  min-height: 48px;
+  border: 0;
+  border-radius: 9px;
+  background: #205c39;
+  color: white;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.form button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.form .error {
+  margin: 0;
+  color: #9b2c2c;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+@media (max-width: 520px) {
+  .page {
+    padding: 16px;
+  }
+
+  .card {
+    padding: 28px 22px;
+  }
+}
