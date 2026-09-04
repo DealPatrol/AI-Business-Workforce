@@ -73,7 +73,7 @@ export default function HomePage() {
 
       <section className={styles.hero}>
         <div className={styles.heroCopy}>
-          <span className={styles.eyebrow}>FOUNDING CAMPAIGN FOR LOCAL SERVICE BUSINESSES</span>
+          <span className={styles.eyebrow}>PROPERTY-BASED POSTCARD CAMPAIGNS FOR HOME SERVICES</span>
           <h1>Show homeowners the yard project you could build for them.</h1>
           <p className={styles.lede}>
             We help you choose the streets, prepare yard concepts, and mail a postcard with a QR
@@ -92,7 +92,7 @@ export default function HomePage() {
             </a>
           </div>
           <p className={styles.heroNote}>
-            Built with Cole as a managed first campaign. You approve everything before it mails.
+            The postcard campaign is our core service. You approve the concept, audience and costs before anything mails.
           </p>
         </div>
 
@@ -241,19 +241,21 @@ export default function HomePage() {
           <h2>Ask Cole if this fits your service area.</h2>
           <p>No sales maze. Email the person who will help set up the campaign.</p>
         </div>
-        <a href={`mailto:${CONTACT_EMAIL}?subject=Question%20about%20the%20Workforce%20AI%20founding%20campaign`}>
+        <a href={`mailto:${CONTACT_EMAIL}?subject=Question%20about%20the%20Workforce%20AI%20postcard%20campaign`}>
           <Mail size={18} /> Email Cole
         </a>
       </section>
 
       <section className={styles.avaSection}>
         <div>
-          <small>ALSO AVAILABLE</small>
-          <h2>Missing calls while you&apos;re on a job?</h2>
-          <p>Ava is our separate AI receptionist demo. It is not required for the postcard campaign.</p>
+          <small>OPTIONAL ADD-ON</small>
+          <h2>Want someone answering the leads your campaign creates?</h2>
+          <p>
+            Ava is a separate AI receptionist add-on for businesses that want 24/7 call coverage. The postcard campaign remains the main service.
+          </p>
         </div>
-        <Link href="/receptionist-demo">
-          Meet Ava <ArrowRight size={16} />
+        <Link href="/ava">
+          See Ava add-on <ArrowRight size={16} />
         </Link>
       </section>
 
