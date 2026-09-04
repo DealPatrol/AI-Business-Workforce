@@ -80,8 +80,8 @@ export default function EstimateRequestForm({ token, businessName }: EstimateReq
         <textarea name="message" rows={4} maxLength={2_000} />
       </label>
       <label className={styles.honeypot} aria-hidden="true">
-        Website
-        <input name="website" tabIndex={-1} autoComplete="off" />
+        Leave this field blank
+        <input name="estimate_request_check" tabIndex={-1} autoComplete="off" />
       </label>
 
       {status.state === 'error' && <p className={styles.error} role="alert">{status.message}</p>}

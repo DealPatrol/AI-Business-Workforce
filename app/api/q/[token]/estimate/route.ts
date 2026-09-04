@@ -35,7 +35,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
     } catch {
       return NextResponse.json({ error: 'Request body must be valid JSON.' }, { status: 400 });
     }
-    if (text(body.website, 200)) {
+    if (text(body.estimate_request_check, 200)) {
       return NextResponse.json({ saved: true }, { status: 201 });
     }
 
