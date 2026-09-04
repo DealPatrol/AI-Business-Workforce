@@ -5,7 +5,7 @@ The application code is designed to degrade safely when integrations are not con
 ## Supabase
 
 1. Create/select the Supabase project.
-2. Run `supabase/migrations/001_initial_schema.sql` in the SQL editor or through your normal migration workflow.
+2. Apply every SQL file in `supabase/migrations` in filename order, using the Supabase SQL editor or your normal migration workflow.
 3. Add these Vercel environment variables for Production, Preview, and Development as appropriate:
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
@@ -28,17 +28,18 @@ Implemented in code:
 - interactive sales/product experience
 - dashboard and property workflow
 - Supabase SSR client utilities
+- contractor sign-in and session refresh
 - database schema for businesses, audit leads, contractor settings, projects and agent runs
+- postcard campaigns with unique recipient QR pages, page-open tracking, estimate capture, and an owner inbox
 - RLS owner policies for authenticated application data
 - server-side AI Business Audit endpoint with fallback mode
 
 Still requires credentials/integration work before claiming live:
 - persisting public audit leads into Supabase
-- authentication screens/session proxy
 - generated property imagery
 - live supplier inventory/pricing
 - Stripe checkout/subscriptions
 - SMS/phone/email sending
-- postcard fulfillment
+- postcard printing and fulfillment
 
 Never commit secrets to GitHub. Configure them in Vercel/Supabase secret management.
