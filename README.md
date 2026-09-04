@@ -21,3 +21,18 @@ AI-powered business automation platform focused on measurable outcomes for servi
 ## Build principle
 
 Show demo/sample data clearly until the corresponding integration is connected. Emphasize leads, appointments, pipeline, revenue opportunities, automation spend, and ROI rather than technical AI metrics.
+
+## Postcard QR campaign setup
+
+The production-ready slice of the postcard workflow uses Supabase for recipient URLs, page-open events, and estimate requests.
+
+1. Apply every file in `supabase/migrations` to the target Supabase project in filename order.
+2. Set the environment variables shown in `.env.example`. `SUPABASE_SECRET_KEY` is server-only and is required by the public QR route so no campaign tables need anonymous access.
+3. In Supabase Authentication, create the contractor user who will own and view the campaign.
+4. Edit the contractor email, business details, sample addresses, and production domain in `supabase/seed_postcard_demo.sql`, then run it in the Supabase SQL Editor.
+5. Copy the returned URL for each address into Canva's QR Code app. Each recipient has a distinct `/q/[token]` URL.
+6. Sign in at `/login`, then open `/dashboard/campaigns` to see page opens and estimate requests.
+
+For a real campaign, use the same SQL shape as the seed: create one `campaigns` row with the contractor Auth user's ID, then add one `campaign_recipients` row per mailed address. Leave `public_token` out of inserts so Postgres generates a high-entropy unique token.
+
+The app records a page-open event whenever a valid recipient page is rendered. This is useful response activity, but it can include link-preview bots as well as homeowner QR scans.
