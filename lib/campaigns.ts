@@ -1,3 +1,5 @@
+import { createHash } from 'node:crypto';
+
 export const PUBLIC_TOKEN_PATTERN = /^[A-Za-z0-9_-]{16,128}$/;
 
 export type PublicRecipient = {
@@ -31,4 +33,12 @@ export function formatRecipientAddress(recipient: {
     recipient.address_line_2,
     `${recipient.city}, ${recipient.state} ${recipient.postal_code}`,
   ].filter(Boolean);
+}
+
+export function hashRequestSource(headers: Headers) {
+  const forwardedFor = headers.get('x-forwarded-for')?.split(',')[0]?.trim();
+  const address = forwardedFor ?? headers.get('x-real-ip') ?? 'unknown';
+  const userAgent = headers.get('user-agent') ?? 'unknown';
+
+  return createHash('sha256').update(`${address}|${userAgent}`).digest('hex');
 }

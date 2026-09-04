@@ -27,20 +27,25 @@ create table public.campaign_recipients (
 create table public.recipient_scans (
   id uuid primary key default gen_random_uuid(),
   recipient_id uuid not null references public.campaign_recipients(id) on delete cascade,
+  source_hash text not null,
   user_agent text,
-  scanned_at timestamptz not null default now()
+  scanned_at timestamptz not null default now(),
+  scan_bucket timestamptz not null
+    default date_bin('30 minutes', now(), '2000-01-01 00:00:00+00'::timestamptz)
 );
 
 create table public.estimate_requests (
   id uuid primary key default gen_random_uuid(),
   recipient_id uuid not null references public.campaign_recipients(id) on delete cascade,
-  dedupe_key text not null,
+  source_hash text not null,
   name text not null,
   email text,
   phone text,
   message text,
   status text not null default 'new' check (status in ('new', 'contacted', 'closed')),
   requested_at timestamptz not null default now(),
+  request_bucket timestamptz not null
+    default date_bin('1 hour', now(), '2000-01-01 00:00:00+00'::timestamptz),
   check (email is not null or phone is not null)
 );
 
@@ -51,15 +56,62 @@ create index campaign_recipients_campaign_created_idx
 create index recipient_scans_recipient_scanned_idx
   on public.recipient_scans(recipient_id, scanned_at desc);
 create unique index recipient_scans_dedupe_idx
-  on public.recipient_scans(
-    recipient_id,
-    md5(coalesce(user_agent, '')),
-    date_bin('30 minutes', scanned_at, '2000-01-01 00:00:00+00'::timestamptz)
-  );
+  on public.recipient_scans(recipient_id, source_hash, scan_bucket);
 create index estimate_requests_recipient_requested_idx
   on public.estimate_requests(recipient_id, requested_at desc);
 create unique index estimate_requests_recipient_dedupe_idx
-  on public.estimate_requests(recipient_id, dedupe_key);
+  on public.estimate_requests(recipient_id, source_hash, request_bucket);
+
+create schema if not exists private;
+revoke all on schema private from public, anon, authenticated;
+
+create function private.limit_recipient_scans()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+begin
+  if (
+    select count(*)
+    from public.recipient_scans
+    where recipient_id = new.recipient_id
+      and scanned_at >= now() - interval '1 hour'
+  ) >= 200 then
+    raise exception using
+      errcode = 'P0001',
+      message = 'QR page event rate limit exceeded';
+  end if;
+  return new;
+end;
+$$;
+
+create function private.limit_estimate_requests()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+begin
+  if (
+    select count(*)
+    from public.estimate_requests
+    where recipient_id = new.recipient_id
+      and requested_at >= now() - interval '1 hour'
+  ) >= 20 then
+    raise exception using
+      errcode = 'P0001',
+      message = 'Estimate request rate limit exceeded';
+  end if;
+  return new;
+end;
+$$;
+
+create trigger limit_recipient_scans_before_insert
+before insert on public.recipient_scans
+for each row execute function private.limit_recipient_scans();
+
+create trigger limit_estimate_requests_before_insert
+before insert on public.estimate_requests
+for each row execute function private.limit_estimate_requests();
 
 alter table public.campaigns enable row level security;
 alter table public.campaign_recipients enable row level security;

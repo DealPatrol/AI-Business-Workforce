@@ -35,4 +35,4 @@ The production-ready slice of the postcard workflow uses Supabase for recipient 
 
 For a real campaign, use the same SQL shape as the seed: create one `campaigns` row with the contractor Auth user's ID, then add one `campaign_recipients` row per mailed address. Leave `public_token` out of inserts so Postgres generates a high-entropy unique token.
 
-The app records a page-open event whenever a valid recipient page is rendered. This is useful response activity, but it can include link-preview bots as well as homeowner QR scans.
+The app records page-open activity for valid recipient pages and deduplicates repeated opens from the same request source within 30 minutes. This is useful response activity, but it can include link-preview bots as well as homeowner QR scans.

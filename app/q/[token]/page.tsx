@@ -2,7 +2,12 @@ import { headers } from 'next/headers';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { CheckCircle2, Leaf, MapPin, Phone } from 'lucide-react';
-import { formatRecipientAddress, PUBLIC_TOKEN_PATTERN, PublicRecipient } from '@/lib/campaigns';
+import {
+  formatRecipientAddress,
+  hashRequestSource,
+  PUBLIC_TOKEN_PATTERN,
+  PublicRecipient,
+} from '@/lib/campaigns';
 import { createAdminClient } from '@/lib/supabase/admin';
 import EstimateRequestForm from './estimate-request-form';
 import styles from './qr-page.module.css';
@@ -52,9 +57,10 @@ export default async function RecipientPage({ params }: PageProps) {
   const userAgent = requestHeaders.get('user-agent')?.slice(0, 500) ?? null;
   const { error: scanError } = await supabase.from('recipient_scans').insert({
     recipient_id: recipient.id,
+    source_hash: hashRequestSource(requestHeaders),
     user_agent: userAgent,
   });
-  if (scanError && scanError.code !== '23505') {
+  if (scanError && !['23505', 'P0001'].includes(scanError.code)) {
     console.error('Unable to record QR page view', scanError);
   }
 

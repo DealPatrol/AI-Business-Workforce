@@ -1,6 +1,5 @@
-import { createHash } from 'node:crypto';
 import { NextRequest, NextResponse } from 'next/server';
-import { PUBLIC_TOKEN_PATTERN } from '@/lib/campaigns';
+import { hashRequestSource, PUBLIC_TOKEN_PATTERN } from '@/lib/campaigns';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -70,12 +69,9 @@ export async function POST(request: NextRequest, context: RouteContext) {
       return NextResponse.json({ error: 'This campaign link is not valid.' }, { status: 404 });
     }
 
-    const dedupeKey = createHash('sha256')
-      .update(`${email}|${phone.replace(/\D/g, '')}`)
-      .digest('hex');
     const { error } = await supabase.from('estimate_requests').insert({
       recipient_id: recipient.id,
-      dedupe_key: dedupeKey,
+      source_hash: hashRequestSource(request.headers),
       name,
       email: email || null,
       phone: phone || null,
@@ -85,6 +81,12 @@ export async function POST(request: NextRequest, context: RouteContext) {
     if (error) {
       if (error.code === '23505') {
         return NextResponse.json({ saved: true, duplicate: true });
+      }
+      if (error.code === 'P0001') {
+        return NextResponse.json(
+          { error: 'Too many requests. Please try again later.' },
+          { status: 429 },
+        );
       }
       console.error('Unable to save estimate request', error);
       return NextResponse.json(
