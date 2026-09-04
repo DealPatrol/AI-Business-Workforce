@@ -7,9 +7,11 @@ type LoginPageProps = {
   searchParams: Promise<{ next?: string }>;
 };
 
+const ALLOWED_RETURN_PATHS = new Set(['/dashboard', '/dashboard/campaigns']);
+
 export default async function LoginPage({ searchParams }: LoginPageProps) {
   const { next } = await searchParams;
-  const returnTo = next?.startsWith('/') && !next.startsWith('//') ? next : '/dashboard/campaigns';
+  const returnTo = next && ALLOWED_RETURN_PATHS.has(next) ? next : '/dashboard/campaigns';
 
   return (
     <main className={styles.page}>

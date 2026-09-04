@@ -16,6 +16,16 @@ type EstimateRequest = {
   message: string | null;
   status: 'new' | 'contacted' | 'closed';
   requested_at: string;
+  campaign_recipients: {
+    address_line_1: string;
+    address_line_2: string | null;
+    city: string;
+    state: string;
+    postal_code: string;
+    campaigns: {
+      name: string;
+    };
+  };
 };
 
 type Recipient = {
@@ -27,17 +37,11 @@ type Recipient = {
   city: string;
   state: string;
   postal_code: string;
-  recipient_scans: Array<{ id: string; scanned_at: string }>;
-  estimate_requests: EstimateRequest[];
-};
-
-type Campaign = {
-  id: string;
-  name: string;
-  business_name: string;
-  status: 'draft' | 'active' | 'complete';
-  created_at: string;
-  campaign_recipients: Recipient[];
+  campaigns: {
+    name: string;
+  };
+  recipient_scans: Array<{ count: number }>;
+  estimate_requests: Array<{ count: number }>;
 };
 
 function formatTime(value: string) {
@@ -53,15 +57,13 @@ export default async function CampaignInboxPage() {
   const { data: authData } = await supabase.auth.getUser();
   if (!authData.user) redirect('/login?next=/dashboard/campaigns');
 
-  const { data, error } = await supabase
-    .from('campaigns')
-    .select(`
-      id,
-      name,
-      business_name,
-      status,
-      created_at,
-      campaign_recipients (
+  const [
+    { data: recipientData, error: recipientError },
+    { data: estimateData, error: estimateError },
+  ] = await Promise.all([
+    supabase
+      .from('campaign_recipients')
+      .select(`
         id,
         public_token,
         homeowner_name,
@@ -70,27 +72,46 @@ export default async function CampaignInboxPage() {
         city,
         state,
         postal_code,
-        recipient_scans (id, scanned_at),
-        estimate_requests (id, name, email, phone, message, status, requested_at)
-      )
-    `)
-    .order('created_at', { ascending: false });
+        campaigns!inner (name),
+        recipient_scans (count),
+        estimate_requests (count)
+      `)
+      .order('created_at', { ascending: false })
+      .limit(500),
+    supabase
+      .from('estimate_requests')
+      .select(`
+        id,
+        name,
+        email,
+        phone,
+        message,
+        status,
+        requested_at,
+        campaign_recipients!inner (
+          address_line_1,
+          address_line_2,
+          city,
+          state,
+          postal_code,
+          campaigns!inner (name)
+        )
+      `)
+      .order('requested_at', { ascending: false })
+      .limit(100),
+  ]);
 
-  if (error) {
-    console.error('Unable to load campaign inbox', error);
-  }
+  const error = recipientError ?? estimateError;
+  if (error) console.error('Unable to load campaign inbox', error);
 
-  const campaigns = (data ?? []) as unknown as Campaign[];
-  const recipients = campaigns.flatMap((campaign) =>
-    campaign.campaign_recipients.map((recipient) => ({ campaign, recipient })),
-  );
-  const estimates = recipients.flatMap(({ campaign, recipient }) =>
-    recipient.estimate_requests.map((estimate) => ({ campaign, recipient, estimate })),
-  ).sort((left, right) =>
-    new Date(right.estimate.requested_at).getTime() - new Date(left.estimate.requested_at).getTime(),
-  );
+  const recipients = (recipientData ?? []) as unknown as Recipient[];
+  const estimates = (estimateData ?? []) as unknown as EstimateRequest[];
   const scanCount = recipients.reduce(
-    (total, item) => total + item.recipient.recipient_scans.length,
+    (total, recipient) => total + (recipient.recipient_scans[0]?.count ?? 0),
+    0,
+  );
+  const estimateCount = recipients.reduce(
+    (total, recipient) => total + (recipient.estimate_requests[0]?.count ?? 0),
     0,
   );
   const appUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') ?? '';
@@ -127,14 +148,14 @@ export default async function CampaignInboxPage() {
         <div className={styles.stats}>
           <article><Mail /><span><small>RECIPIENTS</small><b>{recipients.length}</b></span></article>
           <article><QrCode /><span><small>PAGE OPENS</small><b>{scanCount}</b></span></article>
-          <article><Inbox /><span><small>ESTIMATE REQUESTS</small><b>{estimates.length}</b></span></article>
+          <article><Inbox /><span><small>ESTIMATE REQUESTS</small><b>{estimateCount}</b></span></article>
         </div>
 
         <div className={styles.grid}>
           <section className={styles.panel}>
             <div className={styles.panelHeading}>
               <div><span>LEADS</span><h2>Estimate requests</h2></div>
-              <b>{estimates.length}</b>
+              <b>{estimateCount}</b>
             </div>
             {estimates.length === 0 ? (
               <div className={styles.empty}>
@@ -142,7 +163,10 @@ export default async function CampaignInboxPage() {
                 <b>No estimate requests yet</b>
                 <p>Requests submitted from a recipient QR page will appear here.</p>
               </div>
-            ) : estimates.map(({ campaign, recipient, estimate }) => (
+            ) : estimates.map((estimate) => {
+              const recipient = estimate.campaign_recipients;
+              const campaign = recipient.campaigns;
+              return (
               <article className={styles.lead} key={estimate.id}>
                 <div className={styles.leadTop}>
                   <div>
@@ -159,7 +183,8 @@ export default async function CampaignInboxPage() {
                 {estimate.message && <blockquote>{estimate.message}</blockquote>}
                 <small>{campaign.name}</small>
               </article>
-            ))}
+              );
+            })}
           </section>
 
           <section className={styles.panel}>
@@ -173,11 +198,9 @@ export default async function CampaignInboxPage() {
                 <b>No campaign recipients</b>
                 <p>Create a campaign and recipients with the included seed SQL.</p>
               </div>
-            ) : recipients.map(({ campaign, recipient }) => {
-              const latestScan = [...recipient.recipient_scans]
-                .sort((left, right) =>
-                  new Date(right.scanned_at).getTime() - new Date(left.scanned_at).getTime(),
-                )[0];
+            ) : recipients.map((recipient) => {
+              const campaign = recipient.campaigns;
+              const recipientScanCount = recipient.recipient_scans[0]?.count ?? 0;
               const qrPath = `/q/${recipient.public_token}`;
               return (
                 <article className={styles.recipient} key={recipient.id}>
@@ -187,9 +210,9 @@ export default async function CampaignInboxPage() {
                     <p>{formatRecipientAddress(recipient).join(', ')}</p>
                   </div>
                   <div className={styles.activity}>
-                    <b>{recipient.recipient_scans.length}</b>
-                    <span>{recipient.recipient_scans.length === 1 ? 'open' : 'opens'}</span>
-                    <small>{latestScan ? `Latest ${formatTime(latestScan.scanned_at)} UTC` : 'Not opened'}</small>
+                    <b>{recipientScanCount}</b>
+                    <span>{recipientScanCount === 1 ? 'open' : 'opens'}</span>
+                    <small>{recipientScanCount > 0 ? 'QR page opened' : 'Not opened'}</small>
                   </div>
                   <a href={`${appUrl}${qrPath}`} target="_blank" rel="noreferrer">
                     Open page <ExternalLink size={13} />

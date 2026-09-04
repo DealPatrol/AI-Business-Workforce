@@ -34,10 +34,12 @@ export default async function RecipientPage({ params }: PageProps) {
       campaigns!inner (
         business_name,
         business_phone,
-        business_email
+        business_email,
+        status
       )
     `)
     .eq('public_token', token)
+    .eq('campaigns.status', 'active')
     .single();
 
   if (error || !data) {
@@ -52,7 +54,9 @@ export default async function RecipientPage({ params }: PageProps) {
     recipient_id: recipient.id,
     user_agent: userAgent,
   });
-  if (scanError) console.error('Unable to record QR page view', scanError);
+  if (scanError && scanError.code !== '23505') {
+    console.error('Unable to record QR page view', scanError);
+  }
 
   const address = formatRecipientAddress(recipient);
   const business = recipient.campaigns;

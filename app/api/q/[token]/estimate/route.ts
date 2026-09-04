@@ -1,8 +1,10 @@
+import { createHash } from 'node:crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { PUBLIC_TOKEN_PATTERN } from '@/lib/campaigns';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MAX_REQUEST_BYTES = 10_000;
 
 type RouteContext = {
   params: Promise<{ token: string }>;
@@ -19,7 +21,21 @@ export async function POST(request: NextRequest, context: RouteContext) {
       return NextResponse.json({ error: 'This campaign link is not valid.' }, { status: 404 });
     }
 
-    const body = await request.json();
+    const contentLength = Number(request.headers.get('content-length') ?? 0);
+    if (contentLength > MAX_REQUEST_BYTES) {
+      return NextResponse.json({ error: 'Request is too large.' }, { status: 413 });
+    }
+
+    const rawBody = await request.text();
+    if (rawBody.length > MAX_REQUEST_BYTES) {
+      return NextResponse.json({ error: 'Request is too large.' }, { status: 413 });
+    }
+    let body: Record<string, unknown>;
+    try {
+      body = JSON.parse(rawBody) as Record<string, unknown>;
+    } catch {
+      return NextResponse.json({ error: 'Request body must be valid JSON.' }, { status: 400 });
+    }
     if (text(body.website, 200)) {
       return NextResponse.json({ saved: true }, { status: 201 });
     }
@@ -42,8 +58,9 @@ export async function POST(request: NextRequest, context: RouteContext) {
     const supabase = createAdminClient();
     const { data: recipient, error: recipientError } = await supabase
       .from('campaign_recipients')
-      .select('id')
+      .select('id, campaigns!inner(status)')
       .eq('public_token', token)
+      .eq('campaigns.status', 'active')
       .single();
 
     if (recipientError || !recipient) {
@@ -53,8 +70,12 @@ export async function POST(request: NextRequest, context: RouteContext) {
       return NextResponse.json({ error: 'This campaign link is not valid.' }, { status: 404 });
     }
 
+    const dedupeKey = createHash('sha256')
+      .update(`${email}|${phone.replace(/\D/g, '')}`)
+      .digest('hex');
     const { error } = await supabase.from('estimate_requests').insert({
       recipient_id: recipient.id,
+      dedupe_key: dedupeKey,
       name,
       email: email || null,
       phone: phone || null,
@@ -62,6 +83,9 @@ export async function POST(request: NextRequest, context: RouteContext) {
     });
 
     if (error) {
+      if (error.code === '23505') {
+        return NextResponse.json({ saved: true, duplicate: true });
+      }
       console.error('Unable to save estimate request', error);
       return NextResponse.json(
         { error: 'Estimate requests are temporarily unavailable.' },

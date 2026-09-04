@@ -15,6 +15,7 @@ export type PublicRecipient = {
     business_name: string;
     business_phone: string | null;
     business_email: string | null;
+    status: 'active';
   };
 };
 

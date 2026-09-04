@@ -34,6 +34,7 @@ create table public.recipient_scans (
 create table public.estimate_requests (
   id uuid primary key default gen_random_uuid(),
   recipient_id uuid not null references public.campaign_recipients(id) on delete cascade,
+  dedupe_key text not null,
   name text not null,
   email text,
   phone text,
@@ -49,8 +50,16 @@ create index campaign_recipients_campaign_created_idx
   on public.campaign_recipients(campaign_id, created_at desc);
 create index recipient_scans_recipient_scanned_idx
   on public.recipient_scans(recipient_id, scanned_at desc);
+create unique index recipient_scans_dedupe_idx
+  on public.recipient_scans(
+    recipient_id,
+    md5(coalesce(user_agent, '')),
+    date_bin('30 minutes', scanned_at, '2000-01-01 00:00:00+00'::timestamptz)
+  );
 create index estimate_requests_recipient_requested_idx
   on public.estimate_requests(recipient_id, requested_at desc);
+create unique index estimate_requests_recipient_dedupe_idx
+  on public.estimate_requests(recipient_id, dedupe_key);
 
 alter table public.campaigns enable row level security;
 alter table public.campaign_recipients enable row level security;
