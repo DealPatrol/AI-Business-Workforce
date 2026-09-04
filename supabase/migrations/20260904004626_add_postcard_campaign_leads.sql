@@ -71,6 +71,9 @@ language plpgsql
 set search_path = ''
 as $$
 begin
+  perform pg_catalog.pg_advisory_xact_lock(
+    pg_catalog.hashtextextended(new.recipient_id::text, 0)
+  );
   if (
     select count(*)
     from public.recipient_scans
@@ -91,6 +94,9 @@ language plpgsql
 set search_path = ''
 as $$
 begin
+  perform pg_catalog.pg_advisory_xact_lock(
+    pg_catalog.hashtextextended(new.recipient_id::text, 0)
+  );
   if (
     select count(*)
     from public.estimate_requests
