@@ -16,11 +16,15 @@ The application code is designed to degrade safely when integrations are not con
 
 Add `OPENAI_API_KEY` to Vercel as a server-only environment variable. `OPENAI_AUDIT_MODEL` can override the default audit model. The API route `/api/audit` uses the Responses API and returns a safe deterministic fallback recommendation when no API key is configured.
 
-## Founding-request email
+## Customer-request email
 
-Add `RESEND_API_KEY` as a server-only Vercel environment variable. The public founding form sends requests directly to `colecollins763@gmail.com`. If email delivery is unavailable, the form explicitly opens the visitor's email client with their answers preserved instead of displaying a false success state.
+Add `RESEND_API_KEY` as a server-only Vercel environment variable. The public founding form and Ava paid-pilot onboarding form send requests directly to `colecollins763@gmail.com`. If email delivery is unavailable, each form explicitly opens the visitor's email client with their answers preserved instead of displaying a false success state.
 
-TODO before enabling payment CTAs: configure and test Stripe in production, then create a checkout flow for the advertised $299 founding launch and $99/month managed automation. The existing `/api/checkout` route models separate Ava tiers and production currently returns `503`; it must not be presented as a working founding checkout.
+## Ava checkout handoff
+
+Add `STRIPE_SECRET_KEY` as a server-only Vercel environment variable before enabling the existing `/api/checkout` flow. Successful Checkout Sessions return customers to `/onboarding/ava` with the Checkout session ID and selected plan included in Cole's setup notification. The compatibility route `/onboarding` also sends customers to the Ava setup form.
+
+The hard-coded founding Payment Link is shared by Ava and Visual Canvasser offers, so its Dashboard completion URL must not be changed globally to the Ava form. Create an Ava-specific Payment Link or use `/api/checkout` before wiring Ava payment buttons directly to this onboarding path.
 
 ## Current production boundary
 

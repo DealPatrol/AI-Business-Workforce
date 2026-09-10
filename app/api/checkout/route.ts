@@ -19,7 +19,10 @@ export async function POST(req: NextRequest) {
     const origin = req.nextUrl.origin;
     const params = new URLSearchParams();
     params.set('mode', 'subscription');
-    params.set('success_url', `${origin}/onboarding?session_id={CHECKOUT_SESSION_ID}&plan=${planKey}`);
+    params.set(
+      'success_url',
+      `${origin}/onboarding/ava?session_id={CHECKOUT_SESSION_ID}&plan=${planKey}`,
+    );
     params.set('cancel_url', `${origin}/receptionist-demo#pricing`);
     params.set('billing_address_collection', 'auto');
     params.set('allow_promotion_codes', 'true');
