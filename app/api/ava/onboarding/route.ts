@@ -15,9 +15,6 @@ type OnboardingField =
   | 'staffEmail'
   | 'calendarPreference'
   | 'urgentCallRules'
-  | 'timezone'
-  | 'greetingNotes'
-  | 'websiteUrl'
   | 'sessionId'
   | 'plan';
 
@@ -32,9 +29,6 @@ const fieldNames: OnboardingField[] = [
   'staffEmail',
   'calendarPreference',
   'urgentCallRules',
-  'timezone',
-  'greetingNotes',
-  'websiteUrl',
   'sessionId',
   'plan',
 ];
