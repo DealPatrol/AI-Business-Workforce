@@ -10,6 +10,7 @@ type OnboardingField =
   | 'services'
   | 'callHandlingRules'
   | 'staffName'
+  | 'staffContact'
   | 'staffPhone'
   | 'staffEmail'
   | 'calendarPreference'
@@ -26,6 +27,7 @@ const fieldNames: OnboardingField[] = [
   'services',
   'callHandlingRules',
   'staffName',
+  'staffContact',
   'staffPhone',
   'staffEmail',
   'calendarPreference',
@@ -86,9 +88,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!fields.staffPhone && !fields.staffEmail) {
+    const staffContact = fields.staffContact || fields.staffPhone || fields.staffEmail;
+    if (!staffContact) {
       return NextResponse.json(
-        { error: 'Add a staff phone number or email for call handoffs.' },
+        { error: 'Add a phone number or email for the staff contact.' },
         { status: 400 },
       );
     }
@@ -97,6 +100,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Enter a valid staff email address.' }, { status: 400 });
     }
 
+    const replyTo = EMAIL_PATTERN.test(staffContact) ? staffContact : fields.staffEmail;
     const apiKey = process.env.RESEND_API_KEY;
     if (!apiKey) {
       return NextResponse.json(
@@ -115,13 +119,9 @@ export async function POST(request: NextRequest) {
       ['Services offered', fields.services],
       ['Call-handling rules', fields.callHandlingRules],
       ['Staff contact', fields.staffName],
-      ['Staff phone', fields.staffPhone || 'Not provided'],
-      ['Staff email', fields.staffEmail || 'Not provided'],
+      ['Staff phone or email', staffContact],
       ['Calendar preference', fields.calendarPreference],
       ['Urgent-call rules', fields.urgentCallRules],
-      ['Timezone', fields.timezone || 'Not provided'],
-      ['Voice / greeting notes', fields.greetingNotes || 'Not provided'],
-      ['Website', fields.websiteUrl || 'Not provided'],
       ['Stripe Checkout session', fields.sessionId || 'Not provided'],
       ['Selected plan', fields.plan || 'Not provided'],
       ['Submitted at', submittedAt],
@@ -142,7 +142,7 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({
         from: 'Workforce AI <onboarding@resend.dev>',
         to: [NOTIFICATION_EMAIL],
-        ...(fields.staffEmail ? { reply_to: fields.staffEmail } : {}),
+        ...(replyTo ? { reply_to: replyTo } : {}),
         subject: `Ava paid pilot setup — ${fields.businessName}`,
         html: `<div style="font-family:Arial,sans-serif;max-width:760px;margin:auto;color:#17211b"><h1>New Ava paid pilot onboarding</h1><p>Use these answers to configure the customer&apos;s Ava workflow and schedule one live test call before launch.</p><table style="border-collapse:collapse;width:100%">${htmlRows}</table></div>`,
       }),

@@ -24,15 +24,11 @@ function buildEmailFallback(form: HTMLFormElement) {
       `Call-handling rules:\n${data.get('callHandlingRules') || ''}`,
       '',
       `Staff contact: ${data.get('staffName') || ''}`,
-      `Staff phone: ${data.get('staffPhone') || ''}`,
-      `Staff email: ${data.get('staffEmail') || ''}`,
+      `Phone or email: ${data.get('staffContact') || ''}`,
       `Calendar preference: ${data.get('calendarPreference') || ''}`,
       '',
       `Urgent-call rules:\n${data.get('urgentCallRules') || ''}`,
       '',
-      `Timezone: ${data.get('timezone') || ''}`,
-      `Website: ${data.get('websiteUrl') || ''}`,
-      `Voice / greeting notes: ${data.get('greetingNotes') || ''}`,
       `Stripe Checkout session: ${data.get('sessionId') || ''}`,
       `Selected plan: ${data.get('plan') || ''}`,
     ].join('\n'),
@@ -102,152 +98,134 @@ function AvaOnboardingForm() {
           <span className={styles.eyebrow}>AVA PAID PILOT ONBOARDING</span>
           <h1>You&apos;re in. Let&apos;s get Ava ready.</h1>
           <p>
-            Payment is complete. Tell us how your business handles calls so Cole can configure Ava
-            around the way your team actually works.
+            Payment is complete. Fill this out, Cole sets up Ava, you test one live call together,
+            then Ava launches.
           </p>
         </header>
 
         <section className={styles.steps} aria-label="What happens next">
           <article className={styles.step}>
             <span>1</span>
-            <b>Fill out this form</b>
-            <p>Share your hours, services, booking preferences, and handoff rules.</p>
+            <b>Fill this out</b>
+            <p>Tell us how your calls work.</p>
           </article>
           <article className={styles.step}>
             <span>2</span>
-            <b>We configure Ava</b>
-            <p>Cole manually builds your call flow from the answers you provide.</p>
+            <b>We set up Ava</b>
+            <p>Cole builds your call flow.</p>
           </article>
           <article className={styles.step}>
             <span>3</span>
-            <b>Run one live test call</b>
-            <p>You and Cole test the greeting, questions, routing, and urgent-call handling.</p>
+            <b>Test one live call</b>
+            <p>Check the flow with Cole.</p>
           </article>
           <article className={styles.step}>
             <span>4</span>
-            <b>Then go live</b>
-            <p>Ava launches only after the test call confirms the workflow is ready.</p>
+            <b>Launch</b>
+            <p>Go live after the test passes.</p>
           </article>
         </section>
+
+        <aside className={styles.sample}>
+          <div>
+            <span className={styles.eyebrow}>HEAR AVA ON A CALL</span>
+            <h2>Want to hear Ava first?</h2>
+            <p>Try the live receptionist demo. A real sample call video is coming soon.</p>
+          </div>
+          <Link href="/ava#live-demo">Open the live Ava demo</Link>
+        </aside>
 
         {status === 'sent' ? (
           <section className={styles.success} aria-live="polite">
             <CheckCircle2 />
-            <h2>Cole has your Ava setup details.</h2>
+            <h2>Cole has your setup details.</h2>
             <p>
-              He&apos;ll configure Ava from your answers and contact you to schedule one live test
-              call. Ava will go live after you&apos;ve tested the workflow together.
+              He&apos;ll set up Ava and contact you to run one live test call before launch.
             </p>
             <Link href="/ava">Return to Ava</Link>
           </section>
         ) : (
           <form className={styles.form} onSubmit={submit}>
             <header className={styles.formHeader}>
-              <h2>Tell us how Ava should answer.</h2>
-              <p>
-                Specific answers help Cole build a useful first version. You can refine the details
-                together during the live test.
-              </p>
+              <h2>How should Ava handle your calls?</h2>
+              <p>Short answers are fine. Cole will confirm the details during your live test.</p>
             </header>
 
             <fieldset className={styles.section}>
-              <legend>Your business</legend>
+              <legend>Business</legend>
               <div className={styles.two}>
                 <label>
                   Business name
                   <input name="businessName" required autoComplete="organization" />
                 </label>
                 <label>
-                  Timezone <span className={styles.optional}>(optional)</span>
-                  <input name="timezone" placeholder="Central Time" autoComplete="off" />
+                  Hours
+                  <input
+                    name="businessHours"
+                    required
+                    placeholder="Mon–Fri, 7am–5pm CT"
+                    autoComplete="off"
+                  />
                 </label>
               </div>
               <label>
-                Business hours
-                <textarea
-                  name="businessHours"
-                  required
-                  rows={3}
-                  placeholder="Mon–Fri 7am–5pm; emergency calls accepted after hours"
-                />
-              </label>
-              <label>
-                Services offered
+                Services
                 <textarea
                   name="services"
                   required
-                  rows={4}
-                  placeholder="List your main services, service area, and anything Ava should know about what you do not offer."
-                />
-              </label>
-              <label>
-                Website URL <span className={styles.optional}>(optional)</span>
-                <input
-                  name="websiteUrl"
-                  type="url"
-                  placeholder="https://yourbusiness.com"
-                  autoComplete="url"
+                  rows={3}
+                  placeholder="HVAC repair and installation in Birmingham"
                 />
               </label>
             </fieldset>
 
             <fieldset className={styles.section}>
-              <legend>How Ava should handle calls</legend>
+              <legend>Call flow</legend>
               <label>
-                Call-handling rules
+                What should Ava do?
                 <textarea
                   name="callHandlingRules"
                   required
-                  rows={6}
-                  placeholder="What should Ava say, ask, book, transfer, or avoid? Include the information every new caller should provide."
+                  rows={4}
+                  placeholder="Ask what they need, collect their address, book estimates, and transfer warranty calls."
                 />
               </label>
               <label>
-                Calendar preference
-                <textarea
+                How should bookings work?
+                <input
                   name="calendarPreference"
                   required
-                  rows={3}
-                  placeholder="Google Calendar, your booking link, collect details for a phone callback, or another process."
+                  placeholder="Google Calendar, booking link, or phone callback"
                 />
               </label>
               <label>
-                Urgent-call rules
+                What counts as urgent?
                 <textarea
                   name="urgentCallRules"
                   required
-                  rows={5}
-                  placeholder="What counts as urgent, who should Ava contact, and what should she tell the caller if nobody answers?"
-                />
-              </label>
-              <label>
-                Preferred voice or greeting notes{' '}
-                <span className={styles.optional}>(optional)</span>
-                <textarea
-                  name="greetingNotes"
                   rows={3}
-                  placeholder="Example greeting, tone, pronunciation, or voice preference."
+                  placeholder="No heat is urgent. Call Sam; if no answer, text him and tell the caller we will respond in 15 minutes."
                 />
               </label>
             </fieldset>
 
             <fieldset className={styles.section}>
-              <legend>Staff handoff contact</legend>
+              <legend>Staff contact</legend>
               <div className={styles.two}>
                 <label>
-                  Contact name
+                  Name
                   <input name="staffName" required autoComplete="name" />
                 </label>
                 <label>
-                  Phone
-                  <input name="staffPhone" type="tel" autoComplete="tel" />
+                  Phone or email
+                  <input
+                    name="staffContact"
+                    required
+                    placeholder="(205) 555-0123 or sam@example.com"
+                    autoComplete="off"
+                  />
                 </label>
               </div>
-              <label>
-                Email
-                <input name="staffEmail" type="email" autoComplete="email" />
-              </label>
-              <small>Add at least one phone number or email for call handoffs.</small>
             </fieldset>
 
             <input type="hidden" name="sessionId" value={searchParams.get('session_id') || ''} />
@@ -263,7 +241,7 @@ function AvaOnboardingForm() {
                   <Loader2 className={styles.spin} /> Sending setup details…
                 </>
               ) : (
-                'Send My Ava Setup Details to Cole'
+                'Send Setup Details'
               )}
             </button>
             {status === 'email' && (
@@ -278,7 +256,7 @@ function AvaOnboardingForm() {
               </p>
             )}
             <small className={styles.privacy}>
-              <Mail /> Your answers go directly to Cole for manual Ava setup.
+              <Mail /> Sent directly to Cole for setup.
             </small>
           </form>
         )}
