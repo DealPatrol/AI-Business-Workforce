@@ -106,6 +106,9 @@
   border-radius: 12px;
   padding: 20px 22px;
   margin-bottom: 32px;
+}
+
+.sampleHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -123,15 +126,20 @@
   margin: 0;
 }
 
-.sample a {
+.sampleHeader a {
   flex: none;
-  border-radius: 8px;
-  padding: 11px 14px;
-  background: #205c39;
-  color: #fff;
-  text-decoration: none;
+  color: #205c39;
   font-size: 12px;
   font-weight: 800;
+}
+
+.sampleVideo {
+  display: block;
+  width: 100%;
+  max-height: 480px;
+  margin-top: 18px;
+  border-radius: 10px;
+  background: #10281c;
 }
 
 .form {
@@ -336,14 +344,14 @@
     grid-template-columns: 1fr;
   }
 
-  .sample {
+  .sampleHeader {
     align-items: flex-start;
     flex-direction: column;
+    gap: 10px;
   }
 
-  .sample a {
-    width: 100%;
-    text-align: center;
+  .sample {
+    padding: 18px;
   }
 
   .step {

@@ -126,14 +126,20 @@ function AvaOnboardingForm() {
           </article>
         </section>
 
-        <aside className={styles.sample}>
-          <div>
-            <span className={styles.eyebrow}>HEAR AVA ON A CALL</span>
-            <h2>Want to hear Ava first?</h2>
-            <p>Try the live receptionist demo. A real sample call video is coming soon.</p>
+        <section className={styles.sample}>
+          <div className={styles.sampleHeader}>
+            <div>
+              <span className={styles.eyebrow}>HEAR AVA ON A CALL</span>
+              <h2>Hear Ava on a call</h2>
+              <p>Sample landscaping receptionist call · about 54 seconds</p>
+            </div>
+            <Link href="/ava#live-demo">Or try Ava live</Link>
           </div>
-          <Link href="/ava#live-demo">Open the live Ava demo</Link>
-        </aside>
+          <video className={styles.sampleVideo} controls playsInline preload="metadata">
+            <source src="/ava-sample-call.mp4" type="video/mp4" />
+            Your browser does not support HTML5 video.
+          </video>
+        </section>
 
         {status === 'sent' ? (
           <section className={styles.success} aria-live="polite">
