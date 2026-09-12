@@ -144,7 +144,7 @@ function AvaOnboardingForm() {
               <h2>Hear Ava on a call</h2>
               <p>Sample landscaping receptionist call · about 54 seconds</p>
             </div>
-            <Link href="/ava#live-demo">Or try Ava live</Link>
+            <Link href="/receptionist-demo#live-demo">Or try Ava live</Link>
           </div>
           <video className={styles.sampleVideo} controls playsInline preload="metadata">
             <source src="/ava-sample-call.mp4" type="video/mp4" />
