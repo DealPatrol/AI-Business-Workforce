@@ -217,6 +217,9 @@ export async function POST(request: NextRequest) {
         {
           error: 'Online delivery is temporarily unavailable.',
           emailFallback: NOTIFICATION_EMAIL,
+          onboardingId,
+          provisioning,
+          ...(persistenceWarning ? { warning: persistenceWarning } : {}),
         },
         { status: 502 },
       );
