@@ -59,7 +59,7 @@ export default function HomePage() {
           <span>
             <Sparkles size={17} />
           </span>
-          Workforce <b>AI</b>
+          YardProof
         </Link>
         <div className={styles.navLinks}>
           <a href="#how">How it works</a>
@@ -264,7 +264,7 @@ export default function HomePage() {
           <span>
             <Sparkles size={17} />
           </span>
-          Workforce <b>AI</b>
+          YardProof
         </Link>
         <p>
           Cole · <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>

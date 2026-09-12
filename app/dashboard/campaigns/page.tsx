@@ -120,7 +120,7 @@ export default async function CampaignInboxPage() {
     <main className={styles.page}>
       <aside className={styles.sidebar}>
         <Link href="/" className={styles.brand}>
-          <span><Leaf size={17} /></span> Workforce<b>AI</b>
+          <span><Leaf size={17} /></span> YardProof
         </Link>
         <nav>
           <Link href="/dashboard">Overview</Link>
