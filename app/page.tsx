@@ -59,7 +59,7 @@ export default function HomePage() {
           <span>
             <Sparkles size={17} />
           </span>
-          Workforce <b>AI</b>
+          YardProof
         </Link>
         <div className={styles.navLinks}>
           <a href="#how">How it works</a>
@@ -241,7 +241,7 @@ export default function HomePage() {
           <h2>Ask Cole if this fits your service area.</h2>
           <p>No sales maze. Email the person who will help set up the campaign.</p>
         </div>
-        <a href={`mailto:${CONTACT_EMAIL}?subject=Question%20about%20the%20Workforce%20AI%20postcard%20campaign`}>
+        <a href={`mailto:${CONTACT_EMAIL}?subject=Question%20about%20the%20YardProof%20postcard%20campaign`}>
           <Mail size={18} /> Email Cole
         </a>
       </section>
@@ -264,7 +264,7 @@ export default function HomePage() {
           <span>
             <Sparkles size={17} />
           </span>
-          Workforce <b>AI</b>
+          YardProof
         </Link>
         <p>
           Cole · <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>

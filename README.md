@@ -1,4 +1,4 @@
-# AI Business Workforce
+# YardProof
 
 AI-powered business automation platform focused on measurable outcomes for service businesses.
 
