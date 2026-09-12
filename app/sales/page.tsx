@@ -40,8 +40,20 @@ const STATUS_OPTIONS: ProspectStatus[] = [
   'passed',
 ];
 
-function countByStatus(statuses: StoredStatus[], status: ProspectStatus): number {
-  return statuses.filter((s) => s.status === status).length;
+const STATUS_RANK: Record<ProspectStatus, number> = {
+  passed: -1,
+  queued: 0,
+  contacted: 1,
+  demo_sent: 2,
+  opened: 3,
+  called_ava: 4,
+  replied: 5,
+  conversation: 6,
+  pilot_proposed: 7,
+};
+
+function countAtOrBeyond(statuses: StoredStatus[], status: ProspectStatus): number {
+  return statuses.filter((stored) => STATUS_RANK[stored.status] >= STATUS_RANK[status]).length;
 }
 
 export default function SalesTrackerPage() {
@@ -90,10 +102,10 @@ export default function SalesTrackerPage() {
 
   const metrics = useMemo(
     () => ({
-      contacted: countByStatus(statuses, 'contacted') + countByStatus(statuses, 'demo_sent'),
-      demosSent: countByStatus(statuses, 'demo_sent'),
-      conversations: countByStatus(statuses, 'conversation') + countByStatus(statuses, 'replied'),
-      pilotProposals: countByStatus(statuses, 'pilot_proposed'),
+      contacted: countAtOrBeyond(statuses, 'contacted'),
+      demosSent: countAtOrBeyond(statuses, 'demo_sent'),
+      conversations: countAtOrBeyond(statuses, 'replied'),
+      pilotProposals: countAtOrBeyond(statuses, 'pilot_proposed'),
     }),
     [statuses],
   );

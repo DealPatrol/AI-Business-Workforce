@@ -28,6 +28,18 @@ export const SALES_STATUSES = [
 
 export type SalesStatus = (typeof SALES_STATUSES)[number];
 
+const SALES_STATUS_RANK: Record<SalesStatus, number> = {
+  passed: -1,
+  queued: 0,
+  contacted: 1,
+  demo_sent: 2,
+  opened: 3,
+  called_ava: 4,
+  replied: 5,
+  conversation: 6,
+  pilot_proposed: 7,
+};
+
 export const STATUS_FROM_EVENT: Record<SalesEventType, SalesStatus> = {
   demo_open: 'opened',
   call_started: 'called_ava',
@@ -96,17 +108,32 @@ export async function recordSalesEvent(input: {
   }
 
   const nextStatus = STATUS_FROM_EVENT[input.eventType];
-  await supabase.from('sales_prospect_status').upsert(
-    {
-      prospect_slug: prospectSlug,
-      status: nextStatus,
-      updated_at: new Date().toISOString(),
-      ...(input.eventType === 'contacted' || input.eventType === 'demo_sent'
-        ? { contacted_at: new Date().toISOString() }
-        : {}),
-    },
-    { onConflict: 'prospect_slug' },
+  const timestamp = new Date().toISOString();
+  const statusUpdate = {
+    prospect_slug: prospectSlug,
+    status: nextStatus,
+    updated_at: timestamp,
+    ...(input.eventType === 'contacted' || input.eventType === 'demo_sent'
+      ? { contacted_at: timestamp }
+      : {}),
+  };
+  const lowerStatuses = SALES_STATUSES.filter(
+    (status) =>
+      SALES_STATUS_RANK[status] >= 0 &&
+      SALES_STATUS_RANK[status] < SALES_STATUS_RANK[nextStatus],
   );
+
+  await supabase
+    .from('sales_prospect_status')
+    .upsert(statusUpdate, { onConflict: 'prospect_slug', ignoreDuplicates: true });
+
+  if (lowerStatuses.length > 0) {
+    await supabase
+      .from('sales_prospect_status')
+      .update(statusUpdate)
+      .eq('prospect_slug', prospectSlug)
+      .in('status', lowerStatuses);
+  }
 
   return { tracked: true, event: data as SalesEvent };
 }
@@ -136,6 +163,16 @@ export async function listSalesEvents(): Promise<{
   if (eventsResult.error) {
     console.error('Sales event list failed', eventsResult.error);
     return { available: false, events: [], statuses: [], reason: eventsResult.error.message };
+  }
+
+  if (statusResult.error) {
+    console.error('Sales status list failed', statusResult.error);
+    return {
+      available: false,
+      events: (eventsResult.data ?? []) as SalesEvent[],
+      statuses: [],
+      reason: statusResult.error.message,
+    };
   }
 
   return {
