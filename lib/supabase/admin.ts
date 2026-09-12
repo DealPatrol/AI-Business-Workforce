@@ -1,6 +1,22 @@
 import { createClient } from '@supabase/supabase-js';
 import { createClient as createUserClient } from '@/lib/supabase/server';
 
+export function createAdminClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const secretKey = process.env.SUPABASE_SECRET_KEY;
+
+  if (!url || !secretKey) {
+    throw new Error('Server-side Supabase environment variables are not configured.');
+  }
+
+  return createClient(url, secretKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  });
+}
+
 /**
  * Prefer the server secret so sales events persist even when RLS blocks the
  * publishable key. Fall back to the cookie/SSR client when only the public
