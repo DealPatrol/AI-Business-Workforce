@@ -104,6 +104,12 @@
   color: #34864d;
 }
 
+.bad-options .section-title > p,
+.comparison .section-title > p,
+.playbooks .section-title > p {
+  color: #5f6d64;
+}
+
 .options-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

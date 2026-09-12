@@ -167,7 +167,7 @@ function ReceptionistDemoContent(){
 
   <section id="hear-ava" className="sample-section">
    <div className="sample-copy"><span className="kicker">HEAR THE ACTUAL EXPERIENCE</span><h2>Sample landscaping estimate call</h2><p>Hear how Ava greets a homeowner, asks useful qualification questions, and keeps the conversation moving. No stock voice montage or invented customer story.</p><div className="sample-tags"><span><Check/> Estimate intent</span><span><Check/> Property details</span><span><Check/> Clear next step</span></div></div>
-   <div className="audio-card"><div className="audio-icon"><Headphones/></div><div><b>Ava sample call</b><span>Landscaping estimate · prerecorded example</span></div><audio controls preload="metadata"><source src="/ava-sample-call.mp4" type="video/mp4"/>Your browser does not support audio playback.</audio></div>
+   <div className="audio-card"><div className="audio-icon"><Headphones/></div><div><b>Ava sample call</b><span>Landscaping estimate · prerecorded example</span></div><audio controls preload="metadata"><source src="/ava-sample-call.mp4" type="audio/mp4"/>Your browser does not support audio playback.</audio></div>
   </section>
 
   <section className="bad-options">
