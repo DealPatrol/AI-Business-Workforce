@@ -1,6 +1,6 @@
 # Ava phone setup runbook
 
-Owner: Cole  
+Owner: Cole
 Launch rule: Ava is not live until a customer test call passes.
 
 ## Customer path (live today)
@@ -29,7 +29,7 @@ After onboarding, the app stores a private `ava_onboardings` record in Supabase 
 There are two agent-create modes:
 
 - Default/manual trigger: call `POST /api/ava/provision` with `{"onboardingId":"..."}` and `Authorization: Bearer $AVA_PROVISIONING_SECRET`.
-- Opt-in automatic trigger: set `AVA_AUTO_PROVISION_AGENT=true`. A successful form submission then duplicates `ELEVENLABS_AGENT_ID`, patches the new agent with the customer's greeting and operating rules, and records the returned agent ID.
+- Opt-in automatic trigger: set `AVA_AUTO_PROVISION_AGENT=true`. A form submission with a paid, complete Ava Checkout Session then duplicates `ELEVENLABS_AGENT_ID`, patches the new agent with the customer's greeting and operating rules, and records the returned agent ID. `/api/checkout` sessions are recognized by their Ava plan metadata. For an Ava-specific Payment Link, also set `AVA_STRIPE_PAYMENT_LINK_ID` and configure its completion URL to pass `{CHECKOUT_SESSION_ID}`.
 
 Example manual trigger:
 
@@ -58,10 +58,11 @@ Required to create/configure an agent:
 - `ELEVENLABS_AGENT_ID` (the Ava template; it also remains the browser-demo agent)
 - `AVA_PROVISIONING_SECRET` (long random server-only value for the internal trigger)
 - `AVA_AUTO_PROVISION_AGENT=true` only after the template and workflow have been tested
+- `STRIPE_SECRET_KEY` (used to verify payment before submit-time creation)
+- `AVA_STRIPE_PAYMENT_LINK_ID` when an Ava-specific Payment Link should qualify for automatic creation
 
 Related production settings:
 
-- `STRIPE_SECRET_KEY`
 - `AVA_LEAD_NOTIFICATION_EMAIL`
 - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
 

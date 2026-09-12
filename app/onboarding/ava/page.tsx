@@ -10,7 +10,15 @@ const CONTACT_EMAIL = 'colecollins763@gmail.com';
 
 type SubmissionStatus = 'idle' | 'sending' | 'sent' | 'email';
 
-function buildEmailFallback(form: HTMLFormElement) {
+type OnboardingResponse = {
+  onboardingId?: string | null;
+  provisioning?: {
+    status?: string;
+    message?: string;
+  };
+};
+
+function buildEmailFallback(form: HTMLFormElement, result: OnboardingResponse) {
   const data = new FormData(form);
   const subject = encodeURIComponent(
     `Ava paid pilot setup — ${String(data.get('businessName') || 'New business')}`,
@@ -31,6 +39,9 @@ function buildEmailFallback(form: HTMLFormElement) {
       '',
       `Stripe Checkout session: ${data.get('sessionId') || ''}`,
       `Selected plan: ${data.get('plan') || ''}`,
+      `Onboarding record: ${result.onboardingId || 'Not persisted'}`,
+      `Agent status: ${result.provisioning?.status || 'pending_manual'}`,
+      `Next provisioning step: ${result.provisioning?.message || 'Cole must complete setup.'}`,
     ].join('\n'),
   );
 
@@ -62,7 +73,7 @@ function AvaOnboardingForm() {
 
       if (!response.ok) {
         if (result.emailFallback) {
-          const fallback = buildEmailFallback(form);
+          const fallback = buildEmailFallback(form, result);
           setEmailFallback(fallback);
           setStatus('email');
           window.location.href = fallback;

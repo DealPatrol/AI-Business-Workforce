@@ -3,6 +3,7 @@ import {
   provisionStoredAvaOnboarding,
   saveAvaOnboarding,
 } from '@/lib/ava/onboarding-store';
+import { verifyAvaCheckoutSession } from '@/lib/ava/checkout';
 import { AvaProvisioningResult } from '@/lib/ava/provisioning';
 
 const NOTIFICATION_EMAIL = 'colecollins763@gmail.com';
@@ -128,7 +129,17 @@ export async function POST(request: NextRequest) {
       onboardingId = onboarding.id;
 
       if (process.env.AVA_AUTO_PROVISION_AGENT?.toLowerCase() === 'true') {
-        provisioning = await provisionStoredAvaOnboarding(onboarding);
+        const checkout = await verifyAvaCheckoutSession(fields.sessionId);
+        if (checkout.verified) {
+          provisioning = await provisionStoredAvaOnboarding(onboarding);
+        } else {
+          provisioning = {
+            status: 'pending_manual',
+            agentId: onboarding.elevenlabs_agent_id,
+            phoneStatus: 'pending_manual',
+            message: checkout.message,
+          };
+        }
       } else if (onboarding.elevenlabs_agent_id) {
         provisioning = {
           status: 'agent_ready_phone_pending',

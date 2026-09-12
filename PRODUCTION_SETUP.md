@@ -36,8 +36,9 @@ Add these server-only variables:
 - `ELEVENLABS_AGENT_ID` — the tested Ava template agent used by the browser demo and as the duplication source
 - `AVA_PROVISIONING_SECRET` — a long random bearer secret for `POST /api/ava/provision`
 - `AVA_AUTO_PROVISION_AGENT=true` — optional; leave false until automatic creation has been tested
+- `AVA_STRIPE_PAYMENT_LINK_ID` — required only when an Ava-specific Payment Link should qualify for automatic creation
 
-With automatic creation disabled, Cole can use the authenticated internal endpoint described in [`docs/AVA_PHONE_SETUP_RUNBOOK.md`](docs/AVA_PHONE_SETUP_RUNBOOK.md). The endpoint duplicates the template through ElevenLabs' supported agent-duplicate API, updates the customer's prompt and greeting, and saves the returned agent ID. Missing credentials result in a pending status.
+With automatic creation disabled, Cole can use the authenticated internal endpoint described in [`docs/AVA_PHONE_SETUP_RUNBOOK.md`](docs/AVA_PHONE_SETUP_RUNBOOK.md). The endpoint duplicates the template through ElevenLabs' supported agent-duplicate API, updates the customer's prompt and greeting, and saves the returned agent ID. Missing credentials result in a pending status. Submit-time automatic creation also requires Stripe to report the session as paid and complete and identify it through `/api/checkout` Ava plan metadata or the configured Ava-specific Payment Link ID.
 
 Phone-number purchase, allocation, import/assignment, forwarding, calendar writes, SMS, and launch approval are still manual. `agent_ready_phone_pending` means the customer agent is configured; it does not mean a phone number or live calling is ready.
 
