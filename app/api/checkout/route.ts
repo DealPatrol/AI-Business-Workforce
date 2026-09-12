@@ -77,11 +77,13 @@ export async function GET(req: NextRequest) {
     }
 
     const result = await createAvaCheckout(req, planKey);
-    if ('error' in result) return result.error;
+    if ('error' in result) {
+      return NextResponse.redirect(new URL('/ava#pricing', req.url));
+    }
     return NextResponse.redirect(result.url, 303);
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: 'Could not start Ava checkout.' }, { status: 500 });
+    return NextResponse.redirect(new URL('/ava#pricing', req.url));
   }
 }
 
