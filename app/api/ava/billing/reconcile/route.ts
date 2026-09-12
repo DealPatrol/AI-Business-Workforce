@@ -31,6 +31,14 @@ async function stripePost(path: string, secret: string, params: URLSearchParams)
   return { ok: r.ok, status: r.status, data: await r.json().catch(() => ({})) };
 }
 
+async function stripeDelete(path: string, secret: string) {
+  const r = await fetch(`${STRIPE_API}${path}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${secret}`, 'Stripe-Version': '2026-07-29.dahlia' },
+  });
+  return { ok: r.ok, status: r.status, data: await r.json().catch(() => ({})) };
+}
+
 async function elevenUsage(agentId: string, start: number, end: number, apiKey: string) {
   let cursor = '';
   let seconds = 0;
@@ -82,8 +90,9 @@ export async function GET(req: NextRequest) {
       const subRes = await stripeGet(`/subscriptions/${encodeURIComponent(subscriptionId)}`, stripeSecret);
       if (!subRes.ok) throw new Error('Stripe subscription lookup failed');
       const sub = subRes.data;
-      const start = Number(sub.current_period_start || 0);
-      const end = Number(sub.current_period_end || Math.floor(Date.now() / 1000));
+      const subscriptionItem = sub.items?.data?.[0];
+      const start = Number(subscriptionItem?.current_period_start || 0);
+      const end = Number(subscriptionItem?.current_period_end || Math.floor(Date.now() / 1000));
       const included = Number(sub.metadata?.included_minutes || 0);
       const overageCents = Number(sub.metadata?.overage_cents || 0);
       if (!start || !included || !overageCents) throw new Error('Subscription usage metadata missing');
@@ -97,10 +106,12 @@ export async function GET(req: NextRequest) {
       const pendingRes = await stripeGet(`/invoiceitems?customer=${encodeURIComponent(customer)}&pending=true&limit=100`, stripeSecret);
       const existing = (pendingRes.data?.data || []).find((x: any) => x.metadata?.ava_usage_key === usageKey);
 
-      if (existing && Number(existing.amount || 0) !== amount) {
-        await stripePost(`/invoiceitems/${encodeURIComponent(existing.id)}`, stripeSecret, new URLSearchParams({ deleted: 'true' }));
+      const existingAmount = Number(existing?.amount || 0);
+      if (existing && (existingAmount !== amount || amount === 0)) {
+        const deleted = await stripeDelete(`/invoiceitems/${encodeURIComponent(existing.id)}`, stripeSecret);
+        if (!deleted.ok) throw new Error(deleted.data?.error?.message || 'Unable to delete Stripe overage item');
       }
-      if (amount > 0 && (!existing || Number(existing.amount || 0) !== amount)) {
+      if (amount > 0 && (!existing || existingAmount !== amount)) {
         const p = new URLSearchParams();
         p.set('customer', customer);
         p.set('subscription', subscriptionId);
@@ -112,9 +123,6 @@ export async function GET(req: NextRequest) {
         p.set('metadata[included_minutes]', String(included));
         const created = await stripePost('/invoiceitems', stripeSecret, p);
         if (!created.ok) throw new Error(created.data?.error?.message || 'Unable to create Stripe overage item');
-      }
-      if (amount === 0 && existing) {
-        await stripePost(`/invoiceitems/${encodeURIComponent(existing.id)}`, stripeSecret, new URLSearchParams({ deleted: 'true' }));
       }
 
       results.push({ onboardingId: row.id, business: row.business_name, calls: usage.calls, seconds: usage.seconds, includedMinutes: included, overageMinutes, pendingCharge: amount / 100, ok: true });
