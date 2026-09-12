@@ -139,6 +139,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     alternates: { canonical: url },
     keywords: [page.title.toLowerCase(), 'AI receptionist home services', 'AI answering service contractors', '24/7 call answering'],
     openGraph: { title: page.metaTitle, description: page.description, url, type: 'website' },
+    twitter: { card: 'summary_large_image', title: page.metaTitle, description: page.description },
   };
 }
 
