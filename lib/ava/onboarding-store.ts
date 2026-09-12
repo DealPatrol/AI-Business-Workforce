@@ -57,7 +57,29 @@ export async function saveAvaOnboarding(input: AvaOnboardingInput) {
       throw new Error(`Unable to check Ava onboarding: ${existingError.message}`);
     }
     if (existing) {
-      return existing as AvaOnboardingRow;
+      const { data, error } = await supabase
+        .from('ava_onboardings')
+        .update({
+          business_name: input.businessName,
+          business_hours: input.businessHours,
+          services: input.services,
+          call_handling_rules: input.callHandlingRules,
+          staff_name: input.staffName,
+          staff_contact: input.staffContact,
+          calendar_preference: input.calendarPreference,
+          urgent_call_rules: input.urgentCallRules,
+          selected_plan: input.plan || null,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', existing.id)
+        .select()
+        .single();
+
+      if (error) {
+        throw new Error(`Unable to update Ava onboarding: ${error.message}`);
+      }
+
+      return data as AvaOnboardingRow;
     }
   }
 
