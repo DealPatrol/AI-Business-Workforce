@@ -1,4 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+import {
+  provisionStoredAvaOnboarding,
+  saveAvaOnboarding,
+} from '@/lib/ava/onboarding-store';
+import { verifyAvaCheckoutSession } from '@/lib/ava/checkout';
+import { AvaProvisioningResult } from '@/lib/ava/provisioning';
 
 const NOTIFICATION_EMAIL = 'colecollins763@gmail.com';
 const MAX_FIELD_LENGTH = 4_000;
@@ -96,17 +102,60 @@ export async function POST(request: NextRequest) {
 
     const replyTo = EMAIL_PATTERN.test(staffContact) ? staffContact : fields.staffEmail;
     const apiKey = process.env.RESEND_API_KEY;
-    if (!apiKey) {
-      return NextResponse.json(
-        {
-          error: 'Online delivery is not configured yet.',
-          emailFallback: NOTIFICATION_EMAIL,
-        },
-        { status: 503 },
-      );
-    }
 
     const submittedAt = new Date().toISOString();
+    let onboardingId: string | null = null;
+    let persistenceWarning: string | null = null;
+    let provisioning: AvaProvisioningResult = {
+      status: 'pending_manual',
+      agentId: null,
+      phoneStatus: 'pending_manual',
+      message: 'Cole must trigger agent creation; phone number setup remains manual.',
+    };
+
+    try {
+      const onboarding = await saveAvaOnboarding({
+        businessName: fields.businessName,
+        businessHours: fields.businessHours,
+        services: fields.services,
+        callHandlingRules: fields.callHandlingRules,
+        staffName: fields.staffName,
+        staffContact,
+        calendarPreference: fields.calendarPreference,
+        urgentCallRules: fields.urgentCallRules,
+        sessionId: fields.sessionId,
+        plan: fields.plan,
+      });
+      onboardingId = onboarding.id;
+
+      if (process.env.AVA_AUTO_PROVISION_AGENT?.toLowerCase() === 'true') {
+        const checkout = await verifyAvaCheckoutSession(fields.sessionId);
+        if (checkout.verified) {
+          provisioning = await provisionStoredAvaOnboarding(onboarding);
+        } else {
+          provisioning = {
+            status: 'pending_manual',
+            agentId: onboarding.elevenlabs_agent_id,
+            phoneStatus: 'pending_manual',
+            message: checkout.message,
+          };
+        }
+      } else if (onboarding.elevenlabs_agent_id) {
+        provisioning = {
+          status: 'agent_ready_phone_pending',
+          agentId: onboarding.elevenlabs_agent_id,
+          phoneStatus: 'pending_manual',
+          message: 'Customer agent already exists; phone number setup remains manual.',
+        };
+      }
+    } catch (persistenceError) {
+      persistenceWarning =
+        persistenceError instanceof Error
+          ? persistenceError.message
+          : 'Onboarding persistence is unavailable.';
+      console.error('Ava onboarding persistence/provisioning error', persistenceError);
+    }
+
     const rows: Array<[string, string]> = [
       ['Business', fields.businessName],
       ['Business hours', fields.businessHours],
@@ -118,6 +167,12 @@ export async function POST(request: NextRequest) {
       ['Urgent-call rules', fields.urgentCallRules],
       ['Stripe Checkout session', fields.sessionId || 'Not provided'],
       ['Selected plan', fields.plan || 'Not provided'],
+      ['Onboarding record', onboardingId || 'Not persisted — use the answers in this email'],
+      ['Agent status', provisioning.status],
+      ['ElevenLabs agent ID', provisioning.agentId || 'Not created'],
+      ['Phone status', provisioning.phoneStatus],
+      ['Next provisioning step', provisioning.message],
+      ['Persistence warning', persistenceWarning || 'None'],
       ['Submitted at', submittedAt],
     ];
     const htmlRows = rows
@@ -126,6 +181,19 @@ export async function POST(request: NextRequest) {
           `<tr><td style="padding:8px;border-bottom:1px solid #e5e7eb;vertical-align:top"><b>${label}</b></td><td style="padding:8px;border-bottom:1px solid #e5e7eb;white-space:pre-wrap">${escapeHtml(value)}</td></tr>`,
       )
       .join('');
+
+    if (!apiKey) {
+      return NextResponse.json(
+        {
+          error: 'Online delivery is not configured yet.',
+          emailFallback: NOTIFICATION_EMAIL,
+          onboardingId,
+          provisioning,
+          ...(persistenceWarning ? { warning: persistenceWarning } : {}),
+        },
+        { status: 503 },
+      );
+    }
 
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -149,12 +217,20 @@ export async function POST(request: NextRequest) {
         {
           error: 'Online delivery is temporarily unavailable.',
           emailFallback: NOTIFICATION_EMAIL,
+          onboardingId,
+          provisioning,
+          ...(persistenceWarning ? { warning: persistenceWarning } : {}),
         },
         { status: 502 },
       );
     }
 
-    return NextResponse.json({ sent: true });
+    return NextResponse.json({
+      sent: true,
+      onboardingId,
+      provisioning,
+      ...(persistenceWarning ? { warning: persistenceWarning } : {}),
+    });
   } catch (error) {
     console.error('Ava onboarding error', error);
     return NextResponse.json(

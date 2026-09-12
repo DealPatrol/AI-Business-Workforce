@@ -26,6 +26,22 @@ Add `STRIPE_SECRET_KEY` as a server-only Vercel environment variable before enab
 
 The hard-coded founding Payment Link is shared by Ava and Visual Canvasser offers, so its Dashboard completion URL must not be changed globally to the Ava form. Create an Ava-specific Payment Link or use `/api/checkout` before wiring Ava payment buttons directly to this onboarding path.
 
+## Ava agent provisioning
+
+Apply `supabase/migrations/003_ava_onboarding_provisioning.sql` before enabling provisioning. Ava onboarding then saves a private, service-role-only record and includes the record ID and provisioning status in Cole's Resend notification.
+
+Add these server-only variables:
+
+- `ELEVENLABS_API_KEY`
+- `ELEVENLABS_AGENT_ID` — the tested Ava template agent used by the browser demo and as the duplication source
+- `AVA_PROVISIONING_SECRET` — a long random bearer secret for `POST /api/ava/provision`
+- `AVA_AUTO_PROVISION_AGENT=true` — optional; leave false until automatic creation has been tested
+- `AVA_STRIPE_PAYMENT_LINK_ID` — required only when an Ava-specific Payment Link should qualify for automatic creation
+
+With automatic creation disabled, Cole can use the authenticated internal endpoint described in [`docs/AVA_PHONE_SETUP_RUNBOOK.md`](docs/AVA_PHONE_SETUP_RUNBOOK.md). The endpoint duplicates the template through ElevenLabs' supported agent-duplicate API, updates the customer's prompt and greeting, and saves the returned agent ID. Missing credentials result in a pending status. Submit-time automatic creation also requires Stripe to report the session as paid and complete and identify it through `/api/checkout` Ava plan metadata or the configured Ava-specific Payment Link ID.
+
+Phone-number purchase, allocation, import/assignment, forwarding, calendar writes, SMS, and launch approval are still manual. `agent_ready_phone_pending` means the customer agent is configured; it does not mean a phone number or live calling is ready.
+
 ## Current production boundary
 
 Implemented in code:
@@ -37,13 +53,16 @@ Implemented in code:
 - postcard campaigns with unique recipient QR pages, page-open tracking, estimate capture, and an owner inbox
 - RLS owner policies for authenticated application data
 - server-side AI Business Audit endpoint with fallback mode
+- private Ava onboarding persistence and status tracking
+- feature-flagged ElevenLabs customer-agent duplication and prompt configuration
 
 Still requires credentials/integration work before claiming live:
 - persisting public audit leads into Supabase
 - generated property imagery
 - live supplier inventory/pricing
 - Stripe checkout/subscriptions
-- SMS/phone/email sending
+- Ava phone-number purchase/assignment, line forwarding, and SMS
+- Ava calendar writes and automated launch approval
 - postcard printing and fulfillment
 
 Never commit secrets to GitHub. Configure them in Vercel/Supabase secret management.

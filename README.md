@@ -36,3 +36,7 @@ The production-ready slice of the postcard workflow uses Supabase for recipient 
 For a real campaign, use the same SQL shape as the seed: create one `campaigns` row with the contractor Auth user's ID, then add one `campaign_recipients` row per mailed address. Leave `public_token` out of inserts so Postgres generates a high-entropy unique token.
 
 The app records page-open activity for valid recipient pages and deduplicates repeated opens from the same request source within 30 minutes. This is useful response activity, but it can include link-preview bots as well as homeowner QR scans.
+
+## Ava operations
+
+Cole's current post-purchase and phone-launch checklist, plus the first automated agent-provisioning path, is in [`docs/AVA_PHONE_SETUP_RUNBOOK.md`](docs/AVA_PHONE_SETUP_RUNBOOK.md). Production credentials and rollout boundaries are documented in [`PRODUCTION_SETUP.md`](PRODUCTION_SETUP.md).
