@@ -1,0 +1,394 @@
+.sales-btn.text-link {
+  background: transparent;
+  border-color: transparent;
+  color: #b9c7bd !important;
+  padding-inline: 8px;
+}
+
+.sales-btn.text-link:hover {
+  color: #fff !important;
+}
+
+.sample-section {
+  width: min(1120px, calc(100% - 40px));
+  margin: 84px auto 110px;
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 70px;
+  align-items: center;
+}
+
+.sample-copy h2,
+.bad-options h2,
+.comparison h2,
+.playbooks h2,
+.faq h2 {
+  font: 600 clamp(39px, 4.4vw, 58px) / 1.05 Georgia, serif;
+  letter-spacing: -0.025em;
+  margin: 12px 0 18px;
+}
+
+.sample-copy > p {
+  color: #9faca3;
+  line-height: 1.65;
+}
+
+.sample-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 22px;
+}
+
+.sample-tags span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #c7d1ca;
+  font-size: 11px;
+}
+
+.sample-tags svg {
+  width: 15px;
+  color: #8fe66f;
+}
+
+.audio-card {
+  display: grid;
+  grid-template-columns: 54px 1fr;
+  gap: 14px;
+  align-items: center;
+  padding: 24px;
+  border: 1px solid #31503d;
+  border-radius: 17px;
+  background: linear-gradient(145deg, #11251a, #09150f);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+}
+
+.audio-icon {
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #173722;
+  color: #8fe66f;
+}
+
+.audio-card > div:nth-child(2) {
+  display: grid;
+  gap: 4px;
+}
+
+.audio-card span {
+  color: #84958a;
+  font-size: 11px;
+}
+
+.audio-card audio {
+  width: 100%;
+  grid-column: 1 / -1;
+  margin-top: 8px;
+}
+
+.bad-options {
+  background: #f5f7f3;
+  color: #102017;
+  padding: 100px max(20px, calc((100vw - 1180px) / 2));
+}
+
+.bad-options .kicker,
+.comparison .kicker,
+.playbooks .kicker,
+.faq .kicker {
+  color: #34864d;
+}
+
+.bad-options .section-title > p,
+.comparison .section-title > p,
+.playbooks .section-title > p {
+  color: #5f6d64;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.options-grid article {
+  min-height: 280px;
+  position: relative;
+  padding: 25px;
+  border: 1px solid #dce4dc;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.options-grid article > span {
+  position: absolute;
+  top: 14px;
+  right: 17px;
+  color: #c9d8cc;
+  font: 600 27px Georgia, serif;
+}
+
+.options-grid article > svg {
+  color: #6d7d72;
+}
+
+.options-grid h3 {
+  margin: 18px 0 9px;
+}
+
+.options-grid p {
+  color: #718078;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.options-grid .better-option {
+  border-color: #2d7c45;
+  background: #163d25;
+  color: #fff;
+}
+
+.options-grid .better-option > span {
+  color: #5c9f6d;
+}
+
+.options-grid .better-option > svg,
+.options-grid .better-option a {
+  color: #8fe66f;
+}
+
+.options-grid .better-option p {
+  color: #bed0c2;
+}
+
+.options-grid .better-option a {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 24px;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.options-grid .better-option a svg {
+  width: 16px;
+}
+
+.ai-disclosure {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 18px;
+  padding: 6px 9px;
+  border-radius: 99px;
+  background: #e6f3e3;
+  color: #2d6b3d;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.ai-disclosure svg {
+  width: 13px;
+}
+
+.comparison {
+  padding: 100px max(20px, calc((100vw - 1180px) / 2));
+  background: #edf3eb;
+  color: #102017;
+}
+
+.comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.comparison-grid article {
+  padding: 28px;
+  border: 1px solid #d5dfd5;
+  border-radius: 15px;
+  background: #fff;
+}
+
+.comparison-grid small,
+.playbook-grid small {
+  color: #56705d;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.comparison-grid h3 {
+  margin: 12px 0 10px;
+  font: 600 25px Georgia, serif;
+}
+
+.comparison-grid p {
+  color: #6d7a71;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.comparison-grid .ava-choice {
+  border-color: #31884c;
+  background: #163d25;
+  color: #fff;
+}
+
+.comparison-grid .ava-choice small {
+  color: #8fe66f;
+}
+
+.comparison-grid .ava-choice p {
+  color: #bed0c2;
+}
+
+.playbooks {
+  padding: 100px max(20px, calc((100vw - 1180px) / 2));
+  background: #fff;
+  color: #102017;
+}
+
+.playbook-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.playbook-grid article {
+  padding: 28px;
+  border: 1px solid #dce4dc;
+  border-radius: 14px;
+  background: #f8faf7;
+}
+
+.playbook-grid article > svg {
+  color: #31884c;
+  margin-bottom: 22px;
+}
+
+.playbook-grid h3 {
+  margin: 9px 0;
+}
+
+.playbook-grid p {
+  color: #718078;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.setup-steps {
+  max-width: 950px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.setup-steps article {
+  display: flex;
+  gap: 16px;
+  padding: 25px;
+  border: 1px solid #d6e1d5;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.setup-steps article > b {
+  width: 34px;
+  height: 34px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #173d25;
+  color: #8fe66f;
+}
+
+.setup-steps h3 {
+  margin: 4px 0 8px;
+}
+
+.setup-steps p {
+  margin: 0;
+  color: #718078;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.faq {
+  padding: 100px max(20px, calc((100vw - 980px) / 2));
+  background: #f5f7f3;
+  color: #102017;
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.faq details {
+  align-self: start;
+  border: 1px solid #d9e2da;
+  border-radius: 11px;
+  background: #fff;
+  padding: 18px 20px;
+}
+
+.faq summary {
+  cursor: pointer;
+  font-weight: 850;
+}
+
+.faq details p {
+  margin: 12px 0 2px;
+  color: #68766d;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+@media (max-width: 900px) {
+  .sample-section {
+    grid-template-columns: 1fr;
+    gap: 35px;
+  }
+
+  .options-grid,
+  .comparison-grid,
+  .playbook-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .sample-section {
+    margin: 65px auto;
+  }
+
+  .bad-options,
+  .comparison,
+  .playbooks,
+  .faq {
+    padding: 70px 20px;
+  }
+
+  .options-grid,
+  .comparison-grid,
+  .playbook-grid,
+  .setup-steps,
+  .faq-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .options-grid article {
+    min-height: 0;
+  }
+}

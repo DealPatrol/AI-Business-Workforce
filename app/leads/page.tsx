@@ -1,11 +1,6 @@
-'use client';
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { Sparkles, Phone, MapPin, BriefcaseBusiness, Clock } from 'lucide-react';
+import { redirect } from 'next/navigation';
 
-type Lead={id:string;caller_name?:string;caller_phone?:string;service_job_type?:string;property_address?:string;intent_urgency?:string;summary:string;business_name?:string;business_type?:string;created_at:string};
-export default function LeadsPage(){
- const [leads,setLeads]=useState<Lead[]>([]); const [error,setError]=useState(''); const [loading,setLoading]=useState(true);
- useEffect(()=>{fetch('/api/ava/leads',{cache:'no-store'}).then(r=>r.json()).then(d=>{if(d.error)throw new Error(d.error);setLeads(d.leads||[])}).catch(e=>setError(e.message)).finally(()=>setLoading(false))},[]);
- return <main className="ava-page"><nav className="nav"><Link className="brand" href="/"><span className="logo"><Sparkles size={18}/></span> Workforce<span>AI</span></Link><Link className="ghost" href="/receptionist-demo">Talk to Ava</Link></nav><section className="section wrap"><div className="sectionhead"><span>AVA LEADS</span><h1>Calls worth following up.</h1><p>Completed Ava conversations are captured here for manual follow-up.</p></div>{loading&&<p>Loading leads…</p>}{error&&<p style={{color:'#a83232'}}>{error}</p>}{!loading&&!error&&leads.length===0&&<div className="ava-lead"><h3>No Ava leads yet</h3><p>Finish a qualifying conversation with Ava and the lead will appear here once post-call processing completes.</p></div>}<div style={{display:'grid',gap:18}}>{leads.map(l=><article className="ava-lead" key={l.id}><div className="ava-lead-head"><span>{l.caller_name||'Unknown caller'}</span><b>{l.intent_urgency||'Intent not captured'}</b></div><h3>{l.service_job_type||'Service request'}</h3><dl><div><dt><Phone size={14}/> Phone</dt><dd>{l.caller_phone||'Not provided'}</dd></div><div><dt><MapPin size={14}/> Address</dt><dd>{l.property_address||'Not provided'}</dd></div><div><dt><BriefcaseBusiness size={14}/> Business</dt><dd>{l.business_name||l.business_type||'Ava demo'}</dd></div><div><dt><Clock size={14}/> Received</dt><dd>{new Date(l.created_at).toLocaleString()}</dd></div></dl><p>{l.summary}</p></article>)}</div></section></main>
+export default function LeadsPage() {
+  // Lead records are an operator view, not a public marketing destination.
+  redirect('/receptionist-demo#live-demo');
 }

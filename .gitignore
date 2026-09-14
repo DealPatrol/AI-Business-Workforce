@@ -5,5 +5,11 @@ out
 .env.local
 .env.*.local
 .vercel
+next-env.d.ts
+*.tsbuildinfo
+supabase/.temp
 *.log
 .DS_Store
+tsconfig.tsbuildinfo
+scripts/sales-video/build/
+
