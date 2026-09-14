@@ -104,6 +104,7 @@ export async function GET(req: NextRequest) {
       const usageKey = `ava:${subscriptionId}:${start}`;
 
       const pendingRes = await stripeGet(`/invoiceitems?customer=${encodeURIComponent(customer)}&pending=true&limit=100`, stripeSecret);
+      if (!pendingRes.ok) throw new Error(pendingRes.data?.error?.message || 'Stripe invoice item lookup failed');
       const existing = (pendingRes.data?.data || []).find((x: any) => x.metadata?.ava_usage_key === usageKey);
 
       const existingAmount = Number(existing?.amount || 0);
