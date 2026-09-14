@@ -143,7 +143,7 @@ function ReceptionistDemoContent(){
 
  return <main className="ava-sales">
   <nav className="ava-nav">
-   <Link className="ava-brand" href="/"><span><Sparkles size={17}/></span> Workforce AI</Link>
+   <Link className="ava-brand" href="/"><span><Sparkles size={17}/></span> YardProof</Link>
    <div><a href="#hear-ava">Hear Ava</a><a href="#how">How It Works</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></div>
    <a className="nav-cta" href="#live-demo">Try Ava Live</a>
   </nav>
@@ -210,7 +210,7 @@ function ReceptionistDemoContent(){
 
   <section className="final-cta"><span className="kicker">YOUR NEXT CUSTOMER MAY CALL AFTER HOURS</span><h2>Let Ava answer before they call somebody else.</h2><p>Try the live AI receptionist. Then book a founding setup and we&apos;ll build the call flow around your trade, service area, and team.</p><div><a className="sales-btn light" href="#live-demo"><PhoneCall/> Try Ava Live</a><a className="sales-btn outline" href={FOUNDING_PAYMENT_LINK}>Book $299 Founding Setup <ArrowRight/></a></div></section>
 
-  <footer className="sales-footer"><Link className="ava-brand" href="/"><span><Sparkles size={17}/></span> Workforce AI</Link><p>AI receptionists and automation built around business outcomes.</p><Link href="/founding?interest=ava">Contact Cole</Link></footer>
+  <footer className="sales-footer"><Link className="ava-brand" href="/"><span><Sparkles size={17}/></span> YardProof</Link><p>AI receptionists and automation built around business outcomes.</p><Link href="/founding?interest=ava">Contact Cole</Link></footer>
  </main>
 }
 

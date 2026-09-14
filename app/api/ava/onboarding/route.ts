@@ -202,7 +202,7 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Workforce AI <onboarding@resend.dev>',
+        from: 'YardProof <onboarding@resend.dev>',
         to: [NOTIFICATION_EMAIL],
         ...(replyTo ? { reply_to: replyTo } : {}),
         subject: `Ava paid pilot setup — ${fields.businessName}`,

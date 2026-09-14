@@ -100,7 +100,7 @@ function AvaOnboardingForm() {
           <ArrowLeft /> Ava
         </Link>
         <b>
-          <Sparkles /> Workforce AI
+          <Sparkles /> YardProof
         </b>
       </nav>
 

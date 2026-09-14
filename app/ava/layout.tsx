@@ -6,6 +6,7 @@ import type { ReactNode } from 'react';
 
 export const metadata: Metadata = {
   title: 'AI Receptionist for Home Service Businesses | Ava by Workforce AI',
+  title: 'Ava AI Receptionist for Alabama Home Services | YardProof',
   description:
     'Ava answers calls 24/7 for landscapers, HVAC companies, roofers, plumbers, fencing companies and other home-service businesses. Plans start at $59/month with $0 setup.',
   alternates: { canonical: '/ava' },
