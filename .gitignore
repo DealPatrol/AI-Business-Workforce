@@ -10,3 +10,6 @@ next-env.d.ts
 supabase/.temp
 *.log
 .DS_Store
+tsconfig.tsbuildinfo
+scripts/sales-video/build/
+
