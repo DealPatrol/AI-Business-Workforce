@@ -1,0 +1,223 @@
+/* Production presentation for the connected YardProof campaign demo paths. */
+.vc-mail-photo > img {
+  width: 200%;
+  max-width: none;
+  height: 100%;
+  object-fit: cover;
+  transform: translateX(-50%);
+}
+
+.visualtop > small {
+  color: #2e8b57;
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+}
+
+.yard > img,
+.postimage > img {
+  object-fit: cover;
+}
+
+.yard > img {
+  width: 200% !important;
+  max-width: none !important;
+  left: -100% !important;
+  right: auto !important;
+}
+
+.yard > span,
+.postimage > span {
+  z-index: 1;
+}
+
+.demo-image-note {
+  margin: 8px 2px 0;
+  color: #6f7a72;
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+.material > span {
+  padding: 6px;
+  border: 1px solid #d8ded8;
+  border-radius: 5px;
+  color: #6f7971;
+  font-size: 8px;
+  text-align: center;
+}
+
+.postimage {
+  min-height: 340px;
+  overflow: hidden;
+}
+
+.postimage > img {
+  width: 200% !important;
+  max-width: none !important;
+  left: -100% !important;
+  right: auto !important;
+}
+
+.sendpanel > .button {
+  color: #fff;
+}
+
+.sendpanel > .button + .button {
+  margin-top: 8px;
+  background: #173d28;
+}
+
+.property-landing {
+  min-height: 100vh;
+  background: #f4f6f2;
+}
+
+.property-landing > nav {
+  min-height: 68px;
+  padding: 14px max(22px, calc((100vw - 1100px) / 2));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid #dfe4df;
+  background: #fff;
+  color: #59645c;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.property-landing > nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+}
+
+.property-landing > nav svg {
+  width: 15px;
+}
+
+.property-landing .property-brand {
+  color: #173d28;
+  font-size: 19px;
+  font-weight: 900;
+}
+
+.property-landing-hero {
+  width: min(1100px, calc(100% - 40px));
+  margin: auto;
+  padding: 70px 0;
+  display: grid;
+  grid-template-columns: 0.86fr 1.14fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.property-landing-copy h1 {
+  margin: 14px 0 20px;
+  font: 500 clamp(45px, 5vw, 67px) / 1 Georgia, serif;
+  letter-spacing: -0.035em;
+}
+
+.property-landing-copy > p {
+  color: #657168;
+  line-height: 1.65;
+}
+
+.property-location {
+  margin: 23px 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #2e754e;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.property-location svg {
+  width: 17px;
+}
+
+.property-landing-copy ul {
+  margin: 0 0 28px;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+  list-style: none;
+  color: #48564c;
+  font-size: 13px;
+}
+
+.property-landing-copy li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.property-landing-copy li svg {
+  width: 16px;
+  color: #2e8b57;
+}
+
+.property-landing-copy > small {
+  max-width: 470px;
+  margin-top: 14px;
+  display: block;
+  color: #7b857e;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.property-landing-image {
+  position: relative;
+  min-height: 610px;
+  overflow: hidden;
+  border: 10px solid #fff;
+  border-radius: 12px;
+  background: #dce5df;
+  box-shadow: 0 22px 55px rgba(24, 49, 32, 0.14);
+}
+
+.property-landing-image > img {
+  object-fit: cover;
+}
+
+.property-landing-image > span {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 1;
+  padding: 8px 10px;
+  border-radius: 5px;
+  background: #173d28;
+  color: #fff;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+@media (max-width: 800px) {
+  .visualtop {
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .postimage {
+    min-height: 300px;
+  }
+
+  .property-landing > nav > span {
+    display: none;
+  }
+
+  .property-landing-hero {
+    padding: 45px 0;
+    grid-template-columns: 1fr;
+    gap: 35px;
+  }
+
+  .property-landing-image {
+    min-height: 460px;
+  }
+}
