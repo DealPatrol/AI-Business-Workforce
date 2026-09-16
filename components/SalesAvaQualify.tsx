@@ -20,6 +20,7 @@ type CallState = 'idle' | 'preparing' | 'ready' | 'connecting' | 'connected' | '
 
 type QualificationResult = {
   id: string;
+  prefillToken?: string | null;
   businessName?: string;
   planInterest?: string | null;
   summary?: string;
@@ -190,6 +191,7 @@ function SalesAvaQualifyContent() {
 
       setQualification({
         id: s.qualificationId,
+        prefillToken: s.prefillToken || null,
         businessName: s.qualification?.businessName,
         planInterest: s.qualification?.planInterest,
         summary: s.qualification?.summary,
@@ -224,11 +226,24 @@ function SalesAvaQualifyContent() {
       : 'growth';
   const planLabel =
     planKey === 'starter' ? 'Starter $59' : planKey === 'pro' ? 'Pro $249' : 'Growth $129';
-  const onboardingHref = qualification
-    ? `/onboarding/ava?qualificationId=${encodeURIComponent(qualification.id)}${planKey ? `&plan=${planKey}` : ''}`
-    : '/onboarding/ava';
+  const prefillQs = qualification
+    ? [
+        `qualificationId=${encodeURIComponent(qualification.id)}`,
+        planKey ? `plan=${planKey}` : '',
+        qualification.prefillToken
+          ? `prefillToken=${encodeURIComponent(qualification.prefillToken)}`
+          : '',
+      ]
+        .filter(Boolean)
+        .join('&')
+    : '';
+  const onboardingHref = qualification ? `/onboarding/ava?${prefillQs}` : '/onboarding/ava';
   const checkoutHref = qualification
-    ? `/api/checkout?plan=${planKey}&qualificationId=${encodeURIComponent(qualification.id)}`
+    ? `/api/checkout?plan=${planKey}&qualificationId=${encodeURIComponent(qualification.id)}${
+        qualification.prefillToken
+          ? `&prefillToken=${encodeURIComponent(qualification.prefillToken)}`
+          : ''
+      }`
     : `/api/checkout?plan=${planKey}`;
 
   return (

@@ -76,6 +76,7 @@ function buildEmailFallback(form: HTMLFormElement, result: OnboardingResponse) {
 function AvaOnboardingForm() {
   const searchParams = useSearchParams();
   const qualificationId = searchParams.get('qualificationId') || '';
+  const prefillToken = searchParams.get('prefillToken') || searchParams.get('token') || '';
   const [status, setStatus] = useState<SubmissionStatus>('idle');
   const [error, setError] = useState('');
   const [emailFallback, setEmailFallback] = useState('');
@@ -94,10 +95,11 @@ function AvaOnboardingForm() {
     let cancelled = false;
     (async () => {
       try {
-        const res = await fetch(
-          `/api/ava/sales/qualify?id=${encodeURIComponent(qualificationId)}`,
-          { cache: 'no-store' },
-        );
+        const qs = new URLSearchParams({ id: qualificationId });
+        if (prefillToken) qs.set('token', prefillToken);
+        const res = await fetch(`/api/ava/sales/qualify?${qs.toString()}`, {
+          cache: 'no-store',
+        });
         const data = await res.json();
         if (!res.ok || !data.qualification) {
           if (!cancelled) {
@@ -119,7 +121,11 @@ function AvaOnboardingForm() {
           staffContact: q.staffContact || '',
           plan: searchParams.get('plan') || q.planInterest || '',
         });
-        setPrefillNote('Prefilling from your Sales Ava conversation.');
+        setPrefillNote(
+          data.access === 'full'
+            ? 'Prefilling from your Sales Ava conversation.'
+            : 'Prefilling business answers. Re-enter staff contact if blank (token expired or missing).',
+        );
         setPrefillReady(true);
       } catch {
         if (!cancelled) {
@@ -131,7 +137,7 @@ function AvaOnboardingForm() {
     return () => {
       cancelled = true;
     };
-  }, [qualificationId, searchParams]);
+  }, [qualificationId, prefillToken, searchParams]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

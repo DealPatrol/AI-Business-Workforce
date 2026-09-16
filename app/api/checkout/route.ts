@@ -15,10 +15,18 @@ function sanitizeQualificationId(value: unknown) {
   return id;
 }
 
+function sanitizePrefillToken(value: unknown) {
+  const token = String(value || '').trim();
+  // base64url.body.base64url.sig
+  if (!token || token.length > 400 || !/^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/.test(token)) return '';
+  return token;
+}
+
 async function createAvaCheckout(
   req: NextRequest,
   planKey: PlanKey,
   qualificationId?: string,
+  prefillToken?: string,
 ) {
   const secret = process.env.STRIPE_SECRET_KEY;
   if (!secret) {
@@ -32,10 +40,12 @@ async function createAvaCheckout(
 
   const origin = req.nextUrl.origin;
   const qid = sanitizeQualificationId(qualificationId);
+  const token = sanitizePrefillToken(prefillToken);
   const successParts = [
     `session_id={CHECKOUT_SESSION_ID}`,
     `plan=${planKey}`,
     ...(qid ? [`qualificationId=${encodeURIComponent(qid)}`] : []),
+    ...(token ? [`prefillToken=${encodeURIComponent(token)}`] : []),
   ];
   const params = new URLSearchParams();
   params.set('mode', 'subscription');
@@ -86,8 +96,12 @@ export async function GET(req: NextRequest) {
   try {
     const planKey = String(req.nextUrl.searchParams.get('plan') || '').toLowerCase() as PlanKey;
     const qualificationId = req.nextUrl.searchParams.get('qualificationId') || '';
+    const prefillToken =
+      req.nextUrl.searchParams.get('prefillToken') ||
+      req.nextUrl.searchParams.get('token') ||
+      '';
     if (!PLANS[planKey]) return NextResponse.redirect(new URL('/ava#pricing', req.url));
-    const result = await createAvaCheckout(req, planKey, qualificationId);
+    const result = await createAvaCheckout(req, planKey, qualificationId, prefillToken);
     if ('error' in result) return NextResponse.redirect(new URL('/ava#pricing', req.url));
     return NextResponse.redirect(result.url, 303);
   } catch (error) {
@@ -101,8 +115,9 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const planKey = String(body?.plan || '').toLowerCase() as PlanKey;
     const qualificationId = String(body?.qualificationId || '');
+    const prefillToken = String(body?.prefillToken || body?.token || '');
     if (!PLANS[planKey]) return NextResponse.json({ error: 'Invalid Ava plan.' }, { status: 400 });
-    const result = await createAvaCheckout(req, planKey, qualificationId);
+    const result = await createAvaCheckout(req, planKey, qualificationId, prefillToken);
     if ('error' in result) return result.error;
     return NextResponse.json({ url: result.url });
   } catch (error) {

@@ -17,10 +17,15 @@ const industryPages = [
   ['Missed Calls','/ava/missed-call-answering-home-services','Overflow and after-hours coverage for home-service teams.'],
 ];
 
+const BOOKING_URL = process.env.NEXT_PUBLIC_AVA_SETUP_BOOKING_URL || '';
+
 export default function AvaPage() {
+ const heroNext = BOOKING_URL
+  ? 'She\'ll ask the setup questions, then you can book a short setup call — or continue to checkout.'
+  : 'She\'ll ask the setup questions, then send you to checkout or onboarding with answers prefilled.';
  return <main className="ava-sales">
   <nav className="ava-nav"><Link className="ava-brand" href="/"><span><Sparkles size={17}/></span> Workforce AI</Link><div><a href="#talk-to-ava">Talk to Ava</a><a href="#how">How It Works</a><a href="#industries">Industries</a><a href="#pricing">Pricing</a></div><a className="nav-cta" href="#talk-to-ava">Talk to Ava</a></nav>
-  <section className="sales-hero"><div className="hero-copy"><span className="kicker">OPTIONAL AI RECEPTIONIST ADD-ON</span><h1>Turn the calls your marketing creates into <em>qualified leads.</em></h1><p>Call Ava like your customers will. She&apos;ll ask the setup questions, then book a short call with Cole — or send you to checkout.</p><div className="hero-actions"><a className="sales-btn" href="#talk-to-ava"><PhoneCall size={18}/> Talk to Ava — she&apos;ll set up your receptionist</a><a className="sales-btn secondary" href="#pricing">See plans ($59 / $129 / $249) <ArrowRight size={18}/></a></div><div className="trust-row"><span><Check/> $0 setup fee</span><span><Check/> No long-term contract</span><span><Check/> Configured for your business</span></div></div><div className="hero-proof"><div className="proof-phone"><div className="phone-top"><span className="pulse"/><b>Incoming customer call</b><small>7:42 PM</small></div><div className="call-path"><span><PhoneCall/> Ava answers</span><span><Headphones/> Qualifies the request</span><span><ShieldCheck/> Sends the lead</span></div></div></div></section>
+  <section className="sales-hero"><div className="hero-copy"><span className="kicker">OPTIONAL AI RECEPTIONIST ADD-ON</span><h1>Turn the calls your marketing creates into <em>qualified leads.</em></h1><p>Call Ava like your customers will. {heroNext}</p><div className="hero-actions"><a className="sales-btn" href="#talk-to-ava"><PhoneCall size={18}/> Talk to Ava — she&apos;ll set up your receptionist</a><a className="sales-btn secondary" href="#pricing">See plans ($59 / $129 / $249) <ArrowRight size={18}/></a></div><div className="trust-row"><span><Check/> $0 setup fee</span><span><Check/> No long-term contract</span><span><Check/> Configured for your business</span></div></div><div className="hero-proof"><div className="proof-phone"><div className="phone-top"><span className="pulse"/><b>Incoming customer call</b><small>7:42 PM</small></div><div className="call-path"><span><PhoneCall/> Ava answers</span><span><Headphones/> Qualifies the request</span><span><ShieldCheck/> Sends the lead</span></div></div></div></section>
 
   <SalesAvaQualify />
 

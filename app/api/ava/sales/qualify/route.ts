@@ -7,7 +7,15 @@ import {
   rowFromInput,
   sanitizeQualifyField,
   toPublicQualification,
+  toSafePublicQualification,
 } from '@/lib/ava/sales-qualify';
+import {
+  checkRateLimit,
+  clientIp,
+  mintPrefillToken,
+  verifyPrefillToken,
+  verifySalesConversation,
+} from '@/lib/ava/sales-qualify-security';
 
 const escapeHtml = (value: unknown) =>
   String(value ?? 'Not provided').replace(
@@ -25,7 +33,7 @@ async function notifySalesQualification(row: AvaSalesQualificationRow) {
   const subject = `Sales Ava qualification — ${row.business_name}`;
   const html = `<div style="font-family:Arial,sans-serif;max-width:720px;margin:auto;color:#17211b">
     <h1 style="font-size:22px">New Sales Ava qualification</h1>
-    <p>A prospect finished the qualify conversation. Prefill onboarding with <code>qualificationId=${escapeHtml(row.id)}</code>.</p>
+    <p>A prospect finished the qualify conversation. Prefill onboarding with <code>qualificationId=${escapeHtml(row.id)}</code> plus a short-lived <code>prefillToken</code> for staff contact.</p>
     <table style="border-collapse:collapse;width:100%">
       <tr><td><b>Business</b></td><td>${escapeHtml(row.business_name)} (${escapeHtml(row.business_type)})</td></tr>
       <tr><td><b>Hours</b></td><td>${escapeHtml(row.business_hours)}</td></tr>
@@ -73,7 +81,7 @@ function parseBody(body: Record<string, unknown>): AvaSalesQualificationInput {
     companyWebsite: sanitizeQualifyField(body.companyWebsite || '') || null,
     planInterest: sanitizeQualifyField(body.planInterest || '') || null,
     summary: sanitizeQualifyField(body.summary),
-    conversationId: sanitizeQualifyField(body.conversationId || '') || null,
+    conversationId: sanitizeQualifyField(body.conversationId || ''),
     setupCallBookedAt: body.setupCallBookedAt ? String(body.setupCallBookedAt) : null,
     setupCallMeetUrl: sanitizeQualifyField(body.setupCallMeetUrl || '') || null,
   };
@@ -81,8 +89,22 @@ function parseBody(body: Record<string, unknown>): AvaSalesQualificationInput {
 
 export async function GET(req: NextRequest) {
   const id = req.nextUrl.searchParams.get('id') || req.nextUrl.searchParams.get('qualificationId');
+  const token =
+    req.nextUrl.searchParams.get('token') ||
+    req.nextUrl.searchParams.get('prefillToken') ||
+    req.headers.get('x-ava-prefill-token');
+
   if (!id) {
     return NextResponse.json({ error: 'id is required' }, { status: 400 });
+  }
+
+  const ip = clientIp(req);
+  const ipLimit = checkRateLimit(`qualify:get:ip:${ip}`, 60, 15 * 60_000);
+  if (!ipLimit.ok) {
+    return NextResponse.json(
+      { error: 'Too many requests. Try again shortly.' },
+      { status: 429, headers: { 'Retry-After': String(ipLimit.retryAfterSec) } },
+    );
   }
 
   try {
@@ -101,7 +123,22 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Qualification not found.' }, { status: 404 });
     }
 
-    return NextResponse.json({ qualification: toPublicQualification(data as AvaSalesQualificationRow) });
+    const row = data as AvaSalesQualificationRow;
+    const fullAccess = verifyPrefillToken(token, row.id);
+
+    if (fullAccess) {
+      return NextResponse.json({
+        qualification: toPublicQualification(row),
+        access: 'full',
+      });
+    }
+
+    // UUID alone is not enough for staff contact / conversationId (capability-URL risk).
+    return NextResponse.json({
+      qualification: toSafePublicQualification(row),
+      access: 'safe',
+      note: 'staffContact and conversationId require a valid short-lived prefillToken.',
+    });
   } catch (error) {
     console.error('Unable to load sales qualification', error);
     return NextResponse.json({ error: 'Qualification lookup is unavailable.' }, { status: 503 });
@@ -110,6 +147,15 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = clientIp(req);
+    const ipLimit = checkRateLimit(`qualify:post:ip:${ip}`, 8, 15 * 60_000);
+    if (!ipLimit.ok) {
+      return NextResponse.json(
+        { error: 'Too many qualification saves from this network. Try again later.' },
+        { status: 429, headers: { 'Retry-After': String(ipLimit.retryAfterSec) } },
+      );
+    }
+
     const body = (await req.json()) as Record<string, unknown>;
     const input = parseBody(body);
 
@@ -121,32 +167,51 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const convLimit = checkRateLimit(
+      `qualify:post:conv:${input.conversationId}`,
+      4,
+      60 * 60_000,
+    );
+    if (!convLimit.ok) {
+      return NextResponse.json(
+        { error: 'Too many saves for this conversation. Try again later.' },
+        { status: 429, headers: { 'Retry-After': String(convLimit.retryAfterSec) } },
+      );
+    }
+
+    const verified = await verifySalesConversation(input.conversationId);
+    if (!verified.ok) {
+      return NextResponse.json({ error: verified.error }, { status: verified.status });
+    }
+
+    // Bind to the verified id so clients cannot upsert under a different key after verification.
+    input.conversationId = verified.conversationId;
+
     const supabase = createAdminClient();
     const payload = rowFromInput(input);
 
-    let data: AvaSalesQualificationRow | null = null;
-    let error = null as { message: string } | null;
+    // Upsert only after ElevenLabs proof — prevents unauthenticated inserts and blind overwrites.
+    const upsert = await supabase
+      .from('ava_sales_qualifications')
+      .upsert(payload, { onConflict: 'conversation_id' })
+      .select()
+      .single();
 
-    if (payload.conversation_id) {
-      const upsert = await supabase
-        .from('ava_sales_qualifications')
-        .upsert(payload, { onConflict: 'conversation_id' })
-        .select()
-        .single();
-      data = upsert.data as AvaSalesQualificationRow | null;
-      error = upsert.error;
-    } else {
-      const insert = await supabase.from('ava_sales_qualifications').insert(payload).select().single();
-      data = insert.data as AvaSalesQualificationRow | null;
-      error = insert.error;
-    }
+    const data = upsert.data as AvaSalesQualificationRow | null;
+    const error = upsert.error;
 
     if (error || !data) {
       console.error('Unable to save sales qualification', error);
       return NextResponse.json({ error: 'Could not save qualification.' }, { status: 503 });
     }
 
-    let notification: { sent: boolean; skipped?: boolean; error?: string; id?: string; warning?: string } = {
+    let notification: {
+      sent: boolean;
+      skipped?: boolean;
+      error?: string;
+      id?: string;
+      warning?: string;
+    } = {
       sent: Boolean(data.notified_at),
       skipped: Boolean(data.notified_at),
     };
@@ -167,8 +232,11 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    const prefillToken = mintPrefillToken(data.id);
+
     return NextResponse.json({
       qualificationId: data.id,
+      prefillToken,
       qualification: toPublicQualification(data),
       notification,
     });

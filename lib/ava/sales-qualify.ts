@@ -11,7 +11,7 @@ export type AvaSalesQualificationInput = {
   companyWebsite?: string | null;
   planInterest?: string | null;
   summary: string;
-  conversationId?: string | null;
+  conversationId: string;
   setupCallBookedAt?: string | null;
   setupCallMeetUrl?: string | null;
 };
@@ -38,7 +38,8 @@ export type AvaSalesQualificationRow = {
   updated_at: string;
 };
 
-export type AvaSalesQualificationPublic = {
+/** Safe fields for unauthenticated GET by UUID (no staff PII, no conversationId). */
+export type AvaSalesQualificationPublicSafe = {
   id: string;
   businessName: string;
   businessType: string;
@@ -47,14 +48,18 @@ export type AvaSalesQualificationPublic = {
   callHandlingRules: string;
   urgentCallRules: string;
   staffName: string;
-  staffContact: string;
   calendarPreference: string;
   companyWebsite: string | null;
   planInterest: string | null;
   summary: string;
-  conversationId: string | null;
   setupCallBookedAt: string | null;
   setupCallMeetUrl: string | null;
+};
+
+/** Full public shape — only returned with a valid short-lived prefill token (or to POST caller). */
+export type AvaSalesQualificationPublic = AvaSalesQualificationPublicSafe & {
+  staffContact: string;
+  conversationId: string | null;
 };
 
 const MAX_FIELD = 4_000;
@@ -65,7 +70,9 @@ export function sanitizeQualifyField(value: unknown, fallback = ''): string {
     .slice(0, MAX_FIELD);
 }
 
-export function toPublicQualification(row: AvaSalesQualificationRow): AvaSalesQualificationPublic {
+export function toSafePublicQualification(
+  row: AvaSalesQualificationRow,
+): AvaSalesQualificationPublicSafe {
   return {
     id: row.id,
     businessName: row.business_name,
@@ -75,14 +82,22 @@ export function toPublicQualification(row: AvaSalesQualificationRow): AvaSalesQu
     callHandlingRules: row.call_handling_rules,
     urgentCallRules: row.urgent_call_rules,
     staffName: row.staff_name,
-    staffContact: row.staff_contact,
     calendarPreference: row.calendar_preference,
     companyWebsite: row.company_website,
     planInterest: row.plan_interest,
     summary: row.summary,
-    conversationId: row.conversation_id,
     setupCallBookedAt: row.setup_call_booked_at,
     setupCallMeetUrl: row.setup_call_meet_url,
+  };
+}
+
+export function toPublicQualification(
+  row: AvaSalesQualificationRow,
+): AvaSalesQualificationPublic {
+  return {
+    ...toSafePublicQualification(row),
+    staffContact: row.staff_contact,
+    conversationId: row.conversation_id,
   };
 }
 
@@ -100,7 +115,7 @@ export function rowFromInput(input: AvaSalesQualificationInput) {
     company_website: sanitizeQualifyField(input.companyWebsite || '') || null,
     plan_interest: sanitizeQualifyField(input.planInterest || '') || null,
     summary: sanitizeQualifyField(input.summary),
-    conversation_id: sanitizeQualifyField(input.conversationId || '') || null,
+    conversation_id: sanitizeQualifyField(input.conversationId),
     setup_call_booked_at: input.setupCallBookedAt || null,
     setup_call_meet_url: sanitizeQualifyField(input.setupCallMeetUrl || '') || null,
     updated_at: new Date().toISOString(),
@@ -118,4 +133,5 @@ export const REQUIRED_QUALIFY_FIELDS: Array<keyof AvaSalesQualificationInput> = 
   'staffContact',
   'calendarPreference',
   'summary',
+  'conversationId',
 ];
