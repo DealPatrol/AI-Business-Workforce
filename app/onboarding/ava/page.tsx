@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, Suspense, useState } from 'react';
+import { FormEvent, Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, CheckCircle2, Loader2, Mail, Sparkles } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
@@ -16,6 +16,30 @@ type OnboardingResponse = {
     status?: string;
     message?: string;
   };
+};
+
+type Prefill = {
+  businessName: string;
+  businessHours: string;
+  services: string;
+  callHandlingRules: string;
+  calendarPreference: string;
+  urgentCallRules: string;
+  staffName: string;
+  staffContact: string;
+  plan: string;
+};
+
+const emptyPrefill: Prefill = {
+  businessName: '',
+  businessHours: '',
+  services: '',
+  callHandlingRules: '',
+  calendarPreference: '',
+  urgentCallRules: '',
+  staffName: '',
+  staffContact: '',
+  plan: '',
 };
 
 function buildEmailFallback(form: HTMLFormElement, result: OnboardingResponse) {
@@ -39,6 +63,7 @@ function buildEmailFallback(form: HTMLFormElement, result: OnboardingResponse) {
       '',
       `Stripe Checkout session: ${data.get('sessionId') || ''}`,
       `Selected plan: ${data.get('plan') || ''}`,
+      `Qualification: ${data.get('qualificationId') || ''}`,
       `Onboarding record: ${result.onboardingId || 'Not persisted'}`,
       `Agent status: ${result.provisioning?.status || 'pending_manual'}`,
       `Next provisioning step: ${result.provisioning?.message || 'Cole must complete setup.'}`,
@@ -50,9 +75,69 @@ function buildEmailFallback(form: HTMLFormElement, result: OnboardingResponse) {
 
 function AvaOnboardingForm() {
   const searchParams = useSearchParams();
+  const qualificationId = searchParams.get('qualificationId') || '';
+  const prefillToken = searchParams.get('prefillToken') || searchParams.get('token') || '';
   const [status, setStatus] = useState<SubmissionStatus>('idle');
   const [error, setError] = useState('');
   const [emailFallback, setEmailFallback] = useState('');
+  const [prefill, setPrefill] = useState<Prefill>({
+    ...emptyPrefill,
+    plan: searchParams.get('plan') || '',
+  });
+  const [prefillNote, setPrefillNote] = useState('');
+  const [prefillReady, setPrefillReady] = useState(!qualificationId);
+
+  useEffect(() => {
+    if (!qualificationId) {
+      setPrefillReady(true);
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      try {
+        const qs = new URLSearchParams({ id: qualificationId });
+        if (prefillToken) qs.set('token', prefillToken);
+        const res = await fetch(`/api/ava/sales/qualify?${qs.toString()}`, {
+          cache: 'no-store',
+        });
+        const data = await res.json();
+        if (!res.ok || !data.qualification) {
+          if (!cancelled) {
+            setPrefillNote('Could not load Sales Ava answers — fill the form manually.');
+            setPrefillReady(true);
+          }
+          return;
+        }
+        const q = data.qualification;
+        if (cancelled) return;
+        setPrefill({
+          businessName: q.businessName || '',
+          businessHours: q.businessHours || '',
+          services: q.services || '',
+          callHandlingRules: q.callHandlingRules || '',
+          calendarPreference: q.calendarPreference || '',
+          urgentCallRules: q.urgentCallRules || '',
+          staffName: q.staffName || '',
+          staffContact: q.staffContact || '',
+          plan: searchParams.get('plan') || q.planInterest || '',
+        });
+        setPrefillNote(
+          data.access === 'full'
+            ? 'Prefilling from your Sales Ava conversation.'
+            : 'Prefilling business answers. Re-enter staff contact if blank (token expired or missing).',
+        );
+        setPrefillReady(true);
+      } catch {
+        if (!cancelled) {
+          setPrefillNote('Could not load Sales Ava answers — fill the form manually.');
+          setPrefillReady(true);
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [qualificationId, prefillToken, searchParams]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -112,6 +197,7 @@ function AvaOnboardingForm() {
             Payment is complete. Fill this out, Cole sets up Ava, you test one live call together,
             then Ava launches.
           </p>
+          {prefillNote ? <p className={styles.notice}>{prefillNote}</p> : null}
         </header>
 
         <section className={styles.steps} aria-label="What happens next">
@@ -144,7 +230,7 @@ function AvaOnboardingForm() {
               <h2>Hear Ava on a call</h2>
               <p>Sample landscaping receptionist call · about 54 seconds</p>
             </div>
-            <Link href="/receptionist-demo#live-demo">Or try Ava live</Link>
+            <Link href="/ava#talk-to-ava">Or talk to Sales Ava</Link>
           </div>
           <video className={styles.sampleVideo} controls playsInline preload="metadata">
             <source src="/ava-sample-call.mp4" type="video/mp4" />
@@ -161,7 +247,9 @@ function AvaOnboardingForm() {
             </p>
             <Link href="/ava">Return to Ava</Link>
           </section>
-        ) : (
+        ) : !prefillReady ? (
+            <p className={styles.notice}><Loader2 className={styles.spin} /> Loading your Sales Ava answers…</p>
+          ) : (
           <form className={styles.form} onSubmit={submit}>
             <header className={styles.formHeader}>
               <h2>How should Ava handle your calls?</h2>
@@ -173,7 +261,12 @@ function AvaOnboardingForm() {
               <div className={styles.two}>
                 <label>
                   Business name
-                  <input name="businessName" required autoComplete="organization" />
+                  <input
+                    name="businessName"
+                    required
+                    autoComplete="organization"
+                    defaultValue={prefill.businessName}
+                  />
                 </label>
                 <label>
                   Hours
@@ -182,6 +275,7 @@ function AvaOnboardingForm() {
                     required
                     placeholder="Mon–Fri, 7am–5pm CT"
                     autoComplete="off"
+                    defaultValue={prefill.businessHours}
                   />
                 </label>
               </div>
@@ -192,6 +286,7 @@ function AvaOnboardingForm() {
                   required
                   rows={3}
                   placeholder="HVAC repair and installation in Birmingham"
+                  defaultValue={prefill.services}
                 />
               </label>
             </fieldset>
@@ -205,6 +300,7 @@ function AvaOnboardingForm() {
                   required
                   rows={4}
                   placeholder="Ask what they need, collect their address, book estimates, and transfer warranty calls."
+                  defaultValue={prefill.callHandlingRules}
                 />
               </label>
               <label>
@@ -213,6 +309,7 @@ function AvaOnboardingForm() {
                   name="calendarPreference"
                   required
                   placeholder="Google Calendar, booking link, or phone callback"
+                  defaultValue={prefill.calendarPreference}
                 />
               </label>
               <label>
@@ -222,6 +319,7 @@ function AvaOnboardingForm() {
                   required
                   rows={3}
                   placeholder="No heat is urgent. Call Sam; if no answer, text him and tell the caller we will respond in 15 minutes."
+                  defaultValue={prefill.urgentCallRules}
                 />
               </label>
             </fieldset>
@@ -231,7 +329,12 @@ function AvaOnboardingForm() {
               <div className={styles.two}>
                 <label>
                   Name
-                  <input name="staffName" required autoComplete="name" />
+                  <input
+                    name="staffName"
+                    required
+                    autoComplete="name"
+                    defaultValue={prefill.staffName}
+                  />
                 </label>
                 <label>
                   Phone or email
@@ -240,13 +343,15 @@ function AvaOnboardingForm() {
                     required
                     placeholder="(205) 555-0123 or sam@example.com"
                     autoComplete="off"
+                    defaultValue={prefill.staffContact}
                   />
                 </label>
               </div>
             </fieldset>
 
             <input type="hidden" name="sessionId" value={searchParams.get('session_id') || ''} />
-            <input type="hidden" name="plan" value={searchParams.get('plan') || ''} />
+            <input type="hidden" name="plan" value={prefill.plan || searchParams.get('plan') || ''} />
+            <input type="hidden" name="qualificationId" value={qualificationId} />
             <label className={styles.honeypot} aria-hidden="true">
               Company website
               <input name="companyWebsite" tabIndex={-1} autoComplete="off" />
