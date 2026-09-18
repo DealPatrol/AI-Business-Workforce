@@ -1,7 +1,8 @@
 # Ava sales funnel (qualify-only)
 
 **Slice:** Sales Ava qualify → persist → onboarding prefill.  
-**Out of scope:** Calendar booking APIs, SMS, GHL, auto phone buy, public dial-in numbers.
+**Out of scope:** Calendar booking APIs, customer-facing SMS/GHL, auto phone buy, public dial-in numbers.
+**Optional:** Internal lead-alert SMS via Twilio when `TWILIO_*` + `AVA_LEAD_SMS_TO` are set (additive to Resend; not live until configured).
 
 ## Flow
 
@@ -33,6 +34,7 @@
 | `ELEVENLABS_SALES_AGENT_ID` | **New** separate Sales Ava agent |
 | `NEXT_PUBLIC_SUPABASE_URL` / `SUPABASE_SECRET_KEY` | Persist qualifications |
 | `RESEND_API_KEY` / `AVA_LEAD_NOTIFICATION_EMAIL` | Email Cole on new qualification |
+| `TWILIO_ACCOUNT_SID` / `TWILIO_AUTH_TOKEN` / `TWILIO_FROM_NUMBER` / `AVA_LEAD_SMS_TO` | Optional Twilio SMS alert on qualify (no-op if unset) |
 | `NEXT_PUBLIC_AVA_SETUP_BOOKING_URL` | Optional setup-call link after qualify |
 | `AVA_QUALIFY_PREFILL_SECRET` | Optional dedicated HMAC secret for prefill tokens |
 | `STRIPE_SECRET_KEY` | Ava plan checkout ($59 / $129 / $249, $0 setup) |
@@ -53,4 +55,5 @@ Apply migration `supabase/migrations/005_ava_sales_qualifications.sql` (table `a
 - Pricing stays Starter **$59** / Growth **$129** / Pro **$249**, **$0** setup.
 - Do not invent dial-in numbers or retarget Visual Canvasser payment links for Ava.
 - Calendar writes are not live in this slice — optional booking URL only.
-- **Starter feature-list gap:** the `/ava` pricing card still lists “Appointment booking” on Starter for marketing continuity, but live calendar booking APIs are **not** wired in this qualify-only slice. Treat that line as aspirational / setup-call scope until calendar integration ships — do not imply Google Calendar / SMS / GHL is already connected.
+- **Starter feature-list gap:** the `/ava` pricing card still lists “Appointment booking” on Starter for marketing continuity, but live calendar booking APIs are **not** wired in this qualify-only slice. Treat that line as aspirational / setup-call scope until calendar integration ships — do not imply Google Calendar / customer SMS / GHL is already connected.
+- Internal Twilio SMS lead alerts are available only when Twilio env is set; do not claim Google SMS or that customer SMS is live.

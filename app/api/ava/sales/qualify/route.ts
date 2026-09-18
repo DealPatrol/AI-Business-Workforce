@@ -16,6 +16,7 @@ import {
   verifyPrefillToken,
   verifySalesConversation,
 } from '@/lib/ava/sales-qualify-security';
+import { formatSalesQualifySmsBody, sendAvaLeadSms } from '@/lib/ava/sms';
 
 const escapeHtml = (value: unknown) =>
   String(value ?? 'Not provided').replace(
@@ -23,7 +24,7 @@ const escapeHtml = (value: unknown) =>
     (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[c] || c,
   );
 
-async function notifySalesQualification(row: AvaSalesQualificationRow) {
+async function notifySalesQualificationEmail(row: AvaSalesQualificationRow) {
   const apiKey = process.env.RESEND_API_KEY;
   const to = process.env.AVA_LEAD_NOTIFICATION_EMAIL;
   if (!apiKey || !to) {
@@ -211,14 +212,35 @@ export async function POST(req: NextRequest) {
       error?: string;
       id?: string;
       warning?: string;
+      sms?: {
+        sent: boolean;
+        skipped?: boolean;
+        sid?: string;
+        error?: string;
+      };
     } = {
       sent: Boolean(data.notified_at),
       skipped: Boolean(data.notified_at),
+      sms: { sent: false, skipped: true },
     };
 
     if (!data.notified_at) {
-      notification = await notifySalesQualification(data);
-      if (notification.sent) {
+      const email = await notifySalesQualificationEmail(data);
+      let sms;
+      try {
+        sms = await sendAvaLeadSms({
+          body: formatSalesQualifySmsBody(data.business_name),
+        });
+      } catch (smsError) {
+        console.error('Ava lead SMS failed', smsError);
+        sms = {
+          sent: false,
+          error: smsError instanceof Error ? smsError.message : 'SMS send failed',
+        };
+      }
+      notification = { ...email, sms };
+      // Email remains primary for notified_at; SMS is additive and must not block the request.
+      if (email.sent) {
         const notifiedAt = new Date().toISOString();
         const { error: updateError } = await supabase
           .from('ava_sales_qualifications')
