@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { formatAvaLeadSmsBody, sendAvaLeadSms } from '@/lib/ava/sms';
 
 const escapeHtml=(value:unknown)=>String(value??'Not provided').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]||c));
 
-async function notifyLead(lead:any){
+async function notifyLeadEmail(lead:any){
   const apiKey=process.env.RESEND_API_KEY;
   const to=process.env.AVA_LEAD_NOTIFICATION_EMAIL;
   if(!apiKey||!to) return { sent:false, error:'Email notification environment variables are not configured.' };
@@ -39,10 +40,19 @@ export async function POST(req: NextRequest) {
     }
 
     // Only notify once per saved call. This protects against browser/API retries creating duplicate alerts.
-    let notification={ sent:Boolean(data.notified_at), skipped:Boolean(data.notified_at) } as any;
+    let notification={ sent:Boolean(data.notified_at), skipped:Boolean(data.notified_at), sms:{ sent:false, skipped:true } } as any;
     if(!data.notified_at){
-      notification=await notifyLead(data);
-      if(notification.sent){
+      const email=await notifyLeadEmail(data);
+      let sms;
+      try {
+        sms=await sendAvaLeadSms({ body: formatAvaLeadSmsBody(data) });
+      } catch (smsError) {
+        console.error('Ava lead SMS failed', smsError);
+        sms={ sent:false, error: smsError instanceof Error ? smsError.message : 'SMS send failed' };
+      }
+      notification={ ...email, sms };
+      // Email remains primary for notified_at; SMS is additive and must not block the request.
+      if(email.sent){
         const notifiedAt=new Date().toISOString();
         const { error:updateError }=await supabase.from('ava_call_leads').update({notified_at:notifiedAt}).eq('id',data.id);
         if(updateError) notification.warning='Email sent, but notified_at could not be saved.';

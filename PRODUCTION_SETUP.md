@@ -40,7 +40,7 @@ Add these server-only variables:
 
 With automatic creation disabled, Cole can use the authenticated internal endpoint described in [`docs/AVA_PHONE_SETUP_RUNBOOK.md`](docs/AVA_PHONE_SETUP_RUNBOOK.md). The endpoint duplicates the template through ElevenLabs' supported agent-duplicate API, updates the customer's prompt and greeting, and saves the returned agent ID. Missing credentials result in a pending status. Submit-time automatic creation also requires Stripe to report the session as paid and complete and identify it through `/api/checkout` Ava plan metadata or the configured Ava-specific Payment Link ID.
 
-Phone-number purchase, allocation, import/assignment, forwarding, calendar writes, SMS, and launch approval are still manual. `agent_ready_phone_pending` means the customer agent is configured; it does not mean a phone number or live calling is ready.
+Phone-number purchase, allocation, import/assignment, forwarding, calendar writes, customer-facing SMS, and launch approval are still manual. Optional **internal** Twilio SMS lead alerts (`TWILIO_*` + `AVA_LEAD_SMS_TO`) activate only when configured — missing env no-ops SMS; email (Resend) remains primary. `agent_ready_phone_pending` means the customer agent is configured; it does not mean a phone number or live calling is ready.
 
 ## Current production boundary
 
@@ -61,7 +61,7 @@ Still requires credentials/integration work before claiming live:
 - generated property imagery
 - live supplier inventory/pricing
 - Stripe checkout/subscriptions
-- Ava phone-number purchase/assignment, line forwarding, and SMS
+- Ava phone-number purchase/assignment, line forwarding, and customer-facing SMS (internal Twilio lead-alert SMS is available when Twilio env is set)
 - Ava calendar writes and automated launch approval
 - postcard printing and fulfillment
 

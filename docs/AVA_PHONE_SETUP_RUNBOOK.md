@@ -18,7 +18,7 @@ Never use the shared founding Payment Link for this handoff. Visual Canvasser al
 2. Put the onboarding answers into the agent prompt/knowledge: greeting, services, hours, qualification and booking rules, escalation and urgent rules, and staff handoff.
 3. Attach a phone number in ElevenLabs. If Twilio is the source, buy/select the number in Twilio and import it into ElevenLabs.
 4. Give the customer the Ava number, or have the customer/carrier forward the existing business line to it.
-5. Confirm lead summaries reach the intended email/inbox. `AVA_LEAD_NOTIFICATION_EMAIL` controls the existing Ava lead email destination.
+5. Confirm lead summaries reach the intended email/inbox. `AVA_LEAD_NOTIFICATION_EMAIL` controls the existing Ava lead email destination. Optional Twilio SMS alerts (`TWILIO_*` + `AVA_LEAD_SMS_TO`) are additive when configured — they are not live until those env vars are set and tested.
 6. Make a live test call with the customer. Test normal, booking, out-of-hours, urgent, and staff-handoff cases.
 7. Launch only after the test passes. Do not describe phone, SMS, calendar writes, or transfers as live until each is configured and tested.
 
@@ -64,6 +64,7 @@ Required to create/configure an agent:
 Related production settings:
 
 - `AVA_LEAD_NOTIFICATION_EMAIL`
+- Optional lead-alert SMS (Twilio; no-op until all set): `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER`, `AVA_LEAD_SMS_TO`
 - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
 
 Do not commit any value. Missing credentials leave a truthful pending status; they never produce a fake number.
