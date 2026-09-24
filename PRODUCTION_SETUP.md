@@ -58,7 +58,7 @@ Implemented in code:
 
 Still requires credentials/integration work before claiming live:
 - persisting public audit leads into Supabase
-- generated property imagery
+- generated property imagery end-to-end in production (MVP routes exist; needs Maps/OpenAI keys, Storage bucket, migration apply, and human review before mail)
 - live supplier inventory/pricing
 - Stripe checkout/subscriptions
 - Ava phone-number purchase/assignment, line forwarding, and customer-facing SMS (internal Twilio lead-alert SMS is available when Twilio env is set)
@@ -66,3 +66,28 @@ Still requires credentials/integration work before claiming live:
 - postcard printing and fulfillment
 
 Never commit secrets to GitHub. Configure them in Vercel/Supabase secret management.
+
+## YardProof postcard imagery (MVP code present — not live without keys)
+
+Migrations:
+
+- `supabase/migrations/20260924120000_postcard_recipient_imagery.sql` — per-recipient Current/After/review + campaign geo parity
+- `supabase/migrations/20260924130000_streetview_printable_current.sql` — allows `current_image_source=street_view`
+
+**Product rules (Cole 2026-09-24 — supersede prior internal-only locks):**
+
+1. **Google Street View Static** = printable **Current** (before) on the postcard and `/q/[token]`.
+2. **After-render** uses that Street View Current as AI input → **After** (modest AL lawn refresh).
+3. **Crew/owner photos** (`POST /api/imagery/crew-photo`) remain **optional alternate** Current sources, not required.
+4. **Human review** (`POST /api/imagery/review`) remains required before mail-ready.
+5. `POST /api/imagery/streetview-preview` downloads Static pixels into Storage (`IMAGERY_STORAGE_BUCKET`, default `yardproof-imagery`) because Maps Static URLs are ephemeral, then sets `current_image_source=street_view`.
+6. Satellite preview is operator fallback only when Street View metadata is unavailable — not printable Current by default.
+
+**Still required before claiming imagery is live:**
+
+1. Apply both additive migrations in Supabase (especially `…130000…` so `street_view` passes the check constraint).
+2. Create private Storage bucket `yardproof-imagery` (or the configured name).
+3. Add server-only Vercel env: `GOOGLE_MAPS_API_KEY` (Geocoding + Street View Static + Maps Static, restricted), optional `GOOGLE_MAPS_URL_SIGNING_SECRET`, confirm `OPENAI_API_KEY` Images access / `OPENAI_IMAGE_MODEL`, optional `IMAGERY_PROVIDER`, `AFTER_PROMPT_VERSION`, `IMAGERY_STORAGE_BUCKET`, `IMAGERY_DAILY_CAP`.
+4. Do **not** invent or paste secrets into git. Cole configures Vercel/GCP.
+
+Postcard **printing and fulfillment** (Lob / vendor mail) remain out of scope until explicitly authorized.

@@ -4,7 +4,12 @@ import { ArrowLeft, CheckCircle2, ExternalLink, Mail, QrCode } from 'lucide-reac
 import { FOUNDING_PAYMENT_LINK } from '@/lib/payments';
 
 type PostcardProps = {
-  searchParams: Promise<{ zip?: string }>;
+  searchParams: Promise<{
+    zip?: string;
+    current?: string;
+    after?: string;
+    token?: string;
+  }>;
 };
 
 function normalizeZip(value: string | undefined) {
@@ -12,9 +17,26 @@ function normalizeZip(value: string | undefined) {
   return zip || '35077';
 }
 
+function safeImageUrl(value: string | undefined): string | null {
+  if (!value) return null;
+  try {
+    const url = new URL(value);
+    if (url.protocol !== 'https:' && url.protocol !== 'http:') return null;
+    return url.toString();
+  } catch {
+    return null;
+  }
+}
+
 export default async function Postcard({ searchParams }: PostcardProps) {
-  const { zip: requestedZip } = await searchParams;
-  const zip = normalizeZip(requestedZip);
+  const params = await searchParams;
+  const zip = normalizeZip(params.zip);
+  const currentUrl = safeImageUrl(params.current);
+  const afterUrl = safeImageUrl(params.after);
+  const hasPair = Boolean(currentUrl && afterUrl);
+  const qrHint = params.token
+    ? `Live QR destination /q/${params.token.slice(0, 12)}…`
+    : `ZIP ${zip} · View the concept and request an estimate.`;
 
   return (
     <main className="postpage">
@@ -29,40 +51,72 @@ export default async function Postcard({ searchParams }: PostcardProps) {
         <div className="studiohead">
           <span>STEP 5 · OUTREACH</span>
           <h1>Turn the concept into a conversation.</h1>
-          <p>Preview the postcard and homeowner landing-page path before anything is sent.</p>
+          <p>
+            Preview the postcard and homeowner landing-page path before anything is sent.
+            {hasPair
+              ? ' Showing Current | After from supplied imagery (Street View or crew/owner Current + After concept).'
+              : ' Demo art below — live Current|After appears when Street View (or crew/owner) Current + After URLs are provided.'}
+          </p>
         </div>
         <div className="postgrid">
           <section>
             <div className="bigpost">
-              <div className="postimage">
-                <Image
-                  src="/service-landscaping.png"
-                  alt="Illustrative front-yard landscaping concept"
-                  fill
-                  priority
-                  sizes="(max-width: 800px) 100vw, 50vw"
-                />
-                <span>ILLUSTRATIVE CONCEPT · DEMO PROPERTY</span>
+              <div className="postimage" style={hasPair ? { display: 'grid', gridTemplateColumns: '1fr 1fr', padding: 0 } : undefined}>
+                {hasPair ? (
+                  <>
+                    <div style={{ position: 'relative', minHeight: 280 }}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={currentUrl!}
+                        alt="Current property photo (Street View or crew/owner)"
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }}
+                      />
+                      <span>CURRENT</span>
+                    </div>
+                    <div style={{ position: 'relative', minHeight: 280 }}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={afterUrl!}
+                        alt="After concept — modest plant and trim refresh"
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }}
+                      />
+                      <span style={{ left: 'auto', right: 13 }}>AFTER · ILLUSTRATIVE CONCEPT</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <Image
+                      src="/service-landscaping.png"
+                      alt="Illustrative front-yard landscaping concept"
+                      fill
+                      priority
+                      sizes="(max-width: 800px) 100vw, 50vw"
+                    />
+                    <span>ILLUSTRATIVE CONCEPT · DEMO PROPERTY</span>
+                  </>
+                )}
               </div>
               <div className="postcopy">
                 <small>YOUR HOME. A FRESH POSSIBILITY.</small>
                 <h2>A fresh idea for your front yard.</h2>
                 <p>
-                  We prepared a Clean &amp; Simple landscaping idea with practical curb-appeal
-                  improvements.
+                  Concept after a light plant &amp; trim refresh (approx. $1–3k plant materials).
+                  Same house and camera angle — not a luxury redesign. Current is typically Street View Static.
                 </p>
                 <div className="qrcode">
                   <QrCode />
                   <span>
                     <b>See your project idea</b>
-                    <small>ZIP {zip} · View the concept and request an estimate.</small>
+                    <small>{qrHint}</small>
                   </span>
                 </div>
                 <strong>YOUR COMPANY NAME · (555) 555-0123</strong>
               </div>
             </div>
             <p className="fine">
-              Demo postcard. A founding campaign&apos;s business identity, approved imagery, QR
+              Demo postcard mock. Printable Current is Street View Static by default (crew/owner
+              photos optional alternates). After is rendered from that Current and requires human
+              review before mail. A founding campaign&apos;s business identity, approved imagery, QR
               destination, and mailing details are prepared with the customer before launch.
             </p>
           </section>

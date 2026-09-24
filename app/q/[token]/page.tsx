@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { CheckCircle2, Leaf, MapPin, Phone } from 'lucide-react';
 import {
   formatRecipientAddress,
+  getPublicImagery,
   hashRequestSource,
   PUBLIC_TOKEN_PATTERN,
   PublicRecipient,
@@ -36,6 +37,10 @@ export default async function RecipientPage({ params }: PageProps) {
       postal_code,
       concept_image_url,
       concept_summary,
+      current_image_url,
+      current_image_source,
+      after_image_url,
+      review_status,
       campaigns!inner (
         business_name,
         business_phone,
@@ -104,14 +109,49 @@ export default async function RecipientPage({ params }: PageProps) {
         </div>
 
         <aside className={styles.card}>
-          {recipient.concept_image_url && (
-            <div
-              className={styles.concept}
-              style={{ backgroundImage: `url("${recipient.concept_image_url.replaceAll('"', '%22')}")` }}
-              role="img"
-              aria-label={`Project concept for ${recipient.address_line_1}`}
-            />
-          )}
+          {(() => {
+            const imagery = getPublicImagery(recipient);
+            if (imagery.currentUrl && imagery.afterUrl) {
+              return (
+                <div className={styles.beforeAfter}>
+                  <div className={styles.beforeAfterPair}>
+                    <div
+                      className={styles.conceptHalf}
+                      style={{ backgroundImage: `url("${imagery.currentUrl.replaceAll('"', '%22')}")` }}
+                      role="img"
+                      aria-label={`Current photo for ${recipient.address_line_1}`}
+                    >
+                      <span>CURRENT</span>
+                    </div>
+                    <div
+                      className={styles.conceptHalf}
+                      style={{ backgroundImage: `url("${imagery.afterUrl.replaceAll('"', '%22')}")` }}
+                      role="img"
+                      aria-label={`After concept for ${recipient.address_line_1}`}
+                    >
+                      <span>AFTER · CONCEPT</span>
+                    </div>
+                  </div>
+                  <p className={styles.imageryNote}>
+                    {imagery.approved
+                      ? 'Illustrative concept after a light plant & trim refresh (approx. $1–3k plant materials).'
+                      : 'Illustrative concept pending final contractor review — not a guaranteed finished result.'}
+                  </p>
+                </div>
+              );
+            }
+            if (imagery.legacyOnly) {
+              return (
+                <div
+                  className={styles.concept}
+                  style={{ backgroundImage: `url("${imagery.legacyOnly.replaceAll('"', '%22')}")` }}
+                  role="img"
+                  aria-label={`Project concept for ${recipient.address_line_1}`}
+                />
+              );
+            }
+            return null;
+          })()}
           <EstimateRequestForm token={recipient.public_token} businessName={business.business_name} />
         </aside>
       </section>
