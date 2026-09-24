@@ -1,0 +1,21 @@
+{
+  "version": "al-lawn-v1",
+  "label": "North Alabama / Cullman local garden-center reference (not live inventory)",
+  "budgetMinUsd": 1000,
+  "budgetMaxUsd": 3000,
+  "climateNote": "USDA ~7b · Cullman / Hanceville AL",
+  "items": [
+    { "id": "boxwood_dwarf", "commonName": "Dwarf boxwood", "category": "evergreen_shrub", "typicalUnitUsd": 35, "defaultQty": 8 },
+    { "id": "holly_dwarf", "commonName": "Dwarf yaupon holly", "category": "evergreen_shrub", "typicalUnitUsd": 40, "defaultQty": 6 },
+    { "id": "hydrangea_oakleaf", "commonName": "Oakleaf hydrangea", "category": "flowering_shrub", "typicalUnitUsd": 37, "defaultQty": 4 },
+    { "id": "azalea_encore", "commonName": "Encore azalea", "category": "flowering_shrub", "typicalUnitUsd": 33, "defaultQty": 6 },
+    { "id": "daylily", "commonName": "Daylily", "category": "perennial", "typicalUnitUsd": 13, "defaultQty": 14 },
+    { "id": "loropetalum", "commonName": "Purple loropetalum", "category": "flowering_shrub", "typicalUnitUsd": 36, "defaultQty": 3 },
+    { "id": "crepe_dwarf", "commonName": "Dwarf crape myrtle", "category": "small_tree", "typicalUnitUsd": 45, "defaultQty": 1 },
+    { "id": "liriope", "commonName": "Liriope / monkey grass", "category": "edging", "typicalUnitUsd": 8, "defaultQty": 24 },
+    { "id": "annual_color", "commonName": "Seasonal annual color flats", "category": "annual", "typicalUnitUsd": 10, "defaultQty": 8 },
+    { "id": "mulch_dyed", "commonName": "Dyed brown mulch (bags)", "category": "finish", "typicalUnitUsd": 5, "defaultQty": 20 },
+    { "id": "edging_plastic", "commonName": "Plastic/steel bed edging (ft)", "category": "finish", "typicalUnitUsd": 1.5, "defaultQty": 50 },
+    { "id": "soil_bag", "commonName": "Garden soil / conditioner", "category": "amendment", "typicalUnitUsd": 6, "defaultQty": 8 }
+  ]
+}

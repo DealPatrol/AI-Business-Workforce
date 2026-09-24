@@ -58,7 +58,7 @@ Implemented in code:
 
 Still requires credentials/integration work before claiming live:
 - persisting public audit leads into Supabase
-- generated property imagery
+- generated property imagery end-to-end in production (MVP routes exist; needs Maps/OpenAI keys, Storage bucket, migration apply, and human review before mail)
 - live supplier inventory/pricing
 - Stripe checkout/subscriptions
 - Ava phone-number purchase/assignment, line forwarding, and customer-facing SMS (internal Twilio lead-alert SMS is available when Twilio env is set)
@@ -66,3 +66,23 @@ Still requires credentials/integration work before claiming live:
 - postcard printing and fulfillment
 
 Never commit secrets to GitHub. Configure them in Vercel/Supabase secret management.
+
+## YardProof postcard imagery (MVP code present — not live without keys)
+
+Additive migration `supabase/migrations/20260924120000_postcard_recipient_imagery.sql` adds per-recipient Current/After/review fields and documents campaign-level geo columns already present in live Supabase.
+
+**Locked product rules (do not claim otherwise):**
+
+- **Street View / satellite** = internal operator reference only (`POST /api/imagery/streetview-preview`). Store geo + pano/heading params. Do **not** print Street View on mailers, do **not** feed Street View into AI after-edits, do **not** set it as printable Current.
+- **Printable Current** = `crew_photo` or `owner_upload` only (`POST /api/imagery/crew-photo` → Storage bucket `IMAGERY_STORAGE_BUCKET`, default `yardproof-imagery`).
+- **After** = photoreal modest AL lawn refresh via `lib/imagery/after-render.ts` (`IMAGERY_PROVIDER=openai` day-1; Gemini hook only). Requires human `POST /api/imagery/review` before treating a card as mail-ready.
+- Public `/q/[token]` shows Current|After when those URLs are present (crew/owner Current + After).
+
+**Still required before claiming imagery is live:**
+
+1. Apply the additive migration in Supabase.
+2. Create private Storage bucket `yardproof-imagery` (or the configured name).
+3. Add server-only Vercel env: `GOOGLE_MAPS_API_KEY` (Geocoding + Street View Static + Maps Static, restricted), optional `GOOGLE_MAPS_URL_SIGNING_SECRET`, confirm `OPENAI_API_KEY` Images access / `OPENAI_IMAGE_MODEL`, optional `IMAGERY_PROVIDER`, `AFTER_PROMPT_VERSION`, `IMAGERY_STORAGE_BUCKET`, `IMAGERY_DAILY_CAP`.
+4. Do **not** invent or paste secrets into git. Cole configures Vercel/GCP.
+
+Postcard **printing and fulfillment** (Lob / vendor mail) remain out of scope until explicitly authorized.
