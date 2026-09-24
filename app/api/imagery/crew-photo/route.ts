@@ -12,8 +12,8 @@ const ALLOWED_SOURCES = new Set(['crew_photo', 'owner_upload']);
 const MAX_BYTES = 8 * 1024 * 1024;
 
 /**
- * Upload printable Current photo (crew_photo | owner_upload) to Storage.
- * Street View uploads are rejected.
+ * Upload optional alternate printable Current (crew_photo | owner_upload).
+ * Preferred product path is Street View via POST /api/imagery/streetview-preview.
  */
 export async function POST(request: NextRequest) {
   const auth = await requireCampaignOwner();
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error:
-            'source must be crew_photo or owner_upload. Street View cannot be a printable Current.',
+            'source must be crew_photo or owner_upload. For Street View Current use POST /api/imagery/streetview-preview.',
         },
         { status: 400 },
       );

@@ -69,18 +69,23 @@ Never commit secrets to GitHub. Configure them in Vercel/Supabase secret managem
 
 ## YardProof postcard imagery (MVP code present — not live without keys)
 
-Additive migration `supabase/migrations/20260924120000_postcard_recipient_imagery.sql` adds per-recipient Current/After/review fields and documents campaign-level geo columns already present in live Supabase.
+Migrations:
 
-**Locked product rules (do not claim otherwise):**
+- `supabase/migrations/20260924120000_postcard_recipient_imagery.sql` — per-recipient Current/After/review + campaign geo parity
+- `supabase/migrations/20260924130000_streetview_printable_current.sql` — allows `current_image_source=street_view`
 
-- **Street View / satellite** = internal operator reference only (`POST /api/imagery/streetview-preview`). Store geo + pano/heading params. Do **not** print Street View on mailers, do **not** feed Street View into AI after-edits, do **not** set it as printable Current.
-- **Printable Current** = `crew_photo` or `owner_upload` only (`POST /api/imagery/crew-photo` → Storage bucket `IMAGERY_STORAGE_BUCKET`, default `yardproof-imagery`).
-- **After** = photoreal modest AL lawn refresh via `lib/imagery/after-render.ts` (`IMAGERY_PROVIDER=openai` day-1; Gemini hook only). Requires human `POST /api/imagery/review` before treating a card as mail-ready.
-- Public `/q/[token]` shows Current|After when those URLs are present (crew/owner Current + After).
+**Product rules (Cole 2026-09-24 — supersede prior internal-only locks):**
+
+1. **Google Street View Static** = printable **Current** (before) on the postcard and `/q/[token]`.
+2. **After-render** uses that Street View Current as AI input → **After** (modest AL lawn refresh).
+3. **Crew/owner photos** (`POST /api/imagery/crew-photo`) remain **optional alternate** Current sources, not required.
+4. **Human review** (`POST /api/imagery/review`) remains required before mail-ready.
+5. `POST /api/imagery/streetview-preview` downloads Static pixels into Storage (`IMAGERY_STORAGE_BUCKET`, default `yardproof-imagery`) because Maps Static URLs are ephemeral, then sets `current_image_source=street_view`.
+6. Satellite preview is operator fallback only when Street View metadata is unavailable — not printable Current by default.
 
 **Still required before claiming imagery is live:**
 
-1. Apply the additive migration in Supabase.
+1. Apply both additive migrations in Supabase (especially `…130000…` so `street_view` passes the check constraint).
 2. Create private Storage bucket `yardproof-imagery` (or the configured name).
 3. Add server-only Vercel env: `GOOGLE_MAPS_API_KEY` (Geocoding + Street View Static + Maps Static, restricted), optional `GOOGLE_MAPS_URL_SIGNING_SECRET`, confirm `OPENAI_API_KEY` Images access / `OPENAI_IMAGE_MODEL`, optional `IMAGERY_PROVIDER`, `AFTER_PROMPT_VERSION`, `IMAGERY_STORAGE_BUCKET`, `IMAGERY_DAILY_CAP`.
 4. Do **not** invent or paste secrets into git. Cole configures Vercel/GCP.

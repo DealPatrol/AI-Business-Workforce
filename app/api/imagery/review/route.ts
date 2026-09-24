@@ -9,9 +9,10 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 const ALLOWED = new Set(['approved', 'changes_requested', 'rejected', 'pending_review']);
+const ACCEPTED_CURRENT = new Set(['street_view', 'crew_photo', 'owner_upload']);
 
 /**
- * Set human review_status. Approval requires printable Current + After URLs.
+ * Set human review_status. Approval requires Current (SV or crew/owner) + After URLs.
  */
 export async function POST(request: NextRequest) {
   const auth = await requireCampaignOwner();
@@ -42,19 +43,19 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(
           {
             error:
-              'Cannot approve without printable Current (crew/owner) and After imagery.',
+              'Cannot approve without Current (street_view / crew_photo / owner_upload) and After imagery.',
           },
           { status: 400 },
         );
       }
       if (
-        recipient.current_image_source !== 'crew_photo' &&
-        recipient.current_image_source !== 'owner_upload'
+        !recipient.current_image_source ||
+        !ACCEPTED_CURRENT.has(recipient.current_image_source)
       ) {
         return NextResponse.json(
           {
             error:
-              'Cannot approve: Current must be crew_photo or owner_upload (not Street View).',
+              'Cannot approve: Current must be street_view, crew_photo, or owner_upload.',
           },
           { status: 400 },
         );

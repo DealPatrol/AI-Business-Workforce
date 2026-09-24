@@ -1,8 +1,8 @@
 /**
  * After-image adapter — OpenAI-first with IMAGERY_PROVIDER hook.
  *
- * LOCKED:
- * - Input must be crew_photo / owner_upload bytes (never Street View).
+ * Product rules (Cole 2026-09-24):
+ * - Input Current may be street_view (preferred) or crew_photo / owner_upload.
  * - Photoreal modest AL lawn refresh; same structure; $1–3k plant look.
  * - Human review gate is enforced by callers (review_status).
  */

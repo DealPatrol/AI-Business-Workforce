@@ -1,10 +1,11 @@
 /**
  * Google Street View / Geocoding helpers — server only.
  *
- * LOCKED: Street View is INTERNAL REFERENCE ONLY.
- * - Store geo + pano/heading params; do not treat SV bytes as a permanent print asset.
- * - Never mark SV as print_source.
- * - Never feed SV into AI after-edits.
+ * Product rules (Cole 2026-09-24):
+ * - Google Street View Static = printable Current (before) on postcard and /q/[token].
+ * - After-render uses that Street View Current as AI input → After.
+ * - Crew/owner photos remain optional alternate Current sources.
+ * - Persist durable Current bytes in Storage (Static Maps URLs are ephemeral).
  */
 
 import { createHmac } from 'node:crypto';
@@ -138,8 +139,7 @@ export function signGoogleMapsUrl(pathWithQuery: string): string {
 }
 
 /**
- * Build a Street View Static image URL for short-lived INTERNAL preview / proxy.
- * Do not persist returned pixels as a print asset or AI input.
+ * Build a Street View Static image URL (ephemeral — download into Storage for durable Current).
  */
 export function buildStreetViewStaticUrl(params: StreetViewStaticParams): string {
   const key = requireMapsKey();
@@ -160,7 +160,7 @@ export function buildStreetViewStaticUrl(params: StreetViewStaticParams): string
   return `https://maps.googleapis.com${signGoogleMapsUrl(pathWithQuery)}`;
 }
 
-/** Satellite Static Maps URL — also INTERNAL REFERENCE ONLY. */
+/** Satellite Static Maps URL — operator fallback preview when SV is unavailable (not printable Current). */
 export function buildSatelliteStaticUrl(lat: number, lng: number, size = '640x640'): string {
   const key = requireMapsKey();
   const search = new URLSearchParams({
@@ -172,6 +172,28 @@ export function buildSatelliteStaticUrl(lat: number, lng: number, size = '640x64
   });
   const pathWithQuery = `${STATIC_MAP_PATH}?${search.toString()}`;
   return `https://maps.googleapis.com${signGoogleMapsUrl(pathWithQuery)}`;
+}
+
+/** Download Street View Static image bytes for durable Storage Current. */
+export async function downloadStreetViewImage(
+  params: StreetViewStaticParams,
+): Promise<{ bytes: Buffer; mimeType: string; sourceUrl: string }> {
+  const sourceUrl = buildStreetViewStaticUrl(params);
+  const response = await fetch(sourceUrl, { cache: 'no-store' });
+  if (!response.ok) {
+    throw new Error(`Street View Static download HTTP ${response.status}`);
+  }
+  const mimeType = response.headers.get('content-type') || 'image/jpeg';
+  if (!mimeType.startsWith('image/')) {
+    throw new Error(
+      `Street View Static returned non-image content-type (${mimeType}). Check Maps key / billing.`,
+    );
+  }
+  const bytes = Buffer.from(await response.arrayBuffer());
+  if (bytes.length < 100) {
+    throw new Error('Street View Static download returned an empty or tiny payload.');
+  }
+  return { bytes, mimeType, sourceUrl };
 }
 
 export function formatRecipientAddressLine(parts: {

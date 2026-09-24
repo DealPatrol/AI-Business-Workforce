@@ -14,11 +14,12 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 export const maxDuration = 60;
 
-const PRINTABLE = new Set(['crew_photo', 'owner_upload']);
+/** Current sources accepted as AI After input (and printable Current). */
+const ACCEPTED_CURRENT = new Set(['street_view', 'crew_photo', 'owner_upload']);
 
 /**
- * Trigger After render from printable Current only.
- * Refuses Street View / satellite sources.
+ * Trigger After render from Current (Street View preferred product path;
+ * crew_photo / owner_upload remain valid alternates).
  */
 export async function POST(request: NextRequest) {
   const auth = await requireCampaignOwner();
@@ -46,16 +47,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error:
-            'Upload a crew_photo or owner_upload Current before rendering After. Street View cannot be used as AI input.',
+            'Fetch Street View Current (POST /api/imagery/streetview-preview) or upload crew_photo/owner_upload before rendering After.',
         },
         { status: 400 },
       );
     }
-    if (!recipient.current_image_source || !PRINTABLE.has(recipient.current_image_source)) {
+    if (!recipient.current_image_source || !ACCEPTED_CURRENT.has(recipient.current_image_source)) {
       return NextResponse.json(
         {
           error:
-            'Printable Current must be crew_photo or owner_upload. Refusing Street View / unknown sources as AI input.',
+            'Current must be street_view, crew_photo, or owner_upload before rendering After.',
         },
         { status: 400 },
       );
@@ -122,6 +123,7 @@ export async function POST(request: NextRequest) {
         model: rendered.model,
         promptVersion: rendered.promptVersion,
         storagePath: path,
+        currentSource: recipient.current_image_source,
         renderedAt: new Date().toISOString(),
       },
     };
@@ -155,6 +157,7 @@ export async function POST(request: NextRequest) {
       model: rendered.model,
       promptVersion: rendered.promptVersion,
       plantPlan: rendered.plantPlan,
+      currentImageSource: recipient.current_image_source,
       reviewStatus: 'pending_review',
       note: 'Human review required before mailing. Call POST /api/imagery/review to approve.',
     });

@@ -54,8 +54,8 @@ export default async function Postcard({ searchParams }: PostcardProps) {
           <p>
             Preview the postcard and homeowner landing-page path before anything is sent.
             {hasPair
-              ? ' Showing Current | After from supplied imagery (crew/owner Current + After concept).'
-              : ' Demo art below — live Current|After appears when crew photo + approved After URLs are provided.'}
+              ? ' Showing Current | After from supplied imagery (Street View or crew/owner Current + After concept).'
+              : ' Demo art below — live Current|After appears when Street View (or crew/owner) Current + After URLs are provided.'}
           </p>
         </div>
         <div className="postgrid">
@@ -68,10 +68,10 @@ export default async function Postcard({ searchParams }: PostcardProps) {
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={currentUrl!}
-                        alt="Current property photo (crew or owner upload)"
+                        alt="Current property photo (Street View or crew/owner)"
                         style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }}
                       />
-                      <span>CURRENT · CREW / OWNER</span>
+                      <span>CURRENT</span>
                     </div>
                     <div style={{ position: 'relative', minHeight: 280 }}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -101,7 +101,7 @@ export default async function Postcard({ searchParams }: PostcardProps) {
                 <h2>A fresh idea for your front yard.</h2>
                 <p>
                   Concept after a light plant &amp; trim refresh (approx. $1–3k plant materials).
-                  Same house and camera angle — not a luxury redesign. Street View is never printed.
+                  Same house and camera angle — not a luxury redesign. Current is typically Street View Static.
                 </p>
                 <div className="qrcode">
                   <QrCode />
@@ -114,10 +114,10 @@ export default async function Postcard({ searchParams }: PostcardProps) {
               </div>
             </div>
             <p className="fine">
-              Demo postcard mock. Printable Current must be crew_photo or owner_upload; After requires
-              human review before mail. Street View is internal reference only (not a print asset, not
-              AI input). A founding campaign&apos;s business identity, approved imagery, QR destination,
-              and mailing details are prepared with the customer before launch.
+              Demo postcard mock. Printable Current is Street View Static by default (crew/owner
+              photos optional alternates). After is rendered from that Current and requires human
+              review before mail. A founding campaign&apos;s business identity, approved imagery, QR
+              destination, and mailing details are prepared with the customer before launch.
             </p>
           </section>
           <aside className="sendpanel">
