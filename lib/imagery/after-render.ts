@@ -117,29 +117,62 @@ async function renderWithOpenAI(
 
   const model = process.env.OPENAI_IMAGE_MODEL?.trim() || 'gpt-image-1';
   const openai = new OpenAI({ apiKey });
-  const mime = input.currentMimeType || 'image/jpeg';
-  const file = await toFile(input.currentBytes, 'current.jpg', { type: mime });
+  const mime = normalizeInputMime(input.currentMimeType);
+  const ext = mime === 'image/png' ? 'png' : mime === 'image/webp' ? 'webp' : 'jpg';
+  const file = await toFile(input.currentBytes, `current.${ext}`, { type: mime });
+
+  // gpt-image-* models ALWAYS return base64 (`b64_json`) and reject `response_format`
+  // with a 400. Only legacy DALL·E models accept/need response_format.
+  const isLegacyDalle = model.startsWith('dall-e');
 
   const result = await openai.images.edit({
     model,
     image: file,
     prompt: buildEditPrompt(plantPlan, promptVersion),
     size: '1024x1024',
-    response_format: 'b64_json',
+    n: 1,
+    ...(isLegacyDalle ? { response_format: 'b64_json' as const } : {}),
   });
 
   const b64 = result.data?.[0]?.b64_json;
   if (!b64) {
-    throw new Error('OpenAI image edit returned no image data.');
+    throw new Error('OpenAI image edit returned no base64 image data.');
+  }
+
+  const imageBytes = Buffer.from(b64, 'base64');
+  if (imageBytes.length < 100) {
+    throw new Error('OpenAI image edit returned an empty image.');
   }
 
   return {
-    imageBytes: Buffer.from(b64, 'base64'),
-    mimeType: 'image/png',
+    imageBytes,
+    mimeType: sniffImageMime(imageBytes),
     provider: 'openai',
     model,
     promptVersion,
   };
+}
+
+/** gpt-image-1 edit accepts png / jpeg / webp input. */
+function normalizeInputMime(raw?: string): 'image/png' | 'image/jpeg' | 'image/webp' {
+  const m = (raw || '').split(';')[0].trim().toLowerCase();
+  if (m === 'image/png') return 'image/png';
+  if (m === 'image/webp') return 'image/webp';
+  return 'image/jpeg';
+}
+
+/** gpt-image-1 defaults to PNG output; sniff magic bytes to be safe. */
+function sniffImageMime(bytes: Buffer): 'image/png' | 'image/jpeg' | 'image/webp' {
+  if (bytes.length >= 4 && bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47) {
+    return 'image/png';
+  }
+  if (bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) {
+    return 'image/jpeg';
+  }
+  if (bytes.length >= 12 && bytes.toString('ascii', 0, 4) === 'RIFF' && bytes.toString('ascii', 8, 12) === 'WEBP') {
+    return 'image/webp';
+  }
+  return 'image/png';
 }
 
 async function renderWithGemini(

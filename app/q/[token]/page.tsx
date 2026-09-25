@@ -15,6 +15,79 @@ import styles from './qr-page.module.css';
 
 export const dynamic = 'force-dynamic';
 
+const BASE_COLUMNS = `
+  id,
+  public_token,
+  homeowner_name,
+  address_line_1,
+  address_line_2,
+  city,
+  state,
+  postal_code,
+  concept_image_url,
+  concept_summary,
+  campaigns!inner (
+    business_name,
+    business_phone,
+    business_email,
+    status
+  )
+`;
+
+// Added by supabase/migrations/20260924120000_postcard_recipient_imagery.sql.
+const IMAGERY_COLUMNS = `
+  current_image_url,
+  current_image_source,
+  after_image_url,
+  review_status,
+`;
+
+/** Postgres "undefined_column" — imagery migration not applied yet. */
+const UNDEFINED_COLUMN = '42703';
+
+/**
+ * Load the public recipient. If the imagery migration has not been applied,
+ * selecting the new columns fails with 42703 — previously that error was
+ * treated as "not found" and every QR link 404'd. Fall back to the legacy
+ * column set so the page still renders (legacy concept image only).
+ */
+async function loadPublicRecipient(
+  supabase: ReturnType<typeof createAdminClient>,
+  token: string,
+): Promise<PublicRecipient | null> {
+  const query = (columns: string) =>
+    supabase
+      .from('campaign_recipients')
+      .select(columns)
+      .eq('public_token', token)
+      .eq('campaigns.status', 'active')
+      .single();
+
+  const full = await query(`${IMAGERY_COLUMNS}${BASE_COLUMNS}`);
+  if (full.data && !full.error) return full.data as unknown as PublicRecipient;
+
+  if (full.error?.code === UNDEFINED_COLUMN) {
+    console.warn(
+      'QR page: imagery columns missing (apply migration 20260924120000_postcard_recipient_imagery.sql); using legacy columns.',
+    );
+    const legacy = await query(BASE_COLUMNS);
+    if (legacy.data && !legacy.error) {
+      return {
+        ...(legacy.data as unknown as PublicRecipient),
+        current_image_url: null,
+        current_image_source: null,
+        after_image_url: null,
+        review_status: null,
+      };
+    }
+    if (legacy.error?.code !== 'PGRST116') console.error('Unable to load QR recipient', legacy.error);
+    return null;
+  }
+
+  if (full.error?.code !== 'PGRST116') console.error('Unable to load QR recipient', full.error);
+  return null;
+}
+
 type PageProps = {
   params: Promise<{ token: string }>;
 };
@@ -24,40 +97,10 @@ export default async function RecipientPage({ params }: PageProps) {
   if (!PUBLIC_TOKEN_PATTERN.test(token)) notFound();
 
   const supabase = createAdminClient();
-  const { data, error } = await supabase
-    .from('campaign_recipients')
-    .select(`
-      id,
-      public_token,
-      homeowner_name,
-      address_line_1,
-      address_line_2,
-      city,
-      state,
-      postal_code,
-      concept_image_url,
-      concept_summary,
-      current_image_url,
-      current_image_source,
-      after_image_url,
-      review_status,
-      campaigns!inner (
-        business_name,
-        business_phone,
-        business_email,
-        status
-      )
-    `)
-    .eq('public_token', token)
-    .eq('campaigns.status', 'active')
-    .single();
+  const data = await loadPublicRecipient(supabase, token);
+  if (!data) notFound();
 
-  if (error || !data) {
-    if (error?.code !== 'PGRST116') console.error('Unable to load QR recipient', error);
-    notFound();
-  }
-
-  const recipient = data as unknown as PublicRecipient;
+  const recipient = data;
   const requestHeaders = await headers();
   const userAgent = requestHeaders.get('user-agent')?.slice(0, 500) ?? null;
   const { error: scanError } = await supabase.from('recipient_scans').insert({

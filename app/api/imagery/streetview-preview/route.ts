@@ -6,7 +6,7 @@ import {
   requireCampaignOwner,
 } from '@/lib/imagery/auth';
 import {
-  buildSatelliteStaticUrl,
+  downloadSatelliteImage,
   downloadStreetViewImage,
   fetchStreetViewMetadata,
   formatRecipientAddressLine,
@@ -121,7 +121,27 @@ export async function POST(request: NextRequest) {
       previewUrl = signed.signedUrl;
       imageryStatus = 'ready';
     } else {
-      previewUrl = buildSatelliteStaticUrl(geo.lat, geo.lng);
+      // Never return a maps.googleapis.com URL to the client (it embeds the Maps key).
+      // Download the satellite preview server-side and serve it from private Storage.
+      const satellite = await downloadSatelliteImage(geo.lat, geo.lng);
+      const bucket = imageryBucket();
+      const ext = satellite.mimeType.includes('jpeg') || satellite.mimeType.includes('jpg') ? 'jpg' : 'png';
+      const previewPath = `${recipient.id}/preview-satellite-${Date.now()}.${ext}`;
+      const { error: previewUploadError } = await auth.ctx.admin.storage
+        .from(bucket)
+        .upload(previewPath, satellite.bytes, { contentType: satellite.mimeType, upsert: true });
+      if (previewUploadError) {
+        throw new Error(
+          `Storage upload failed (${previewUploadError.message}). Ensure bucket "${bucket}" exists (private).`,
+        );
+      }
+      const { data: previewSigned, error: previewSignError } = await auth.ctx.admin.storage
+        .from(bucket)
+        .createSignedUrl(previewPath, 60 * 60);
+      if (previewSignError || !previewSigned?.signedUrl) {
+        throw new Error('Satellite preview upload succeeded but signed URL creation failed.');
+      }
+      previewUrl = previewSigned.signedUrl;
       imageryStatus = 'needs_photo';
       imageryError = `Street View status ${metadata.status}; satellite preview only. Upload crew_photo/owner_upload or retry when Street View is available for printable Current.`;
     }

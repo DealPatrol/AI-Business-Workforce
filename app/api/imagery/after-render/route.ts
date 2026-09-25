@@ -9,6 +9,7 @@ import {
   isAfterRenderConfigured,
   renderAfter,
 } from '@/lib/imagery/after-render';
+import { fetchAllowedImage } from '@/lib/imagery/safe-fetch';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -67,14 +68,14 @@ export async function POST(request: NextRequest) {
       .update({ imagery_status: 'rendering_after', imagery_error: null })
       .eq('id', recipient.id);
 
-    const currentResponse = await fetch(recipient.current_image_url, {
-      cache: 'no-store',
+    // SSRF guard: only our Supabase Storage host or Google Street View Static.
+    const { bytes: currentBytes, mimeType: currentMimeType } = await fetchAllowedImage(
+      recipient.current_image_url,
+    ).catch((error: unknown) => {
+      throw new Error(
+        `Could not download Current image: ${error instanceof Error ? error.message : 'unknown error'}`,
+      );
     });
-    if (!currentResponse.ok) {
-      throw new Error(`Could not download Current image (HTTP ${currentResponse.status}).`);
-    }
-    const currentBytes = Buffer.from(await currentResponse.arrayBuffer());
-    const currentMimeType = currentResponse.headers.get('content-type') || 'image/jpeg';
 
     const catalogSkus = Array.isArray(body.catalogSkus)
       ? body.catalogSkus.map(String)
@@ -93,7 +94,8 @@ export async function POST(request: NextRequest) {
     });
 
     const bucket = imageryBucket();
-    const path = `${recipient.id}/after-${Date.now()}.png`;
+    const ext = rendered.mimeType === 'image/jpeg' ? 'jpg' : rendered.mimeType === 'image/webp' ? 'webp' : 'png';
+    const path = `${recipient.id}/after-${Date.now()}.${ext}`;
     const { error: uploadError } = await auth.ctx.admin.storage
       .from(bucket)
       .upload(path, rendered.imageBytes, {
