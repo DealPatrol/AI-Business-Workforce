@@ -130,6 +130,27 @@ export async function fetchStreetViewMetadata(
   };
 }
 
+/**
+ * Street View metadata `date` is month precision ("YYYY-MM"), but
+ * campaign_recipients.street_view_captured_at is a Postgres `date` column
+ * (migration 20260924120000). Postgres rejects "YYYY-MM" as a date, which
+ * failed the whole recipient update. Normalize to the first of the month
+ * ("YYYY-MM-01"); a full "YYYY-MM-DD" passes through. Anything else → null.
+ */
+export function normalizeStreetViewCaptureDate(raw: string | null | undefined): string | null {
+  const value = raw?.trim();
+  if (!value) return null;
+  const match = /^(\d{4})-(\d{2})(?:-(\d{2}))?$/.exec(value);
+  if (!match) return null;
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = match[3] ? Number(match[3]) : 1;
+  if (year < 1900 || month < 1 || month > 12 || day < 1) return null;
+  const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
+  if (day > daysInMonth) return null;
+  return `${match[1]}-${match[2]}-${String(day).padStart(2, '0')}`;
+}
+
 /** Sign a Google Static Maps / Street View URL path+query when signing secret is set. */
 export function signGoogleMapsUrl(pathWithQuery: string): string {
   const secret = process.env.GOOGLE_MAPS_URL_SIGNING_SECRET?.trim();
