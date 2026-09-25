@@ -12,6 +12,7 @@ import {
   formatRecipientAddressLine,
   geocodeAddress,
   isGoogleMapsConfigured,
+  normalizeStreetViewCaptureDate,
 } from '@/lib/google/streetview';
 
 export const dynamic = 'force-dynamic';
@@ -155,7 +156,8 @@ export async function POST(request: NextRequest) {
       street_view_heading: heading ?? null,
       street_view_pitch: pitch,
       street_view_fov: fov,
-      street_view_captured_at: metadata.date,
+      // Column is `date`; SV metadata is "YYYY-MM" → stored as "YYYY-MM-01" (month precision).
+      street_view_captured_at: normalizeStreetViewCaptureDate(metadata.date),
       imagery_provider: metadata.available ? 'google_street_view' : 'google_satellite',
       imagery_fetched_at: new Date().toISOString(),
       imagery_status: imageryStatus,

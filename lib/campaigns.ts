@@ -17,6 +17,7 @@ export type PublicRecipient = {
   current_image_source: 'street_view' | 'crew_photo' | 'owner_upload' | null;
   after_image_url: string | null;
   review_status: string | null;
+  concept_json: Record<string, unknown> | null;
   campaigns: {
     business_name: string;
     business_phone: string | null;
@@ -45,35 +46,4 @@ export function hashRequestSource(headers: Headers) {
   const userAgent = headers.get('user-agent') ?? 'unknown';
 
   return createHash('sha256').update(`${address}|${userAgent}`).digest('hex');
-}
-
-/** Public QR page may show Current|After when Current (SV/crew/owner) + After exist. */
-export function getPublicImagery(recipient: PublicRecipient) {
-  const accepted =
-    recipient.current_image_source === 'street_view' ||
-    recipient.current_image_source === 'crew_photo' ||
-    recipient.current_image_source === 'owner_upload';
-  const printable =
-    recipient.current_image_url && accepted
-      ? recipient.current_image_url
-      : null;
-  const after = recipient.after_image_url;
-  const approved = recipient.review_status === 'approved';
-
-  if (printable && after) {
-    return {
-      currentUrl: printable,
-      afterUrl: after,
-      approved,
-      legacyOnly: null as string | null,
-    };
-  }
-
-  // Legacy single concept image fallback
-  return {
-    currentUrl: null as string | null,
-    afterUrl: null as string | null,
-    approved: false,
-    legacyOnly: recipient.concept_image_url,
-  };
 }

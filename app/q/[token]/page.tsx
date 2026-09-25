@@ -4,12 +4,13 @@ import { notFound } from 'next/navigation';
 import { CheckCircle2, Leaf, MapPin, Phone } from 'lucide-react';
 import {
   formatRecipientAddress,
-  getPublicImagery,
   hashRequestSource,
   PUBLIC_TOKEN_PATTERN,
   PublicRecipient,
 } from '@/lib/campaigns';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { imageryBucket } from '@/lib/imagery/auth';
+import { getPublicRecipientImagery } from '@/lib/imagery/public-imagery';
 import EstimateRequestForm from './estimate-request-form';
 import styles from './qr-page.module.css';
 
@@ -40,6 +41,7 @@ const IMAGERY_COLUMNS = `
   current_image_source,
   after_image_url,
   review_status,
+  concept_json,
 `;
 
 /** Postgres "undefined_column" — imagery migration not applied yet. */
@@ -78,6 +80,7 @@ async function loadPublicRecipient(
         current_image_source: null,
         after_image_url: null,
         review_status: null,
+        concept_json: null,
       };
     }
     if (legacy.error?.code !== 'PGRST116') console.error('Unable to load QR recipient', legacy.error);
@@ -114,6 +117,8 @@ export default async function RecipientPage({ params }: PageProps) {
 
   const address = formatRecipientAddress(recipient);
   const business = recipient.campaigns;
+  // Only human-approved Current/After, via fresh short-lived signed URLs from the private bucket.
+  const imagery = await getPublicRecipientImagery(supabase, recipient, imageryBucket());
 
   return (
     <main className={styles.page}>
@@ -152,49 +157,39 @@ export default async function RecipientPage({ params }: PageProps) {
         </div>
 
         <aside className={styles.card}>
-          {(() => {
-            const imagery = getPublicImagery(recipient);
-            if (imagery.currentUrl && imagery.afterUrl) {
-              return (
-                <div className={styles.beforeAfter}>
-                  <div className={styles.beforeAfterPair}>
-                    <div
-                      className={styles.conceptHalf}
-                      style={{ backgroundImage: `url("${imagery.currentUrl.replaceAll('"', '%22')}")` }}
-                      role="img"
-                      aria-label={`Current photo for ${recipient.address_line_1}`}
-                    >
-                      <span>CURRENT</span>
-                    </div>
-                    <div
-                      className={styles.conceptHalf}
-                      style={{ backgroundImage: `url("${imagery.afterUrl.replaceAll('"', '%22')}")` }}
-                      role="img"
-                      aria-label={`After concept for ${recipient.address_line_1}`}
-                    >
-                      <span>AFTER · CONCEPT</span>
-                    </div>
-                  </div>
-                  <p className={styles.imageryNote}>
-                    {imagery.approved
-                      ? 'Illustrative concept after a light plant & trim refresh (approx. $1–3k plant materials).'
-                      : 'Illustrative concept pending final contractor review — not a guaranteed finished result.'}
-                  </p>
-                </div>
-              );
-            }
-            if (imagery.legacyOnly) {
-              return (
+          {imagery.kind === 'approved' && (
+            <div className={styles.beforeAfter}>
+              <div className={styles.beforeAfterPair}>
                 <div
-                  className={styles.concept}
-                  style={{ backgroundImage: `url("${imagery.legacyOnly.replaceAll('"', '%22')}")` }}
+                  className={styles.conceptHalf}
+                  style={{ backgroundImage: `url("${imagery.currentUrl.replaceAll('"', '%22')}")` }}
                   role="img"
-                  aria-label={`Project concept for ${recipient.address_line_1}`}
-                />
-              );
-            }
-            return null;
-          })()}
+                  aria-label={`Current photo for ${recipient.address_line_1}`}
+                >
+                  <span>CURRENT</span>
+                </div>
+                <div
+                  className={styles.conceptHalf}
+                  style={{ backgroundImage: `url("${imagery.afterUrl.replaceAll('"', '%22')}")` }}
+                  role="img"
+                  aria-label={`After concept for ${recipient.address_line_1}`}
+                >
+                  <span>AFTER · CONCEPT</span>
+                </div>
+              </div>
+              <p className={styles.imageryNote}>
+                Illustrative concept after a light plant &amp; trim refresh (approx. $1–3k plant materials).
+              </p>
+            </div>
+          )}
+          {imagery.kind === 'concept' && (
+            <div
+              className={styles.concept}
+              style={{ backgroundImage: `url("${imagery.conceptUrl.replaceAll('"', '%22')}")` }}
+              role="img"
+              aria-label={`Project concept for ${recipient.address_line_1}`}
+            />
+          )}
           <EstimateRequestForm token={recipient.public_token} businessName={business.business_name} />
         </aside>
       </section>
