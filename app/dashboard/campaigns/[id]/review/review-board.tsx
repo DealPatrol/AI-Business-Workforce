@@ -118,6 +118,7 @@ async function postJson(url: string, body: Record<string, unknown>): Promise<Api
 export default function ReviewBoard({ campaign, initialRecipients }: Props) {
   const router = useRouter();
   const profile = CONCEPT_PROFILES[campaign.trade];
+  const usesPlants = ['landscaping', 'hardscaping'].includes(campaign.trade);
   const [recipients, setRecipients] = useState(initialRecipients);
   const [campaignStatus, setCampaignStatus] = useState(campaign.status);
   const [busy, setBusy] = useState<string | null>(null);
@@ -350,7 +351,9 @@ export default function ReviewBoard({ campaign, initialRecipients }: Props) {
                 </ul>
 
                 <details className={styles.swaps}>
-                  <summary><Shuffle /> Swap plants/materials <ChevronDown /></summary>
+                  <summary>
+                    <Shuffle /> {usesPlants ? 'Swap plants/materials' : 'Swap materials/finishes'} <ChevronDown />
+                  </summary>
                   <p>{profile.catalogLabel}</p>
                   <small>{profile.catalogDisclosure}</small>
                   <div className={styles.choiceList}>
@@ -384,7 +387,11 @@ export default function ReviewBoard({ campaign, initialRecipients }: Props) {
                       setNotes((current) => ({ ...current, [recipient.id]: event.target.value }))
                     }
                     maxLength={2000}
-                    placeholder="Example: use fewer shrubs and swap the red flowers for white."
+                    placeholder={
+                      usesPlants
+                        ? 'Example: use fewer shrubs and swap the red flowers for white.'
+                        : `Example: replace ${profile.choices[0]?.name ?? 'the current finish'} with ${profile.choices[1]?.name ?? 'a simpler finish'}.`
+                    }
                   />
                 </label>
 

@@ -93,6 +93,7 @@ begin
         review_status not in ('pending_review', 'approved')
         or current_image_url is null
         or after_image_url is null
+        or current_image_source is null
         or current_image_source not in ('street_view', 'crew_photo', 'owner_upload')
       )
   ) then

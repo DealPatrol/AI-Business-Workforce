@@ -67,7 +67,7 @@ For each card:
 
 1. Compare Current and After, address, and scope bullets.
 2. Approve it, or enter required notes and choose **Request changes**.
-3. Open **Swap plants/materials**, choose up to 12 curated references, and save.
+3. Open **Swap plants/materials** for landscaping/hardscaping, or **Swap materials/finishes** for other trades; choose up to 12 curated references and save.
 4. Choose **Regenerate After** to render the saved selection against the Current image.
 5. Repeat until every card is ready.
 6. Choose **Approve all ready**. This approves the cards and sets campaign status to `ready_to_mail`.
