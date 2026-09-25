@@ -62,7 +62,7 @@ async function loadPublicRecipient(
       .from('campaign_recipients')
       .select(columns)
       .eq('public_token', token)
-      .eq('campaigns.status', 'active')
+      .in('campaigns.status', ['active', 'ready_to_mail'])
       .single();
 
   const full = await query(`${IMAGERY_COLUMNS}${BASE_COLUMNS}`);
