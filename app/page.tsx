@@ -10,7 +10,7 @@ import {
   ShieldCheck,
   Sparkles,
 } from 'lucide-react';
-import { FOUNDING_PAYMENT_LINK } from '@/lib/payments';
+import { FOUNDING_PAYMENT_LINK, getDemo10Payment } from '@/lib/payments';
 import styles from './home.module.css';
 
 const CONTACT_EMAIL = 'colecollins763@gmail.com';
@@ -52,6 +52,8 @@ const packageItems = [
 ];
 
 export default function HomePage() {
+  const demo10 = getDemo10Payment();
+
   return (
     <main className={styles.page}>
       <nav className={styles.nav}>
@@ -63,11 +65,12 @@ export default function HomePage() {
         </Link>
         <div className={styles.navLinks}>
           <a href="#how">How it works</a>
+          <a href="#demo10">Demo Blast 10</a>
           <a href="#package">What you get</a>
           <Link href="/visual-canvasser">See examples</Link>
         </div>
-        <a className={styles.navCta} href={FOUNDING_PAYMENT_LINK}>
-          Pay $299
+        <a className={styles.navCta} href={demo10.href}>
+          {demo10.configured ? 'Try 10 cards — $49' : 'Request 10-card demo'}
         </a>
       </nav>
 
@@ -76,23 +79,23 @@ export default function HomePage() {
           <span className={styles.eyebrow}>PROPERTY-BASED POSTCARD CAMPAIGNS FOR HOME SERVICES</span>
           <h1>Show homeowners the yard project you could build for them.</h1>
           <p className={styles.lede}>
-            We help you choose the streets, prepare yard concepts, and mail a postcard with a QR
-            page where the homeowner can request an estimate.
+            Start with 10 before-and-after postcard concepts. Review every card, request changes,
+            and approve the set before Cole coordinates any printing or mailing.
           </p>
           <div className={styles.priceLine}>
-            <strong>$299 setup</strong>
-            <span>then $99/month</span>
+            <strong>$49 Demo Blast 10</strong>
+            <span>10-card review-first demo</span>
           </div>
           <div className={styles.heroActions}>
-            <a className={styles.primaryButton} href={FOUNDING_PAYMENT_LINK}>
-              Pay $299 — Start My Campaign <ArrowRight size={18} />
+            <a className={styles.primaryButton} href={demo10.href}>
+              {demo10.label} <ArrowRight size={18} />
             </a>
-            <a className={styles.secondaryButton} href="#how">
-              See how it works
+            <a className={styles.secondaryButton} href="#package">
+              See the $299 + $99/mo founding offer
             </a>
           </div>
           <p className={styles.heroNote}>
-            The postcard campaign is our core service. You approve the concept, audience and costs before anything mails.
+            No mail is auto-sent. Cole/ops confirms print, postage, and fulfillment after approval.
           </p>
         </div>
 
@@ -132,6 +135,29 @@ export default function HomePage() {
         <span>
           <Check /> Built for landscaping and home services
         </span>
+      </section>
+
+      <section className={styles.demoOffer} id="demo10">
+        <div>
+          <span>LOW-RISK STARTER</span>
+          <h2>See 10 homes before you scale.</h2>
+          <p>
+            Choose your trade and provide up to 10 addresses—or ask Cole to help choose the area.
+            Each card pairs authorized Current imagery when available with a clearly labeled After concept.
+          </p>
+        </div>
+        <div>
+          <strong>$49</strong>
+          <ul>
+            <li><Check /> Up to 10 before/after concepts</li>
+            <li><Check /> Per-card approve, swap, regenerate, or request changes</li>
+            <li><Check /> QR estimate-page structure</li>
+            <li><Check /> Manual mailing only after your approval</li>
+          </ul>
+          <a className={styles.primaryButton} href={demo10.href}>
+            {demo10.label} <ArrowRight size={18} />
+          </a>
+        </div>
       </section>
 
       <section className={styles.section} id="how">

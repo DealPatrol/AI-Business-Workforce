@@ -119,7 +119,11 @@ export async function POST(request: NextRequest) {
 
     const conceptJson = {
       ...(recipient.concept_json ?? {}),
-      plantPlan: rendered.plantPlan,
+      trade: rendered.conceptPlan.trade,
+      selectedCatalogItems: rendered.conceptPlan.selectedCatalogItems,
+      scopeBullets: rendered.conceptPlan.scopeBullets,
+      conceptNotes: rendered.conceptPlan.notes,
+      catalogDisclosure: rendered.conceptPlan.catalogDisclosure,
       after: {
         provider: rendered.provider,
         model: rendered.model,
@@ -158,7 +162,7 @@ export async function POST(request: NextRequest) {
       provider: rendered.provider,
       model: rendered.model,
       promptVersion: rendered.promptVersion,
-      plantPlan: rendered.plantPlan,
+      conceptPlan: rendered.conceptPlan,
       currentImageSource: recipient.current_image_source,
       reviewStatus: 'pending_review',
       note: 'Human review required before mailing. Call POST /api/imagery/review to approve.',
