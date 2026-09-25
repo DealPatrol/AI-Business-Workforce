@@ -4,6 +4,7 @@ import { FormEvent, Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, CheckCircle2, Loader2, Mail, Sparkles } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
+import { AVA_VOICE_OPTIONS } from '@/lib/ava/voice-options';
 import styles from './onboarding.module.css';
 
 const CONTACT_EMAIL = 'colecollins763@gmail.com';
@@ -60,6 +61,7 @@ function buildEmailFallback(form: HTMLFormElement, result: OnboardingResponse) {
       `Calendar preference: ${data.get('calendarPreference') || ''}`,
       '',
       `Urgent-call rules:\n${data.get('urgentCallRules') || ''}`,
+      `Preferred Ava voice: ${data.get('preferredVoice') || 'No preference'}`,
       '',
       `Stripe Checkout session: ${data.get('sessionId') || ''}`,
       `Selected plan: ${data.get('plan') || ''}`,
@@ -347,6 +349,21 @@ function AvaOnboardingForm() {
                   />
                 </label>
               </div>
+            </fieldset>
+
+            <fieldset className={styles.section}>
+              <legend>Ava voice (optional)</legend>
+              <label>
+                Preferred voice
+                <select name="preferredVoice" defaultValue="">
+                  <option value="">No preference — Cole can recommend one</option>
+                  {AVA_VOICE_OPTIONS.map((option) => (
+                    <option value={option.key} key={option.key}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
             </fieldset>
 
             <input type="hidden" name="sessionId" value={searchParams.get('session_id') || ''} />

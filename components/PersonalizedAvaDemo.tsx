@@ -21,6 +21,11 @@ import {
 } from 'lucide-react';
 import { ConversationProvider, useConversation } from '@elevenlabs/react';
 import { AVA_PILOT_OFFER, AVA_PILOT_PAYMENT_LINK } from '@/lib/ava-pilot-offer';
+import {
+  AVA_VOICE_OPTIONS,
+  DEFAULT_AVA_VOICE,
+  type AvaVoiceKey,
+} from '@/lib/ava/voice-options';
 import type { Prospect } from '@/lib/prospects';
 
 type CallState = 'idle' | 'preparing' | 'ready' | 'connecting' | 'connected' | 'ending' | 'processing';
@@ -54,6 +59,7 @@ function PersonalizedDemoContent({ prospect }: { prospect: Prospect }) {
   const [textMode, setTextMode] = useState(false);
   const [textInput, setTextInput] = useState('');
   const [textStep, setTextStep] = useState(0);
+  const [selectedVoice, setSelectedVoice] = useState<AvaVoiceKey>(DEFAULT_AVA_VOICE);
   const [textMessages, setTextMessages] = useState<TextMessage[]>([
     {
       from: 'ava',
@@ -78,11 +84,12 @@ function PersonalizedDemoContent({ prospect }: { prospect: Prospect }) {
     },
   });
 
-  async function prepareSession() {
+  async function prepareSession(voice: AvaVoiceKey = selectedVoice) {
     setCallState('preparing');
     setError('');
     try {
-      const res = await fetch('/api/ava/elevenlabs', { cache: 'no-store' });
+      const params = new URLSearchParams({ voice });
+      const res = await fetch(`/api/ava/elevenlabs?${params}`, { cache: 'no-store' });
       const data = await res.json();
       if (!res.ok || !data.signedUrl) {
         throw new Error(data?.error || data?.next || 'Could not prepare Ava.');
@@ -99,11 +106,25 @@ function PersonalizedDemoContent({ prospect }: { prospect: Prospect }) {
 
   useEffect(() => {
     trackEvent(prospect.slug, 'demo_open');
-    prepareSession();
   }, [prospect.slug]);
+
+  useEffect(() => {
+    prepareSession(selectedVoice);
+  }, [selectedVoice]);
 
   const active = callState === 'connected' || conversation.status === 'connected';
   const ending = callState === 'ending';
+  const voicePickerDisabled =
+    active ||
+    ['preparing', 'connecting', 'ending', 'processing'].includes(callState);
+
+  function selectVoice(voice: AvaVoiceKey) {
+    if (voicePickerDisabled || voice === selectedVoice) return;
+    signedUrl.current = null;
+    preparedConversationId.current = null;
+    setCallState('preparing');
+    setSelectedVoice(voice);
+  }
 
   async function startCall() {
     if (!['ready', 'idle'].includes(callState)) return;
@@ -304,6 +325,30 @@ function PersonalizedDemoContent({ prospect }: { prospect: Prospect }) {
               </p>
             </div>
           </div>
+
+          <fieldset className="voice-picker" disabled={voicePickerDisabled}>
+            <legend>Choose Ava&apos;s voice</legend>
+            <div className="voice-options">
+              {AVA_VOICE_OPTIONS.map((option) => (
+                <label
+                  className={selectedVoice === option.key ? 'voice-option selected' : 'voice-option'}
+                  key={option.key}
+                >
+                  <input
+                    type="radio"
+                    name="avaVoice"
+                    value={option.key}
+                    checked={selectedVoice === option.key}
+                    onChange={() => selectVoice(option.key)}
+                  />
+                  <span>
+                    <b>{option.label}</b>
+                    <small>{option.description}</small>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
 
           {textMode ? (
             <div className="text-preview">

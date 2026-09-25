@@ -1,0 +1,63 @@
+.voice-picker {
+  border: 0;
+  border-top: 1px solid #e0e7e1;
+  margin: 0 0 16px;
+  padding: 14px 0 0;
+}
+
+.voice-picker legend {
+  padding: 0 8px 0 0;
+  color: #526057;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.voice-options {
+  display: grid;
+  gap: 7px;
+}
+
+.voice-option {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid #d8e0d9;
+  border-radius: 9px;
+  padding: 9px 10px;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+}
+
+.voice-option.selected {
+  border-color: var(--brand);
+  background: color-mix(in srgb, var(--brand) 8%, #fff);
+}
+
+.voice-option input {
+  margin: 0;
+  accent-color: var(--brand);
+}
+
+.voice-option span {
+  display: grid;
+  gap: 1px;
+}
+
+.voice-option b {
+  color: #203027;
+  font-size: 11px;
+}
+
+.voice-option small {
+  color: #78847c;
+  font-size: 9px;
+}
+
+.voice-picker:disabled .voice-option {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
