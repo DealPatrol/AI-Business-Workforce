@@ -90,4 +90,18 @@ Migrations:
 3. Add server-only Vercel env: `GOOGLE_MAPS_API_KEY` (Geocoding + Street View Static + Maps Static, restricted), optional `GOOGLE_MAPS_URL_SIGNING_SECRET`, confirm `OPENAI_API_KEY` Images access / `OPENAI_IMAGE_MODEL`, optional `IMAGERY_PROVIDER`, `AFTER_PROMPT_VERSION`, `IMAGERY_STORAGE_BUCKET`, `IMAGERY_DAILY_CAP`.
 4. Do **not** invent or paste secrets into git. Cole configures Vercel/GCP.
 
+**Imagery security notes:**
+
+- `GOOGLE_MAPS_API_KEY` is server-only. Never create a `NEXT_PUBLIC_GOOGLE_MAPS_*` var. API responses never include `maps.googleapis.com` URLs (they embed the key); Street View and satellite preview bytes are downloaded server-side and served via short-lived Storage signed URLs.
+- Server-side image fetches go through `lib/imagery/safe-fetch.ts`: https only, host must be the `NEXT_PUBLIC_SUPABASE_URL` host under `/storage/v1/object/`, or `maps.googleapis.com` under `/maps/api/streetview|staticmap`. No redirects, 20 MB cap.
+- After-render uses `gpt-image-1` image **edit** with the Current as input. gpt-image models always return base64 and reject `response_format` (400), so it is only sent for legacy `dall-e-*` overrides.
+
+**Hanceville demo QR 404 (`/q/f4db2ae44db4886b70d6b6060751cc70b95b`) — diagnosed 2026-09-24:**
+
+- The recipient row **exists** in prod Supabase (`ielfvaguaebdlyfdkgtt`, Hanceville, campaign `status=active`).
+- Prod `campaign_recipients` only has the legacy columns; migrations `20260924120000_postcard_recipient_imagery.sql` and `20260924130000_streetview_printable_current.sql` are **not applied** (latest applied: `fix_extension_schemas_and_fk_index`).
+- `/q/[token]` selected `current_image_url, current_image_source, after_image_url, review_status`, PostgREST returned `42703 undefined_column`, and the page treated any error as `notFound()` → 404.
+- Code fix: `/q/[token]` now falls back to the legacy column set on `42703`, so the page renders (legacy concept image only) even before migrations.
+- To enable Current|After on that page: apply both migrations above (in order), create the private Storage bucket `yardproof-imagery` (none exists in prod yet), then run streetview-preview → after-render → review for that recipient.
+
 Postcard **printing and fulfillment** (Lob / vendor mail) remain out of scope until explicitly authorized.

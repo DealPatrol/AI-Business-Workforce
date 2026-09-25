@@ -9,6 +9,14 @@
  */
 
 import { createHmac } from 'node:crypto';
+import { fetchAllowedImage } from '@/lib/imagery/safe-fetch';
+
+// Server-only: GOOGLE_MAPS_API_KEY must never reach the browser bundle.
+// (No NEXT_PUBLIC_ key exists; URLs built here embed the key and must not be
+// returned to clients — download bytes server-side and serve from Storage.)
+if (typeof window !== 'undefined') {
+  throw new Error('lib/google/streetview is server-only and must not be imported in client code.');
+}
 
 const GEOCODE_URL = 'https://maps.googleapis.com/maps/api/geocode/json';
 const SV_METADATA_URL = 'https://maps.googleapis.com/maps/api/streetview/metadata';
@@ -140,8 +148,9 @@ export function signGoogleMapsUrl(pathWithQuery: string): string {
 
 /**
  * Build a Street View Static image URL (ephemeral — download into Storage for durable Current).
+ * SERVER-ONLY: the returned URL contains the Maps key. Never send it to the client.
  */
-export function buildStreetViewStaticUrl(params: StreetViewStaticParams): string {
+function buildStreetViewStaticUrl(params: StreetViewStaticParams): string {
   const key = requireMapsKey();
   const size = params.size ?? '640x640';
   const search = new URLSearchParams();
@@ -160,8 +169,11 @@ export function buildStreetViewStaticUrl(params: StreetViewStaticParams): string
   return `https://maps.googleapis.com${signGoogleMapsUrl(pathWithQuery)}`;
 }
 
-/** Satellite Static Maps URL — operator fallback preview when SV is unavailable (not printable Current). */
-export function buildSatelliteStaticUrl(lat: number, lng: number, size = '640x640'): string {
+/**
+ * Satellite Static Maps URL — operator fallback preview when SV is unavailable (not printable Current).
+ * SERVER-ONLY: the returned URL contains the Maps key. Never send it to the client.
+ */
+function buildSatelliteStaticUrl(lat: number, lng: number, size = '640x640'): string {
   const key = requireMapsKey();
   const search = new URLSearchParams({
     center: `${lat},${lng}`,
@@ -174,26 +186,37 @@ export function buildSatelliteStaticUrl(lat: number, lng: number, size = '640x64
   return `https://maps.googleapis.com${signGoogleMapsUrl(pathWithQuery)}`;
 }
 
-/** Download Street View Static image bytes for durable Storage Current. */
+/** Download Street View Static image bytes for durable Storage Current (key never leaves the server). */
 export async function downloadStreetViewImage(
   params: StreetViewStaticParams,
-): Promise<{ bytes: Buffer; mimeType: string; sourceUrl: string }> {
-  const sourceUrl = buildStreetViewStaticUrl(params);
-  const response = await fetch(sourceUrl, { cache: 'no-store' });
-  if (!response.ok) {
-    throw new Error(`Street View Static download HTTP ${response.status}`);
-  }
-  const mimeType = response.headers.get('content-type') || 'image/jpeg';
-  if (!mimeType.startsWith('image/')) {
-    throw new Error(
-      `Street View Static returned non-image content-type (${mimeType}). Check Maps key / billing.`,
-    );
-  }
-  const bytes = Buffer.from(await response.arrayBuffer());
+): Promise<{ bytes: Buffer; mimeType: string }> {
+  const { bytes, mimeType } = await fetchAllowedImage(buildStreetViewStaticUrl(params)).catch(
+    (error: unknown) => {
+      throw new Error(
+        `Street View Static download failed: ${error instanceof Error ? error.message : 'unknown error'}. Check Maps key / billing.`,
+      );
+    },
+  );
   if (bytes.length < 100) {
     throw new Error('Street View Static download returned an empty or tiny payload.');
   }
-  return { bytes, mimeType, sourceUrl };
+  return { bytes, mimeType };
+}
+
+/** Download satellite Static Maps bytes (operator preview only; key never leaves the server). */
+export async function downloadSatelliteImage(
+  lat: number,
+  lng: number,
+  size = '640x640',
+): Promise<{ bytes: Buffer; mimeType: string }> {
+  const { bytes, mimeType } = await fetchAllowedImage(buildSatelliteStaticUrl(lat, lng, size)).catch(
+    (error: unknown) => {
+      throw new Error(
+        `Satellite Static Maps download failed: ${error instanceof Error ? error.message : 'unknown error'}.`,
+      );
+    },
+  );
+  return { bytes, mimeType };
 }
 
 export function formatRecipientAddressLine(parts: {
