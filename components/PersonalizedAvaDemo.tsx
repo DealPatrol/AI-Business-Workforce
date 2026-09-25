@@ -69,6 +69,8 @@ function PersonalizedDemoContent({ prospect }: { prospect: Prospect }) {
   const conversationId = useRef<string | null>(null);
   const signedUrl = useRef<string | null>(null);
   const preparedConversationId = useRef<string | null>(null);
+  const prepareRequestId = useRef(0);
+  const selectedVoiceRef = useRef<AvaVoiceKey>(DEFAULT_AVA_VOICE);
 
   const conversation = useConversation({
     onConnect: () => {
@@ -85,7 +87,8 @@ function PersonalizedDemoContent({ prospect }: { prospect: Prospect }) {
   });
 
   async function prepareSession(voice: AvaVoiceKey = selectedVoice) {
-    setCallState('preparing');
+    const requestId = ++prepareRequestId.current;
+    setCallState((state) => (state === 'connecting' ? state : 'preparing'));
     setError('');
     try {
       const params = new URLSearchParams({ voice });
@@ -94,10 +97,12 @@ function PersonalizedDemoContent({ prospect }: { prospect: Prospect }) {
       if (!res.ok || !data.signedUrl) {
         throw new Error(data?.error || data?.next || 'Could not prepare Ava.');
       }
+      if (requestId !== prepareRequestId.current || voice !== selectedVoiceRef.current) return;
       signedUrl.current = data.signedUrl;
       preparedConversationId.current = data.conversationId || null;
-      setCallState('ready');
+      setCallState((state) => (state === 'connecting' ? state : 'ready'));
     } catch {
+      if (requestId !== prepareRequestId.current || voice !== selectedVoiceRef.current) return;
       setError('');
       setTextMode(true);
       setCallState('idle');
@@ -120,6 +125,8 @@ function PersonalizedDemoContent({ prospect }: { prospect: Prospect }) {
 
   function selectVoice(voice: AvaVoiceKey) {
     if (voicePickerDisabled || voice === selectedVoice) return;
+    prepareRequestId.current += 1;
+    selectedVoiceRef.current = voice;
     signedUrl.current = null;
     preparedConversationId.current = null;
     setCallState('preparing');
