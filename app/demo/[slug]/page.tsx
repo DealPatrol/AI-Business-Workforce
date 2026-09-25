@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import PersonalizedDemo from '@/components/PersonalizedAvaDemo';
 import { getProspectBySlug, PROSPECTS } from '@/lib/prospects';
 import './demo.css';
+import './voice-picker.css';
 
 type PageProps = { params: Promise<{ slug: string }> };
 
