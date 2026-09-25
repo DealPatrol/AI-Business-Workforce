@@ -42,7 +42,7 @@ The app is safe to deploy before the newest migration: the review page falls bac
 4. Sign in and open:
    `/dashboard/campaigns/d0100000-0000-4000-8000-000000000010/review`
 
-The seed is repeatable and recreates exactly 10 clearly labeled SAMPLE/PLACEHOLDER cards. It uses site demo assets, not live property imagery. Do not mail those cards.
+The seed is repeatable and creates exactly 10 clearly labeled SAMPLE/PLACEHOLDER cards with random public tokens. It starts in `draft`, uses site demo assets rather than live property imagery, and preserves existing card review state on rerun. Do not mail those cards.
 
 ## Seed a real customer's 10 addresses
 

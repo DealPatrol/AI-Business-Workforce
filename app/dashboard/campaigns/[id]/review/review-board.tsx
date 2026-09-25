@@ -138,6 +138,20 @@ export default function ReviewBoard({ campaign, initialRecipients }: Props) {
     () => recipients.filter((recipient) => recipient.reviewStatus === 'approved').length,
     [recipients],
   );
+  const allReady = useMemo(
+    () =>
+      recipients.length > 0 &&
+      recipients.every(
+        (recipient) =>
+          Boolean(
+            recipient.currentImageUrl &&
+            recipient.afterImageUrl &&
+            recipient.currentImageSource,
+          ) &&
+          ['pending_review', 'approved'].includes(recipient.reviewStatus),
+      ),
+    [recipients],
+  );
 
   const updateRecipient = (id: string, patch: Partial<ReviewRecipient>) => {
     setRecipients((current) =>
@@ -154,7 +168,6 @@ export default function ReviewBoard({ campaign, initialRecipients }: Props) {
         recipientId: recipient.id,
         status,
         notes: notes[recipient.id] || null,
-        trade: campaign.trade,
         catalogSelections: selections[recipient.id],
       });
       updateRecipient(recipient.id, {
@@ -178,7 +191,6 @@ export default function ReviewBoard({ campaign, initialRecipients }: Props) {
         recipientId: recipient.id,
         status: 'pending_review',
         notes: notes[recipient.id] || null,
-        trade: campaign.trade,
         catalogSelections: selections[recipient.id],
       });
       updateRecipient(recipient.id, { reviewStatus: 'pending_review' });
@@ -197,7 +209,6 @@ export default function ReviewBoard({ campaign, initialRecipients }: Props) {
     try {
       const result = await postJson('/api/imagery/after-render', {
         recipientId: recipient.id,
-        trade: campaign.trade,
         catalogSkus: selections[recipient.id],
       });
       updateRecipient(recipient.id, {
@@ -253,7 +264,7 @@ export default function ReviewBoard({ campaign, initialRecipients }: Props) {
           <button
             type="button"
             onClick={approveAll}
-            disabled={busy !== null || recipients.length === 0 || campaign.legacyImagery}
+            disabled={busy !== null || !allReady || campaign.legacyImagery}
           >
             {busy === 'campaign:approve' ? <LoaderCircle className={styles.spin} /> : <CheckCheck />}
             Approve all ready

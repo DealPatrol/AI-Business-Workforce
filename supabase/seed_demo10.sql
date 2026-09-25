@@ -34,7 +34,7 @@ begin
     'Sample North Alabama Landscaping',
     '(256) 555-0110',
     'contractor@example.com',
-    'active',
+    'draft',
     'demo_10',
     'landscaping',
     true
@@ -49,9 +49,6 @@ begin
     campaign_type = excluded.campaign_type,
     trade = excluded.trade,
     is_sample = excluded.is_sample;
-
-  delete from public.campaign_recipients
-  where campaign_id = sample_campaign_id;
 
   insert into public.campaign_recipients (
     id,
@@ -77,7 +74,7 @@ begin
   select
     ('d0100000-0000-4000-8100-' || lpad(card_number::text, 12, '0'))::uuid,
     sample_campaign_id,
-    'sample-demo10-card-' || lpad(card_number::text, 2, '0'),
+    encode(gen_random_bytes(18), 'hex'),
     null,
     (100 + card_number * 2)::text || ' Sample Oak Drive',
     'Cullman',
@@ -109,7 +106,8 @@ begin
     ),
     'pending_review',
     'ready'
-  from generate_series(1, 10) as card_number;
+  from generate_series(1, 10) as card_number
+  on conflict (id) do nothing;
 end
 $$;
 

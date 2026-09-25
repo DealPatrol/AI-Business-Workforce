@@ -6,16 +6,16 @@ import {
 } from '@/lib/imagery/auth';
 import {
   getConceptProfile,
-  normalizeTrade,
   selectCatalogChoices,
 } from '@/lib/concept-profiles';
+import { getCampaignTrade } from '@/lib/campaign-trade';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 const ALLOWED = new Set(['approved', 'changes_requested', 'rejected', 'pending_review']);
 const ACCEPTED_CURRENT = new Set(['street_view', 'crew_photo', 'owner_upload']);
-const UNDEFINED_COLUMN = '42703';
+const MISSING_COLUMN_CODES = new Set(['42703', 'PGRST204']);
 
 /**
  * Set human review_status. Approval requires Current (SV or crew/owner) + After URLs.
@@ -29,7 +29,6 @@ export async function POST(request: NextRequest) {
     const recipientId = String(body.recipientId ?? '').trim();
     const status = String(body.status ?? '').trim();
     const notes = body.notes != null ? String(body.notes).slice(0, 2000) : null;
-    const trade = normalizeTrade(body.trade != null ? String(body.trade) : undefined);
     const requestedSelections = Array.isArray(body.catalogSelections)
       ? body.catalogSelections.map(String).slice(0, 12)
       : null;
@@ -48,6 +47,7 @@ export async function POST(request: NextRequest) {
     if (!owned.ok) return owned.response;
 
     const recipient = owned.recipient;
+    const trade = await getCampaignTrade(auth.ctx.admin, recipient.campaign_id);
     if (status === 'approved') {
       if (!recipient.current_image_url || !recipient.after_image_url) {
         return NextResponse.json(
@@ -75,10 +75,11 @@ export async function POST(request: NextRequest) {
     const patch: Record<string, unknown> = {
       review_status: status,
       review_notes: notes,
-      change_notes: status === 'changes_requested' ? notes : null,
       postcard_approved_at:
         status === 'approved' ? new Date().toISOString() : null,
     };
+
+    if (status === 'changes_requested') patch.change_notes = notes;
 
     if (requestedSelections) {
       const profile = getConceptProfile(trade);
@@ -98,7 +99,7 @@ export async function POST(request: NextRequest) {
 
     // Deploy-order safety: the UI and existing review workflow remain usable
     // before the Demo 10 migration adds change_notes.
-    if (error?.code === UNDEFINED_COLUMN) {
+    if (error && MISSING_COLUMN_CODES.has(error.code)) {
       delete patch.change_notes;
       const fallback = await auth.ctx.admin
         .from('campaign_recipients')
