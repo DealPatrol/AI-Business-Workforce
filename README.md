@@ -47,6 +47,46 @@ For a real campaign, use the same SQL shape as the seed: create one `campaigns` 
 
 The app records page-open activity for valid recipient pages and deduplicates repeated opens from the same request source within 30 minutes. This is useful response activity, but it can include link-preview bots as well as homeowner QR scans.
 
+## Property imagery
+
+The authenticated campaign inbox can geocode a recipient address, check the Street View metadata endpoint, and display a fresh Street View Static preview. If imagery is unavailable, the workflow explains the failure and keeps the owner/crew upload control available.
+
+Required setup:
+
+1. Enable Google Geocoding API, Street View Static API, and Maps Static API in one billed Google Cloud project.
+2. Set the server-only `GOOGLE_MAPS_API_KEY` and restrict it to those APIs. `GOOGLE_MAPS_URL_SIGNING_SECRET` is optional.
+3. Create the private Supabase bucket named by `IMAGERY_STORAGE_BUCKET`.
+4. Leave `GOOGLE_STREET_VIEW_STORAGE_ENABLED=false` and `STREET_VIEW_POSTCARD_ENABLED=false` unless Google has granted separate written rights for storage and printed direct-mail use.
+
+By default YardProof retains the geocode and Street View panorama ID, but not Street View image bytes. Authenticated previews are fetched on demand with `Cache-Control: no-store`. Owner- or crew-taken photographs are the recommended postcard source.
+
+### Google Maps Platform policy finding
+
+This is an engineering risk assessment, not legal advice. As reviewed September 27, 2026:
+
+- [Google Maps Platform Terms §3.2.3(a), “No Scraping”](https://cloud.google.com/maps-platform/terms) bars exporting Google Maps Content for use outside the services and specifically lists pre-fetching, storing, resharing, or rehosting it.
+- [§3.2.3(b), “No Caching”](https://cloud.google.com/maps-platform/terms) bars caching except where the service-specific terms expressly permit it.
+- [Google Maps Platform Service Specific Terms §3, “Google ID Caching”](https://cloud.google.com/maps-platform/terms/maps-service-terms) permits caching the Street View `pano_id`; it does not grant an image-storage or print exception.
+- [Street View Static API Policies, “Pre-fetching, caching, or storage of content”](https://developers.google.com/maps/documentation/streetview/policies) says storing/caching content is generally prohibited apart from stated ID exceptions.
+- [Street View Static API Policies, “Google Maps attribution requirements”](https://developers.google.com/maps/documentation/streetview/policies) requires supplied attribution to remain visible and legible.
+
+The terms do not provide an express commercial-postcard/offline-print permission. Because printing necessarily exports and fixes the image outside the service, YardProof treats it as prohibited or at least materially risky absent written permission. The postcard gate is therefore OFF by default. Use owner/crew photos or separately licensed property imagery instead.
+
+## Lob postcard mailing
+
+YardProof uses Lob for the initial integration because its official API supports US 4×6 and 6×9 postcards, separate test/live keys, US address verification, HTML proofs, mail tracking webhooks, and signed webhook verification. PostGrid is viable, but Lob's explicit postcard artboard/no-ink-zone guidance and mature test fixtures make it the lower-risk fit for this workflow.
+
+Setup:
+
+1. Create a Lob account and start with a `test_*` API key.
+2. Set `LOB_API_KEY`, `LOB_MODE=test`, and the `MAIL_RETURN_*` fields from `.env.example`.
+3. Set `MAIL_PRICE_PER_CARD_CENTS` to the expected all-in per-piece amount from the Lob plan or quote. It drives the campaign preview only; Lob's invoice remains authoritative.
+4. In Lob, add a webhook pointing to `https://YOUR_DOMAIN/api/webhooks/lob`, subscribe to postcard tracking events, and copy its unique secret to `LOB_WEBHOOK_SECRET`.
+5. Apply `supabase/migrations/20260927020000_postcard_mailing.sql`.
+6. Keep `MAIL_LIVE_ENABLED=false`. Live mail requires `LOB_MODE=live`, a `live_*` key, and `MAIL_LIVE_ENABLED=true`.
+
+The inbox shows a fresh per-campaign estimate and an explicit **Approve & send** action. The server re-checks eligibility, verifies every address before creating a Lob job, records test/live mode and Lob IDs, and updates delivery status only from HMAC-SHA256 verified webhooks. For 6×9 pieces the generated back reserves Lob's documented 2.375″ × 4″ ink-free address/postage/barcode block.
+
 ## Ava operations
 
 Cole's current post-purchase and phone-launch checklist, plus the first automated agent-provisioning path, is in [`docs/AVA_PHONE_SETUP_RUNBOOK.md`](docs/AVA_PHONE_SETUP_RUNBOOK.md). Production credentials and rollout boundaries are documented in [`PRODUCTION_SETUP.md`](PRODUCTION_SETUP.md).

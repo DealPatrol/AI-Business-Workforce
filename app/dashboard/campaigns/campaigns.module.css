@@ -152,6 +152,85 @@
   align-items: start;
 }
 
+.mailSection {
+  margin-bottom: 18px;
+}
+
+.sectionHeading {
+  margin-bottom: 10px;
+}
+
+.sectionHeading span,
+.mailPanel > div > span {
+  color: #2e8b57;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.sectionHeading h2 {
+  margin: 4px 0;
+  font-size: 20px;
+}
+
+.sectionHeading p {
+  margin: 0;
+  color: #707b73;
+  font-size: 11px;
+}
+
+.mailPanel {
+  margin-top: 10px;
+  padding: 18px 20px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px 18px;
+  align-items: center;
+  border: 1px solid #dce3dc;
+  border-radius: 11px;
+  background: white;
+}
+
+.mailPanel h2 {
+  margin: 4px 0;
+  font-size: 17px;
+}
+
+.mailPanel p,
+.mailPanel small {
+  margin: 3px 0;
+  display: block;
+  color: #6f7971;
+  font-size: 10px;
+}
+
+.mailPanel strong {
+  display: block;
+  color: #205c39;
+  font-size: 20px;
+}
+
+.mailPanel button,
+.workflowActions button,
+.workflowActions label {
+  padding: 8px 10px;
+  border: 1px solid #2e754e;
+  border-radius: 7px;
+  background: #2e754e;
+  color: white;
+  font-size: 9px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.mailPanel button:disabled,
+.workflowActions button:disabled,
+.workflowActions label:has(input:disabled) {
+  border-color: #a9b5ad;
+  background: #a9b5ad;
+  cursor: not-allowed;
+}
+
 .panel {
   overflow: hidden;
   border: 1px solid #dce3dc;
@@ -329,6 +408,66 @@
   white-space: nowrap;
 }
 
+.workflow {
+  grid-column: 1 / -1;
+  margin-top: 6px;
+  padding-top: 12px;
+  border-top: 1px solid #edf0ec;
+}
+
+.workflowImages {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.workflowImages img,
+.workflowImages > span {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  background: #edf1ec;
+  color: #7b857d;
+  font-size: 9px;
+}
+
+.workflowStatus,
+.workflowActions {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.workflowStatus span {
+  padding: 4px 6px;
+  border-radius: 99px;
+  background: #f0f4ef;
+  color: #5f6c62;
+  font-size: 8px;
+}
+
+.workflowActions label {
+  position: relative;
+}
+
+.workflowActions input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.workflowMessage {
+  grid-column: 1 / -1;
+  margin: 6px 0 0 !important;
+  color: #6a4c21 !important;
+  font-size: 9px !important;
+}
+
 @media (max-width: 950px) {
   .grid {
     grid-template-columns: 1fr;
@@ -365,6 +504,10 @@
   }
 
   .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .mailPanel {
     grid-template-columns: 1fr;
   }
 

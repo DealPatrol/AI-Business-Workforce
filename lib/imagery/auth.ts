@@ -68,6 +68,9 @@ export async function assertRecipientOwned(
         longitude: number | null;
         normalized_address: string | null;
         street_view_pano_id: string | null;
+        street_view_heading: number | null;
+        street_view_pitch: number | null;
+        street_view_fov: number | null;
         concept_json: Record<string, unknown> | null;
       };
     }
@@ -100,6 +103,9 @@ export async function assertRecipientOwned(
       longitude,
       normalized_address,
       street_view_pano_id,
+      street_view_heading,
+      street_view_pitch,
+      street_view_fov,
       concept_json,
       campaigns!inner ( owner_id )
     `,
@@ -148,6 +154,9 @@ export async function assertRecipientOwned(
       longitude: (row.longitude as number | null) ?? null,
       normalized_address: (row.normalized_address as string | null) ?? null,
       street_view_pano_id: (row.street_view_pano_id as string | null) ?? null,
+      street_view_heading: (row.street_view_heading as number | null) ?? null,
+      street_view_pitch: (row.street_view_pitch as number | null) ?? null,
+      street_view_fov: (row.street_view_fov as number | null) ?? null,
       concept_json: (row.concept_json as Record<string, unknown> | null) ?? null,
     },
   };

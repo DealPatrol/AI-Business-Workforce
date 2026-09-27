@@ -14,16 +14,58 @@ import {
   isGoogleMapsConfigured,
   normalizeStreetViewCaptureDate,
 } from '@/lib/google/streetview';
+import { streetViewStorageEnabled } from '@/lib/mail/config';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 export const maxDuration = 60;
 
 /**
- * Geocode + Street View Static → durable printable Current in Storage.
- * Sets current_image_source = street_view for postcard /q and after-render AI input.
- * Crew/owner photos remain optional alternate Current sources.
- * Satellite is operator preview only when SV is unavailable (not Current).
+ * Stream a fresh authenticated Street View preview without caching image bytes.
+ * Only pano/geo metadata is retained by default.
+ */
+export async function GET(request: NextRequest) {
+  const auth = await requireCampaignOwner();
+  if (!auth.ok) return auth.response;
+  const owned = await assertRecipientOwned(
+    auth.ctx,
+    request.nextUrl.searchParams.get('recipientId') ?? '',
+  );
+  if (!owned.ok) return owned.response;
+  const recipient = owned.recipient;
+  if (!recipient.street_view_pano_id || recipient.latitude == null || recipient.longitude == null) {
+    return NextResponse.json({ error: 'Street View imagery has not been fetched.' }, { status: 404 });
+  }
+
+  try {
+    const image = await downloadStreetViewImage({
+      lat: recipient.latitude,
+      lng: recipient.longitude,
+      panoId: recipient.street_view_pano_id,
+      heading: recipient.street_view_heading ?? undefined,
+      pitch: recipient.street_view_pitch ?? undefined,
+      fov: recipient.street_view_fov ?? undefined,
+      size: '640x640',
+    });
+    return new NextResponse(image.bytes, {
+      headers: {
+        'Content-Type': image.mimeType,
+        'Cache-Control': 'private, no-store, max-age=0',
+        'X-Content-Type-Options': 'nosniff',
+      },
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'Street View preview failed.' },
+      { status: 502 },
+    );
+  }
+}
+
+/**
+ * Geocode + metadata lookup. Image storage is disabled by default because
+ * Google generally prohibits storing Street View Static content. Operators
+ * with separate written rights can explicitly opt in.
  */
 export async function POST(request: NextRequest) {
   const auth = await requireCampaignOwner();
@@ -78,7 +120,7 @@ export async function POST(request: NextRequest) {
     let imageryStatus: string;
     let imageryError: string | null = null;
 
-    if (metadata.available) {
+    if (metadata.available && streetViewStorageEnabled()) {
       const downloaded = await downloadStreetViewImage({
         lat: metadata.lat ?? geo.lat,
         lng: metadata.lng ?? geo.lng,
@@ -121,6 +163,11 @@ export async function POST(request: NextRequest) {
       currentImageUrl = signed.signedUrl;
       previewUrl = signed.signedUrl;
       imageryStatus = 'ready';
+    } else if (metadata.available) {
+      previewUrl = `/api/imagery/streetview-preview?recipientId=${encodeURIComponent(recipient.id)}`;
+      imageryStatus = 'ready';
+      imageryError =
+        'Preview is fetched on demand; Google Street View storage and postcard use are disabled by default.';
     } else {
       // Never return a maps.googleapis.com URL to the client (it embeds the Maps key).
       // Download the satellite preview server-side and serve it from private Storage.
@@ -208,7 +255,9 @@ export async function POST(request: NextRequest) {
       ok: true,
       usage: metadata.available ? 'print_source' : 'operator_preview',
       note: metadata.available
-        ? 'Street View Static persisted as durable printable Current (source=street_view). Valid AI input for After. Human review still required before mail.'
+        ? currentImageUrl
+          ? 'Street View storage is explicitly enabled. Human review and postcard policy gates still apply.'
+          : 'Street View is available and shown on demand without caching. Upload an owner/crew photo for postcard use.'
         : 'Street View unavailable — satellite preview only. Use crew_photo/owner_upload as alternate Current.',
       geocode: {
         lat: geo.lat,
@@ -225,7 +274,7 @@ export async function POST(request: NextRequest) {
       previewKind: metadata.available ? 'street_view' : 'satellite',
       currentImageUrl,
       currentImageSource: currentImageUrl ? 'street_view' : null,
-      currentImageUsage: currentImageUrl ? 'print_source' : null,
+      currentImageUsage: currentImageUrl ? 'print_source' : 'preview_only',
       storagePath,
       imageryStatus,
     });

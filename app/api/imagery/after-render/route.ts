@@ -10,6 +10,7 @@ import {
   renderAfter,
 } from '@/lib/imagery/after-render';
 import { fetchAllowedImage } from '@/lib/imagery/safe-fetch';
+import { downloadStreetViewImage } from '@/lib/google/streetview';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -44,7 +45,11 @@ export async function POST(request: NextRequest) {
     if (!owned.ok) return owned.response;
 
     const recipient = owned.recipient;
-    if (!recipient.current_image_url) {
+    const hasFreshStreetView =
+      Boolean(recipient.street_view_pano_id) &&
+      recipient.latitude != null &&
+      recipient.longitude != null;
+    if (!recipient.current_image_url && !hasFreshStreetView) {
       return NextResponse.json(
         {
           error:
@@ -53,7 +58,12 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
-    if (!recipient.current_image_source || !ACCEPTED_CURRENT.has(recipient.current_image_source)) {
+    const currentSource = recipient.current_image_url
+      ? recipient.current_image_source
+      : hasFreshStreetView
+        ? 'street_view'
+        : null;
+    if (!currentSource || !ACCEPTED_CURRENT.has(currentSource)) {
       return NextResponse.json(
         {
           error:
@@ -69,21 +79,29 @@ export async function POST(request: NextRequest) {
       .eq('id', recipient.id);
 
     // SSRF guard: only our Supabase Storage host or Google Street View Static.
-    const { bytes: currentBytes, mimeType: currentMimeType } = await fetchAllowedImage(
-      recipient.current_image_url,
-    ).catch((error: unknown) => {
-      throw new Error(
-        `Could not download Current image: ${error instanceof Error ? error.message : 'unknown error'}`,
-      );
-    });
+    const current = recipient.current_image_url
+      ? await fetchAllowedImage(recipient.current_image_url).catch((error: unknown) => {
+          throw new Error(
+            `Could not download Current image: ${error instanceof Error ? error.message : 'unknown error'}`,
+          );
+        })
+      : await downloadStreetViewImage({
+          lat: recipient.latitude!,
+          lng: recipient.longitude!,
+          panoId: recipient.street_view_pano_id,
+          heading: recipient.street_view_heading ?? undefined,
+          pitch: recipient.street_view_pitch ?? undefined,
+          fov: recipient.street_view_fov ?? undefined,
+          size: '640x640',
+        });
 
     const catalogSkus = Array.isArray(body.catalogSkus)
       ? body.catalogSkus.map(String)
       : undefined;
 
     const rendered = await renderAfter({
-      currentBytes,
-      currentMimeType,
+      currentBytes: current.bytes,
+      currentMimeType: current.mimeType,
       trade: String(body.trade ?? 'landscaping'),
       catalogSkus,
       budgetMax:
@@ -125,7 +143,7 @@ export async function POST(request: NextRequest) {
         model: rendered.model,
         promptVersion: rendered.promptVersion,
         storagePath: path,
-        currentSource: recipient.current_image_source,
+        currentSource,
         renderedAt: new Date().toISOString(),
       },
     };
@@ -159,7 +177,7 @@ export async function POST(request: NextRequest) {
       model: rendered.model,
       promptVersion: rendered.promptVersion,
       plantPlan: rendered.plantPlan,
-      currentImageSource: recipient.current_image_source,
+      currentImageSource: currentSource,
       reviewStatus: 'pending_review',
       note: 'Human review required before mailing. Call POST /api/imagery/review to approve.',
     });
