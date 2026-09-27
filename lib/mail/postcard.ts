@@ -11,9 +11,12 @@ export type PostcardRecipient = {
   postal_code: string;
   current_image_url: string | null;
   current_image_source: string | null;
+  rights_basis: string | null;
+  privacy_redaction_status: string;
   after_image_url: string | null;
   review_status: string;
   mail_vendor_job_id: string | null;
+  do_not_mail: boolean;
 };
 
 export type PostcardCampaign = {
@@ -29,8 +32,10 @@ export type Eligibility =
 
 export function postcardEligibility(
   recipient: PostcardRecipient,
-  streetViewAllowed: boolean,
 ): Eligibility {
+  if (recipient.do_not_mail) {
+    return { eligible: false, reason: 'Address is on the do-not-mail list.' };
+  }
   if (recipient.review_status !== 'approved') {
     return { eligible: false, reason: 'Creative needs human approval.' };
   }
@@ -40,12 +45,17 @@ export function postcardEligibility(
   if (!recipient.current_image_url) {
     return { eligible: false, reason: 'A printable before image is required.' };
   }
-  if (recipient.current_image_source === 'street_view' && !streetViewAllowed) {
-    return {
-      eligible: false,
-      reason:
-        'Street View printing is disabled by policy. Upload an owner/crew photo or explicitly enable licensed use.',
-    };
+  if (!recipient.after_image_url) {
+    return { eligible: false, reason: 'A reviewed AI design concept is required.' };
+  }
+  if (!['crew_photo', 'owner_upload', 'licensed'].includes(recipient.current_image_source ?? '')) {
+    return { eligible: false, reason: 'A rights-cleared photo source is required.' };
+  }
+  if (!['crew_owned', 'homeowner_upload', 'licensed'].includes(recipient.rights_basis ?? '')) {
+    return { eligible: false, reason: 'A documented photo rights basis is required.' };
+  }
+  if (recipient.privacy_redaction_status !== 'redacted') {
+    return { eligible: false, reason: 'Privacy redaction must complete before mailing.' };
   }
   return { eligible: true };
 }
@@ -92,11 +102,11 @@ export async function renderPostcardHtml(input: {
           <b style="position:absolute;left:.28in;top:.25in;padding:.08in .14in;background:rgba(10,35,22,.88);font-size:13px;letter-spacing:1px;">BEFORE</b>
         </section>
         ${after ? `<section style="position:relative;width:50%;height:100%;background:url('${after}') center/cover no-repeat;">
-          <b style="position:absolute;right:.28in;top:.25in;padding:.08in .14in;background:rgba(10,35,22,.88);font-size:13px;letter-spacing:1px;">AFTER · CONCEPT</b>
+          <b style="position:absolute;right:.28in;top:.25in;padding:.08in .14in;background:rgba(10,35,22,.88);font-size:13px;letter-spacing:1px;">DESIGN CONCEPT, AI MOCKUP</b>
         </section>` : ''}
       </div>
       <div style="position:absolute;left:.25in;right:.25in;bottom:.2in;padding:.14in .2in;background:rgba(10,35,22,.9);font-size:13px;">
-        Illustrative project concept prepared for campaign review. Final scope and price require an on-site estimate.
+        Design concept, AI mockup. Final scope and price require an on-site estimate.
       </div>
     </main></body></html>`;
 
@@ -112,7 +122,7 @@ export async function renderPostcardHtml(input: {
         </div>
       </section>
       <div aria-label="Lob postal address and barcode clear zone" style="position:absolute;right:1.33in;bottom:1.69in;width:${addressZoneWidth};height:2.375in;background:white;"></div>
-      <div style="position:absolute;left:.4in;bottom:.2in;font-size:10px;color:#53645a;">Prepared by ${businessName} · No work has been performed or promised.</div>
+      <div style="position:absolute;left:.4in;bottom:.2in;font-size:10px;color:#53645a;">Prepared by ${businessName} · Design concept, AI mockup · No work has been performed or promised.</div>
     </main></body></html>`;
 
   return { front, back };

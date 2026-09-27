@@ -4,124 +4,180 @@ import {
   imageryBucket,
   requireCampaignOwner,
 } from '@/lib/imagery/auth';
+import { redactPrivateDetails } from '@/lib/imagery/privacy-redaction';
+import { suppressionAddressKey } from '@/lib/suppression';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
+export const maxDuration = 60;
 
-const ALLOWED_SOURCES = new Set(['crew_photo', 'owner_upload']);
 const MAX_BYTES = 8 * 1024 * 1024;
+const SOURCE_RIGHTS = {
+  crew_photo: 'crew_owned',
+  owner_upload: 'homeowner_upload',
+  licensed: 'licensed',
+} as const;
 
-/**
- * Upload optional alternate printable Current (crew_photo | owner_upload).
- * Preferred product path is Street View via POST /api/imagery/streetview-preview.
- */
+function optionalNumber(value: FormDataEntryValue | null): number | null {
+  if (value == null || String(value).trim() === '') return null;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
 export async function POST(request: NextRequest) {
   const auth = await requireCampaignOwner();
   if (!auth.ok) return auth.response;
+  let ownedRecipientId: string | null = null;
 
   try {
     const form = await request.formData();
     const recipientId = String(form.get('recipientId') ?? '').trim();
     const sourceRaw = String(form.get('source') ?? 'crew_photo').trim();
-    const source = ALLOWED_SOURCES.has(sourceRaw) ? sourceRaw : null;
+    const source =
+      sourceRaw in SOURCE_RIGHTS ? (sourceRaw as keyof typeof SOURCE_RIGHTS) : null;
     if (!source) {
       return NextResponse.json(
-        {
-          error:
-            'source must be crew_photo or owner_upload. For Street View Current use POST /api/imagery/streetview-preview.',
-        },
+        { error: 'source must be crew_photo, owner_upload, or licensed.' },
+        { status: 400 },
+      );
+    }
+    const expectedRights = SOURCE_RIGHTS[source];
+    const rightsBasis = String(form.get('rightsBasis') ?? expectedRights).trim();
+    if (rightsBasis !== expectedRights) {
+      return NextResponse.json({ error: 'Photo source and rights basis do not match.' }, { status: 400 });
+    }
+    if (
+      source !== 'crew_photo' &&
+      String(form.get('rightsLicenseAccepted') ?? '') !== 'true'
+    ) {
+      return NextResponse.json(
+        { error: 'Documented owner/license permission is required.' },
         { status: 400 },
       );
     }
 
     const owned = await assertRecipientOwned(auth.ctx, recipientId);
     if (!owned.ok) return owned.response;
+    ownedRecipientId = owned.recipient.id;
+    const { data: suppression } = await auth.ctx.admin
+      .from('campaign_opt_outs')
+      .select('id')
+      .eq('owner_id', auth.ctx.userId)
+      .eq('address_key', suppressionAddressKey(owned.recipient))
+      .eq('do_not_photograph', true)
+      .maybeSingle();
+    if (owned.recipient.do_not_photograph || suppression) {
+      return NextResponse.json(
+        { error: 'This address is on the do-not-photograph list.' },
+        { status: 409 },
+      );
+    }
 
     const file = form.get('file');
     if (!(file instanceof File)) {
       return NextResponse.json({ error: 'file is required.' }, { status: 400 });
     }
-    if (file.size <= 0 || file.size > MAX_BYTES) {
+    if (file.size <= 0 || file.size > MAX_BYTES || !file.type.startsWith('image/')) {
       return NextResponse.json(
-        { error: 'Image must be between 1 byte and 8MB.' },
+        { error: 'A valid image between 1 byte and 8MB is required.' },
         { status: 400 },
       );
     }
-
-    const mime = file.type || 'image/jpeg';
-    if (!mime.startsWith('image/')) {
-      return NextResponse.json({ error: 'Only image uploads are accepted.' }, { status: 400 });
+    const capturedBy = String(form.get('capturedBy') ?? '').trim().slice(0, 200);
+    if (source === 'crew_photo' && !capturedBy) {
+      return NextResponse.json({ error: 'Photographer name is required.' }, { status: 400 });
     }
 
-    const ext =
-      mime.includes('png') ? 'png' : mime.includes('webp') ? 'webp' : 'jpg';
-    const path = `${owned.recipient.id}/current-${Date.now()}.${ext}`;
-    const bytes = Buffer.from(await file.arrayBuffer());
-    const bucket = imageryBucket();
+    await auth.ctx.admin
+      .from('campaign_recipients')
+      .update({ privacy_redaction_status: 'processing', imagery_error: null })
+      .eq('id', owned.recipient.id);
 
+    const redacted = await redactPrivateDetails(Buffer.from(await file.arrayBuffer()));
+    const bucket = imageryBucket();
+    const path = `${owned.recipient.id}/current-redacted-${Date.now()}.png`;
     const { error: uploadError } = await auth.ctx.admin.storage
       .from(bucket)
-      .upload(path, bytes, { contentType: mime, upsert: true });
-
+      .upload(path, redacted.bytes, {
+        contentType: redacted.mimeType,
+        upsert: false,
+      });
     if (uploadError) {
-      console.error('crew-photo upload failed', uploadError);
-      return NextResponse.json(
-        {
-          error: `Storage upload failed (${uploadError.message}). Ensure bucket "${bucket}" exists (private).`,
-        },
-        { status: 502 },
+      throw new Error(
+        `Storage upload failed (${uploadError.message}). Ensure bucket "${bucket}" exists (private).`,
       );
     }
-
     const { data: signed, error: signError } = await auth.ctx.admin.storage
       .from(bucket)
       .createSignedUrl(path, 60 * 60 * 24 * 365);
-
     if (signError || !signed?.signedUrl) {
-      console.error('crew-photo sign failed', signError);
-      return NextResponse.json(
-        { error: 'Upload succeeded but could not create a signed URL.' },
-        { status: 502 },
-      );
+      await auth.ctx.admin.storage.from(bucket).remove([path]);
+      throw new Error('Redacted upload succeeded but signed URL creation failed.');
     }
 
+    const capturedAtRaw = String(form.get('capturedAt') ?? '').trim();
+    const capturedAt =
+      capturedAtRaw && !Number.isNaN(Date.parse(capturedAtRaw))
+        ? new Date(capturedAtRaw).toISOString()
+        : new Date().toISOString();
     const { error: updateError } = await auth.ctx.admin
       .from('campaign_recipients')
       .update({
         current_image_url: signed.signedUrl,
         current_image_source: source,
+        current_storage_path: path,
         current_image_usage: 'print_source',
+        capture_lat: optionalNumber(form.get('captureLat')),
+        capture_lng: optionalNumber(form.get('captureLng')),
+        capture_heading: optionalNumber(form.get('captureHeading')),
+        captured_at: capturedAt,
+        captured_by: capturedBy || null,
+        rights_basis: rightsBasis,
+        rights_license_version:
+          source === 'owner_upload' ? 'homeowner-upload-v1' : 'crew-capture-v1',
+        privacy_redaction_status: 'redacted',
+        privacy_redacted_at: new Date().toISOString(),
+        privacy_redaction_provider: redacted.provider,
+        privacy_redaction_details: redacted.details,
         imagery_status: 'ready',
-        imagery_error: null,
-        // New current invalidates prior after until re-rendered + re-reviewed
+        imagery_error: redacted.details.peopleDetected
+          ? 'Person detected; face regions were blurred. Confirm privacy during review.'
+          : null,
         after_image_url: null,
         review_status: 'pending',
         postcard_approved_at: null,
       })
       .eq('id', owned.recipient.id);
-
     if (updateError) {
-      console.error('crew-photo db update failed', updateError);
-      return NextResponse.json(
-        { error: 'Uploaded but could not update recipient imagery fields.' },
-        { status: 500 },
-      );
+      await auth.ctx.admin.storage.from(bucket).remove([path]);
+      throw new Error('Redacted image stored but recipient update failed.');
     }
 
     return NextResponse.json({
       ok: true,
       currentImageUrl: signed.signedUrl,
       currentImageSource: source,
-      currentImageUsage: 'print_source',
+      rightsBasis,
+      privacyRedactionStatus: 'redacted',
+      redactionDetails: redacted.details,
       storagePath: path,
       bucket,
     });
   } catch (error) {
-    console.error('crew-photo error', error);
+    console.error('rights-cleared photo upload error', error);
+    if (ownedRecipientId) {
+      await auth.ctx.admin
+        .from('campaign_recipients')
+        .update({
+          privacy_redaction_status: 'failed',
+          imagery_status: 'failed',
+          imagery_error:
+            error instanceof Error ? error.message : 'Privacy redaction or upload failed.',
+        })
+        .eq('id', ownedRecipientId);
+    }
     return NextResponse.json(
-      {
-        error: error instanceof Error ? error.message : 'Crew photo upload failed.',
-      },
+      { error: error instanceof Error ? error.message : 'Photo upload failed.' },
       { status: 500 },
     );
   }

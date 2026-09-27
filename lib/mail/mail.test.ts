@@ -1,10 +1,6 @@
 import { createHmac } from 'node:crypto';
 import { afterEach, describe, expect, it } from 'vitest';
-import {
-  calculateCampaignCost,
-  getMailConfig,
-  streetViewAiInputEnabled,
-} from '@/lib/mail/config';
+import { calculateCampaignCost, getMailConfig } from '@/lib/mail/config';
 import { verifyLobWebhook } from '@/lib/mail/lob';
 import { postcardEligibility, PostcardRecipient } from '@/lib/mail/postcard';
 
@@ -19,15 +15,17 @@ const baseRecipient: PostcardRecipient = {
   postal_code: '35801',
   current_image_url: 'https://example.com/before.jpg',
   current_image_source: 'owner_upload',
+  rights_basis: 'homeowner_upload',
+  privacy_redaction_status: 'redacted',
   after_image_url: 'https://example.com/after.jpg',
   review_status: 'approved',
   mail_vendor_job_id: null,
+  do_not_mail: false,
 };
 
 afterEach(() => {
   delete process.env.LOB_MODE;
   delete process.env.MAIL_LIVE_ENABLED;
-  delete process.env.STREET_VIEW_AI_INPUT_ENABLED;
 });
 
 describe('mail safety configuration', () => {
@@ -43,31 +41,33 @@ describe('mail safety configuration', () => {
     expect(calculateCampaignCost(25, null)).toBeNull();
   });
 
-  it('blocks Street View AI input unless separately enabled', () => {
-    expect(streetViewAiInputEnabled()).toBe(false);
-    process.env.STREET_VIEW_AI_INPUT_ENABLED = 'true';
-    expect(streetViewAiInputEnabled()).toBe(true);
-  });
 });
 
 describe('postcard eligibility', () => {
   it('requires human creative approval', () => {
     expect(
-      postcardEligibility({ ...baseRecipient, review_status: 'pending_review' }, false),
+      postcardEligibility({ ...baseRecipient, review_status: 'pending_review' }),
     ).toEqual({ eligible: false, reason: 'Creative needs human approval.' });
   });
 
-  it('blocks Street View printing by default', () => {
+  it('always rejects Google imagery as a postcard source', () => {
     const recipient = { ...baseRecipient, current_image_source: 'street_view' };
-    expect(postcardEligibility(recipient, false).eligible).toBe(false);
-    expect(postcardEligibility(recipient, true)).toEqual({ eligible: true });
+    expect(postcardEligibility(recipient).eligible).toBe(false);
   });
 
   it('prevents duplicate vendor jobs', () => {
     expect(
-      postcardEligibility({ ...baseRecipient, mail_vendor_job_id: 'psc_existing' }, true)
+      postcardEligibility({ ...baseRecipient, mail_vendor_job_id: 'psc_existing' })
         .eligible,
     ).toBe(false);
+  });
+
+  it('requires rights, privacy redaction, and no suppression', () => {
+    expect(postcardEligibility({ ...baseRecipient, rights_basis: null }).eligible).toBe(false);
+    expect(
+      postcardEligibility({ ...baseRecipient, privacy_redaction_status: 'pending' }).eligible,
+    ).toBe(false);
+    expect(postcardEligibility({ ...baseRecipient, do_not_mail: true }).eligible).toBe(false);
   });
 });
 

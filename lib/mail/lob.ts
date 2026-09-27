@@ -64,6 +64,7 @@ async function lobRequest<T>(
   mode: MailMode,
   path: string,
   fields: Record<string, unknown>,
+  idempotencyKey?: string,
 ): Promise<T> {
   const form = new URLSearchParams();
   for (const [key, value] of Object.entries(fields)) {
@@ -79,6 +80,7 @@ async function lobRequest<T>(
     headers: {
       Authorization: `Basic ${Buffer.from(`${requireLobKey(mode)}:`).toString('base64')}`,
       'Content-Type': 'application/x-www-form-urlencoded',
+      ...(idempotencyKey ? { 'Idempotency-Key': idempotencyKey.slice(0, 256) } : {}),
     },
     body: form,
     cache: 'no-store',
@@ -119,17 +121,22 @@ export function createPostcard(input: {
   size: '4x6' | '6x9';
   recipientId: string;
 }): Promise<LobPostcard> {
-  return lobRequest<LobPostcard>(input.mode, '/postcards', {
-    description: input.description.slice(0, 255),
-    to: input.to,
-    from: input.from,
-    front: input.front,
-    back: input.back,
-    size: input.size,
-    mail_type: 'usps_first_class',
-    use_type: 'marketing',
-    metadata: { recipient_id: input.recipientId },
-  });
+  return lobRequest<LobPostcard>(
+    input.mode,
+    '/postcards',
+    {
+      description: input.description.slice(0, 255),
+      to: input.to,
+      from: input.from,
+      front: input.front,
+      back: input.back,
+      size: input.size,
+      mail_type: 'usps_first_class',
+      use_type: 'marketing',
+      metadata: { recipient_id: input.recipientId },
+    },
+    `yardproof-${input.mode}-${input.recipientId}`,
+  );
 }
 
 export function verifyLobWebhook(input: {

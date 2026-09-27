@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { ExternalLink, Inbox, Leaf, Mail, MapPin, QrCode } from 'lucide-react';
 import { formatRecipientAddress } from '@/lib/campaigns';
+import { purgeQueuedGoogleImagery } from '@/lib/imagery/purge';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 import CampaignMailPanel from './campaign-mail-panel';
 import LogoutButton from './logout-button';
@@ -66,6 +68,13 @@ export default async function CampaignInboxPage() {
   const supabase = await createClient();
   const { data: authData } = await supabase.auth.getUser();
   if (!authData.user) redirect('/login?next=/dashboard/campaigns');
+  await purgeQueuedGoogleImagery({
+    userId: authData.user.id,
+    admin: createAdminClient(),
+  }).catch((purgeError: unknown) => {
+    console.error('Unable to purge queued legacy Google imagery', purgeError);
+    return { purged: 0, failed: 0 };
+  });
 
   const [
     { data: recipientData, error: recipientError },
@@ -179,11 +188,15 @@ export default async function CampaignInboxPage() {
             <p>Every send requires this explicit approval. Test mode is the default.</p>
           </div>
           {campaigns.map((campaign) => (
-            <CampaignMailPanel
-              key={campaign.id}
-              campaignId={campaign.id}
-              campaignName={campaign.name}
-            />
+            <div key={campaign.id}>
+              <Link className={styles.captureLink} href={`/capture/${campaign.id}`}>
+                Open mobile crew capture
+              </Link>
+              <CampaignMailPanel
+                campaignId={campaign.id}
+                campaignName={campaign.name}
+              />
+            </div>
           ))}
         </section>
 

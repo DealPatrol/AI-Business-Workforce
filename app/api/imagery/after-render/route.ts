@@ -9,24 +9,24 @@ import {
   isAfterRenderConfigured,
   renderAfter,
 } from '@/lib/imagery/after-render';
+import { redactPrivateDetails } from '@/lib/imagery/privacy-redaction';
 import { fetchAllowedImage } from '@/lib/imagery/safe-fetch';
-import { downloadStreetViewImage } from '@/lib/google/streetview';
-import { streetViewAiInputEnabled } from '@/lib/mail/config';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 export const maxDuration = 60;
 
-/** Current sources accepted as AI After input (and printable Current). */
-const ACCEPTED_CURRENT = new Set(['street_view', 'crew_photo', 'owner_upload']);
+/** Rights-cleared Current sources accepted as AI and print input. */
+const ACCEPTED_CURRENT = new Set(['crew_photo', 'owner_upload', 'licensed']);
+const ACCEPTED_RIGHTS = new Set(['crew_owned', 'homeowner_upload', 'licensed']);
 
 /**
- * Trigger After render from Current (Street View preferred product path;
- * crew_photo / owner_upload remain valid alternates).
+ * Trigger After render only from a privacy-redacted, rights-cleared Current.
  */
 export async function POST(request: NextRequest) {
   const auth = await requireCampaignOwner();
   if (!auth.ok) return auth.response;
+  let renderingRecipientId: string | null = null;
 
   if (!isAfterRenderConfigured()) {
     return NextResponse.json(
@@ -46,39 +46,35 @@ export async function POST(request: NextRequest) {
     if (!owned.ok) return owned.response;
 
     const recipient = owned.recipient;
-    const hasFreshStreetView =
-      Boolean(recipient.street_view_pano_id) &&
-      recipient.latitude != null &&
-      recipient.longitude != null;
-    if (!recipient.current_image_url && !hasFreshStreetView) {
+    renderingRecipientId = recipient.id;
+    if (!recipient.current_image_url) {
       return NextResponse.json(
         {
           error:
-            'Fetch Street View Current (POST /api/imagery/streetview-preview) or upload crew_photo/owner_upload before rendering After.',
+            'Capture or upload a rights-cleared photo before rendering an After.',
         },
         { status: 400 },
       );
     }
-    const currentSource = recipient.current_image_url
-      ? recipient.current_image_source
-      : hasFreshStreetView
-        ? 'street_view'
-        : null;
+    const currentSource = recipient.current_image_source;
     if (!currentSource || !ACCEPTED_CURRENT.has(currentSource)) {
       return NextResponse.json(
         {
           error:
-            'Current must be street_view, crew_photo, or owner_upload before rendering After.',
+            'Current must be a crew, homeowner-uploaded, or separately licensed photo.',
         },
         { status: 400 },
       );
     }
-    if (currentSource === 'street_view' && !streetViewAiInputEnabled()) {
+    if (!recipient.rights_basis || !ACCEPTED_RIGHTS.has(recipient.rights_basis)) {
       return NextResponse.json(
-        {
-          error:
-            'Street View cannot be used as AI source material under Google’s public terms. Upload an owner/crew photo. Only enable STREET_VIEW_AI_INPUT_ENABLED with separate written rights.',
-        },
+        { error: 'A documented photo rights basis is required before AI rendering.' },
+        { status: 403 },
+      );
+    }
+    if (recipient.privacy_redaction_status !== 'redacted') {
+      return NextResponse.json(
+        { error: 'Privacy redaction must complete before AI rendering.' },
         { status: 403 },
       );
     }
@@ -88,22 +84,13 @@ export async function POST(request: NextRequest) {
       .update({ imagery_status: 'rendering_after', imagery_error: null })
       .eq('id', recipient.id);
 
-    // SSRF guard: only our Supabase Storage host or Google Street View Static.
-    const current = recipient.current_image_url
-      ? await fetchAllowedImage(recipient.current_image_url).catch((error: unknown) => {
-          throw new Error(
-            `Could not download Current image: ${error instanceof Error ? error.message : 'unknown error'}`,
-          );
-        })
-      : await downloadStreetViewImage({
-          lat: recipient.latitude!,
-          lng: recipient.longitude!,
-          panoId: recipient.street_view_pano_id,
-          heading: recipient.street_view_heading ?? undefined,
-          pitch: recipient.street_view_pitch ?? undefined,
-          fov: recipient.street_view_fov ?? undefined,
-          size: '640x640',
-        });
+    const current = await fetchAllowedImage(recipient.current_image_url).catch(
+      (error: unknown) => {
+        throw new Error(
+          `Could not download Current image: ${error instanceof Error ? error.message : 'unknown error'}`,
+        );
+      },
+    );
 
     const catalogSkus = Array.isArray(body.catalogSkus)
       ? body.catalogSkus.map(String)
@@ -121,13 +108,15 @@ export async function POST(request: NextRequest) {
       promptVersion: body.promptVersion ? String(body.promptVersion) : undefined,
     });
 
+    // AI output receives the same fail-closed privacy pass before storage,
+    // review, public display, or print.
+    const redactedAfter = await redactPrivateDetails(rendered.imageBytes);
     const bucket = imageryBucket();
-    const ext = rendered.mimeType === 'image/jpeg' ? 'jpg' : rendered.mimeType === 'image/webp' ? 'webp' : 'png';
-    const path = `${recipient.id}/after-${Date.now()}.${ext}`;
+    const path = `${recipient.id}/after-redacted-${Date.now()}.png`;
     const { error: uploadError } = await auth.ctx.admin.storage
       .from(bucket)
-      .upload(path, rendered.imageBytes, {
-        contentType: rendered.mimeType,
+      .upload(path, redactedAfter.bytes, {
+        contentType: redactedAfter.mimeType,
         upsert: true,
       });
 
@@ -154,6 +143,11 @@ export async function POST(request: NextRequest) {
         promptVersion: rendered.promptVersion,
         storagePath: path,
         currentSource,
+        rightsBasis: recipient.rights_basis,
+        privacyRedaction: {
+          provider: redactedAfter.provider,
+          details: redactedAfter.details,
+        },
         renderedAt: new Date().toISOString(),
       },
     };
@@ -172,7 +166,7 @@ export async function POST(request: NextRequest) {
         // Keep legacy concept_image_url pointing at After for older UI paths
         concept_image_url: signed.signedUrl,
         concept_summary:
-          'Illustrative concept after a light plant & trim refresh (approx. $1–3k plant materials). Subject to contractor review.',
+          'Design concept, AI mockup. Actual scope and price require contractor review.',
       })
       .eq('id', recipient.id);
 
@@ -193,6 +187,15 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('after-render error', error);
+    if (renderingRecipientId) {
+      await auth.ctx.admin
+        .from('campaign_recipients')
+        .update({
+          imagery_status: 'failed',
+          imagery_error: error instanceof Error ? error.message : 'After render failed.',
+        })
+        .eq('id', renderingRecipientId);
+    }
     return NextResponse.json(
       {
         error: error instanceof Error ? error.message : 'After render failed.',

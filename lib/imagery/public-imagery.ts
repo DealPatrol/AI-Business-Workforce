@@ -20,7 +20,8 @@ if (typeof window !== 'undefined') {
 /** Short-lived signed URL lifetime for the public QR page (seconds). */
 export const PUBLIC_IMAGERY_SIGNED_URL_TTL_SECONDS = 600;
 
-const ACCEPTED_CURRENT_SOURCES = new Set(['street_view', 'crew_photo', 'owner_upload']);
+const ACCEPTED_CURRENT_SOURCES = new Set(['crew_photo', 'owner_upload', 'licensed']);
+const ACCEPTED_RIGHTS = new Set(['crew_owned', 'homeowner_upload', 'licensed']);
 const STORAGE_OBJECT_PATH = /^\/storage\/v1\/object\/(?:sign|public|authenticated)\/([^/]+)\/(.+)$/;
 
 function supabaseHost(): string | null {
@@ -100,6 +101,8 @@ export type PublicImageryInput = {
   review_status: string | null;
   current_image_url: string | null;
   current_image_source: string | null;
+  rights_basis?: string | null;
+  privacy_redaction_status?: string | null;
   after_image_url: string | null;
   concept_image_url: string | null;
   concept_json?: Record<string, unknown> | null;
@@ -128,6 +131,8 @@ export function selectApprovedImageryPaths(
   if (!recipient.current_image_source || !ACCEPTED_CURRENT_SOURCES.has(recipient.current_image_source)) {
     return null;
   }
+  if (!recipient.rights_basis || !ACCEPTED_RIGHTS.has(recipient.rights_basis)) return null;
+  if (recipient.privacy_redaction_status !== 'redacted') return null;
   if (!recipient.current_image_url || !recipient.after_image_url) return null;
 
   const currentPath = resolveImageryObjectPath(recipient.current_image_url, bucket, recipient.id);

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { isUuid, OwnerContext, requireCampaignOwner } from '@/lib/imagery/auth';
-import { calculateCampaignCost, getMailConfig, streetViewPostcardEnabled } from '@/lib/mail/config';
+import { calculateCampaignCost, getMailConfig } from '@/lib/mail/config';
 import { createPostcard, isDeliverable, verifyUsAddress } from '@/lib/mail/lob';
 import {
   postcardEligibility,
@@ -8,6 +8,7 @@ import {
   PostcardRecipient,
   renderPostcardHtml,
 } from '@/lib/mail/postcard';
+import { suppressionAddressKey } from '@/lib/suppression';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -26,28 +27,42 @@ async function loadCampaign(
   campaignId: string,
   userId: string,
 ) {
-  return admin
+  const result = await admin
     .from('campaigns')
     .select(`
       id, name, business_name, business_phone, business_email, status,
       campaign_recipients (
         id, public_token, homeowner_name, address_line_1, address_line_2, city, state,
         postal_code, current_image_url, current_image_source, after_image_url, review_status,
-        mail_vendor_job_id
+        mail_vendor_job_id, rights_basis, privacy_redaction_status, do_not_mail
       )
     `)
     .eq('id', campaignId)
     .eq('owner_id', userId)
     .single();
+  if (!result.data || result.error) return result;
+
+  const { data: suppressions } = await admin
+    .from('campaign_opt_outs')
+    .select('address_key')
+    .eq('owner_id', userId)
+    .eq('do_not_mail', true);
+  const suppressedKeys = new Set((suppressions ?? []).map((row) => row.address_key));
+  const campaign = result.data as unknown as CampaignRow;
+  campaign.campaign_recipients = campaign.campaign_recipients.map((recipient) => ({
+    ...recipient,
+    do_not_mail:
+      recipient.do_not_mail || suppressedKeys.has(suppressionAddressKey(recipient)),
+  }));
+  return { ...result, data: campaign };
 }
 
 function preview(campaign: CampaignRow) {
   const config = getMailConfig();
-  const streetViewAllowed = streetViewPostcardEnabled();
   const recipients = campaign.campaign_recipients.map((recipient) => ({
     id: recipient.id,
     address: `${recipient.address_line_1}, ${recipient.city}, ${recipient.state} ${recipient.postal_code}`,
-    ...postcardEligibility(recipient, streetViewAllowed),
+    ...postcardEligibility(recipient),
   }));
   const eligibleCount = recipients.filter((recipient) => recipient.eligible).length;
   return {
@@ -65,7 +80,6 @@ function preview(campaign: CampaignRow) {
         config.returnAddress &&
         config.pricePerCardCents != null,
     ),
-    streetViewPostcardEnabled: streetViewAllowed,
     recipients,
   };
 }
@@ -138,7 +152,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
   const appUrl = (process.env.NEXT_PUBLIC_APP_URL || request.nextUrl.origin).replace(/\/$/, '');
   const results: Array<{ recipientId: string; ok: boolean; jobId?: string; error?: string }> = [];
   for (const recipient of campaign.campaign_recipients) {
-    const eligibility = postcardEligibility(recipient, streetViewPostcardEnabled());
+    const eligibility = postcardEligibility(recipient);
     if (!eligibility.eligible) continue;
     const to = {
       name: recipient.homeowner_name || 'Current Resident',
@@ -151,6 +165,37 @@ export async function POST(request: NextRequest, context: RouteContext) {
     };
 
     try {
+      // Re-check suppression and idempotency immediately before the vendor call.
+      const { data: sendGuard } = await auth.ctx.admin
+        .from('campaign_recipients')
+        .select('do_not_mail, mail_vendor_job_id')
+        .eq('id', recipient.id)
+        .single();
+      const { data: suppressionGuard } = await auth.ctx.admin
+        .from('campaign_opt_outs')
+        .select('id')
+        .eq('owner_id', auth.ctx.userId)
+        .eq('address_key', suppressionAddressKey(recipient))
+        .eq('do_not_mail', true)
+        .maybeSingle();
+      if (!sendGuard || sendGuard.do_not_mail || suppressionGuard) {
+        throw new Error('Address is on the do-not-mail list.');
+      }
+      if (sendGuard.mail_vendor_job_id) {
+        throw new Error('A vendor job already exists for this recipient.');
+      }
+      const { data: reservation } = await auth.ctx.admin
+        .from('campaign_recipients')
+        .update({ mail_status: 'creating', mail_error: null })
+        .eq('id', recipient.id)
+        .is('mail_vendor_job_id', null)
+        .in('mail_status', ['not_sent', 'failed'])
+        .select('id')
+        .maybeSingle();
+      if (!reservation) {
+        throw new Error('Mail creation is already reserved or completed for this recipient.');
+      }
+
       const verification = await verifyUsAddress(config.mode, to);
       const verificationStatus = isDeliverable(verification)
         ? verification.deliverability

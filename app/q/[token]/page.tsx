@@ -12,6 +12,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { imageryBucket } from '@/lib/imagery/auth';
 import { getPublicRecipientImagery } from '@/lib/imagery/public-imagery';
 import EstimateRequestForm from './estimate-request-form';
+import PropertyActions from './property-actions';
 import styles from './qr-page.module.css';
 
 export const dynamic = 'force-dynamic';
@@ -39,6 +40,8 @@ const BASE_COLUMNS = `
 const IMAGERY_COLUMNS = `
   current_image_url,
   current_image_source,
+  rights_basis,
+  privacy_redaction_status,
   after_image_url,
   review_status,
   concept_json,
@@ -78,6 +81,8 @@ async function loadPublicRecipient(
         ...(legacy.data as unknown as PublicRecipient),
         current_image_url: null,
         current_image_source: null,
+        rights_basis: null,
+        privacy_redaction_status: null,
         after_image_url: null,
         review_status: null,
         concept_json: null,
@@ -174,11 +179,11 @@ export default async function RecipientPage({ params }: PageProps) {
                   role="img"
                   aria-label={`After concept for ${recipient.address_line_1}`}
                 >
-                  <span>AFTER · CONCEPT</span>
+                  <span>DESIGN CONCEPT, AI MOCKUP</span>
                 </div>
               </div>
               <p className={styles.imageryNote}>
-                Illustrative concept after a light plant &amp; trim refresh (approx. $1–3k plant materials).
+                Design concept, AI mockup. Actual scope and price require an on-site estimate.
               </p>
             </div>
           )}
@@ -191,6 +196,7 @@ export default async function RecipientPage({ params }: PageProps) {
             />
           )}
           <EstimateRequestForm token={recipient.public_token} businessName={business.business_name} />
+          <PropertyActions token={recipient.public_token} />
         </aside>
       </section>
 

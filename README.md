@@ -47,18 +47,21 @@ For a real campaign, use the same SQL shape as the seed: create one `campaigns` 
 
 The app records page-open activity for valid recipient pages and deduplicates repeated opens from the same request source within 30 minutes. This is useful response activity, but it can include link-preview bots as well as homeowner QR scans.
 
-## Property imagery
+## Property imagery and capture
 
-The authenticated campaign inbox can geocode a recipient address, check the Street View metadata endpoint, and display a fresh Street View Static preview. If imagery is unavailable, the workflow explains the failure and keeps the owner/crew upload control available.
+Google Street View and satellite are authenticated, on-screen scouting previews only. They are streamed with `Cache-Control: no-store` and are structurally excluded from the storage/AI/print fetcher. Printable “before” photos must come from the mobile crew capture page, a licensed homeowner upload, or another separately licensed source.
 
 Required setup:
 
-1. Enable Google Geocoding API and Street View Static API in one billed Google Cloud project.
+1. Enable Google Geocoding API, Street View Static API, and Maps Static API in one billed Google Cloud project.
 2. Set the server-only `GOOGLE_MAPS_API_KEY` and restrict it to those APIs. `GOOGLE_MAPS_URL_SIGNING_SECRET` is optional.
 3. Create the private Supabase bucket named by `IMAGERY_STORAGE_BUCKET`.
-4. Leave `GOOGLE_STREET_VIEW_STORAGE_ENABLED=false`, `STREET_VIEW_POSTCARD_ENABLED=false`, and `STREET_VIEW_AI_INPUT_ENABLED=false` unless Google has granted separate written rights for those uses.
+4. Enable Google Cloud Vision API and set `GOOGLE_CLOUD_VISION_API_KEY`.
+5. Apply `20260927031945_owned_photo_capture_and_suppression.sql`.
+6. Open `/capture/[campaignId]` on a crew phone, enter the photographer, take a rear-camera photo, confirm the nearest GPS-matched address, and upload.
+7. Add a crew/contractor agreement granting YardProof and the landscaping business the right to edit and print route photos taken from the public right-of-way.
 
-By default YardProof retains the geocode and Street View panorama ID, but not Street View image bytes. Authenticated previews are fetched on demand with `Cache-Control: no-store`. Owner- or crew-taken photographs are the recommended postcard source.
+Every owned photo passes through Google Cloud Vision face, OCR/text, and object-localization detection. Sharp blurs returned face, text/house-number, and license-plate regions before storage. AI outputs receive the same pass before storage. If detection is unavailable or fails, upload/render fails closed. Cloud Vision object localization is not infallible, so human review remains mandatory.
 
 ### Google Maps Platform policy finding
 
@@ -71,7 +74,11 @@ This is an engineering risk assessment, not legal advice. As reviewed September 
 - [Street View Static API Policies, “Google Maps attribution requirements”](https://developers.google.com/maps/documentation/streetview/policies) requires supplied attribution to remain visible and legible.
 - [Google Geo Guidelines, “Street View”](https://www.google.com/permissions/geoguidelines/#streetview) expressly say Street View imagery “may not be used for any print purposes,” including “Advertisements or promotional materials of any kind,” and prohibit downloading images for offline use.
 
-Commercial postcard use is prohibited under Google’s public terms, not merely uncertain. Terms §3.2.3(c), “No Creating Content From Google Maps Content,” also makes using Street View as source material for an AI-generated “after” concept prohibited or high-risk. Storage, printing, and AI-input gates are therefore OFF by default. Use owner/crew photos or separately licensed property imagery instead.
+Commercial postcard use is prohibited under Google’s public terms, not merely uncertain. Terms §3.2.3(c), “No Creating Content From Google Maps Content,” also prohibits or makes high-risk using Street View as source material for an AI-generated “after” concept. The repo contains no Google imagery storage, print, or AI override. Use owner/crew photos or separately licensed property imagery.
+
+The migration nulls any legacy Street View Current/After references, restores the source constraint to `crew_photo | owner_upload | licensed`, and queues matching Storage paths. Supabase requires object deletion through its Storage API rather than SQL, so `/dashboard/campaigns` drains that queue; an authenticated operator can also POST `/api/imagery/purge-google`.
+
+Homeowners can use **Send us a better photo** on `/q/[token]`. The required checkbox confirms ownership and grants a narrow, non-exclusive license to store, privacy-redact, AI-edit, display, and print the photo only for that property’s estimate and campaign materials. The same page provides a do-not-photograph/do-not-mail opt-out.
 
 ## Lob postcard mailing
 

@@ -12,7 +12,6 @@ type Preview = {
   eligibleCount: number;
   totalRecipients: number;
   estimatedTotalCents: number | null;
-  streetViewPostcardEnabled: boolean;
 };
 
 function money(cents: number | null): string {
@@ -87,9 +86,7 @@ export default function CampaignMailPanel(props: { campaignId: string; campaignN
             <small>
               {money(preview.pricePerCardCents)} configured per card. Vendor invoices may differ.
             </small>
-            {!preview.streetViewPostcardEnabled && (
-              <small>Street View printing is OFF; approved owner/crew imagery remains eligible.</small>
-            )}
+            <small>Only rights-cleared, privacy-redacted photos are eligible.</small>
           </>
         )}
       </div>

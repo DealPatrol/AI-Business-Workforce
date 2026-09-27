@@ -53,21 +53,28 @@ export default function RecipientWorkflow(props: Props) {
         }),
       );
       setPreviewUrl(String(payload.previewUrl));
-      if (payload.currentImageUrl) {
-        setCurrentUrl(String(payload.currentImageUrl));
-        setCurrentSource('street_view');
-      }
-      setMessage(String(payload.note || 'Street View lookup complete.'));
+      setMessage(String(payload.note || 'Scouting lookup complete.'));
     });
   }
 
   function upload(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (!file) return;
+    if (
+      !window.confirm(
+        'Confirm the homeowner owns this photo and granted YardProof permission to store, privacy-redact, AI-edit, display, and print it for this campaign.',
+      )
+    ) {
+      event.target.value = '';
+      return;
+    }
     void run(async () => {
       const form = new FormData();
       form.set('recipientId', props.recipientId);
       form.set('source', 'owner_upload');
+      form.set('rightsBasis', 'homeowner_upload');
+      form.set('rightsLicenseAccepted', 'true');
+      form.set('capturedBy', 'campaign operator');
       form.set('file', file);
       const payload = await responseJson(
         await fetch('/api/imagery/crew-photo', { method: 'POST', body: form }),
@@ -117,16 +124,16 @@ export default function RecipientWorkflow(props: Props) {
         {afterUrl ? <img src={afterUrl} alt="Illustrative after concept" /> : <span>No after concept</span>}
       </div>
       <div className={styles.workflowStatus}>
-        <span>Before: {currentSource || (previewUrl ? 'Street View preview only' : 'pending')}</span>
+        <span>Before: {currentSource || (previewUrl ? 'scouting preview only' : 'pending')}</span>
         <span>Review: {reviewStatus}</span>
         <span>Mail: {props.mailStatus}</span>
       </div>
       <div className={styles.workflowActions}>
         <button type="button" disabled={busy} onClick={fetchStreetView}>
-          {props.streetViewAvailable === false ? 'Retry Street View' : 'Fetch Street View'}
+          {props.streetViewAvailable === false ? 'Retry scouting view' : 'Scout property'}
         </button>
         <label>
-          Upload owner photo
+          Upload licensed owner photo
           <input type="file" accept="image/*" disabled={busy} onChange={upload} />
         </label>
         <button type="button" disabled={busy || !currentUrl} onClick={renderAfter}>

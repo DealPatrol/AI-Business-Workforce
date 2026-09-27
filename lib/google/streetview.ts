@@ -10,7 +10,6 @@
  */
 
 import { createHmac } from 'node:crypto';
-import { fetchAllowedImage } from '@/lib/imagery/safe-fetch';
 
 // Server-only: GOOGLE_MAPS_API_KEY must never reach the browser bundle.
 // (No NEXT_PUBLIC_ key exists; URLs built here embed the key and must not be
@@ -22,6 +21,9 @@ if (typeof window !== 'undefined') {
 const GEOCODE_URL = 'https://maps.googleapis.com/maps/api/geocode/json';
 const SV_METADATA_URL = 'https://maps.googleapis.com/maps/api/streetview/metadata';
 const SV_STATIC_PATH = '/maps/api/streetview';
+const STATIC_MAP_PATH = '/maps/api/staticmap';
+const GOOGLE_MAPS_HOST = 'maps.googleapis.com';
+const GOOGLE_PREVIEW_MAX_BYTES = 20 * 1024 * 1024;
 
 export type GeocodeResult = {
   lat: number;
@@ -190,11 +192,48 @@ function buildStreetViewStaticUrl(params: StreetViewStaticParams): string {
   return `https://maps.googleapis.com${signGoogleMapsUrl(pathWithQuery)}`;
 }
 
+function buildSatelliteStaticUrl(lat: number, lng: number, size = '640x640'): string {
+  const key = requireMapsKey();
+  const search = new URLSearchParams({
+    center: `${lat},${lng}`,
+    zoom: '20',
+    size,
+    maptype: 'satellite',
+    key,
+  });
+  const pathWithQuery = `${STATIC_MAP_PATH}?${search.toString()}`;
+  return `https://maps.googleapis.com${signGoogleMapsUrl(pathWithQuery)}`;
+}
+
+async function fetchGooglePreview(
+  rawUrl: string,
+): Promise<{ bytes: Buffer; mimeType: string }> {
+  const url = new URL(rawUrl);
+  if (
+    url.protocol !== 'https:' ||
+    url.hostname !== GOOGLE_MAPS_HOST ||
+    ![SV_STATIC_PATH, STATIC_MAP_PATH].includes(url.pathname)
+  ) {
+    throw new Error('Blocked non-Google scouting preview URL.');
+  }
+  const response = await fetch(url, {
+    cache: 'no-store',
+    redirect: 'error',
+    signal: AbortSignal.timeout(20_000),
+  });
+  if (!response.ok) throw new Error(`Google scouting preview HTTP ${response.status}.`);
+  const mimeType = (response.headers.get('content-type') || '').split(';')[0].trim();
+  if (!mimeType.startsWith('image/')) throw new Error('Scouting preview returned non-image data.');
+  const bytes = Buffer.from(await response.arrayBuffer());
+  if (bytes.length > GOOGLE_PREVIEW_MAX_BYTES) throw new Error('Scouting preview is too large.');
+  return { bytes, mimeType };
+}
+
 /** Download Street View Static bytes for immediate server-side use (key never leaves the server). */
 export async function downloadStreetViewImage(
   params: StreetViewStaticParams,
 ): Promise<{ bytes: Buffer; mimeType: string }> {
-  const { bytes, mimeType } = await fetchAllowedImage(buildStreetViewStaticUrl(params)).catch(
+  const { bytes, mimeType } = await fetchGooglePreview(buildStreetViewStaticUrl(params)).catch(
     (error: unknown) => {
       throw new Error(
         `Street View Static download failed: ${error instanceof Error ? error.message : 'unknown error'}. Check Maps key / billing.`,
@@ -204,6 +243,16 @@ export async function downloadStreetViewImage(
   if (bytes.length < 100) {
     throw new Error('Street View Static download returned an empty or tiny payload.');
   }
+  return { bytes, mimeType };
+}
+
+/** Download a satellite scouting preview for one immediate no-store response. */
+export async function downloadSatelliteImage(
+  lat: number,
+  lng: number,
+  size = '640x640',
+): Promise<{ bytes: Buffer; mimeType: string }> {
+  const { bytes, mimeType } = await fetchGooglePreview(buildSatelliteStaticUrl(lat, lng, size));
   return { bytes, mimeType };
 }
 
