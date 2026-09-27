@@ -61,7 +61,7 @@ Required setup:
 6. Open `/capture/[campaignId]` on a crew phone, enter the photographer, take a rear-camera photo, confirm the nearest GPS-matched address, and upload.
 7. Add a crew/contractor agreement granting YardProof and the landscaping business the right to edit and print route photos taken from the public right-of-way.
 
-Every owned photo passes through Google Cloud Vision face, OCR/text, and object-localization detection. Sharp blurs returned face, text/house-number, and license-plate regions before storage. AI outputs receive the same pass before storage. If detection is unavailable or fails, upload/render fails closed. Cloud Vision object localization is not infallible, so human review remains mandatory.
+Every owned photo passes through [Google Cloud Vision `images:annotate`](https://cloud.google.com/vision/docs/reference/rest/v1/images/annotate) using face, OCR/text, and object-localization detection. [Sharp](https://sharp.pixelplumbing.com/) blurs returned face, text/house-number, and license-plate regions before storage. AI outputs receive the same pass before storage. If detection is unavailable or fails, upload/render fails closed. Cloud Vision object localization is not infallible, so human review remains mandatory.
 
 ### Google Maps Platform policy finding
 

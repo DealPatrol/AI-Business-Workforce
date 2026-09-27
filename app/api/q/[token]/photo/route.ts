@@ -46,6 +46,20 @@ export async function POST(request: NextRequest, context: RouteContext) {
       { status: 409 },
     );
   }
+  const sourceHash = hashRequestSource(request.headers);
+  const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+  const { count: recentUploads } = await admin
+    .from('recipient_photo_licenses')
+    .select('id', { count: 'exact', head: true })
+    .eq('recipient_id', recipient.id)
+    .eq('source_hash', sourceHash)
+    .gte('accepted_at', oneHourAgo);
+  if ((recentUploads ?? 0) >= 3) {
+    return NextResponse.json(
+      { error: 'Too many photo uploads. Please try again later.' },
+      { status: 429 },
+    );
+  }
 
   try {
     const redacted = await redactPrivateDetails(Buffer.from(await file.arrayBuffer()));
@@ -93,7 +107,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
 
     const { error: licenseError } = await admin.from('recipient_photo_licenses').insert({
       recipient_id: recipient.id,
-      source_hash: hashRequestSource(request.headers),
+      source_hash: sourceHash,
       license_version: LICENSE_VERSION,
       original_filename: file.name.slice(0, 255),
     });
