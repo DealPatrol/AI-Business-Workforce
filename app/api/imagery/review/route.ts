@@ -9,10 +9,11 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 const ALLOWED = new Set(['approved', 'changes_requested', 'rejected', 'pending_review']);
-const ACCEPTED_CURRENT = new Set(['street_view', 'crew_photo', 'owner_upload']);
+const ACCEPTED_CURRENT = new Set(['crew_photo', 'owner_upload', 'licensed']);
+const ACCEPTED_RIGHTS = new Set(['crew_owned', 'homeowner_upload', 'licensed']);
 
 /**
- * Set human review_status. Approval requires Current (SV or crew/owner) + After URLs.
+ * Set human review_status. Approval requires rights-cleared, redacted imagery.
  */
 export async function POST(request: NextRequest) {
   const auth = await requireCampaignOwner();
@@ -43,7 +44,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(
           {
             error:
-              'Cannot approve without Current (street_view / crew_photo / owner_upload) and After imagery.',
+              'Cannot approve without rights-cleared Current and privacy-redacted After imagery.',
           },
           { status: 400 },
         );
@@ -55,8 +56,20 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(
           {
             error:
-              'Cannot approve: Current must be street_view, crew_photo, or owner_upload.',
+              'Cannot approve: Current must be a crew, homeowner-uploaded, or licensed photo.',
           },
+          { status: 400 },
+        );
+      }
+      if (!recipient.rights_basis || !ACCEPTED_RIGHTS.has(recipient.rights_basis)) {
+        return NextResponse.json(
+          { error: 'Cannot approve without a documented photo rights basis.' },
+          { status: 400 },
+        );
+      }
+      if (recipient.privacy_redaction_status !== 'redacted') {
+        return NextResponse.json(
+          { error: 'Cannot approve until privacy redaction succeeds.' },
           { status: 400 },
         );
       }

@@ -1,15 +1,15 @@
 /**
  * Google Street View / Geocoding helpers — server only.
  *
- * Product rules (Cole 2026-09-24):
- * - Google Street View Static = printable Current (before) on postcard and /q/[token].
- * - After-render uses that Street View Current as AI input → After.
- * - Crew/owner photos remain optional alternate Current sources.
- * - Persist durable Current bytes in Storage (Static Maps URLs are ephemeral).
+ * Product rules:
+ * - Retain geocode + pano metadata, not Street View image bytes, by default.
+ * - Fetch authenticated previews on demand with no-store semantics.
+ * - AI input remains disabled unless separate written rights are configured.
+ * - Owner/crew photos are the default printable Current source.
+ * - Storage/printing requires explicit policy overrides backed by separate rights.
  */
 
 import { createHmac } from 'node:crypto';
-import { fetchAllowedImage } from '@/lib/imagery/safe-fetch';
 
 // Server-only: GOOGLE_MAPS_API_KEY must never reach the browser bundle.
 // (No NEXT_PUBLIC_ key exists; URLs built here embed the key and must not be
@@ -22,6 +22,8 @@ const GEOCODE_URL = 'https://maps.googleapis.com/maps/api/geocode/json';
 const SV_METADATA_URL = 'https://maps.googleapis.com/maps/api/streetview/metadata';
 const SV_STATIC_PATH = '/maps/api/streetview';
 const STATIC_MAP_PATH = '/maps/api/staticmap';
+const GOOGLE_MAPS_HOST = 'maps.googleapis.com';
+const GOOGLE_PREVIEW_MAX_BYTES = 20 * 1024 * 1024;
 
 export type GeocodeResult = {
   lat: number;
@@ -168,7 +170,7 @@ export function signGoogleMapsUrl(pathWithQuery: string): string {
 }
 
 /**
- * Build a Street View Static image URL (ephemeral — download into Storage for durable Current).
+ * Build a Street View Static image URL for an immediate server-side request.
  * SERVER-ONLY: the returned URL contains the Maps key. Never send it to the client.
  */
 function buildStreetViewStaticUrl(params: StreetViewStaticParams): string {
@@ -190,10 +192,6 @@ function buildStreetViewStaticUrl(params: StreetViewStaticParams): string {
   return `https://maps.googleapis.com${signGoogleMapsUrl(pathWithQuery)}`;
 }
 
-/**
- * Satellite Static Maps URL — operator fallback preview when SV is unavailable (not printable Current).
- * SERVER-ONLY: the returned URL contains the Maps key. Never send it to the client.
- */
 function buildSatelliteStaticUrl(lat: number, lng: number, size = '640x640'): string {
   const key = requireMapsKey();
   const search = new URLSearchParams({
@@ -207,11 +205,35 @@ function buildSatelliteStaticUrl(lat: number, lng: number, size = '640x640'): st
   return `https://maps.googleapis.com${signGoogleMapsUrl(pathWithQuery)}`;
 }
 
-/** Download Street View Static image bytes for durable Storage Current (key never leaves the server). */
+async function fetchGooglePreview(
+  rawUrl: string,
+): Promise<{ bytes: Buffer; mimeType: string }> {
+  const url = new URL(rawUrl);
+  if (
+    url.protocol !== 'https:' ||
+    url.hostname !== GOOGLE_MAPS_HOST ||
+    ![SV_STATIC_PATH, STATIC_MAP_PATH].includes(url.pathname)
+  ) {
+    throw new Error('Blocked non-Google scouting preview URL.');
+  }
+  const response = await fetch(url, {
+    cache: 'no-store',
+    redirect: 'error',
+    signal: AbortSignal.timeout(20_000),
+  });
+  if (!response.ok) throw new Error(`Google scouting preview HTTP ${response.status}.`);
+  const mimeType = (response.headers.get('content-type') || '').split(';')[0].trim();
+  if (!mimeType.startsWith('image/')) throw new Error('Scouting preview returned non-image data.');
+  const bytes = Buffer.from(await response.arrayBuffer());
+  if (bytes.length > GOOGLE_PREVIEW_MAX_BYTES) throw new Error('Scouting preview is too large.');
+  return { bytes, mimeType };
+}
+
+/** Download Street View Static bytes for immediate server-side use (key never leaves the server). */
 export async function downloadStreetViewImage(
   params: StreetViewStaticParams,
 ): Promise<{ bytes: Buffer; mimeType: string }> {
-  const { bytes, mimeType } = await fetchAllowedImage(buildStreetViewStaticUrl(params)).catch(
+  const { bytes, mimeType } = await fetchGooglePreview(buildStreetViewStaticUrl(params)).catch(
     (error: unknown) => {
       throw new Error(
         `Street View Static download failed: ${error instanceof Error ? error.message : 'unknown error'}. Check Maps key / billing.`,
@@ -224,19 +246,13 @@ export async function downloadStreetViewImage(
   return { bytes, mimeType };
 }
 
-/** Download satellite Static Maps bytes (operator preview only; key never leaves the server). */
+/** Download a satellite scouting preview for one immediate no-store response. */
 export async function downloadSatelliteImage(
   lat: number,
   lng: number,
   size = '640x640',
 ): Promise<{ bytes: Buffer; mimeType: string }> {
-  const { bytes, mimeType } = await fetchAllowedImage(buildSatelliteStaticUrl(lat, lng, size)).catch(
-    (error: unknown) => {
-      throw new Error(
-        `Satellite Static Maps download failed: ${error instanceof Error ? error.message : 'unknown error'}.`,
-      );
-    },
-  );
+  const { bytes, mimeType } = await fetchGooglePreview(buildSatelliteStaticUrl(lat, lng, size));
   return { bytes, mimeType };
 }
 

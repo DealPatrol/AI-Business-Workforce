@@ -1,0 +1,136 @@
+.page {
+  min-height: 100vh;
+  padding: 24px 16px 60px;
+  background: #eef3ec;
+  color: #173323;
+}
+
+.page > header,
+.captureCard {
+  width: min(620px, 100%);
+  margin: auto;
+}
+
+.page > header {
+  margin-bottom: 18px;
+}
+
+.page > header span {
+  color: #2e754e;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .13em;
+}
+
+.page h1 {
+  margin: 6px 0;
+  font: 500 34px Georgia, serif;
+}
+
+.page header p {
+  margin: 0;
+  color: #647168;
+  font-size: 13px;
+}
+
+.captureCard {
+  padding: 20px;
+  display: grid;
+  gap: 15px;
+  border: 1px solid #d4ded3;
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 15px 40px rgba(22, 57, 35, .1);
+}
+
+.captureCard label {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.captureCard input,
+.captureCard select {
+  width: 100%;
+  min-height: 48px;
+  padding: 11px;
+  border: 1px solid #cbd8cd;
+  border-radius: 9px;
+  background: #fbfcfa;
+  font: inherit;
+}
+
+.cameraInput {
+  position: relative;
+  min-height: 170px;
+  padding: 28px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 7px;
+  border: 2px dashed #82a98e;
+  border-radius: 13px;
+  background: #f1f7f2;
+  text-align: center;
+  overflow: hidden;
+}
+
+.cameraInput svg {
+  width: 38px;
+  height: 38px;
+  color: #2e754e;
+}
+
+.cameraInput span,
+.captureCard small,
+.captureCard footer {
+  color: #68766c;
+  font-size: 10px;
+}
+
+.cameraInput input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.captureCard button {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 9px;
+  font-weight: 850;
+}
+
+.locate {
+  border: 1px solid #2e754e;
+  background: white;
+  color: #2e754e;
+}
+
+.upload {
+  border: 0;
+  background: #205c39;
+  color: white;
+}
+
+.captureCard button:disabled {
+  opacity: .55;
+}
+
+.captureCard > p {
+  margin: 0;
+  color: #6a4c21;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.captureCard footer {
+  padding-top: 12px;
+  border-top: 1px solid #e5ebe5;
+  text-align: center;
+}

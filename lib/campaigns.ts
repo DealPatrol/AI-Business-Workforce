@@ -14,7 +14,9 @@ export type PublicRecipient = {
   concept_image_url: string | null;
   concept_summary: string | null;
   current_image_url: string | null;
-  current_image_source: 'street_view' | 'crew_photo' | 'owner_upload' | null;
+  current_image_source: 'crew_photo' | 'owner_upload' | 'licensed' | null;
+  rights_basis: 'crew_owned' | 'homeowner_upload' | 'licensed' | null;
+  privacy_redaction_status: string | null;
   after_image_url: string | null;
   review_status: string | null;
   concept_json: Record<string, unknown> | null;
