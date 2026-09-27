@@ -10,7 +10,6 @@ import {
   renderAfter,
 } from '@/lib/imagery/after-render';
 import { fetchAllowedImage } from '@/lib/imagery/safe-fetch';
-import { downloadStreetViewImage } from '@/lib/google/streetview';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -45,24 +44,16 @@ export async function POST(request: NextRequest) {
     if (!owned.ok) return owned.response;
 
     const recipient = owned.recipient;
-    const hasFreshStreetView =
-      Boolean(recipient.street_view_pano_id) &&
-      recipient.latitude != null &&
-      recipient.longitude != null;
-    if (!recipient.current_image_url && !hasFreshStreetView) {
+    if (!recipient.current_image_url) {
       return NextResponse.json(
         {
           error:
-            'Fetch Street View Current (POST /api/imagery/streetview-preview) or upload crew_photo/owner_upload before rendering After.',
+            'Upload a printable owner/crew photo, or enable licensed Street View storage, before rendering After.',
         },
         { status: 400 },
       );
     }
-    const currentSource = recipient.current_image_url
-      ? recipient.current_image_source
-      : hasFreshStreetView
-        ? 'street_view'
-        : null;
+    const currentSource = recipient.current_image_source;
     if (!currentSource || !ACCEPTED_CURRENT.has(currentSource)) {
       return NextResponse.json(
         {
@@ -79,21 +70,13 @@ export async function POST(request: NextRequest) {
       .eq('id', recipient.id);
 
     // SSRF guard: only our Supabase Storage host or Google Street View Static.
-    const current = recipient.current_image_url
-      ? await fetchAllowedImage(recipient.current_image_url).catch((error: unknown) => {
-          throw new Error(
-            `Could not download Current image: ${error instanceof Error ? error.message : 'unknown error'}`,
-          );
-        })
-      : await downloadStreetViewImage({
-          lat: recipient.latitude!,
-          lng: recipient.longitude!,
-          panoId: recipient.street_view_pano_id,
-          heading: recipient.street_view_heading ?? undefined,
-          pitch: recipient.street_view_pitch ?? undefined,
-          fov: recipient.street_view_fov ?? undefined,
-          size: '640x640',
-        });
+    const current = await fetchAllowedImage(recipient.current_image_url).catch(
+      (error: unknown) => {
+        throw new Error(
+          `Could not download Current image: ${error instanceof Error ? error.message : 'unknown error'}`,
+        );
+      },
+    );
 
     const catalogSkus = Array.isArray(body.catalogSkus)
       ? body.catalogSkus.map(String)

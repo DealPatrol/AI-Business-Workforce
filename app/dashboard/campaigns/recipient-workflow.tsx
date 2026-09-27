@@ -52,10 +52,17 @@ export default function RecipientWorkflow(props: Props) {
           body: JSON.stringify({ recipientId: props.recipientId }),
         }),
       );
-      setPreviewUrl(String(payload.previewUrl));
+      setPreviewUrl(payload.previewUrl ? String(payload.previewUrl) : null);
       if (payload.currentImageUrl) {
         setCurrentUrl(String(payload.currentImageUrl));
         setCurrentSource('street_view');
+        setAfterUrl(null);
+        setReviewStatus('pending');
+      } else if (currentSource === 'street_view') {
+        setCurrentUrl(null);
+        setCurrentSource(null);
+        setAfterUrl(null);
+        setReviewStatus('pending');
       }
       setMessage(String(payload.note || 'Street View lookup complete.'));
     });
@@ -129,7 +136,7 @@ export default function RecipientWorkflow(props: Props) {
           Upload owner photo
           <input type="file" accept="image/*" disabled={busy} onChange={upload} />
         </label>
-        <button type="button" disabled={busy || (!currentUrl && !previewUrl)} onClick={renderAfter}>
+        <button type="button" disabled={busy || !currentUrl} onClick={renderAfter}>
           Generate after
         </button>
         <button type="button" disabled={busy || !currentUrl || !afterUrl} onClick={approve}>

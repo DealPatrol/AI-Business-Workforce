@@ -79,6 +79,8 @@ export async function renderPostcardHtml(input: {
   const homeowner = escapeHtml(recipient.homeowner_name || 'Neighbor');
   const contact = escapeHtml(campaign.business_phone || campaign.business_email || '');
   const addressZoneWidth = input.size === '4x6' ? '3.2835in' : '4in';
+  const addressZoneRight = input.size === '4x6' ? '.275in' : '1.33in';
+  const addressZoneBottom = input.size === '4x6' ? '.25in' : '1.69in';
 
   const shared = `
     <style>
@@ -102,7 +104,7 @@ export async function renderPostcardHtml(input: {
 
   const back = `<!doctype html><html><head>${shared}</head><body>
     <main style="position:relative;width:100%;height:100%;padding:.4in;background:#f6f1e7;color:#173323;">
-      <section style="width:${input.size === '4x6' ? '2.15in' : '3.6in'};">
+      <section style="width:${input.size === '4x6' ? '1.9in' : '3.6in'};">
         <div style="font-size:12px;font-weight:700;letter-spacing:1px;color:#397251;">A PROJECT IDEA FOR YOUR HOME</div>
         <h1 style="margin:.16in 0 .12in;font:700 ${input.size === '4x6' ? '25px' : '36px'} Georgia,serif;">${homeowner}, see what could be possible.</h1>
         <p style="font-size:14px;line-height:1.42;">Scan to view the campaign concept and request an estimate from ${businessName}.</p>
@@ -111,7 +113,7 @@ export async function renderPostcardHtml(input: {
           <div><b style="font-size:15px;">Scan for your estimate page</b><br/><span style="font-size:11px;">${contact}</span></div>
         </div>
       </section>
-      <div aria-label="Lob postal address and barcode clear zone" style="position:absolute;right:1.33in;bottom:1.69in;width:${addressZoneWidth};height:2.375in;background:white;"></div>
+      <div aria-label="Lob postal address and barcode clear zone" style="position:absolute;right:${addressZoneRight};bottom:${addressZoneBottom};width:${addressZoneWidth};height:2.375in;background:white;"></div>
       <div style="position:absolute;left:.4in;bottom:.2in;font-size:10px;color:#53645a;">Prepared by ${businessName} · No work has been performed or promised.</div>
     </main></body></html>`;
 

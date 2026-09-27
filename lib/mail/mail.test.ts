@@ -1,8 +1,13 @@
 import { createHmac } from 'node:crypto';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { calculateCampaignCost, getMailConfig } from '@/lib/mail/config';
-import { verifyLobWebhook } from '@/lib/mail/lob';
-import { postcardEligibility, PostcardRecipient } from '@/lib/mail/postcard';
+import { createPostcard, verifyLobWebhook } from '@/lib/mail/lob';
+import {
+  postcardEligibility,
+  PostcardCampaign,
+  PostcardRecipient,
+  renderPostcardHtml,
+} from '@/lib/mail/postcard';
 
 const baseRecipient: PostcardRecipient = {
   id: 'recipient-1',
@@ -23,6 +28,9 @@ const baseRecipient: PostcardRecipient = {
 afterEach(() => {
   delete process.env.LOB_MODE;
   delete process.env.MAIL_LIVE_ENABLED;
+  delete process.env.LOB_API_KEY;
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
 });
 
 describe('mail safety configuration', () => {
@@ -96,5 +104,68 @@ describe('Lob webhook signatures', () => {
         nowSeconds: 1400,
       }),
     ).toBe(false);
+  });
+});
+
+describe('postcard creation', () => {
+  it('uses a stable Lob idempotency key for each recipient and mode', async () => {
+    process.env.LOB_API_KEY = 'test_example';
+    const fetchMock = vi.fn().mockResolvedValue(
+      new Response(JSON.stringify({ id: 'psc_1' }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      }),
+    );
+    vi.stubGlobal('fetch', fetchMock);
+
+    await createPostcard({
+      mode: 'test',
+      description: 'Test postcard',
+      to: {
+        name: 'Current Resident',
+        address_line1: '1 Main St',
+        address_city: 'Huntsville',
+        address_state: 'AL',
+        address_zip: '35801',
+        address_country: 'US',
+      },
+      from: {
+        name: 'YardProof',
+        address_line1: '2 Main St',
+        address_city: 'Huntsville',
+        address_state: 'AL',
+        address_zip: '35801',
+        address_country: 'US',
+      },
+      front: '<html>front</html>',
+      back: '<html>back</html>',
+      size: '4x6',
+      recipientId: baseRecipient.id,
+    });
+
+    const headers = new Headers(fetchMock.mock.calls[0][1]?.headers);
+    expect(headers.get('Idempotency-Key')).toBe('postcard-test-recipient-1');
+  });
+});
+
+describe('postcard layout', () => {
+  it('keeps the 4x6 ink-free zone inside the card', async () => {
+    const campaign: PostcardCampaign = {
+      name: 'Test campaign',
+      business_name: 'YardProof',
+      business_phone: '555-0100',
+      business_email: null,
+    };
+    const { back } = await renderPostcardHtml({
+      recipient: baseRecipient,
+      campaign,
+      estimateUrl: 'https://example.com/estimate',
+      size: '4x6',
+    });
+
+    expect(back).toContain(
+      'right:.275in;bottom:.25in;width:3.2835in;height:2.375in',
+    );
+    expect(back).toContain('<section style="width:1.9in;">');
   });
 });

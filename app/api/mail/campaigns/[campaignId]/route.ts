@@ -18,6 +18,8 @@ type RouteContext = { params: Promise<{ campaignId: string }> };
 type CampaignRow = PostcardCampaign & {
   id: string;
   status: string;
+  mail_status: string;
+  mail_approved_at: string | null;
   campaign_recipients: PostcardRecipient[];
 };
 
@@ -30,6 +32,7 @@ async function loadCampaign(
     .from('campaigns')
     .select(`
       id, name, business_name, business_phone, business_email, status,
+      mail_status, mail_approved_at,
       campaign_recipients (
         id, public_token, homeowner_name, address_line_1, address_line_2, city, state,
         postal_code, current_image_url, current_image_source, after_image_url, review_status,
@@ -123,7 +126,8 @@ export async function POST(request: NextRequest, context: RouteContext) {
   }
 
   const approvedAt = new Date().toISOString();
-  await auth.ctx.admin
+  const staleSendingBefore = new Date(Date.now() - maxDuration * 1000).toISOString();
+  const { data: claimedCampaign, error: claimError } = await auth.ctx.admin
     .from('campaigns')
     .update({
       mail_approved_at: approvedAt,
@@ -133,7 +137,22 @@ export async function POST(request: NextRequest, context: RouteContext) {
       mail_estimated_total_cents: campaignPreview.estimatedTotalCents,
       mail_status: 'sending',
     })
-    .eq('id', campaign.id);
+    .eq('id', campaign.id)
+    .or(
+      `mail_status.neq.sending,mail_approved_at.is.null,mail_approved_at.lt.${staleSendingBefore}`,
+    )
+    .select('id')
+    .maybeSingle();
+
+  if (claimError) {
+    return NextResponse.json({ error: 'Could not claim campaign for mailing.' }, { status: 500 });
+  }
+  if (!claimedCampaign) {
+    return NextResponse.json(
+      { error: 'This campaign is already being sent.' },
+      { status: 409 },
+    );
+  }
 
   const appUrl = (process.env.NEXT_PUBLIC_APP_URL || request.nextUrl.origin).replace(/\/$/, '');
   const results: Array<{ recipientId: string; ok: boolean; jobId?: string; error?: string }> = [];
