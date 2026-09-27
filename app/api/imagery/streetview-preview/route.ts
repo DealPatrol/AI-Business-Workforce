@@ -6,7 +6,6 @@ import {
   requireCampaignOwner,
 } from '@/lib/imagery/auth';
 import {
-  downloadSatelliteImage,
   downloadStreetViewImage,
   fetchStreetViewMetadata,
   formatRecipientAddressLine,
@@ -47,7 +46,7 @@ export async function GET(request: NextRequest) {
       fov: recipient.street_view_fov ?? undefined,
       size: '640x640',
     });
-    return new NextResponse(image.bytes, {
+    return new NextResponse(new Uint8Array(image.bytes), {
       headers: {
         'Content-Type': image.mimeType,
         'Cache-Control': 'private, no-store, max-age=0',
@@ -169,29 +168,9 @@ export async function POST(request: NextRequest) {
       imageryError =
         'Preview is fetched on demand; Google Street View storage and postcard use are disabled by default.';
     } else {
-      // Never return a maps.googleapis.com URL to the client (it embeds the Maps key).
-      // Download the satellite preview server-side and serve it from private Storage.
-      const satellite = await downloadSatelliteImage(geo.lat, geo.lng);
-      const bucket = imageryBucket();
-      const ext = satellite.mimeType.includes('jpeg') || satellite.mimeType.includes('jpg') ? 'jpg' : 'png';
-      const previewPath = `${recipient.id}/preview-satellite-${Date.now()}.${ext}`;
-      const { error: previewUploadError } = await auth.ctx.admin.storage
-        .from(bucket)
-        .upload(previewPath, satellite.bytes, { contentType: satellite.mimeType, upsert: true });
-      if (previewUploadError) {
-        throw new Error(
-          `Storage upload failed (${previewUploadError.message}). Ensure bucket "${bucket}" exists (private).`,
-        );
-      }
-      const { data: previewSigned, error: previewSignError } = await auth.ctx.admin.storage
-        .from(bucket)
-        .createSignedUrl(previewPath, 60 * 60);
-      if (previewSignError || !previewSigned?.signedUrl) {
-        throw new Error('Satellite preview upload succeeded but signed URL creation failed.');
-      }
-      previewUrl = previewSigned.signedUrl;
+      previewUrl = '';
       imageryStatus = 'needs_photo';
-      imageryError = `Street View status ${metadata.status}; satellite preview only. Upload crew_photo/owner_upload or retry when Street View is available for printable Current.`;
+      imageryError = `Street View status ${metadata.status}. Upload an owner/crew photo or retry later.`;
     }
 
     const patch: Record<string, unknown> = {
@@ -205,7 +184,7 @@ export async function POST(request: NextRequest) {
       street_view_fov: fov,
       // Column is `date`; SV metadata is "YYYY-MM" → stored as "YYYY-MM-01" (month precision).
       street_view_captured_at: normalizeStreetViewCaptureDate(metadata.date),
-      imagery_provider: metadata.available ? 'google_street_view' : 'google_satellite',
+      imagery_provider: metadata.available ? 'google_street_view' : null,
       imagery_fetched_at: new Date().toISOString(),
       imagery_status: imageryStatus,
       imagery_error: imageryError,
@@ -216,6 +195,17 @@ export async function POST(request: NextRequest) {
       patch.current_image_source = 'street_view';
       patch.current_image_usage = 'print_source';
       // New Current invalidates prior After until re-rendered + re-reviewed
+      patch.after_image_url = null;
+      patch.review_status = 'pending';
+      patch.postcard_approved_at = null;
+    } else if (
+      metadata.available &&
+      !streetViewStorageEnabled() &&
+      recipient.current_image_source === 'street_view'
+    ) {
+      patch.current_image_url = null;
+      patch.current_image_source = null;
+      patch.current_image_usage = null;
       patch.after_image_url = null;
       patch.review_status = 'pending';
       patch.postcard_approved_at = null;
@@ -245,7 +235,7 @@ export async function POST(request: NextRequest) {
         longitude: geo.lng,
         normalized_address: geo.normalizedAddress,
         street_view_available: metadata.available,
-        imagery_provider: metadata.available ? 'google_street_view' : 'google_satellite',
+        imagery_provider: metadata.available ? 'google_street_view' : null,
         imagery_fetched_at: new Date().toISOString(),
       })
       .eq('id', recipient.campaign_id)
@@ -258,7 +248,7 @@ export async function POST(request: NextRequest) {
         ? currentImageUrl
           ? 'Street View storage is explicitly enabled. Human review and postcard policy gates still apply.'
           : 'Street View is available and shown on demand without caching. Upload an owner/crew photo for postcard use.'
-        : 'Street View unavailable — satellite preview only. Use crew_photo/owner_upload as alternate Current.',
+        : 'Street View unavailable. Use an owner/crew photo as the alternate Current.',
       geocode: {
         lat: geo.lat,
         lng: geo.lng,
@@ -271,7 +261,7 @@ export async function POST(request: NextRequest) {
         date: metadata.date,
       },
       previewUrl,
-      previewKind: metadata.available ? 'street_view' : 'satellite',
+      previewKind: metadata.available ? 'street_view' : 'none',
       currentImageUrl,
       currentImageSource: currentImageUrl ? 'street_view' : null,
       currentImageUsage: currentImageUrl ? 'print_source' : 'preview_only',

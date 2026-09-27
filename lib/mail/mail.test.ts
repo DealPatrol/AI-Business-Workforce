@@ -17,6 +17,7 @@ const baseRecipient: PostcardRecipient = {
   current_image_source: 'owner_upload',
   after_image_url: 'https://example.com/after.jpg',
   review_status: 'approved',
+  mail_vendor_job_id: null,
 };
 
 afterEach(() => {
@@ -49,6 +50,13 @@ describe('postcard eligibility', () => {
     const recipient = { ...baseRecipient, current_image_source: 'street_view' };
     expect(postcardEligibility(recipient, false).eligible).toBe(false);
     expect(postcardEligibility(recipient, true)).toEqual({ eligible: true });
+  });
+
+  it('prevents duplicate vendor jobs', () => {
+    expect(
+      postcardEligibility({ ...baseRecipient, mail_vendor_job_id: 'psc_existing' }, true)
+        .eligible,
+    ).toBe(false);
   });
 });
 

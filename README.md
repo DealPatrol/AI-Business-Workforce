@@ -53,7 +53,7 @@ The authenticated campaign inbox can geocode a recipient address, check the Stre
 
 Required setup:
 
-1. Enable Google Geocoding API, Street View Static API, and Maps Static API in one billed Google Cloud project.
+1. Enable Google Geocoding API and Street View Static API in one billed Google Cloud project.
 2. Set the server-only `GOOGLE_MAPS_API_KEY` and restrict it to those APIs. `GOOGLE_MAPS_URL_SIGNING_SECRET` is optional.
 3. Create the private Supabase bucket named by `IMAGERY_STORAGE_BUCKET`.
 4. Leave `GOOGLE_STREET_VIEW_STORAGE_ENABLED=false` and `STREET_VIEW_POSTCARD_ENABLED=false` unless Google has granted separate written rights for storage and printed direct-mail use.

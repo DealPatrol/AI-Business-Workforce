@@ -13,6 +13,7 @@ export type PostcardRecipient = {
   current_image_source: string | null;
   after_image_url: string | null;
   review_status: string;
+  mail_vendor_job_id: string | null;
 };
 
 export type PostcardCampaign = {
@@ -32,6 +33,9 @@ export function postcardEligibility(
 ): Eligibility {
   if (recipient.review_status !== 'approved') {
     return { eligible: false, reason: 'Creative needs human approval.' };
+  }
+  if (recipient.mail_vendor_job_id) {
+    return { eligible: false, reason: 'A vendor job already exists for this recipient.' };
   }
   if (!recipient.current_image_url) {
     return { eligible: false, reason: 'A printable before image is required.' };

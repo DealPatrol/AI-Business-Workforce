@@ -32,7 +32,8 @@ async function loadCampaign(
       id, name, business_name, business_phone, business_email, status,
       campaign_recipients (
         id, public_token, homeowner_name, address_line_1, address_line_2, city, state,
-        postal_code, current_image_url, current_image_source, after_image_url, review_status
+        postal_code, current_image_url, current_image_source, after_image_url, review_status,
+        mail_vendor_job_id
       )
     `)
     .eq('id', campaignId)

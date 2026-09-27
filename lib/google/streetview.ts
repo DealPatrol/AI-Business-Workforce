@@ -1,11 +1,11 @@
 /**
  * Google Street View / Geocoding helpers — server only.
  *
- * Product rules (Cole 2026-09-24):
- * - Google Street View Static = printable Current (before) on postcard and /q/[token].
- * - After-render uses that Street View Current as AI input → After.
- * - Crew/owner photos remain optional alternate Current sources.
- * - Persist durable Current bytes in Storage (Static Maps URLs are ephemeral).
+ * Product rules:
+ * - Retain geocode + pano metadata, not Street View image bytes, by default.
+ * - Fetch authenticated previews and After inputs on demand with no-store semantics.
+ * - Owner/crew photos are the default printable Current source.
+ * - Storage/printing requires explicit policy overrides backed by separate rights.
  */
 
 import { createHmac } from 'node:crypto';
@@ -21,7 +21,6 @@ if (typeof window !== 'undefined') {
 const GEOCODE_URL = 'https://maps.googleapis.com/maps/api/geocode/json';
 const SV_METADATA_URL = 'https://maps.googleapis.com/maps/api/streetview/metadata';
 const SV_STATIC_PATH = '/maps/api/streetview';
-const STATIC_MAP_PATH = '/maps/api/staticmap';
 
 export type GeocodeResult = {
   lat: number;
@@ -168,7 +167,7 @@ export function signGoogleMapsUrl(pathWithQuery: string): string {
 }
 
 /**
- * Build a Street View Static image URL (ephemeral — download into Storage for durable Current).
+ * Build a Street View Static image URL for an immediate server-side request.
  * SERVER-ONLY: the returned URL contains the Maps key. Never send it to the client.
  */
 function buildStreetViewStaticUrl(params: StreetViewStaticParams): string {
@@ -190,24 +189,7 @@ function buildStreetViewStaticUrl(params: StreetViewStaticParams): string {
   return `https://maps.googleapis.com${signGoogleMapsUrl(pathWithQuery)}`;
 }
 
-/**
- * Satellite Static Maps URL — operator fallback preview when SV is unavailable (not printable Current).
- * SERVER-ONLY: the returned URL contains the Maps key. Never send it to the client.
- */
-function buildSatelliteStaticUrl(lat: number, lng: number, size = '640x640'): string {
-  const key = requireMapsKey();
-  const search = new URLSearchParams({
-    center: `${lat},${lng}`,
-    zoom: '20',
-    size,
-    maptype: 'satellite',
-    key,
-  });
-  const pathWithQuery = `${STATIC_MAP_PATH}?${search.toString()}`;
-  return `https://maps.googleapis.com${signGoogleMapsUrl(pathWithQuery)}`;
-}
-
-/** Download Street View Static image bytes for durable Storage Current (key never leaves the server). */
+/** Download Street View Static bytes for immediate server-side use (key never leaves the server). */
 export async function downloadStreetViewImage(
   params: StreetViewStaticParams,
 ): Promise<{ bytes: Buffer; mimeType: string }> {
@@ -221,22 +203,6 @@ export async function downloadStreetViewImage(
   if (bytes.length < 100) {
     throw new Error('Street View Static download returned an empty or tiny payload.');
   }
-  return { bytes, mimeType };
-}
-
-/** Download satellite Static Maps bytes (operator preview only; key never leaves the server). */
-export async function downloadSatelliteImage(
-  lat: number,
-  lng: number,
-  size = '640x640',
-): Promise<{ bytes: Buffer; mimeType: string }> {
-  const { bytes, mimeType } = await fetchAllowedImage(buildSatelliteStaticUrl(lat, lng, size)).catch(
-    (error: unknown) => {
-      throw new Error(
-        `Satellite Static Maps download failed: ${error instanceof Error ? error.message : 'unknown error'}.`,
-      );
-    },
-  );
   return { bytes, mimeType };
 }
 
