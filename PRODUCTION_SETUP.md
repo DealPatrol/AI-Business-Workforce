@@ -34,11 +34,14 @@ Add these server-only variables:
 
 - `ELEVENLABS_API_KEY`
 - `ELEVENLABS_AGENT_ID` — the tested Ava template agent used by the browser demo and as the duplication source
+- `ELEVENLABS_AGENT_ID_SOUTHERN_MAN`, `ELEVENLABS_AGENT_ID_SOUTHERN_WOMAN`, and `ELEVENLABS_AGENT_ID_AMERICAN_WOMAN` — optional separate browser-demo agents; each falls back to `ELEVENLABS_AGENT_ID` when unset
 - `AVA_PROVISIONING_SECRET` — a long random bearer secret for `POST /api/ava/provision`
 - `AVA_AUTO_PROVISION_AGENT=true` — optional; leave false until automatic creation has been tested
 - `AVA_STRIPE_PAYMENT_LINK_ID` — required only when an Ava-specific Payment Link should qualify for automatic creation
 
 With automatic creation disabled, Cole can use the authenticated internal endpoint described in [`docs/AVA_PHONE_SETUP_RUNBOOK.md`](docs/AVA_PHONE_SETUP_RUNBOOK.md). The endpoint duplicates the template through ElevenLabs' supported agent-duplicate API, updates the customer's prompt and greeting, and saves the returned agent ID. Missing credentials result in a pending status. Submit-time automatic creation also requires Stripe to report the session as paid and complete and identify it through `/api/checkout` Ava plan metadata or the configured Ava-specific Payment Link ID.
+
+See [`docs/AVA_VOICE_OPTIONS.md`](docs/AVA_VOICE_OPTIONS.md) for the dashboard duplication checklist and voice-option boundaries. Customer provisioning deliberately continues to duplicate `ELEVENLABS_AGENT_ID`; a preferred voice submitted during onboarding is a setup note and does not change the duplicate source.
 
 Phone-number purchase, allocation, import/assignment, forwarding, calendar writes, customer-facing SMS, and launch approval are still manual. Optional **internal** Twilio SMS lead alerts (`TWILIO_*` + `AVA_LEAD_SMS_TO`) activate only when configured — missing env no-ops SMS; email (Resend) remains primary. `agent_ready_phone_pending` means the customer agent is configured; it does not mean a phone number or live calling is ready.
 

@@ -196,7 +196,8 @@
 }
 
 .form input,
-.form textarea {
+.form textarea,
+.form select {
   width: 100%;
   border: 1px solid #d5ddd6;
   border-radius: 8px;
@@ -212,7 +213,8 @@
 }
 
 .form input:focus,
-.form textarea:focus {
+.form textarea:focus,
+.form select:focus {
   outline: 2px solid #9bc5a9;
   outline-offset: 1px;
   border-color: #2e8b57;
