@@ -26,7 +26,7 @@ const steps = [
     icon: Palette,
     number: '02',
     title: 'Build the concepts',
-    detail: 'We prepare clearly labeled yard project ideas for you to review.',
+    detail: 'Cole prepares clearly labeled yard project ideas by hand for you to review.',
   },
   {
     icon: Mail,
@@ -47,7 +47,7 @@ const packageItems = [
   'Up to 25 property concepts*',
   'Personalized postcard creative',
   'Unique QR project-page structure',
-  'Lead and response tracking setup',
+  'QR scan tracking and estimate-request inbox',
   'Campaign review before launch',
 ];
 
@@ -76,8 +76,9 @@ export default function HomePage() {
           <span className={styles.eyebrow}>PROPERTY-BASED POSTCARD CAMPAIGNS FOR HOME SERVICES</span>
           <h1>Show homeowners the yard project you could build for them.</h1>
           <p className={styles.lede}>
-            We help you choose the streets, prepare yard concepts, and mail a postcard with a QR
-            page where the homeowner can request an estimate.
+            A managed, done-with-you service: we help you choose the streets, prepare yard
+            concepts, and send a postcard with a QR page where the homeowner can request an
+            estimate.
           </p>
           <div className={styles.priceLine}>
             <strong>$299 setup</strong>
@@ -206,8 +207,12 @@ export default function HomePage() {
           <div className={styles.honesty}>
             <b>Honest launch boundary</b>
             <p>
-              First campaigns are managed and may be human-assisted. We will not claim live
-              address-to-render or automatic mailing until those connections are tested.
+              <b>Live today:</b> unique QR pages, scan tracking, and your estimate-request inbox.
+              <br />
+              <b>Done by hand with you (not automated yet):</b> choosing properties, property
+              photos, &ldquo;after&rdquo; concept images, and printing/mailing. We will not claim
+              automatic property lookup, AI renders, lead finding, or automatic mailing until
+              those connections are tested.
             </p>
           </div>
         </div>

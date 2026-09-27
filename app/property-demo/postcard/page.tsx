@@ -54,8 +54,8 @@ export default async function Postcard({ searchParams }: PostcardProps) {
           <p>
             Preview the postcard and homeowner landing-page path before anything is sent.
             {hasPair
-              ? ' Showing Current | After from supplied imagery (Street View or crew/owner Current + After concept).'
-              : ' Demo art below — live Current|After appears when Street View (or crew/owner) Current + After URLs are provided.'}
+              ? ' Showing Current | After from supplied, reviewed imagery.'
+              : ' Demo art below — a real Current|After pair appears once reviewed imagery is supplied.'}
           </p>
         </div>
         <div className="postgrid">
@@ -68,7 +68,7 @@ export default async function Postcard({ searchParams }: PostcardProps) {
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={currentUrl!}
-                        alt="Current property photo (Street View or crew/owner)"
+                        alt="Current property photo"
                         style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }}
                       />
                       <span>CURRENT</span>
@@ -101,7 +101,7 @@ export default async function Postcard({ searchParams }: PostcardProps) {
                 <h2>A fresh idea for your front yard.</h2>
                 <p>
                   Concept after a light plant &amp; trim refresh (approx. $1–3k plant materials).
-                  Same house and camera angle — not a luxury redesign. Current is typically Street View Static.
+                  Same house and camera angle — not a luxury redesign.
                 </p>
                 <div className="qrcode">
                   <QrCode />
@@ -114,10 +114,11 @@ export default async function Postcard({ searchParams }: PostcardProps) {
               </div>
             </div>
             <p className="fine">
-              Demo postcard mock. Printable Current is Street View Static by default (crew/owner
-              photos optional alternates). After is rendered from that Current and requires human
-              review before mail. A founding campaign&apos;s business identity, approved imagery, QR
-              destination, and mailing details are prepared with the customer before launch.
+              Demo postcard mock. In founding campaigns, the Current photo and After concept are
+              prepared and reviewed by hand; automatic property-photo lookup and AI after-images
+              are still being tested and are not part of the live service. A founding
+              campaign&apos;s business identity, approved imagery, QR destination, and mailing
+              details are prepared with the customer before launch.
             </p>
           </section>
           <aside className="sendpanel">

@@ -103,7 +103,7 @@ function FoundingRequestForm() {
               <Check /> $299 founding launch
             </p>
             <p>
-              <Check /> Then $99/month for the initial managed automation
+              <Check /> Then $99/month for the initial managed campaign
             </p>
             <p>
               <Check /> Materials, margin, and campaign setup tailored to your business
