@@ -56,7 +56,7 @@ Required setup:
 1. Enable Google Geocoding API and Street View Static API in one billed Google Cloud project.
 2. Set the server-only `GOOGLE_MAPS_API_KEY` and restrict it to those APIs. `GOOGLE_MAPS_URL_SIGNING_SECRET` is optional.
 3. Create the private Supabase bucket named by `IMAGERY_STORAGE_BUCKET`.
-4. Leave `GOOGLE_STREET_VIEW_STORAGE_ENABLED=false` and `STREET_VIEW_POSTCARD_ENABLED=false` unless Google has granted separate written rights for storage and printed direct-mail use.
+4. Leave `GOOGLE_STREET_VIEW_STORAGE_ENABLED=false`, `STREET_VIEW_POSTCARD_ENABLED=false`, and `STREET_VIEW_AI_INPUT_ENABLED=false` unless Google has granted separate written rights for those uses.
 
 By default YardProof retains the geocode and Street View panorama ID, but not Street View image bytes. Authenticated previews are fetched on demand with `Cache-Control: no-store`. Owner- or crew-taken photographs are the recommended postcard source.
 
@@ -69,8 +69,9 @@ This is an engineering risk assessment, not legal advice. As reviewed September 
 - [Google Maps Platform Service Specific Terms §3, “Google ID Caching”](https://cloud.google.com/maps-platform/terms/maps-service-terms) permits caching the Street View `pano_id`; it does not grant an image-storage or print exception.
 - [Street View Static API Policies, “Pre-fetching, caching, or storage of content”](https://developers.google.com/maps/documentation/streetview/policies) says storing/caching content is generally prohibited apart from stated ID exceptions.
 - [Street View Static API Policies, “Google Maps attribution requirements”](https://developers.google.com/maps/documentation/streetview/policies) requires supplied attribution to remain visible and legible.
+- [Google Geo Guidelines, “Street View”](https://www.google.com/permissions/geoguidelines/#streetview) expressly say Street View imagery “may not be used for any print purposes,” including “Advertisements or promotional materials of any kind,” and prohibit downloading images for offline use.
 
-The terms do not provide an express commercial-postcard/offline-print permission. Because printing necessarily exports and fixes the image outside the service, YardProof treats it as prohibited or at least materially risky absent written permission. The postcard gate is therefore OFF by default. Use owner/crew photos or separately licensed property imagery instead.
+Commercial postcard use is prohibited under Google’s public terms, not merely uncertain. Terms §3.2.3(c), “No Creating Content From Google Maps Content,” also makes using Street View as source material for an AI-generated “after” concept prohibited or high-risk. Storage, printing, and AI-input gates are therefore OFF by default. Use owner/crew photos or separately licensed property imagery instead.
 
 ## Lob postcard mailing
 

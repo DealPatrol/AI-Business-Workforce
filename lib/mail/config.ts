@@ -68,6 +68,10 @@ export function streetViewStorageEnabled(): boolean {
   return enabled(process.env.GOOGLE_STREET_VIEW_STORAGE_ENABLED);
 }
 
+export function streetViewAiInputEnabled(): boolean {
+  return enabled(process.env.STREET_VIEW_AI_INPUT_ENABLED);
+}
+
 export function calculateCampaignCost(
   recipientCount: number,
   pricePerCardCents: number | null,

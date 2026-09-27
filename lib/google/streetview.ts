@@ -3,7 +3,8 @@
  *
  * Product rules:
  * - Retain geocode + pano metadata, not Street View image bytes, by default.
- * - Fetch authenticated previews and After inputs on demand with no-store semantics.
+ * - Fetch authenticated previews on demand with no-store semantics.
+ * - AI input remains disabled unless separate written rights are configured.
  * - Owner/crew photos are the default printable Current source.
  * - Storage/printing requires explicit policy overrides backed by separate rights.
  */

@@ -1,6 +1,10 @@
 import { createHmac } from 'node:crypto';
 import { afterEach, describe, expect, it } from 'vitest';
-import { calculateCampaignCost, getMailConfig } from '@/lib/mail/config';
+import {
+  calculateCampaignCost,
+  getMailConfig,
+  streetViewAiInputEnabled,
+} from '@/lib/mail/config';
 import { verifyLobWebhook } from '@/lib/mail/lob';
 import { postcardEligibility, PostcardRecipient } from '@/lib/mail/postcard';
 
@@ -23,6 +27,7 @@ const baseRecipient: PostcardRecipient = {
 afterEach(() => {
   delete process.env.LOB_MODE;
   delete process.env.MAIL_LIVE_ENABLED;
+  delete process.env.STREET_VIEW_AI_INPUT_ENABLED;
 });
 
 describe('mail safety configuration', () => {
@@ -36,6 +41,12 @@ describe('mail safety configuration', () => {
   it('uses the configured per-card estimate', () => {
     expect(calculateCampaignCost(25, 135)).toBe(3375);
     expect(calculateCampaignCost(25, null)).toBeNull();
+  });
+
+  it('blocks Street View AI input unless separately enabled', () => {
+    expect(streetViewAiInputEnabled()).toBe(false);
+    process.env.STREET_VIEW_AI_INPUT_ENABLED = 'true';
+    expect(streetViewAiInputEnabled()).toBe(true);
   });
 });
 

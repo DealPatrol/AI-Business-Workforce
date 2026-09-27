@@ -129,7 +129,7 @@ export default function RecipientWorkflow(props: Props) {
           Upload owner photo
           <input type="file" accept="image/*" disabled={busy} onChange={upload} />
         </label>
-        <button type="button" disabled={busy || (!currentUrl && !previewUrl)} onClick={renderAfter}>
+        <button type="button" disabled={busy || !currentUrl} onClick={renderAfter}>
           Generate after
         </button>
         <button type="button" disabled={busy || !currentUrl || !afterUrl} onClick={approve}>

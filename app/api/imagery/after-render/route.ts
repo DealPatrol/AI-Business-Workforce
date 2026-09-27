@@ -11,6 +11,7 @@ import {
 } from '@/lib/imagery/after-render';
 import { fetchAllowedImage } from '@/lib/imagery/safe-fetch';
 import { downloadStreetViewImage } from '@/lib/google/streetview';
+import { streetViewAiInputEnabled } from '@/lib/mail/config';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -70,6 +71,15 @@ export async function POST(request: NextRequest) {
             'Current must be street_view, crew_photo, or owner_upload before rendering After.',
         },
         { status: 400 },
+      );
+    }
+    if (currentSource === 'street_view' && !streetViewAiInputEnabled()) {
+      return NextResponse.json(
+        {
+          error:
+            'Street View cannot be used as AI source material under Google’s public terms. Upload an owner/crew photo. Only enable STREET_VIEW_AI_INPUT_ENABLED with separate written rights.',
+        },
+        { status: 403 },
       );
     }
 
