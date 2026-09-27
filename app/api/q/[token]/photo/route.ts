@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { PUBLIC_TOKEN_PATTERN, hashRequestSource } from '@/lib/campaigns';
 import { imageryBucket } from '@/lib/imagery/auth';
 import { redactPrivateDetails } from '@/lib/imagery/privacy-redaction';
+import { suppressionAddressKey } from '@/lib/suppression';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 export const dynamic = 'force-dynamic';
@@ -35,12 +36,25 @@ export async function POST(request: NextRequest, context: RouteContext) {
   const admin = createAdminClient();
   const { data: recipient } = await admin
     .from('campaign_recipients')
-    .select('id, do_not_photograph, campaigns!inner(status)')
+    .select(`
+      id, address_line_1, address_line_2, city, state, postal_code, do_not_photograph,
+      campaigns!inner(owner_id, status)
+    `)
     .eq('public_token', token)
     .eq('campaigns.status', 'active')
     .single();
   if (!recipient) return NextResponse.json({ error: 'Campaign link not found.' }, { status: 404 });
-  if (recipient.do_not_photograph) {
+  const campaign = Array.isArray(recipient.campaigns)
+    ? recipient.campaigns[0]
+    : recipient.campaigns;
+  const { data: suppression } = await admin
+    .from('campaign_opt_outs')
+    .select('id')
+    .eq('owner_id', campaign.owner_id)
+    .eq('address_key', suppressionAddressKey(recipient))
+    .eq('do_not_photograph', true)
+    .maybeSingle();
+  if (recipient.do_not_photograph || suppression) {
     return NextResponse.json(
       { error: 'This address is on the do-not-photograph list.' },
       { status: 409 },

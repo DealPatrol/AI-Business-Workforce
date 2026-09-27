@@ -41,19 +41,23 @@ export async function POST(request: NextRequest, context: RouteContext) {
     return NextResponse.json({ error: 'Campaign owner not found.' }, { status: 404 });
   }
   const addressKey = suppressionAddressKey(recipient);
-  const { error } = await admin.from('campaign_opt_outs').upsert(
-    {
-      owner_id: campaign.owner_id,
-      campaign_id: recipient.campaign_id,
-      recipient_id: recipient.id,
-      address_key: addressKey,
-      do_not_photograph: doNotPhotograph,
-      do_not_mail: doNotMail,
-      source: 'homeowner',
-    },
-    { onConflict: 'owner_id,address_key' },
-  );
-  if (error) {
+  const { data: optOut, error } = await admin
+    .from('campaign_opt_outs')
+    .upsert(
+      {
+        owner_id: campaign.owner_id,
+        campaign_id: recipient.campaign_id,
+        recipient_id: recipient.id,
+        address_key: addressKey,
+        do_not_photograph: doNotPhotograph,
+        do_not_mail: doNotMail,
+        source: 'homeowner',
+      },
+      { onConflict: 'owner_id,address_key' },
+    )
+    .select('do_not_photograph, do_not_mail')
+    .single();
+  if (error || !optOut) {
     console.error('opt-out save error', error);
     return NextResponse.json({ error: 'Could not save the opt-out.' }, { status: 500 });
   }
@@ -61,8 +65,8 @@ export async function POST(request: NextRequest, context: RouteContext) {
   await admin
     .from('campaign_recipients')
     .update({
-      do_not_photograph: doNotPhotograph,
-      do_not_mail: doNotMail,
+      do_not_photograph: optOut.do_not_photograph,
+      do_not_mail: optOut.do_not_mail,
     })
     .eq('id', recipient.id);
   return NextResponse.json({

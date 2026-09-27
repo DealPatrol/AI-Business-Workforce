@@ -41,8 +41,7 @@ set
   imagery_status = 'needs_photo',
   imagery_error = 'Legacy Google imagery removed. Capture or upload a rights-cleared photo.'
 where
-  current_image_source = 'street_view'
-  or imagery_provider in ('google_street_view', 'google_satellite');
+  current_image_source = 'street_view';
 
 update public.campaigns
 set
@@ -122,6 +121,26 @@ create policy "owners manage campaign opt outs"
 
 revoke all on public.campaign_opt_outs from anon;
 grant select, insert, update, delete on public.campaign_opt_outs to authenticated;
+
+create or replace function private.preserve_opt_out_flags()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+begin
+  new.do_not_photograph = old.do_not_photograph or new.do_not_photograph;
+  new.do_not_mail = old.do_not_mail or new.do_not_mail;
+  return new;
+end;
+$$;
+
+revoke all on function private.preserve_opt_out_flags() from public, anon, authenticated;
+
+drop trigger if exists preserve_opt_out_flags_before_update on public.campaign_opt_outs;
+create trigger preserve_opt_out_flags_before_update
+before update of do_not_photograph, do_not_mail
+on public.campaign_opt_outs
+for each row execute function private.preserve_opt_out_flags();
 
 create table if not exists public.recipient_photo_licenses (
   id uuid primary key default gen_random_uuid(),

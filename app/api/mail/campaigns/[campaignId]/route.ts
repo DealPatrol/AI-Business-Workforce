@@ -163,6 +163,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
       address_zip: recipient.postal_code,
       address_country: 'US' as const,
     };
+    let reserved = false;
 
     try {
       // Re-check suppression and idempotency immediately before the vendor call.
@@ -195,6 +196,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
       if (!reservation) {
         throw new Error('Mail creation is already reserved or completed for this recipient.');
       }
+      reserved = true;
 
       const verification = await verifyUsAddress(config.mode, to);
       const verificationStatus = isDeliverable(verification)
@@ -242,10 +244,14 @@ export async function POST(request: NextRequest, context: RouteContext) {
       results.push({ recipientId: recipient.id, ok: true, jobId: postcard.id });
     } catch (sendError) {
       const message = sendError instanceof Error ? sendError.message : 'Mail creation failed.';
-      await auth.ctx.admin
-        .from('campaign_recipients')
-        .update({ mail_status: 'failed', mail_error: message })
-        .eq('id', recipient.id);
+      if (reserved) {
+        await auth.ctx.admin
+          .from('campaign_recipients')
+          .update({ mail_status: 'failed', mail_error: message })
+          .eq('id', recipient.id)
+          .eq('mail_status', 'creating')
+          .is('mail_vendor_job_id', null);
+      }
       results.push({ recipientId: recipient.id, ok: false, error: message });
     }
   }
