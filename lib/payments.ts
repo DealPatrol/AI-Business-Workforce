@@ -1,6 +1,6 @@
-export const FOUNDING_PAYMENT_LINK = 'https://buy.stripe.com/eVq8wR3Zk9kx9Gh0PO0Ba01';
+export const FOUNDING_CTA = 'Start for $99/month';
 
-/** Checkout Session route. Falls back to FOUNDING_PAYMENT_LINK only when STRIPE_SECRET_KEY is unset. */
+/** Subscription Checkout Session for the $99/month YardProof founding plan. */
 export function foundingCheckoutHref(cancelPath?: string) {
   if (!cancelPath || cancelPath === '/') return '/api/checkout?offer=founding';
   return `/api/checkout?offer=founding&cancel=${encodeURIComponent(cancelPath)}`;

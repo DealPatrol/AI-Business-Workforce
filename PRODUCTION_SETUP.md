@@ -24,13 +24,12 @@ Add `RESEND_API_KEY` as a server-only Vercel environment variable. The public fo
 
 Add `STRIPE_SECRET_KEY` as a server-only Vercel environment variable. `/api/checkout` creates Stripe Checkout Sessions in subscription mode:
 
-- Founding (`/api/checkout?offer=founding`): $299 one-time setup line item plus a $99/month subscription. Product name from code is `YardProof Founding Plan`. Every Pay $299 button uses this route. If `STRIPE_SECRET_KEY` is missing, the route falls back to the legacy one-time Payment Link (`https://buy.stripe.com/eVq8wR3Zk9kx9Gh0PO0Ba01`). Do not point that link's completion URL at Ava onboarding; Visual Canvasser still uses it only as that fallback.
-- Ava (`/api/checkout?plan=starter|growth|pro`): $59 / $129 / $249 per month and no setup fee. Product names from code are `Ava Receptionist – Starter`, `Ava Receptionist – Growth`, and `Ava Receptionist – Pro`. Successful sessions return to `/onboarding/ava`. There is no separate Ava Payment Link fallback; without the secret key these buttons return to `/ava#pricing`.
+- Founding (`/api/checkout?offer=founding`): $99/month subscription only. Product name from code is `YardProof Founding Plan`. Buttons use this route. If `STRIPE_SECRET_KEY` is missing, the route does not charge anything and sends the visitor to `/founding?checkout=error`.
+- Ava (`/api/checkout?plan=starter|growth|pro`): $59 / $129 / $249 per month. Product names from code are `Ava Receptionist – Starter`, `Ava Receptionist – Growth`, and `Ava Receptionist – Pro`. Successful sessions return to `/onboarding/ava`. Without the secret key these buttons return to `/ava?checkout=unavailable#pricing`.
 
-Optional price IDs override inline `price_data`. Set both founding IDs or neither. If you use price IDs, set the Dashboard product names to the same strings above — code only sets the name when it sends `price_data`.
+Optional price IDs override inline `price_data`. If you use a price ID, set the Dashboard product name to the same string above — code only sets the name when it sends `price_data`.
 
 - `STRIPE_FOUNDING_MONTHLY_PRICE_ID`
-- `STRIPE_FOUNDING_SETUP_PRICE_ID`
 - `STRIPE_AVA_STARTER_PRICE_ID`
 - `STRIPE_AVA_GROWTH_PRICE_ID`
 - `STRIPE_AVA_PRO_PRICE_ID`
@@ -73,7 +72,7 @@ Still requires credentials/integration work before claiming live:
 - persisting public audit leads into Supabase
 - generated property imagery end-to-end in production (MVP routes exist; needs Maps/OpenAI keys, Storage bucket, migration apply, and human review before mail)
 - live supplier inventory/pricing
-- Stripe checkout/subscriptions in production until `STRIPE_SECRET_KEY` is set (sessions are implemented; the legacy Payment Link is only a founding fallback)
+- Stripe checkout/subscriptions in production until `STRIPE_SECRET_KEY` is set (sessions are implemented; there is no one-time Payment Link fallback)
 - Ava phone-number purchase/assignment, line forwarding, and customer-facing SMS (internal Twilio lead-alert SMS is available when Twilio env is set)
 - Ava calendar writes and automated launch approval
 - postcard printing and fulfillment

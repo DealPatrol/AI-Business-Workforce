@@ -4,7 +4,7 @@ import { FormEvent, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Check, Loader2, Mail, Sparkles } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
-import { foundingCheckoutHref } from '@/lib/payments';
+import { FOUNDING_CTA, foundingCheckoutHref } from '@/lib/payments';
 
 const CONTACT_EMAIL = 'colecollins763@gmail.com';
 
@@ -101,10 +101,7 @@ export default function FoundingRequestForm({ checkoutState: checkoutFromServer 
           </p>
           <div>
             <p>
-              <Check /> $299 founding launch
-            </p>
-            <p>
-              <Check /> Then $99/month for the initial managed campaign
+              <Check /> $99/month for the managed campaign
             </p>
             <p>
               <Check /> Materials, margin, and campaign setup tailored to your business
@@ -112,8 +109,8 @@ export default function FoundingRequestForm({ checkoutState: checkoutFromServer 
           </div>
           {checkoutState === 'success' && (
             <p className="notice">
-              Stripe checkout finished for the YardProof Founding Plan: the $299 setup fee and the
-              $99/month subscription. Send your business details below so Cole can start the campaign.
+              Stripe checkout finished for the YardProof Founding Plan at $99/month. Send your
+              business details below so Cole can start the campaign.
             </p>
           )}
           {checkoutState === 'error' && (
@@ -122,7 +119,7 @@ export default function FoundingRequestForm({ checkoutState: checkoutFromServer 
             </p>
           )}
           <a className="payment-link" href={foundingCheckoutHref('/founding')}>
-            Pay $299 — Reserve Founding Setup
+            {FOUNDING_CTA}
           </a>
           <small>
             Want to confirm fit first?{' '}

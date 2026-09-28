@@ -37,7 +37,7 @@
 | `TWILIO_ACCOUNT_SID` / `TWILIO_AUTH_TOKEN` / `TWILIO_FROM_NUMBER` / `AVA_LEAD_SMS_TO` | Optional Twilio SMS alert on qualify (no-op if unset) |
 | `NEXT_PUBLIC_AVA_SETUP_BOOKING_URL` | Optional setup-call link after qualify |
 | `AVA_QUALIFY_PREFILL_SECRET` | Optional dedicated HMAC secret for prefill tokens |
-| `STRIPE_SECRET_KEY` | Ava plan checkout ($59 / $129 / $249, $0 setup). Product name: `Ava Receptionist – Starter` / `Growth` / `Pro`. |
+| `STRIPE_SECRET_KEY` | Ava plan checkout ($59 / $129 / $249 per month). Product name: `Ava Receptionist – Starter` / `Growth` / `Pro`. |
 | `STRIPE_AVA_STARTER_PRICE_ID` / `STRIPE_AVA_GROWTH_PRICE_ID` / `STRIPE_AVA_PRO_PRICE_ID` | Optional Dashboard prices. Omit to use inline `price_data`. |
 
 ## ElevenLabs setup
@@ -53,7 +53,7 @@ Apply migration `supabase/migrations/005_ava_sales_qualifications.sql` (table `a
 
 ## Honesty
 
-- Pricing stays Starter **$59** / Growth **$129** / Pro **$249**, **$0** setup.
+- Pricing stays Starter **$59** / Growth **$129** / Pro **$249** per month.
 - Do not invent dial-in numbers or retarget Visual Canvasser payment links for Ava.
 - Calendar writes are not live in this slice — optional booking URL only.
 - **Starter feature-list gap:** the `/ava` pricing card still lists “Appointment booking” on Starter for marketing continuity, but live calendar booking APIs are **not** wired in this qualify-only slice. Treat that line as aspirational / setup-call scope until calendar integration ships — do not imply Google Calendar / customer SMS / GHL is already connected.

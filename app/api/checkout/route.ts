@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { FOUNDING_PAYMENT_LINK } from '@/lib/payments';
 import {
   type AvaPlanKey,
   buildAvaCheckoutParams,
@@ -37,30 +36,16 @@ function avaPriceId(planKey: AvaPlanKey) {
   }
 }
 
-function foundingPriceIds() {
-  const monthlyPriceId = readStripePriceId(process.env.STRIPE_FOUNDING_MONTHLY_PRICE_ID);
-  const setupPriceId = readStripePriceId(process.env.STRIPE_FOUNDING_SETUP_PRICE_ID);
-  if (Boolean(monthlyPriceId) !== Boolean(setupPriceId)) {
-    console.error(
-      'Set both STRIPE_FOUNDING_MONTHLY_PRICE_ID and STRIPE_FOUNDING_SETUP_PRICE_ID, or neither. Using inline prices.',
-    );
-    return { monthlyPriceId: '', setupPriceId: '' };
-  }
-  return { monthlyPriceId, setupPriceId };
-}
-
 async function foundingCheckoutUrl(req: NextRequest) {
   const secret = process.env.STRIPE_SECRET_KEY;
   if (!secret) {
-    console.error('STRIPE_SECRET_KEY is not set; founding checkout is using the legacy Payment Link.');
-    return { url: FOUNDING_PAYMENT_LINK, fallback: true as const };
+    console.error('STRIPE_SECRET_KEY is not set; founding checkout cannot start.');
+    return { error: 'Founding checkout is not connected yet.' };
   }
 
-  const { monthlyPriceId, setupPriceId } = foundingPriceIds();
   const params = buildFoundingCheckoutParams({
     origin: req.nextUrl.origin,
-    monthlyPriceId,
-    setupPriceId,
+    monthlyPriceId: readStripePriceId(process.env.STRIPE_FOUNDING_MONTHLY_PRICE_ID),
   });
   const cancelPath = safeCancelPath(req.nextUrl.searchParams.get('cancel'));
   params.set('cancel_url', `${req.nextUrl.origin}${cancelPath}`);
@@ -70,7 +55,7 @@ async function foundingCheckoutUrl(req: NextRequest) {
     console.error('Stripe founding checkout error', result.error);
     return { error: result.error };
   }
-  return { url: result.url, fallback: false as const };
+  return { url: result.url };
 }
 
 async function avaCheckoutUrl(
@@ -112,7 +97,7 @@ export async function GET(req: NextRequest) {
     try {
       const result = await foundingCheckoutUrl(req);
       if ('error' in result) return NextResponse.redirect(new URL('/founding?checkout=error', req.url));
-      return NextResponse.redirect(result.url, result.fallback ? 302 : 303);
+      return NextResponse.redirect(result.url, 303);
     } catch (error) {
       console.error(error);
       return NextResponse.redirect(new URL('/founding?checkout=error', req.url));
