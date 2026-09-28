@@ -20,11 +20,24 @@ Add `OPENAI_API_KEY` to Vercel as a server-only environment variable. `OPENAI_AU
 
 Add `RESEND_API_KEY` as a server-only Vercel environment variable. The public founding form and Ava paid-pilot onboarding form send requests directly to `colecollins763@gmail.com`. If email delivery is unavailable, each form explicitly opens the visitor's email client with their answers preserved instead of displaying a false success state.
 
-## Ava checkout handoff
+## Checkout
 
-Add `STRIPE_SECRET_KEY` as a server-only Vercel environment variable before enabling the existing `/api/checkout` flow. Successful Checkout Sessions return customers to `/onboarding/ava` with the Checkout session ID and selected plan included in Cole's setup notification. The compatibility route `/onboarding` also sends customers to the Ava setup form.
+Add `STRIPE_SECRET_KEY` as a server-only Vercel environment variable. `/api/checkout` creates Stripe Checkout Sessions in subscription mode:
 
-The hard-coded founding Payment Link is shared by Ava and Visual Canvasser offers, so its Dashboard completion URL must not be changed globally to the Ava form. Create an Ava-specific Payment Link or use `/api/checkout` before wiring Ava payment buttons directly to this onboarding path.
+- Founding (`/api/checkout?offer=founding`): $299 one-time setup line item plus a $99/month subscription. Product name from code is `YardProof Founding Plan`. Every Pay $299 button uses this route. If `STRIPE_SECRET_KEY` is missing, the route falls back to the legacy one-time Payment Link (`https://buy.stripe.com/eVq8wR3Zk9kx9Gh0PO0Ba01`). Do not point that link's completion URL at Ava onboarding; Visual Canvasser still uses it only as that fallback.
+- Ava (`/api/checkout?plan=starter|growth|pro`): $59 / $129 / $249 per month and no setup fee. Product names from code are `Ava Receptionist – Starter`, `Ava Receptionist – Growth`, and `Ava Receptionist – Pro`. Successful sessions return to `/onboarding/ava`. There is no separate Ava Payment Link fallback; without the secret key these buttons return to `/ava#pricing`.
+
+Optional price IDs override inline `price_data`. Set both founding IDs or neither. If you use price IDs, set the Dashboard product names to the same strings above — code only sets the name when it sends `price_data`.
+
+- `STRIPE_FOUNDING_MONTHLY_PRICE_ID`
+- `STRIPE_FOUNDING_SETUP_PRICE_ID`
+- `STRIPE_AVA_STARTER_PRICE_ID`
+- `STRIPE_AVA_GROWTH_PRICE_ID`
+- `STRIPE_AVA_PRO_PRICE_ID`
+
+No Stripe webhook route is implemented. Ava payment checks and `/api/ava/billing/reconcile` already expect a subscription-mode Checkout Session. Founding sessions are tagged `metadata.product=yardproof` and are skipped by Ava usage billing. The Checkout business name "Billing" is the Stripe account public business name (Dashboard → Settings → Business details / Branding), not a value in this repo.
+
+The compatibility route `/onboarding` also sends customers to the Ava setup form.
 
 ## Ava agent provisioning
 
@@ -60,7 +73,7 @@ Still requires credentials/integration work before claiming live:
 - persisting public audit leads into Supabase
 - generated property imagery end-to-end in production (MVP routes exist; needs Maps/OpenAI keys, Storage bucket, migration apply, and human review before mail)
 - live supplier inventory/pricing
-- Stripe checkout/subscriptions
+- Stripe checkout/subscriptions in production until `STRIPE_SECRET_KEY` is set (sessions are implemented; the legacy Payment Link is only a founding fallback)
 - Ava phone-number purchase/assignment, line forwarding, and customer-facing SMS (internal Twilio lead-alert SMS is available when Twilio env is set)
 - Ava calendar writes and automated launch approval
 - postcard printing and fulfillment

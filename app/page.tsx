@@ -10,7 +10,7 @@ import {
   ShieldCheck,
   Sparkles,
 } from 'lucide-react';
-import { FOUNDING_PAYMENT_LINK } from '@/lib/payments';
+import { foundingCheckoutHref } from '@/lib/payments';
 import styles from './home.module.css';
 
 const CONTACT_EMAIL = 'colecollins763@gmail.com';
@@ -66,7 +66,7 @@ export default function HomePage() {
           <a href="#package">What you get</a>
           <Link href="/visual-canvasser">See examples</Link>
         </div>
-        <a className={styles.navCta} href={FOUNDING_PAYMENT_LINK}>
+        <a className={styles.navCta} href={foundingCheckoutHref('/#package')}>
           Pay $299
         </a>
       </nav>
@@ -85,7 +85,7 @@ export default function HomePage() {
             <span>then $99/month</span>
           </div>
           <div className={styles.heroActions}>
-            <a className={styles.primaryButton} href={FOUNDING_PAYMENT_LINK}>
+            <a className={styles.primaryButton} href={foundingCheckoutHref('/#package')}>
               Pay $299 — Start My Campaign <ArrowRight size={18} />
             </a>
             <a className={styles.secondaryButton} href="#how">
@@ -230,7 +230,7 @@ export default function HomePage() {
               </li>
             ))}
           </ul>
-          <a className={styles.primaryButton} href={FOUNDING_PAYMENT_LINK}>
+          <a className={styles.primaryButton} href={foundingCheckoutHref('/#package')}>
             Pay $299 — Reserve My Campaign <ArrowRight size={18} />
           </a>
           <small className={styles.disclosure}>
@@ -274,7 +274,7 @@ export default function HomePage() {
         <p>
           Cole · <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
         </p>
-        <a className={styles.footerPay} href={FOUNDING_PAYMENT_LINK}>
+        <a className={styles.footerPay} href={foundingCheckoutHref('/#package')}>
           Pay $299
         </a>
       </footer>
