@@ -1,8 +1,10 @@
 import '../receptionist-demo/receptionist.css';
 import '../receptionist-demo/sales-upgrade.css';
 import '../receptionist-demo/text-preview.css';
+import './ava-extras.css';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { AvaViewContent } from '@/components/analytics/AvaViewContent';
 
 export const metadata: Metadata = {
   title: 'AI Receptionist for Home Service Businesses | Ava by Workforce AI',
@@ -12,8 +14,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Ava AI Receptionist for Home Service Businesses',
     description:
-      '24/7 AI receptionist for home-service companies. Qualify leads, capture job details, book appointments and stop losing missed calls.',
+      'Ava answers home-service calls 24/7 in a friendly Southern voice, collects the caller’s name, number, and what they need, and texts the lead to you.',
     url: '/ava',
+    siteName: 'Ava by Workforce AI',
     type: 'website',
   },
   twitter: {
@@ -42,6 +45,7 @@ export default function AvaLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+      <AvaViewContent />
       {children}
     </>
   );

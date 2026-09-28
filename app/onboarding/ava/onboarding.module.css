@@ -256,6 +256,27 @@
   width: 14px;
 }
 
+.privacy a,
+.footer a {
+  color: #205c39;
+  font-weight: 800;
+}
+
+.nav a:last-child {
+  font-weight: 800;
+  color: #205c39;
+}
+
+.footer {
+  width: min(1080px, calc(100% - 40px));
+  margin: 36px auto 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  color: #657168;
+  font-size: 13px;
+}
+
 .notice {
   background: #edf5ef;
   color: #315f43;
