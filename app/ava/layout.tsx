@@ -7,7 +7,7 @@ import type { ReactNode } from 'react';
 export const metadata: Metadata = {
   title: 'AI Receptionist for Home Service Businesses | Ava by Workforce AI',
   description:
-    'Ava answers calls 24/7 for landscapers, HVAC companies, roofers, plumbers, fencing companies and other home-service businesses. Plans start at $59/month with $0 setup.',
+    'Ava answers calls 24/7 for landscapers, HVAC companies, roofers, plumbers, fencing companies and other home-service businesses. Plans start at $59/month.',
   alternates: { canonical: '/ava' },
   openGraph: {
     title: 'Ava AI Receptionist for Home Service Businesses',
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Ava AI Receptionist for Home Service Businesses',
-    description: 'Plans from $59/month. $0 setup. Built for contractors and home-service businesses.',
+    description: 'Plans from $59/month. Built for contractors and home-service businesses.',
   },
 };
 

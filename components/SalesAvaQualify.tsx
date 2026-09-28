@@ -314,7 +314,7 @@ function SalesAvaQualifyContent() {
               </p>
             </div>
             <a className="talk-btn" href={checkoutHref}>
-              Start {planLabel} — $0 setup <ArrowRight size={16} />
+              Start {planLabel} <ArrowRight size={16} />
             </a>
             <Link className="text-next" href={onboardingHref}>
               Continue to onboarding (prefilled) <ArrowRight size={14} />
@@ -376,7 +376,7 @@ function SalesAvaQualifyContent() {
                 ? conversation.isSpeaking
                   ? 'Ava is speaking…'
                   : 'Ava is listening…'
-                : 'Plans: Starter $59 · Growth $129 · Pro $249 · $0 setup'}
+                : 'Plans: Starter $59 · Growth $129 · Pro $249'}
             </small>
             {error && <p className="call-error">{error}</p>}
           </>

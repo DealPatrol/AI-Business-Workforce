@@ -48,7 +48,7 @@ Hi [First Name] — saw you checked out the demo. The "Call Ava" button lets you
 ## Follow-up (they called Ava, no reply)
 
 ```
-Hi [First Name] — glad you tried the demo. If you want to run a 14-day pilot on your actual number: $250 setup, $299/month after, 300 minutes included, cancel anytime. Happy to walk through it on a 10-minute call.
+Hi [First Name] — glad you tried the demo. If you want to run a 14-day pilot on your actual number: Ava plans start at $59/month, 300 minutes included, cancel anytime. Happy to walk through it on a 10-minute call.
 ```
 
 ---

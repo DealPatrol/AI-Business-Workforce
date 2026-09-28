@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft, CheckCircle2, ExternalLink, Mail, QrCode } from 'lucide-react';
-import { FOUNDING_PAYMENT_LINK } from '@/lib/payments';
+import { FOUNDING_CTA, foundingCheckoutHref } from '@/lib/payments';
 
 type PostcardProps = {
   searchParams: Promise<{
@@ -45,7 +45,7 @@ export default async function Postcard({ searchParams }: PostcardProps) {
           <ArrowLeft /> Back to design
         </Link>
         <b>YardProof Personalized Outreach</b>
-        <a href={FOUNDING_PAYMENT_LINK}>Start a campaign</a>
+        <a href={foundingCheckoutHref('/property-demo/postcard')}>{FOUNDING_CTA}</a>
       </header>
       <div className="postwrap">
         <div className="studiohead">
@@ -155,8 +155,8 @@ export default async function Postcard({ searchParams }: PostcardProps) {
             <Link className="button full" href={`/property/${zip}`}>
               Preview Homeowner Page <ExternalLink />
             </Link>
-            <a className="button full" href={FOUNDING_PAYMENT_LINK}>
-              Pay $299 — Start This Campaign
+            <a className="button full" href={foundingCheckoutHref('/property-demo/postcard')}>
+              {FOUNDING_CTA}
             </a>
             <Link href={`/property-demo?zip=${zip}`}>Keep exploring the demo</Link>
           </aside>
