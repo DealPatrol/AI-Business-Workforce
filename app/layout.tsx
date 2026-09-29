@@ -2,6 +2,8 @@ import './globals.css';
 import './campaign-demo.css';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { AdTracking } from '@/components/analytics/AdTracking';
+import { CaptureAttribution } from '@/components/analytics/CaptureAttribution';
 
 const title = 'YardProof | Managed Postcard Campaigns for Home Services';
 const description =
@@ -31,5 +33,13 @@ export const viewport = {
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
-  return <html lang="en" className="bg-background"><body>{children}</body></html>;
+  return (
+    <html lang="en" className="bg-background">
+      <body>
+        <CaptureAttribution />
+        <AdTracking />
+        {children}
+      </body>
+    </html>
+  );
 }

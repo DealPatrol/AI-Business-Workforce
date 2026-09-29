@@ -461,9 +461,7 @@ function PersonalizedDemoContent({ prospect }: { prospect: Prospect }) {
           <span className="demo-kicker">14-DAY PAID PILOT</span>
           <h2>Try Ava for {prospect.companyName}</h2>
           <p>
-            ${AVA_PILOT_OFFER.setupFee} setup · ${AVA_PILOT_OFFER.monthlyFee}/month after{' '}
-            {AVA_PILOT_OFFER.pilotDays} days · {AVA_PILOT_OFFER.usageLimit} ·{' '}
-            {AVA_PILOT_OFFER.cancelPolicy}
+            Plans from $59/month · {AVA_PILOT_OFFER.usageLimit} · {AVA_PILOT_OFFER.cancelPolicy}
           </p>
           <ul className="pilot-checks">
             <li>

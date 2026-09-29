@@ -10,7 +10,7 @@ import {
   ShieldCheck,
   Sparkles,
 } from 'lucide-react';
-import { FOUNDING_PAYMENT_LINK, getDemo10Payment } from '@/lib/payments';
+import { FOUNDING_CTA, foundingCheckoutHref, getDemo10Payment } from '@/lib/payments';
 import styles from './home.module.css';
 
 const CONTACT_EMAIL = 'colecollins763@gmail.com';
@@ -26,7 +26,7 @@ const steps = [
     icon: Palette,
     number: '02',
     title: 'Build the concepts',
-    detail: 'We prepare clearly labeled yard project ideas for you to review.',
+    detail: 'Cole prepares clearly labeled yard project ideas by hand for you to review.',
   },
   {
     icon: Mail,
@@ -47,7 +47,7 @@ const packageItems = [
   'Up to 25 property concepts*',
   'Personalized postcard creative',
   'Unique QR project-page structure',
-  'Lead and response tracking setup',
+  'QR scan tracking and estimate-request inbox',
   'Campaign review before launch',
 ];
 
@@ -69,8 +69,8 @@ export default function HomePage() {
           <a href="#package">What you get</a>
           <Link href="/visual-canvasser">See examples</Link>
         </div>
-        <a className={styles.navCta} href={demo10.href}>
-          {demo10.configured ? 'Try 10 cards — $49' : 'Request 10-card demo'}
+        <a className={styles.navCta} href={foundingCheckoutHref('/#package')}>
+          {FOUNDING_CTA}
         </a>
       </nav>
 
@@ -79,23 +79,23 @@ export default function HomePage() {
           <span className={styles.eyebrow}>PROPERTY-BASED POSTCARD CAMPAIGNS FOR HOME SERVICES</span>
           <h1>Show homeowners the yard project you could build for them.</h1>
           <p className={styles.lede}>
-            Start with 10 before-and-after postcard concepts. Review every card, request changes,
-            and approve the set before Cole coordinates any printing or mailing.
+            A managed, done-with-you service: we help you choose the streets, prepare yard
+            concepts, and send a postcard with a QR page where the homeowner can request an
+            estimate.
           </p>
           <div className={styles.priceLine}>
-            <strong>$49 Demo Blast 10</strong>
-            <span>10-card review-first demo</span>
+            <strong>$99/month</strong>
           </div>
           <div className={styles.heroActions}>
-            <a className={styles.primaryButton} href={demo10.href}>
-              {demo10.label} <ArrowRight size={18} />
+            <a className={styles.primaryButton} href={foundingCheckoutHref('/#package')}>
+              {FOUNDING_CTA} <ArrowRight size={18} />
             </a>
-            <a className={styles.secondaryButton} href="#package">
-              See the $299 + $99/mo founding offer
+            <a className={styles.secondaryButton} href="#demo10">
+              See the $49 Demo Blast 10
             </a>
           </div>
           <p className={styles.heroNote}>
-            No mail is auto-sent. Cole/ops confirms print, postage, and fulfillment after approval.
+            The postcard campaign is our core service. You approve the concept, audience and costs before anything mails.
           </p>
         </div>
 
@@ -232,18 +232,22 @@ export default function HomePage() {
           <div className={styles.honesty}>
             <b>Honest launch boundary</b>
             <p>
-              First campaigns are managed and may be human-assisted. We will not claim live
-              address-to-render or automatic mailing until those connections are tested.
+              <b>Live today:</b> unique QR pages, scan tracking, and your estimate-request inbox.
+              <br />
+              <b>Done by hand with you (not automated yet):</b> choosing properties, property
+              photos, &ldquo;after&rdquo; concept images, and printing/mailing. We will not claim
+              automatic property lookup, AI renders, lead finding, or automatic mailing until
+              those connections are tested.
             </p>
           </div>
         </div>
         <div className={styles.offerCard}>
           <small>FOUNDING LAUNCH</small>
           <div className={styles.offerPrice}>
-            <strong>$299</strong>
-            <span>setup</span>
+            <strong>$99</strong>
+            <span>/month</span>
           </div>
-          <p>then $99/month for the initial managed campaign</p>
+          <p>$99/month for the initial managed campaign</p>
           <ul>
             {packageItems.map((item) => (
               <li key={item}>
@@ -251,8 +255,8 @@ export default function HomePage() {
               </li>
             ))}
           </ul>
-          <a className={styles.primaryButton} href={FOUNDING_PAYMENT_LINK}>
-            Pay $299 — Reserve My Campaign <ArrowRight size={18} />
+          <a className={styles.primaryButton} href={foundingCheckoutHref('/#package')}>
+            {FOUNDING_CTA} <ArrowRight size={18} />
           </a>
           <small className={styles.disclosure}>
             *Final mailed quantity and printing, postage, or property-data costs are confirmed
@@ -295,8 +299,8 @@ export default function HomePage() {
         <p>
           Cole · <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
         </p>
-        <a className={styles.footerPay} href={FOUNDING_PAYMENT_LINK}>
-          Pay $299
+        <a className={styles.footerPay} href={foundingCheckoutHref('/#package')}>
+          {FOUNDING_CTA}
         </a>
       </footer>
     </main>

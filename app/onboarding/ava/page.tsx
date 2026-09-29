@@ -5,6 +5,9 @@ import Link from 'next/link';
 import { ArrowLeft, CheckCircle2, Loader2, Mail, Sparkles } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import styles from './onboarding.module.css';
+import { readAttribution, readBrowserIds } from '@/lib/analytics/attribution';
+import { splitContact } from '@/lib/analytics/contact';
+import { trackOnboardingSubmitted } from '@/lib/analytics/events';
 
 const CONTACT_EMAIL = 'colecollins763@gmail.com';
 
@@ -42,7 +45,11 @@ const emptyPrefill: Prefill = {
   plan: '',
 };
 
-function buildEmailFallback(form: HTMLFormElement, result: OnboardingResponse) {
+function buildEmailFallback(
+  form: HTMLFormElement,
+  result: OnboardingResponse,
+  attribution: Record<string, string>,
+) {
   const data = new FormData(form);
   const subject = encodeURIComponent(
     `Ava paid pilot setup — ${String(data.get('businessName') || 'New business')}`,
@@ -57,7 +64,7 @@ function buildEmailFallback(form: HTMLFormElement, result: OnboardingResponse) {
       '',
       `Staff contact: ${data.get('staffName') || ''}`,
       `Phone or email: ${data.get('staffContact') || ''}`,
-      `Calendar preference: ${data.get('calendarPreference') || ''}`,
+      `Lead handoff: ${data.get('leadHandoff') || ''}`,
       '',
       `Urgent-call rules:\n${data.get('urgentCallRules') || ''}`,
       '',
@@ -67,6 +74,7 @@ function buildEmailFallback(form: HTMLFormElement, result: OnboardingResponse) {
       `Onboarding record: ${result.onboardingId || 'Not persisted'}`,
       `Agent status: ${result.provisioning?.status || 'pending_manual'}`,
       `Next provisioning step: ${result.provisioning?.message || 'Cole must complete setup.'}`,
+      ...Object.entries(attribution).map(([key, value]) => `${key}: ${value}`),
     ].join('\n'),
   );
 
@@ -146,19 +154,39 @@ function AvaOnboardingForm() {
     setEmailFallback('');
 
     const form = event.currentTarget;
-    const payload = Object.fromEntries(new FormData(form).entries());
+    const formPayload = Object.fromEntries(new FormData(form).entries()) as Record<
+      string,
+      FormDataEntryValue
+    >;
+    const payload: Record<string, FormDataEntryValue | string> = {
+      ...formPayload,
+      calendarPreference: String(
+        formPayload.leadHandoff || 'Text the lead to the owner for a callback.',
+      ),
+    };
+    const eventId = crypto.randomUUID();
+    const attribution = readAttribution();
+    const { fbp, fbc } = readBrowserIds();
+    const contact = splitContact(String(payload.staffContact || ''));
 
     try {
       const response = await fetch('/api/ava/onboarding', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          ...payload,
+          eventId,
+          fbp,
+          fbc,
+          pageUrl: window.location.href,
+          attribution,
+        }),
       });
       const result = await response.json();
 
       if (!response.ok) {
         if (result.emailFallback) {
-          const fallback = buildEmailFallback(form, result);
+          const fallback = buildEmailFallback(form, result, attribution);
           setEmailFallback(fallback);
           setStatus('email');
           window.location.href = fallback;
@@ -167,6 +195,11 @@ function AvaOnboardingForm() {
         throw new Error(result.error || 'Could not send your setup details.');
       }
 
+      trackOnboardingSubmitted({
+        eventId: typeof result.eventId === 'string' ? result.eventId : eventId,
+        email: contact.email,
+        phone: contact.phone,
+      });
       setStatus('sent');
     } catch (submissionError) {
       setError(
@@ -185,17 +218,31 @@ function AvaOnboardingForm() {
           <ArrowLeft /> Ava
         </Link>
         <b>
-          <Sparkles /> YardProof
+          <Sparkles /> Ava
         </b>
+        <Link href="/privacy">Privacy</Link>
       </nav>
 
       <div className={styles.content}>
         <header className={styles.intro}>
-          <span className={styles.eyebrow}>AVA PAID PILOT ONBOARDING</span>
-          <h1>You&apos;re in. Let&apos;s get Ava ready.</h1>
+          <span className={styles.eyebrow}>
+            {searchParams.get('session_id') ? 'AVA SETUP' : 'FREE 7-DAY TRIAL'}
+          </span>
+          <h1>
+            {searchParams.get('session_id')
+              ? "You're in. Let's get Ava ready."
+              : 'Start your free 7-day trial.'}
+          </h1>
           <p>
-            Payment is complete. Fill this out, Cole sets up Ava, you test one live call together,
-            then Ava launches.
+            {searchParams.get('session_id')
+              ? 'Payment is complete. Fill this out, Cole sets up Ava, you test one live call together, then Ava launches.'
+              : `Tell us how your calls work. Cole sets Ava up. Free 7-day trial, then ${
+                  (prefill.plan || searchParams.get('plan') || '').toLowerCase() === 'growth'
+                    ? '$129/mo'
+                    : (prefill.plan || searchParams.get('plan') || '').toLowerCase() === 'pro'
+                      ? '$249/mo'
+                      : '$59/mo'
+                }. $0 setup.`}
           </p>
           {prefillNote ? <p className={styles.notice}>{prefillNote}</p> : null}
         </header>
@@ -299,17 +346,8 @@ function AvaOnboardingForm() {
                   name="callHandlingRules"
                   required
                   rows={4}
-                  placeholder="Ask what they need, collect their address, book estimates, and transfer warranty calls."
+                  placeholder="Ask what they need, collect their name and number, and text you the lead."
                   defaultValue={prefill.callHandlingRules}
-                />
-              </label>
-              <label>
-                How should bookings work?
-                <input
-                  name="calendarPreference"
-                  required
-                  placeholder="Google Calendar, booking link, or phone callback"
-                  defaultValue={prefill.calendarPreference}
                 />
               </label>
               <label>
@@ -349,6 +387,11 @@ function AvaOnboardingForm() {
               </div>
             </fieldset>
 
+            <input
+              type="hidden"
+              name="leadHandoff"
+              defaultValue={prefill.calendarPreference || 'Text the lead to the owner for a callback.'}
+            />
             <input type="hidden" name="sessionId" value={searchParams.get('session_id') || ''} />
             <input type="hidden" name="plan" value={prefill.plan || searchParams.get('plan') || ''} />
             <input type="hidden" name="qualificationId" value={qualificationId} />
@@ -378,11 +421,15 @@ function AvaOnboardingForm() {
               </p>
             )}
             <small className={styles.privacy}>
-              <Mail /> Sent directly to Cole for setup.
+              <Mail /> Sent directly to Cole for setup. <Link href="/privacy">Privacy</Link>
             </small>
           </form>
         )}
       </div>
+      <footer className={styles.footer}>
+        <span>Ava by Workforce AI · DealPatrol</span>
+        <Link href="/privacy">Privacy</Link>
+      </footer>
     </main>
   );
 }

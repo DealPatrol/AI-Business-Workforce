@@ -34,8 +34,8 @@ const SCENES = [
   {
     time: '0:55–1:05',
     title: '14-day pilot offer',
-    visual: 'Simple pricing card: $250 setup, $299/month after 14 days, 300 minutes, cancel anytime.',
-    audio: `$${AVA_PILOT_OFFER.setupFee} setup. $${AVA_PILOT_OFFER.monthlyFee} a month after a ${AVA_PILOT_OFFER.pilotDays}-day pilot. ${AVA_PILOT_OFFER.usageLimit}. Cancel anytime.`,
+    visual: 'Simple pricing card: Ava plans from $59/month, 300 minutes, cancel anytime.',
+    audio: `Ava plans start at $59 a month. ${AVA_PILOT_OFFER.usageLimit}. Cancel anytime.`,
     note: 'Keep pricing on screen for 3 seconds max. Outcome first, price second.',
   },
   {
