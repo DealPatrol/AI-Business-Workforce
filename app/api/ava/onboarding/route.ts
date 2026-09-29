@@ -5,6 +5,15 @@ import {
 } from '@/lib/ava/onboarding-store';
 import { verifyAvaCheckoutSession } from '@/lib/ava/checkout';
 import { AvaProvisioningResult } from '@/lib/ava/provisioning';
+import { splitContact } from '@/lib/analytics/contact';
+import { sendMetaServerEvent } from '@/lib/analytics/meta-capi';
+import {
+  clientIp,
+  readCookieId,
+  readEventId,
+  readRequestAttribution,
+  safePageUrl,
+} from '@/lib/analytics/request-context';
 
 const NOTIFICATION_EMAIL = 'colecollins763@gmail.com';
 const MAX_FIELD_LENGTH = 4_000;
@@ -163,7 +172,7 @@ export async function POST(request: NextRequest) {
       ['Call-handling rules', fields.callHandlingRules],
       ['Staff contact', fields.staffName],
       ['Staff phone or email', staffContact],
-      ['Calendar preference', fields.calendarPreference],
+      ['Lead handoff notes', fields.calendarPreference],
       ['Urgent-call rules', fields.urgentCallRules],
       ['Stripe Checkout session', fields.sessionId || 'Not provided'],
       ['Selected plan', fields.plan || 'Not provided'],
@@ -174,6 +183,9 @@ export async function POST(request: NextRequest) {
       ['Next provisioning step', provisioning.message],
       ['Persistence warning', persistenceWarning || 'None'],
       ['Submitted at', submittedAt],
+      ...Object.entries(readRequestAttribution(body.attribution)).map(
+        ([key, value]) => [key, value] as [string, string],
+      ),
     ];
     const htmlRows = rows
       .map(
@@ -202,11 +214,11 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'YardProof <onboarding@resend.dev>',
+        from: 'Ava <onboarding@resend.dev>',
         to: [NOTIFICATION_EMAIL],
         ...(replyTo ? { reply_to: replyTo } : {}),
         subject: `Ava paid pilot setup — ${fields.businessName}`,
-        html: `<div style="font-family:Arial,sans-serif;max-width:760px;margin:auto;color:#17211b"><h1>New Ava paid pilot onboarding</h1><p>Use these answers to configure the customer&apos;s Ava workflow and schedule one live test call before launch.</p><table style="border-collapse:collapse;width:100%">${htmlRows}</table></div>`,
+        html: `<div style="font-family:Arial,sans-serif;max-width:760px;margin:auto;color:#17211b"><h1>New Ava setup</h1><p>Use these answers to configure the customer&apos;s Ava workflow and run one live test call before launch.</p><table style="border-collapse:collapse;width:100%">${htmlRows}</table></div>`,
       }),
     });
     const result = await response.json().catch(() => ({}));
@@ -225,9 +237,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const eventId = readEventId(body.eventId);
+    const contact = splitContact(staffContact);
+    await sendMetaServerEvent({
+      eventName: 'Lead',
+      eventId,
+      eventSourceUrl: safePageUrl(body.pageUrl, request.nextUrl.origin),
+      email: contact.email || fields.staffEmail,
+      phone: contact.phone,
+      clientIp: clientIp(request.headers.get('x-forwarded-for')),
+      userAgent: request.headers.get('user-agent') || '',
+      fbp: readCookieId(body.fbp),
+      fbc: readCookieId(body.fbc),
+    });
+
     return NextResponse.json({
       sent: true,
       onboardingId,
+      eventId,
       provisioning,
       ...(persistenceWarning ? { warning: persistenceWarning } : {}),
     });

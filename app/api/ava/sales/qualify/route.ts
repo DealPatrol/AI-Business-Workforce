@@ -42,7 +42,7 @@ async function notifySalesQualificationEmail(row: AvaSalesQualificationRow) {
       <tr><td><b>Call handling</b></td><td style="white-space:pre-wrap">${escapeHtml(row.call_handling_rules)}</td></tr>
       <tr><td><b>Urgent rules</b></td><td style="white-space:pre-wrap">${escapeHtml(row.urgent_call_rules)}</td></tr>
       <tr><td><b>Staff</b></td><td>${escapeHtml(row.staff_name)} · ${escapeHtml(row.staff_contact)}</td></tr>
-      <tr><td><b>Calendar</b></td><td>${escapeHtml(row.calendar_preference)}</td></tr>
+      <tr><td><b>Lead handoff</b></td><td>${escapeHtml(row.calendar_preference)}</td></tr>
       <tr><td><b>Plan interest</b></td><td>${escapeHtml(row.plan_interest)}</td></tr>
       <tr><td><b>Website</b></td><td>${escapeHtml(row.company_website)}</td></tr>
     </table>
@@ -55,7 +55,7 @@ async function notifySalesQualificationEmail(row: AvaSalesQualificationRow) {
     method: 'POST',
     headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      from: 'YardProof <onboarding@resend.dev>',
+      from: 'Ava <onboarding@resend.dev>',
       to: [to],
       subject,
       html,

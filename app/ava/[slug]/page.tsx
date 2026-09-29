@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, Check, PhoneCall, ShieldCheck, Sparkles } from 'lucide-react';
 import { notFound } from 'next/navigation';
+import { AvaFooter } from '@/components/ava/AvaFooter';
 
 const base = 'https://ai-business-workforce.vercel.app';
 
@@ -26,14 +27,14 @@ const pages: Record<string, PageData> = {
     description: 'Ava answers HVAC calls 24/7, captures no-cool and no-heat requests, qualifies replacement and repair leads, and sends your team a clean callback summary.',
     eyebrow: 'AI RECEPTIONIST FOR HVAC COMPANIES',
     audience: 'HVAC contractors and heating & cooling teams',
-    pain: 'Peak-season calls arrive while technicians are driving, on ladders, in crawlspaces, or already on another job. A missed no-cool or no-heat call can become your competitor’s booked service call.',
+    pain: 'Peak-season calls arrive while technicians are driving, on ladders, in crawlspaces, or already on another job. A missed no-cool or no-heat call can become the next company’s service call.',
     hero: 'Answer more HVAC calls without adding another person to the office.',
     calls: ['No cooling / no heat calls','Repair vs replacement inquiries','Tune-up and maintenance requests','After-hours emergency requests','Estimate and financing questions'],
-    qualification: ['Customer name and callback number','Service address','System problem and urgency','Repair, maintenance, or replacement intent','Preferred appointment timing'],
+    qualification: ['Customer name and callback number','Service address','System problem and urgency','Repair, maintenance, or replacement intent','Preferred callback timing'],
     useCases: ['After-hours overflow','Summer and winter call surges','One-to-five truck shops','Owner-operators who cannot stop mid-job'],
     faq: [
       ['Can Ava handle emergency HVAC calls?','Ava can identify urgent language, collect the right details, and follow the escalation rules you define. Life-safety situations should always follow your human emergency policy.'],
-      ['Can Ava book HVAC estimates?','Yes. Ava can collect the information needed for an estimate request and can be configured around your booking or callback workflow.'],
+      ['Can Ava take HVAC estimate requests?','Ava collects the caller’s name, number, and what they need for the estimate, then texts that lead to you so you can call them back.'],
       ['Does Ava replace ServiceTitan or Housecall Pro?','No. Ava is designed to handle the call layer. It can sit beside your current field-service workflow rather than forcing a full software replacement.']
     ]
   },
@@ -44,7 +45,7 @@ const pages: Record<string, PageData> = {
     eyebrow: 'AI RECEPTIONIST FOR PLUMBERS',
     audience: 'plumbing companies and owner-operators',
     pain: 'Plumbing leads are often urgent. If a homeowner with a burst pipe, clogged drain, or failed water heater reaches voicemail, they usually keep calling until someone answers.',
-    hero: 'Turn more plumbing calls into qualified jobs instead of voicemails.',
+    hero: 'Turn more plumbing calls into qualified leads instead of voicemails.',
     calls: ['Leaks and active water issues','Clogged drains and sewer calls','Water heater repair or replacement','Fixture installation','Emergency and after-hours requests'],
     qualification: ['Caller contact information','Property address','What is leaking or blocked','Whether water can be shut off','Urgency and preferred timing'],
     useCases: ['Emergency overflow','Night and weekend calls','Small plumbing shops','Dispatch intake before a human callback'],
@@ -96,9 +97,9 @@ const pages: Record<string, PageData> = {
     audience: 'home-service contractors and field teams',
     pain: 'Contractors rarely work next to a desk phone. Every missed call creates a chance for the customer to hire the next company that answers.',
     hero: 'A contractor answering service built around jobs, estimates, and callbacks.',
-    calls: ['New estimate requests','Existing customer questions','Urgent service requests','After-hours calls','Scheduling and callback requests'],
+    calls: ['New estimate requests','Existing customer questions','Urgent service requests','After-hours calls','Callback requests'],
     qualification: ['Who is calling','What service they need','Where the job is','How urgent it is','When they want service'],
-    useCases: ['HVAC','Plumbing','Roofing','Landscaping','Fencing and exterior services','Other appointment-based home services'],
+    useCases: ['HVAC','Plumbing','Roofing','Landscaping','Fencing and exterior services','Other home-service businesses'],
     faq: [
       ['How is Ava different from voicemail?','Voicemail waits for the caller to leave whatever they remember. Ava actively asks the qualification questions your team needs.'],
       ['How is Ava different from a call center?','Ava uses a consistent business-specific call flow and can cost far less than staffing or outsourced human coverage.'],
@@ -114,7 +115,7 @@ const pages: Record<string, PageData> = {
     pain: 'The highest-intent homeowner is often the one calling right now. If the call rolls to voicemail, the next action is frequently another Google result and another contractor.',
     hero: 'Turn missed calls into ready-to-follow-up leads.',
     calls: ['Calls while crews are working','After-hours inquiries','Busy-line overflow','Weekend calls','Estimate requests during peak season'],
-    qualification: ['Contact information','Service requested','Property location','Urgency','Best callback or booking time'],
+    qualification: ['Contact information','Service requested','Property location','Urgency','Best time for a callback'],
     useCases: ['Overflow coverage','After-hours coverage','Small teams without office staff','Seasonal demand spikes'],
     faq: [
       ['Do I have to let Ava answer every call?','No. You can use Ava only when you do not answer, after hours, or during busy periods.'],
@@ -156,23 +157,24 @@ export default async function IndustryPage({ params }: { params: Promise<{ slug:
     provider: { '@type': 'Organization', name: 'Workforce AI', url: base },
     audience: { '@type': 'BusinessAudience', audienceType: page.audience },
     url,
-    offers: { '@type': 'Offer', price: '59', priceCurrency: 'USD', description: 'Ava Starter begins at $59 per month.' },
+    offers: { '@type': 'Offer', price: '59', priceCurrency: 'USD', description: 'Free 7-day trial, then Ava Starter at $59 per month with no setup fee.' },
   };
 
   return <main className="ava-sales">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-    <nav className="ava-nav"><Link className="ava-brand" href="/ava"><span><Sparkles size={17}/></span> Ava</Link><div><Link href="/ava#pricing">Pricing</Link><Link href="/receptionist-demo#live-demo">Live Demo</Link></div><Link className="nav-cta" href="/receptionist-demo#live-demo">Try Ava Live</Link></nav>
+    <nav className="ava-nav"><Link className="ava-brand" href="/ava"><span><Sparkles size={17}/></span> Ava</Link><div><Link href="/ava#pricing">Pricing</Link><Link href="/ava#talk-to-ava">Talk to Ava</Link></div><Link className="nav-cta" href="/onboarding/ava">Start free trial</Link></nav>
 
-    <section className="sales-hero"><div className="hero-copy"><span className="kicker">{page.eyebrow}</span><h1>{page.hero}</h1><p>{page.pain}</p><div className="hero-actions"><Link className="sales-btn" href="/receptionist-demo#live-demo"><PhoneCall size={18}/> Try Ava live</Link><Link className="sales-btn secondary" href="/ava#pricing">See plans from $59 <ArrowRight size={18}/></Link></div><div className="trust-row"><span><Check/> Starts at $59/month</span><span><Check/> 24/7 coverage</span><span><Check/> Built for service calls</span></div></div><div className="hero-proof"><div className="proof-phone"><div className="phone-top"><span className="pulse"/><b>Incoming customer call</b><small>After hours</small></div><div className="call-path"><span><PhoneCall/> Ava answers</span><span><ShieldCheck/> Qualifies the job</span><span><Check/> Your team gets the details</span></div></div></div></section>
+    <section className="sales-hero"><div className="hero-copy"><span className="kicker">{page.eyebrow}</span><h1>{page.hero}</h1><p>{page.pain}</p><p className="trial-line">Free 7-day trial, then $59/mo. $0 setup.</p><div className="hero-actions"><Link className="sales-btn" href="/ava#talk-to-ava"><PhoneCall size={18}/> Talk to Ava</Link><Link className="sales-btn secondary" href="/onboarding/ava">Start free 7-day trial <ArrowRight size={18}/></Link></div><div className="trust-row"><span><Check/> Free 7-day trial</span><span><Check/> $0 setup fee</span><span><Check/> 24/7 answering</span></div></div><div className="hero-proof"><div className="proof-phone"><div className="phone-top"><span className="pulse"/><b>Incoming customer call</b><small>After hours</small></div><div className="call-path"><span><PhoneCall/> Ava answers</span><span><ShieldCheck/> Takes the caller’s details</span><span><Check/> Texts you the lead</span></div></div></div></section>
 
     <section className="how-section"><div className="section-title"><span className="kicker">CALLS AVA CAN HANDLE</span><h2>Built around the calls that matter to {page.audience}.</h2></div><div className="steps-grid">{page.calls.slice(0,3).map((item,i)=><article key={item}><span>0{i+1}</span><PhoneCall/><h3>{item}</h3><p>Ava follows the call flow and qualification rules you approve.</p></article>)}</div></section>
 
     <section className="comparison"><div className="section-title"><span className="kicker">WHAT AVA CAPTURES</span><h2>Give your team more than a voicemail.</h2><p>Each call can be turned into a structured lead with the details needed for a useful callback.</p></div><div className="comparison-grid"><article><small>QUALIFICATION</small><h3>Job details your team can use</h3><ul>{page.qualification.map(item=><li key={item}><Check/>{item}</li>)}</ul></article><article><small>BEST FIT</small><h3>Where this works especially well</h3><ul>{page.useCases.map(item=><li key={item}><Check/>{item}</li>)}</ul></article></div></section>
 
-    <section className="pricing"><div className="section-title"><span className="kicker">SIMPLE ENTRY PRICE</span><h2>Start at $59/month.</h2><p>Starter includes 250 voice minutes per month. Growth and Pro add more capacity and deeper call-flow options.</p></div><div className="hero-actions" style={{justifyContent:'center'}}><Link className="sales-btn" href="/ava#pricing">Compare Ava plans <ArrowRight size={18}/></Link><Link className="sales-btn secondary" href="/receptionist-demo#live-demo">Try the live demo</Link></div></section>
+    <section className="pricing"><div className="section-title"><span className="kicker">SIMPLE ENTRY PRICE</span><h2>Free 7-day trial, then $59/mo. $0 setup.</h2><p>Starter includes 250 voice minutes per month. Growth is $129 and Pro is $249. Every plan has a $0 setup fee.</p></div><div className="hero-actions" style={{justifyContent:'center'}}><Link className="sales-btn" href="/onboarding/ava">Start free 7-day trial <ArrowRight size={18}/></Link><Link className="sales-btn secondary" href="/ava#talk-to-ava">Talk to Ava</Link></div></section>
 
     <section className="bad-options"><div className="section-title"><span className="kicker">COMMON QUESTIONS</span><h2>What businesses ask before trying Ava.</h2></div><div className="options-grid">{page.faq.map(([q,a],i)=><article key={q}><span>0{i+1}</span><h3>{q}</h3><p>{a}</p></article>)}</div></section>
 
-    <section className="final-cta"><span className="kicker">TRY IT BEFORE YOU BUY IT</span><h2>Hear how Ava would handle your next call.</h2><p>Use the live demo, then choose a plan only if the call experience makes sense for your business.</p><div><Link className="sales-btn light" href="/receptionist-demo#live-demo"><PhoneCall/> Try Ava Live</Link><Link className="sales-btn outline" href="/ava#pricing">View Pricing</Link></div></section>
+    <section className="final-cta"><span className="kicker">FREE 7-DAY TRIAL</span><h2>Hear how Ava would handle your next call.</h2><p>Talk to Ava in the browser, then start a free 7-day trial. $0 setup. After the trial, plans are $59, $129, or $249 a month.</p><div><Link className="sales-btn light" href="/onboarding/ava">Start free 7-day trial</Link><Link className="sales-btn outline" href="/ava#talk-to-ava"><PhoneCall/> Talk to Ava</Link></div></section>
+    <AvaFooter />
   </main>;
 }

@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { ConversationProvider, useConversation } from '@elevenlabs/react';
 import {
   ArrowRight,
-  Calendar,
   Check,
   Loader2,
   Mic2,
@@ -15,6 +14,8 @@ import {
   Sparkles,
   UserRound,
 } from 'lucide-react';
+import { trackDemoStarted } from '@/lib/analytics/events';
+import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
 
 type CallState = 'idle' | 'preparing' | 'ready' | 'connecting' | 'connected' | 'ending' | 'processing';
 
@@ -26,7 +27,7 @@ type QualificationResult = {
   summary?: string;
 };
 
-const BOOKING_URL = process.env.NEXT_PUBLIC_AVA_SETUP_BOOKING_URL || '';
+const SETUP_CALL_URL = process.env.NEXT_PUBLIC_AVA_SETUP_BOOKING_URL || '';
 
 function valueOf(item: unknown) {
   if (!item || typeof item !== 'object') return null;
@@ -54,11 +55,19 @@ function SalesAvaQualifyContent() {
   const conversationId = useRef<string | null>(null);
   const signedUrl = useRef<string | null>(null);
   const preparedConversationId = useRef<string | null>(null);
+  const demoTracked = useRef(false);
+
+  function markDemoConnected() {
+    if (demoTracked.current) return;
+    demoTracked.current = true;
+    trackDemoStarted();
+  }
 
   const conversation = useConversation({
     onConnect: () => {
       setError('');
       setCallState('connected');
+      markDemoConnected();
     },
     onDisconnect: () => {
       setCallState((s) => (s === 'processing' ? s : 'ready'));
@@ -99,6 +108,7 @@ function SalesAvaQualifyContent() {
     if (!['ready', 'idle'].includes(callState)) return;
     setQualification(null);
     setError('');
+    demoTracked.current = false;
     setCallState('connecting');
     try {
       if (!signedUrl.current) {
@@ -111,6 +121,7 @@ function SalesAvaQualifyContent() {
       signedUrl.current = null;
       preparedConversationId.current = null;
       setCallState('connected');
+      markDemoConnected();
     } catch (e: unknown) {
       const err = e as { name?: string; message?: string };
       setError(err?.message || 'Unable to start Sales Ava.');
@@ -169,7 +180,7 @@ function SalesAvaQualifyContent() {
         calendarPreference:
           q.calendarPreference ||
           pickCollected(collected, 'calendarPreference', 'calendar_preference') ||
-          'Lead notify only until calendar is connected',
+          'Text the lead to the owner for a callback.',
         companyWebsite:
           q.companyWebsite ||
           pickCollected(collected, 'companyWebsite', 'company_website') ||
@@ -263,7 +274,7 @@ function SalesAvaQualifyContent() {
             <Check /> Call handling + urgent rules
           </li>
           <li>
-            <Check /> Staff contact and calendar preference
+            <Check /> Where to text the lead
           </li>
           <li>
             <Check /> Prefill onboarding after the call
@@ -313,15 +324,15 @@ function SalesAvaQualifyContent() {
                 {qualification.summary ? ` — ${qualification.summary.slice(0, 180)}` : ''}.
               </p>
             </div>
-            <a className="talk-btn" href={checkoutHref}>
-              Start {planLabel} <ArrowRight size={16} />
-            </a>
-            <Link className="text-next" href={onboardingHref}>
-              Continue to onboarding (prefilled) <ArrowRight size={14} />
+            <Link className="talk-btn" href={onboardingHref}>
+              Start free 7-day trial <ArrowRight size={16} />
             </Link>
-            {BOOKING_URL ? (
-              <a className="text-fallback" href={BOOKING_URL} target="_blank" rel="noreferrer">
-                <Calendar size={14} /> Book a setup call with Cole
+            <TrackedCheckoutLink className="text-next" href={checkoutHref} plan={planKey}>
+              Checkout {planLabel} <ArrowRight size={14} />
+            </TrackedCheckoutLink>
+            {SETUP_CALL_URL ? (
+              <a className="text-fallback" href={SETUP_CALL_URL} target="_blank" rel="noreferrer">
+                Request a setup call with Cole
               </a>
             ) : null}
             <button className="text-switch" type="button" onClick={() => setQualification(null)}>
@@ -376,7 +387,7 @@ function SalesAvaQualifyContent() {
                 ? conversation.isSpeaking
                   ? 'Ava is speaking…'
                   : 'Ava is listening…'
-                : 'Plans: Starter $59 · Growth $129 · Pro $249'}
+                : 'Free 7-day trial, then Starter $59/mo. Growth $129. Pro $249. $0 setup.'}
             </small>
             {error && <p className="call-error">{error}</p>}
           </>
