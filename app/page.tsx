@@ -10,7 +10,7 @@ import {
   ShieldCheck,
   Sparkles,
 } from 'lucide-react';
-import { FOUNDING_PAYMENT_LINK } from '@/lib/payments';
+import { FOUNDING_CTA, foundingCheckoutHref } from '@/lib/payments';
 import styles from './home.module.css';
 
 const CONTACT_EMAIL = 'colecollins763@gmail.com';
@@ -66,8 +66,8 @@ export default function HomePage() {
           <a href="#package">What you get</a>
           <Link href="/visual-canvasser">See examples</Link>
         </div>
-        <a className={styles.navCta} href={FOUNDING_PAYMENT_LINK}>
-          Pay $299
+        <a className={styles.navCta} href={foundingCheckoutHref('/#package')}>
+          {FOUNDING_CTA}
         </a>
       </nav>
 
@@ -81,12 +81,11 @@ export default function HomePage() {
             estimate.
           </p>
           <div className={styles.priceLine}>
-            <strong>$299 setup</strong>
-            <span>then $99/month</span>
+            <strong>$99/month</strong>
           </div>
           <div className={styles.heroActions}>
-            <a className={styles.primaryButton} href={FOUNDING_PAYMENT_LINK}>
-              Pay $299 — Start My Campaign <ArrowRight size={18} />
+            <a className={styles.primaryButton} href={foundingCheckoutHref('/#package')}>
+              {FOUNDING_CTA} <ArrowRight size={18} />
             </a>
             <a className={styles.secondaryButton} href="#how">
               See how it works
@@ -219,10 +218,10 @@ export default function HomePage() {
         <div className={styles.offerCard}>
           <small>FOUNDING LAUNCH</small>
           <div className={styles.offerPrice}>
-            <strong>$299</strong>
-            <span>setup</span>
+            <strong>$99</strong>
+            <span>/month</span>
           </div>
-          <p>then $99/month for the initial managed campaign</p>
+          <p>$99/month for the initial managed campaign</p>
           <ul>
             {packageItems.map((item) => (
               <li key={item}>
@@ -230,8 +229,8 @@ export default function HomePage() {
               </li>
             ))}
           </ul>
-          <a className={styles.primaryButton} href={FOUNDING_PAYMENT_LINK}>
-            Pay $299 — Reserve My Campaign <ArrowRight size={18} />
+          <a className={styles.primaryButton} href={foundingCheckoutHref('/#package')}>
+            {FOUNDING_CTA} <ArrowRight size={18} />
           </a>
           <small className={styles.disclosure}>
             *Final mailed quantity and printing, postage, or property-data costs are confirmed
@@ -274,8 +273,8 @@ export default function HomePage() {
         <p>
           Cole · <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
         </p>
-        <a className={styles.footerPay} href={FOUNDING_PAYMENT_LINK}>
-          Pay $299
+        <a className={styles.footerPay} href={foundingCheckoutHref('/#package')}>
+          {FOUNDING_CTA}
         </a>
       </footer>
     </main>

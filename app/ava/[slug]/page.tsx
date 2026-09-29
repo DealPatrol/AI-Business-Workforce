@@ -120,7 +120,7 @@ const pages: Record<string, PageData> = {
     faq: [
       ['Do I have to let Ava answer every call?','No. You can use Ava only when you do not answer, after hours, or during busy periods.'],
       ['What happens after Ava answers?','Ava follows your intake rules, captures the job details, and sends a structured lead summary to your team.'],
-      ['Is there a setup fee?','Current Ava plans start at $59 per month with no setup fee.']
+      ['What does Ava cost?','Current Ava plans start at $59 per month.']
     ]
   }
 };

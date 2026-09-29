@@ -66,7 +66,14 @@ const industryPages = [
 
 const SETUP_CALL_URL = process.env.NEXT_PUBLIC_AVA_SETUP_BOOKING_URL || '';
 
-export default function AvaPage() {
+type AvaPageProps = {
+  searchParams: Promise<{ checkout?: string | string[] }>;
+};
+
+export default async function AvaPage({ searchParams }: AvaPageProps) {
+  const checkoutParam = (await searchParams).checkout;
+  const checkoutUnavailable =
+    (Array.isArray(checkoutParam) ? checkoutParam[0] : checkoutParam) === 'unavailable';
   const heroNext = SETUP_CALL_URL
     ? 'She’ll ask the setup questions. After that you can request a short setup call with Cole, or start the free trial.'
     : 'She’ll ask the setup questions, then you can start the free trial with answers prefilled.';
@@ -199,6 +206,12 @@ export default function AvaPage() {
           <span className="kicker">AVA PRICING · $0 SETUP</span>
           <h2>Choose the call coverage that fits your business.</h2>
           <p>Free 7-day trial, then $59/mo. $0 setup. Growth is $129 and Pro is $249, with the same $0 setup.</p>
+          {checkoutUnavailable && (
+            <p className="usage-note">
+              Checkout could not open a Stripe payment page. Email colecollins763@gmail.com and Cole can start the plan
+              with you.
+            </p>
+          )}
         </div>
         <p className="trial-note">Free 7-day trial, then $59/mo. $0 setup.</p>
         <div className="plan-grid">
