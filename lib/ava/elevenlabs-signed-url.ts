@@ -1,8 +1,24 @@
+import { AvaVoiceKey, DEFAULT_AVA_VOICE } from '@/lib/ava/voice-options';
+
 const ELEVENLABS_API = 'https://api.elevenlabs.io/v1';
 
 export type AvaElevenLabsMode = 'demo' | 'sales';
 
-export async function getAvaSignedUrl(mode: AvaElevenLabsMode = 'demo') {
+function getDemoAgentId(voice: AvaVoiceKey) {
+  const fallbackAgentId = process.env.ELEVENLABS_AGENT_ID;
+  const voiceAgentIds: Record<AvaVoiceKey, string | undefined> = {
+    'southern-man': process.env.ELEVENLABS_AGENT_ID_SOUTHERN_MAN,
+    'southern-woman': process.env.ELEVENLABS_AGENT_ID_SOUTHERN_WOMAN,
+    'american-woman': process.env.ELEVENLABS_AGENT_ID_AMERICAN_WOMAN,
+  };
+
+  return voiceAgentIds[voice] || fallbackAgentId;
+}
+
+export async function getAvaSignedUrl(
+  mode: AvaElevenLabsMode = 'demo',
+  voice: AvaVoiceKey = DEFAULT_AVA_VOICE,
+) {
   const apiKey = process.env.ELEVENLABS_API_KEY;
   if (!apiKey) {
     return {
@@ -14,7 +30,7 @@ export async function getAvaSignedUrl(mode: AvaElevenLabsMode = 'demo') {
   const isSales = mode === 'sales';
   const agentId = isSales
     ? process.env.ELEVENLABS_SALES_AGENT_ID
-    : process.env.ELEVENLABS_AGENT_ID;
+    : getDemoAgentId(voice);
 
   if (!agentId) {
     return {
@@ -47,6 +63,7 @@ export async function getAvaSignedUrl(mode: AvaElevenLabsMode = 'demo') {
       body: {
         configured: true,
         mode: isSales ? 'sales' : 'demo',
+        ...(isSales ? {} : { voice }),
         signedUrl: data.signed_url,
         conversationId: data.conversation_id || null,
       },

@@ -4,6 +4,13 @@ import { FormEvent, Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, CheckCircle2, Loader2, Mail, Sparkles } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
+import { AVA_VOICE_OPTIONS } from '@/lib/ava/voice-options';
+import {
+  AVA_PLANS,
+  avaPlanPriceLine,
+  isAvaPlanKey,
+  type AvaPlanKey,
+} from '@/lib/ava/pricing';
 import styles from './onboarding.module.css';
 import { readAttribution, readBrowserIds } from '@/lib/analytics/attribution';
 import { splitContact } from '@/lib/analytics/contact';
@@ -67,6 +74,7 @@ function buildEmailFallback(
       `Lead handoff: ${data.get('leadHandoff') || ''}`,
       '',
       `Urgent-call rules:\n${data.get('urgentCallRules') || ''}`,
+      `Preferred Ava voice: ${data.get('preferredVoice') || 'No preference'}`,
       '',
       `Stripe Checkout session: ${data.get('sessionId') || ''}`,
       `Selected plan: ${data.get('plan') || ''}`,
@@ -211,6 +219,9 @@ function AvaOnboardingForm() {
     }
   }
 
+  const selectedPlanRaw = (prefill.plan || searchParams.get('plan') || 'starter').toLowerCase();
+  const selectedPlan: AvaPlanKey = isAvaPlanKey(selectedPlanRaw) ? selectedPlanRaw : 'starter';
+
   return (
     <main className={styles.page}>
       <nav className={styles.nav}>
@@ -236,13 +247,7 @@ function AvaOnboardingForm() {
           <p>
             {searchParams.get('session_id')
               ? 'Payment is complete. Fill this out, Cole sets up Ava, you test one live call together, then Ava launches.'
-              : `Tell us how your calls work. Cole sets Ava up. Free 7-day trial, then ${
-                  (prefill.plan || searchParams.get('plan') || '').toLowerCase() === 'growth'
-                    ? '$129/mo'
-                    : (prefill.plan || searchParams.get('plan') || '').toLowerCase() === 'pro'
-                      ? '$249/mo'
-                      : '$59/mo'
-                }. $0 setup.`}
+              : `Tell us how your calls work. Cole sets Ava up. Free 7-day trial, then ${avaPlanPriceLine(selectedPlan)}. $0 setup.`}
           </p>
           {prefillNote ? <p className={styles.notice}>{prefillNote}</p> : null}
         </header>
@@ -387,6 +392,25 @@ function AvaOnboardingForm() {
               </div>
             </fieldset>
 
+            <fieldset className={styles.section}>
+              <legend>Ava voice (optional)</legend>
+              <label>
+                Preferred voice
+                <select name="preferredVoice" defaultValue="">
+                  <option value="">No preference — Cole can recommend one</option>
+                  {AVA_VOICE_OPTIONS.map((option) => (
+                    <option value={option.key} key={option.key}>
+                      {option.label} — {option.description}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <p className={styles.notice}>
+                Demo voices use separate ElevenLabs agents when configured. Customer provisioning still
+                duplicates the shared template agent; this preference is a setup note for Cole.
+              </p>
+            </fieldset>
+
             <input
               type="hidden"
               name="leadHandoff"
@@ -395,6 +419,10 @@ function AvaOnboardingForm() {
             <input type="hidden" name="sessionId" value={searchParams.get('session_id') || ''} />
             <input type="hidden" name="plan" value={prefill.plan || searchParams.get('plan') || ''} />
             <input type="hidden" name="qualificationId" value={qualificationId} />
+            <p className={styles.notice}>
+              Selected plan: {AVA_PLANS[selectedPlan].label} · {AVA_PLANS[selectedPlan].monthlyLabel}
+              /mo after trial · {AVA_PLANS[selectedPlan].minutes} included minutes
+            </p>
             <label className={styles.honeypot} aria-hidden="true">
               Company website
               <input name="companyWebsite" tabIndex={-1} autoComplete="off" />

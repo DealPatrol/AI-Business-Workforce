@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 
 const title = 'Ava setup | Ava by Workforce AI';
 const description =
-  'Tell us about your business so Cole can set up Ava. She answers calls and texts you the lead. Free 7-day trial, then $59/mo. $0 setup.';
+  'Tell us about your business so Cole can set up Ava. She answers calls and texts you the lead. Free 7-day trial, then $79/mo. $0 setup.';
 
 export const metadata: Metadata = {
   title: { absolute: title },
