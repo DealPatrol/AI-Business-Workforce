@@ -2,6 +2,7 @@ import '../receptionist-demo/receptionist.css';
 import '../receptionist-demo/sales-upgrade.css';
 import '../receptionist-demo/text-preview.css';
 import './ava-extras.css';
+import './ava-redesign.css';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { AvaViewContent } from '@/components/analytics/AvaViewContent';

@@ -1,8 +1,24 @@
 import Link from 'next/link';
-import { ArrowRight, Check, Headphones, PhoneCall, ShieldCheck, Sparkles } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Check } from 'lucide-react';
+import { Fraunces, IBM_Plex_Mono } from 'next/font/google';
 import SalesAvaQualify from '@/components/SalesAvaQualify';
 import { AvaFooter } from '@/components/ava/AvaFooter';
 import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
+
+const display = Fraunces({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  style: ['normal', 'italic'],
+  variable: '--ava-display',
+  display: 'swap',
+});
+
+const mono = IBM_Plex_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--ava-mono',
+  display: 'swap',
+});
 
 const plans = [
   {
@@ -11,14 +27,8 @@ const plans = [
     price: '$59',
     minutes: '250 voice minutes / month',
     overage: '$0.25/min after included usage',
-    description: 'For smaller service businesses that want affordable 24/7 call coverage.',
-    features: [
-      'Ava AI receptionist',
-      '24/7 answering',
-      'Lead qualification + summaries',
-      'Lead texts to your phone',
-      'Business-specific greeting & FAQs',
-    ],
+    description: 'For smaller shops that want affordable 24/7 call coverage.',
+    features: ['Ava AI receptionist', '24/7 answering', 'Lead qualification + summaries', 'Lead texts to your phone', 'Business-specific greeting & FAQs'],
     featured: false,
   },
   {
@@ -27,14 +37,8 @@ const plans = [
     price: '$129',
     minutes: '650 voice minutes / month',
     overage: '$0.22/min after included usage',
-    description: 'For businesses that depend on steady inbound calls and estimates.',
-    features: [
-      'Everything in Starter',
-      'More custom call flows',
-      'Multiple service types',
-      'Advanced lead qualification',
-      'Advanced routing',
-    ],
+    description: 'For businesses that live on inbound calls and estimates.',
+    features: ['Everything in Starter', 'More custom call flows', 'Multiple service types', 'Advanced lead qualification', 'Advanced routing'],
     featured: true,
   },
   {
@@ -44,13 +48,7 @@ const plans = [
     minutes: '1,300 voice minutes / month',
     overage: '$0.20/min after included usage',
     description: 'For higher-volume teams that want a deeply customized front desk.',
-    features: [
-      'Everything in Growth',
-      'Multiple call experiences',
-      'Advanced routing logic',
-      'Priority customization',
-      'Deeper business configuration',
-    ],
+    features: ['Everything in Growth', 'Multiple call experiences', 'Advanced routing logic', 'Priority customization', 'Deeper business configuration'],
     featured: false,
   },
 ];
@@ -62,6 +60,14 @@ const industryPages = [
   ['Landscaping', '/ava/ai-receptionist-landscapers', 'Mowing, cleanup and landscape project estimate leads.'],
   ['Contractors', '/ava/ai-answering-service-contractors', 'General home-service answering and qualification.'],
   ['Missed Calls', '/ava/missed-call-answering-home-services', 'Overflow and after-hours coverage for home-service teams.'],
+];
+
+const callLog = [
+  { time: '7:42 PM', from: '(205) 555-0143', note: '“No cool — house is 88 degrees”' },
+  { time: '8:03 PM', from: '(256) 555-0117', note: '“Water heater leaking in the garage”' },
+  { time: '8:31 PM', from: '(205) 555-0192', note: '“Need an estimate on a new unit”' },
+  { time: '9:12 PM', from: '(256) 555-0164', note: '“Drain backing up into the tub”' },
+  { time: '9:47 PM', from: '(205) 555-0138', note: '“Storm took shingles off the roof”' },
 ];
 
 const SETUP_CALL_URL = process.env.NEXT_PUBLIC_AVA_SETUP_BOOKING_URL || '';
@@ -79,189 +85,219 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
     : 'She’ll ask the setup questions, then you can start the free trial with answers prefilled.';
 
   return (
-    <main className="ava-sales">
-      <nav className="ava-nav">
-        <Link className="ava-brand" href="/ava">
-          <span>
-            <Sparkles size={17} />
-          </span>{' '}
-          Workforce AI
+    <main className={`ava-redesign ${display.variable} ${mono.variable}`}>
+      <div className="paper-grain" aria-hidden="true" />
+
+      {/* ── Masthead ─────────────────────────────────────────── */}
+      <header className="masthead">
+        <Link className="wordmark" href="/ava">
+          <span className="wordmark-ava">Ava</span>
+          <span className="wordmark-sub">by Workforce AI</span>
         </Link>
-        <div>
-          <a href="#talk-to-ava">Talk to Ava</a>
-          <a href="#how">How It Works</a>
-          <a href="#industries">Industries</a>
-          <a href="#pricing">Pricing</a>
-        </div>
-        <Link className="nav-cta" href="/onboarding/ava">
+        <nav className="masthead-links">
+          <a href="#talk-to-ava">Hear her</a>
+          <a href="#how">How it works</a>
+          <a href="#pricing">Rate card</a>
+        </nav>
+        <Link className="btn btn-ink" href="/onboarding/ava">
           Start free trial
         </Link>
-      </nav>
+      </header>
 
-      <section className="sales-hero">
-        <div className="hero-copy">
-          <span className="kicker">AI RECEPTIONIST FOR HOME SERVICES</span>
+      {/* ── Hero ─────────────────────────────────────────────── */}
+      <section className="hero">
+        <div className="hero-main">
+          <p className="stamp">AI receptionist · home services</p>
           <h1>
-            Ava answers your calls 24/7 and <em>texts you the lead.</em>
+            Never miss <em>another</em> call.
           </h1>
-          <p>
-            A friendly Southern voice picks up, collects the caller’s name, number, and what they need, then texts
-            that lead to you. {heroNext}
+          <p className="lede">
+            Ava answers your business line 24/7 in a friendly Southern voice — takes the caller&apos;s
+            name, number, and what they need, then <strong>texts you the lead</strong>. {heroNext}
           </p>
-          <div className="hero-actions">
-            <a className="sales-btn" href="#talk-to-ava">
-              <PhoneCall size={18} /> Talk to Ava
+          <div className="hero-ctas">
+            <a className="btn btn-signal" href="#talk-to-ava">
+              Talk to Ava
             </a>
-            <Link className="sales-btn secondary" href="/onboarding/ava">
-              Start free 7-day trial <ArrowRight size={18} />
+            <Link className="btn btn-outline" href="/onboarding/ava">
+              Start free 7-day trial <ArrowRight size={17} />
             </Link>
           </div>
-          <p className="trial-line">Free 7-day trial, then $59/mo. $0 setup.</p>
-          <div className="trust-row">
-            <span>
-              <Check /> Free 7-day trial
-            </span>
-            <span>
-              <Check /> $0 setup fee
-            </span>
-            <span>
-              <Check /> Then $59/mo
-            </span>
-          </div>
+          <p className="hero-fine">Free 7-day trial · then $59/mo · $0 setup · cancel anytime</p>
         </div>
-        <div className="hero-proof">
-          <div className="proof-phone">
-            <div className="phone-top">
-              <span className="pulse" />
-              <b>Incoming customer call</b>
-              <small>7:42 PM</small>
-            </div>
-            <div className="call-path">
-              <span>
-                <PhoneCall /> Ava answers
-              </span>
-              <span>
-                <Headphones /> Takes the caller’s details
-              </span>
-              <span>
-                <ShieldCheck /> Texts you the lead
-              </span>
-            </div>
+
+        <aside className="call-log" aria-label="Sample of calls Ava answered tonight">
+          <div className="call-log-head">
+            <span className="live-dot" aria-hidden="true" />
+            <span>Tonight on Ava&apos;s line</span>
           </div>
+          <ol>
+            {callLog.map((call, i) => (
+              <li key={call.time} style={{ animationDelay: `${0.35 + i * 0.45}s` }}>
+                <span className="cl-time">{call.time}</span>
+                <span className="cl-from">{call.from}</span>
+                <span className="cl-note">{call.note}</span>
+                <span className="cl-done">
+                  <Check size={13} /> lead texted
+                </span>
+              </li>
+            ))}
+          </ol>
+          <p className="call-log-foot">5 after-hours calls · 0 missed · every lead on the owner&apos;s phone</p>
+        </aside>
+      </section>
+
+      {/* ── Trades marquee ───────────────────────────────────── */}
+      <div className="marquee" aria-hidden="true">
+        <div className="marquee-track">
+          {Array.from({ length: 2 }).map((_, dup) => (
+            <span key={dup}>
+              {['HVAC', 'Plumbing', 'Roofing', 'Landscaping', 'Electrical', 'Pest Control', 'Fencing', 'Concrete'].map(
+                (trade) => (
+                  <span className="marquee-item" key={`${dup}-${trade}`}>
+                    {trade} <i>✳</i>
+                  </span>
+                ),
+              )}
+            </span>
+          ))}
         </div>
+      </div>
+
+      {/* ── How it works ─────────────────────────────────────── */}
+      <section id="how" className="how">
+        <p className="section-kicker">From missed call to money</p>
+        <h2>
+          The front desk, <em>handled.</em>
+        </h2>
+        <div className="how-grid">
+          <article>
+            <span className="how-num">01</span>
+            <h3>The phone rings</h3>
+            <p>Ava picks up on the first ring — 24/7, including nights, weekends, and when you&apos;re up a ladder.</p>
+          </article>
+          <article>
+            <span className="how-num">02</span>
+            <h3>She works the call</h3>
+            <p>A friendly Southern voice collects the caller&apos;s name, number, and what they need — the way you&apos;d train her yourself.</p>
+          </article>
+          <article>
+            <span className="how-num">03</span>
+            <h3>You get the text</h3>
+            <p>Seconds later the qualified lead lands on your phone. You call back the winners, not the tire-kickers.</p>
+          </article>
+        </div>
+      </section>
+
+      {/* ── Demo ─────────────────────────────────────────────── */}
+      <section className="demo-intro">
+        <p className="section-kicker">Don&apos;t take our word for it</p>
+        <h2>
+          Pick up the <em>phone.</em>
+        </h2>
+        <p className="demo-sub">
+          Talk to Ava right now — she&apos;ll qualify you the way she qualifies your customers. No signup, no
+          credit card. If your mic is blocked, you can watch her handle a real call instead.
+        </p>
       </section>
 
       <SalesAvaQualify />
 
-      <section id="how" className="how-section">
-        <div className="section-title">
-          <span className="kicker">FROM MISSED CALL TO A LEAD ON YOUR PHONE</span>
-          <h2>Ava handles the front desk while you handle the work.</h2>
-        </div>
-        <div className="steps-grid">
-          <article>
-            <span>01</span>
-            <PhoneCall />
-            <h3>Customer calls</h3>
-            <p>Ava answers 24/7, including after-hours and overflow.</p>
-          </article>
-          <article>
-            <span>02</span>
-            <Headphones />
-            <h3>Ava takes the details</h3>
-            <p>She collects the caller’s name, number, and what they need.</p>
-          </article>
-          <article>
-            <span>03</span>
-            <ShieldCheck />
-            <h3>You get a text</h3>
-            <p>Ava texts that lead to you so you can call them back.</p>
-          </article>
-        </div>
-      </section>
-
-      <section id="industries" className="bad-options">
-        <div className="section-title">
-          <span className="kicker">BUILT AROUND YOUR TRADE</span>
-          <h2>See how Ava handles calls in your industry.</h2>
-          <p>Each trade has different urgency and intake questions. These guides show the call flow Ava can support.</p>
-        </div>
-        <div className="options-grid">
-          {industryPages.map(([name, href, desc], i) => (
-            <article key={href}>
-              <span>0{i + 1}</span>
-              <PhoneCall />
-              <h3>{name}</h3>
-              <p>{desc}</p>
-              <Link href={href}>
-                See {name} call flow <ArrowRight />
-              </Link>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section id="pricing" className="pricing">
-        <div className="section-title">
-          <span className="kicker">AVA PRICING · $0 SETUP</span>
-          <h2>Choose the call coverage that fits your business.</h2>
-          <p>Free 7-day trial, then $59/mo. $0 setup. Growth is $129 and Pro is $249, with the same $0 setup.</p>
-          {checkoutUnavailable && (
-            <p className="usage-note">
-              Checkout could not open a Stripe payment page. Email colecollins763@gmail.com and Cole can start the plan
-              with you.
-            </p>
-          )}
-        </div>
-        <p className="trial-note">Free 7-day trial, then $59/mo. $0 setup.</p>
-        <div className="plan-grid">
+      {/* ── Pricing ──────────────────────────────────────────── */}
+      <section id="pricing" className="ratecard">
+        <p className="section-kicker">Ava pricing · $0 setup</p>
+        <h2>
+          The <em>rate card.</em>
+        </h2>
+        <p className="ratecard-sub">
+          Free 7-day trial on every plan. Included minutes reset monthly — overage is billed at the plan&apos;s
+          published per-minute rate.
+        </p>
+        {checkoutUnavailable && (
+          <p className="ratecard-alert">
+            Checkout couldn&apos;t open a Stripe payment page just now. Email colecollins763@gmail.com and Cole can
+            start the plan with you directly.
+          </p>
+        )}
+        <div className="ratecard-list">
           {plans.map((plan) => (
             <article className={plan.featured ? 'plan featured' : 'plan'} key={plan.key}>
-              {plan.featured && <span className="popular">MOST POPULAR</span>}
-              <h3>{plan.name}</h3>
-              <p>{plan.description}</p>
-              <div className="price">
-                <strong>{plan.price}</strong>
-                <span>/month</span>
+              <div className="plan-main">
+                <div className="plan-head">
+                  <h3>{plan.name}</h3>
+                  {plan.featured && <span className="stamp-sm">Most booked</span>}
+                </div>
+                <p className="plan-desc">{plan.description}</p>
+                <ul className="plan-features">
+                  {plan.features.map((feature) => (
+                    <li key={feature}>
+                      <Check size={14} /> {feature}
+                    </li>
+                  ))}
+                </ul>
+                <p className="plan-minutes">
+                  {plan.minutes} · {plan.overage}
+                </p>
               </div>
-              <small>{plan.minutes}</small>
-              <small>{plan.overage}</small>
-              <ul>
-                {plan.features.map((feature) => (
-                  <li key={feature}>
-                    <Check />
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-              <Link className="plan-btn" href={`/onboarding/ava?plan=${plan.key}`}>
-                Start free 7-day trial
-              </Link>
-              <TrackedCheckoutLink className="plan-checkout" href={`/api/checkout?plan=${plan.key}`} plan={plan.key}>
-                Checkout {plan.name}
-              </TrackedCheckoutLink>
+              <div className="plan-side">
+                <p className="plan-price">
+                  <strong>{plan.price}</strong>
+                  <span>/mo</span>
+                </p>
+                <Link className="btn btn-signal" href={`/onboarding/ava?plan=${plan.key}`}>
+                  Start free trial
+                </Link>
+                <TrackedCheckoutLink className="plan-direct" href={`/api/checkout?plan=${plan.key}`} plan={plan.key}>
+                  or check out directly <ArrowUpRight size={13} />
+                </TrackedCheckoutLink>
+              </div>
             </article>
           ))}
         </div>
-        <p className="usage-note">
-          Included minutes reset monthly. Usage above the included allowance is billed at the plan&apos;s published
-          per-minute overage rate. Special telephony or integration requirements are quoted before launch.
+        <p className="ratecard-fine">
+          Special telephony or integration requirements are quoted before launch. Cancel anytime.
         </p>
       </section>
 
-      <section className="final-cta">
-        <span className="kicker">FREE 7-DAY TRIAL</span>
-        <h2>Talk to Ava, then start the trial.</h2>
-        <p>Free 7-day trial, then $59/mo. $0 setup. She answers 24/7 and texts you the lead.</p>
-        <div>
-          <Link className="sales-btn light" href="/onboarding/ava">
-            Start free 7-day trial
+      {/* ── Industries ───────────────────────────────────────── */}
+      <section className="trades">
+        <p className="section-kicker">Built around your trade</p>
+        <h2>
+          Fluent in <em>your</em> trade.
+        </h2>
+        <p className="trades-sub">
+          Every trade has its own urgency and intake questions. These guides show the exact call flow Ava runs for yours.
+        </p>
+        <ul className="trades-list">
+          {industryPages.map(([name, href, desc]) => (
+            <li key={href}>
+              <Link href={href}>
+                <span className="trade-name">{name}</span>
+                <span className="trade-desc">{desc}</span>
+                <ArrowUpRight size={18} aria-hidden="true" />
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* ── Final CTA ────────────────────────────────────────── */}
+      <section className="finale">
+        <p className="stamp stamp-light">Free 7-day trial · $0 setup</p>
+        <h2>
+          Put Ava on the <em>phones.</em>
+        </h2>
+        <p>Talk to her above, then start the trial. Tomorrow&apos;s after-hours calls answer themselves.</p>
+        <div className="hero-ctas">
+          <Link className="btn btn-paper" href="/onboarding/ava">
+            Start free 7-day trial <ArrowRight size={17} />
           </Link>
-          <a className="sales-btn outline" href="#talk-to-ava">
-            Talk to Ava
+          <a className="btn btn-ghostlight" href="#talk-to-ava">
+            Talk to Ava first
           </a>
         </div>
       </section>
+
       <AvaFooter />
     </main>
   );
