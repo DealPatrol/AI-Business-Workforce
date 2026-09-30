@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { trackDemoStarted } from '@/lib/analytics/events';
 import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
+import { AVA_PLANS, avaPricingSummaryCopy } from '@/lib/ava/pricing';
 
 type CallState = 'idle' | 'preparing' | 'ready' | 'connecting' | 'connected' | 'ending' | 'processing';
 
@@ -236,7 +237,11 @@ function SalesAvaQualifyContent() {
       ? 'pro'
       : 'growth';
   const planLabel =
-    planKey === 'starter' ? 'Starter $59' : planKey === 'pro' ? 'Pro $249' : 'Growth $129';
+    planKey === 'starter'
+      ? `Starter ${AVA_PLANS.starter.monthlyLabel}`
+      : planKey === 'pro'
+        ? `Pro ${AVA_PLANS.pro.monthlyLabel}`
+        : `Growth ${AVA_PLANS.growth.monthlyLabel}`;
   const prefillQs = qualification
     ? [
         `qualificationId=${encodeURIComponent(qualification.id)}`,
@@ -387,7 +392,7 @@ function SalesAvaQualifyContent() {
                 ? conversation.isSpeaking
                   ? 'Ava is speaking…'
                   : 'Ava is listening…'
-                : 'Free 7-day trial, then Starter $59/mo. Growth $129. Pro $249. $0 setup.'}
+                : avaPricingSummaryCopy()}
             </small>
             {error && <p className="call-error">{error}</p>}
           </>

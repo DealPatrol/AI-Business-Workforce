@@ -1,5 +1,6 @@
+import { AVA_PLANS, isAvaPlanKey } from '@/lib/ava/pricing';
+
 const STRIPE_API = 'https://api.stripe.com/v1';
-const AVA_PLANS = new Set(['starter', 'growth', 'pro']);
 
 type StripeCheckoutSession = {
   metadata?: Record<string, string>;
@@ -60,10 +61,10 @@ export async function verifyAvaCheckoutSession(
     };
   }
 
-  const checkoutPlan = session.metadata?.plan?.toLowerCase();
+  const checkoutPlan = session.metadata?.plan?.toLowerCase() || '';
   const avaPaymentLinkId = process.env.AVA_STRIPE_PAYMENT_LINK_ID;
   const recognizedAvaCheckout =
-    Boolean(checkoutPlan && AVA_PLANS.has(checkoutPlan)) ||
+    Boolean(checkoutPlan && isAvaPlanKey(checkoutPlan) && AVA_PLANS[checkoutPlan]) ||
     Boolean(avaPaymentLinkId && session.payment_link === avaPaymentLinkId);
 
   if (!recognizedAvaCheckout) {

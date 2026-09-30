@@ -1,38 +1,16 @@
+import {
+  AVA_PLANS,
+  type AvaPlanKey,
+  isAvaPlanKey,
+} from '@/lib/ava/pricing';
+
 const STRIPE_API = 'https://api.stripe.com/v1';
 export const STRIPE_API_VERSION = '2026-07-29.dahlia';
 
 export const FOUNDING_PRODUCT_NAME = 'YardProof Founding Plan';
 export const FOUNDING_MONTHLY_CENTS = 9900;
 
-export const AVA_PLANS = {
-  starter: {
-    label: 'Starter',
-    productName: 'Ava Receptionist – Starter',
-    monthly: 5900,
-    minutes: 250,
-    overage: 25,
-  },
-  growth: {
-    label: 'Growth',
-    productName: 'Ava Receptionist – Growth',
-    monthly: 12900,
-    minutes: 650,
-    overage: 22,
-  },
-  pro: {
-    label: 'Pro',
-    productName: 'Ava Receptionist – Pro',
-    monthly: 24900,
-    minutes: 1300,
-    overage: 20,
-  },
-} as const;
-
-export type AvaPlanKey = keyof typeof AVA_PLANS;
-
-export function isAvaPlanKey(value: string): value is AvaPlanKey {
-  return value === 'starter' || value === 'growth' || value === 'pro';
-}
+export { AVA_PLANS, type AvaPlanKey, isAvaPlanKey };
 
 export function safeCancelPath(value: string | null | undefined) {
   const fallback = '/';
@@ -119,21 +97,23 @@ export function buildAvaCheckoutParams(input: AvaCheckoutInput) {
   params.set('cancel_url', `${input.origin}/ava#pricing`);
   params.set('billing_address_collection', 'auto');
   params.set('allow_promotion_codes', 'true');
+  // Stripe Checkout trial: 7 days before first charge when using price_data or Dashboard prices without their own trial.
+  params.set('subscription_data[trial_period_days]', '7');
   appendRecurringPrice(params, 0, {
     priceId: input.priceId,
-    unitAmount: plan.monthly,
+    unitAmount: plan.monthlyCents,
     productName: plan.productName,
-    description: `${plan.minutes} included voice minutes/month; overage $${(plan.overage / 100).toFixed(2)}/minute.`,
+    description: `${plan.minutes} included voice minutes/month; overage $${(plan.overageCents / 100).toFixed(2)}/minute.`,
   });
   params.set('metadata[product]', 'ava');
   params.set('metadata[plan]', input.planKey);
   params.set('metadata[included_minutes]', String(plan.minutes));
-  params.set('metadata[overage_cents]', String(plan.overage));
+  params.set('metadata[overage_cents]', String(plan.overageCents));
   if (input.qualificationId) params.set('metadata[qualification_id]', input.qualificationId);
   params.set('subscription_data[metadata][product]', 'ava');
   params.set('subscription_data[metadata][plan]', input.planKey);
   params.set('subscription_data[metadata][included_minutes]', String(plan.minutes));
-  params.set('subscription_data[metadata][overage_cents]', String(plan.overage));
+  params.set('subscription_data[metadata][overage_cents]', String(plan.overageCents));
   if (input.qualificationId) {
     params.set('subscription_data[metadata][qualification_id]', input.qualificationId);
   }

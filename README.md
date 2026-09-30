@@ -22,10 +22,10 @@ AI-powered business automation platform focused on measurable outcomes for servi
 
 One offer: Ava answers missed and after-hours calls, handles common questions, captures job details, and sends the owner a qualified lead summary.
 
-- Ava plans from **$59/month** · 300 voice minutes on the pilot · cancel anytime
+- Ava plans from **$79/month** · 300 voice minutes on Starter · cancel anytime after trial
 - YardProof founding plan: **$99/month**
 - Personalized demos: `/demo/acexperts`, `/demo/family-comfort-hvac`, `/demo/after-hours-hvacr`, `/demo/underwood-hvac`, `/demo/posey-family-plumbing`
-- Offer page: `/ava-pilot` · sales video: `/video` (`/ava-hvac-pilot.mp4`) · tracker: `/sales`
+- Offer page: `/ava` · sales video: `/video` (`/ava-hvac-pilot.mp4`) · tracker: `/sales`
 - Prospect list and outreach copy: `sales/prospect-list.md`, `sales/outreach-templates.md`
 - Supabase events: `sales_prospect_events` + `sales_prospect_status` via `/api/sales/events`. Apply migrations `003` and `004`.
 

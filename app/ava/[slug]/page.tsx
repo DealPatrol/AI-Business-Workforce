@@ -120,7 +120,7 @@ const pages: Record<string, PageData> = {
     faq: [
       ['Do I have to let Ava answer every call?','No. You can use Ava only when you do not answer, after hours, or during busy periods.'],
       ['What happens after Ava answers?','Ava follows your intake rules, captures the job details, and sends a structured lead summary to your team.'],
-      ['What does Ava cost?','Current Ava plans start at $59 per month.']
+      ['What does Ava cost?','Current Ava plans start at $79 per month.']
     ]
   }
 };
@@ -157,24 +157,24 @@ export default async function IndustryPage({ params }: { params: Promise<{ slug:
     provider: { '@type': 'Organization', name: 'Workforce AI', url: base },
     audience: { '@type': 'BusinessAudience', audienceType: page.audience },
     url,
-    offers: { '@type': 'Offer', price: '59', priceCurrency: 'USD', description: 'Free 7-day trial, then Ava Starter at $59 per month with no setup fee.' },
+    offers: { '@type': 'Offer', price: '79', priceCurrency: 'USD', description: 'Free 7-day trial, then Ava Starter at $79 per month with no setup fee.' },
   };
 
   return <main className="ava-sales">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
     <nav className="ava-nav"><Link className="ava-brand" href="/ava"><span><Sparkles size={17}/></span> Ava</Link><div><Link href="/ava#pricing">Pricing</Link><Link href="/ava#talk-to-ava">Talk to Ava</Link></div><Link className="nav-cta" href="/onboarding/ava">Start free trial</Link></nav>
 
-    <section className="sales-hero"><div className="hero-copy"><span className="kicker">{page.eyebrow}</span><h1>{page.hero}</h1><p>{page.pain}</p><p className="trial-line">Free 7-day trial, then $59/mo. $0 setup.</p><div className="hero-actions"><Link className="sales-btn" href="/ava#talk-to-ava"><PhoneCall size={18}/> Talk to Ava</Link><Link className="sales-btn secondary" href="/onboarding/ava">Start free 7-day trial <ArrowRight size={18}/></Link></div><div className="trust-row"><span><Check/> Free 7-day trial</span><span><Check/> $0 setup fee</span><span><Check/> 24/7 answering</span></div></div><div className="hero-proof"><div className="proof-phone"><div className="phone-top"><span className="pulse"/><b>Incoming customer call</b><small>After hours</small></div><div className="call-path"><span><PhoneCall/> Ava answers</span><span><ShieldCheck/> Takes the caller’s details</span><span><Check/> Texts you the lead</span></div></div></div></section>
+    <section className="sales-hero"><div className="hero-copy"><span className="kicker">{page.eyebrow}</span><h1>{page.hero}</h1><p>{page.pain}</p><p className="trial-line">Free 7-day trial, then $79/mo. $0 setup.</p><div className="hero-actions"><Link className="sales-btn" href="/ava#talk-to-ava"><PhoneCall size={18}/> Talk to Ava</Link><Link className="sales-btn secondary" href="/onboarding/ava">Start free 7-day trial <ArrowRight size={18}/></Link></div><div className="trust-row"><span><Check/> Free 7-day trial</span><span><Check/> $0 setup fee</span><span><Check/> 24/7 answering</span></div></div><div className="hero-proof"><div className="proof-phone"><div className="phone-top"><span className="pulse"/><b>Incoming customer call</b><small>After hours</small></div><div className="call-path"><span><PhoneCall/> Ava answers</span><span><ShieldCheck/> Takes the caller’s details</span><span><Check/> Texts you the lead</span></div></div></div></section>
 
     <section className="how-section"><div className="section-title"><span className="kicker">CALLS AVA CAN HANDLE</span><h2>Built around the calls that matter to {page.audience}.</h2></div><div className="steps-grid">{page.calls.slice(0,3).map((item,i)=><article key={item}><span>0{i+1}</span><PhoneCall/><h3>{item}</h3><p>Ava follows the call flow and qualification rules you approve.</p></article>)}</div></section>
 
     <section className="comparison"><div className="section-title"><span className="kicker">WHAT AVA CAPTURES</span><h2>Give your team more than a voicemail.</h2><p>Each call can be turned into a structured lead with the details needed for a useful callback.</p></div><div className="comparison-grid"><article><small>QUALIFICATION</small><h3>Job details your team can use</h3><ul>{page.qualification.map(item=><li key={item}><Check/>{item}</li>)}</ul></article><article><small>BEST FIT</small><h3>Where this works especially well</h3><ul>{page.useCases.map(item=><li key={item}><Check/>{item}</li>)}</ul></article></div></section>
 
-    <section className="pricing"><div className="section-title"><span className="kicker">SIMPLE ENTRY PRICE</span><h2>Free 7-day trial, then $59/mo. $0 setup.</h2><p>Starter includes 250 voice minutes per month. Growth is $129 and Pro is $249. Every plan has a $0 setup fee.</p></div><div className="hero-actions" style={{justifyContent:'center'}}><Link className="sales-btn" href="/onboarding/ava">Start free 7-day trial <ArrowRight size={18}/></Link><Link className="sales-btn secondary" href="/ava#talk-to-ava">Talk to Ava</Link></div></section>
+    <section className="pricing"><div className="section-title"><span className="kicker">SIMPLE ENTRY PRICE</span><h2>Free 7-day trial, then $79/mo. $0 setup.</h2><p>Starter includes 300 voice minutes per month. Growth is $149 and Pro is $299. Every plan has a $0 setup fee.</p></div><div className="hero-actions" style={{justifyContent:'center'}}><Link className="sales-btn" href="/onboarding/ava">Start free 7-day trial <ArrowRight size={18}/></Link><Link className="sales-btn secondary" href="/ava#talk-to-ava">Talk to Ava</Link></div></section>
 
     <section className="bad-options"><div className="section-title"><span className="kicker">COMMON QUESTIONS</span><h2>What businesses ask before trying Ava.</h2></div><div className="options-grid">{page.faq.map(([q,a],i)=><article key={q}><span>0{i+1}</span><h3>{q}</h3><p>{a}</p></article>)}</div></section>
 
-    <section className="final-cta"><span className="kicker">FREE 7-DAY TRIAL</span><h2>Hear how Ava would handle your next call.</h2><p>Talk to Ava in the browser, then start a free 7-day trial. $0 setup. After the trial, plans are $59, $129, or $249 a month.</p><div><Link className="sales-btn light" href="/onboarding/ava">Start free 7-day trial</Link><Link className="sales-btn outline" href="/ava#talk-to-ava"><PhoneCall/> Talk to Ava</Link></div></section>
+    <section className="final-cta"><span className="kicker">FREE 7-DAY TRIAL</span><h2>Hear how Ava would handle your next call.</h2><p>Talk to Ava in the browser, then start a free 7-day trial. $0 setup. After the trial, plans are $79, $149, or $299 a month.</p><div><Link className="sales-btn light" href="/onboarding/ava">Start free 7-day trial</Link><Link className="sales-btn outline" href="/ava#talk-to-ava"><PhoneCall/> Talk to Ava</Link></div></section>
     <AvaFooter />
   </main>;
 }

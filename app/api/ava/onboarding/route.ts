@@ -14,6 +14,7 @@ import {
   readRequestAttribution,
   safePageUrl,
 } from '@/lib/analytics/request-context';
+import { AVA_VOICE_OPTIONS, isAvaVoiceKey } from '@/lib/ava/voice-options';
 
 const NOTIFICATION_EMAIL = 'colecollins763@gmail.com';
 const MAX_FIELD_LENGTH = 4_000;
@@ -30,6 +31,7 @@ type OnboardingField =
   | 'staffEmail'
   | 'calendarPreference'
   | 'urgentCallRules'
+  | 'preferredVoice'
   | 'sessionId'
   | 'plan';
 
@@ -44,6 +46,7 @@ const fieldNames: OnboardingField[] = [
   'staffEmail',
   'calendarPreference',
   'urgentCallRules',
+  'preferredVoice',
   'sessionId',
   'plan',
 ];
@@ -107,6 +110,10 @@ export async function POST(request: NextRequest) {
 
     if (fields.staffEmail && !EMAIL_PATTERN.test(fields.staffEmail)) {
       return NextResponse.json({ error: 'Enter a valid staff email address.' }, { status: 400 });
+    }
+
+    if (fields.preferredVoice && !isAvaVoiceKey(fields.preferredVoice)) {
+      return NextResponse.json({ error: 'Choose a valid Ava voice option.' }, { status: 400 });
     }
 
     const replyTo = EMAIL_PATTERN.test(staffContact) ? staffContact : fields.staffEmail;
@@ -174,6 +181,11 @@ export async function POST(request: NextRequest) {
       ['Staff phone or email', staffContact],
       ['Lead handoff notes', fields.calendarPreference],
       ['Urgent-call rules', fields.urgentCallRules],
+      [
+        'Preferred Ava voice',
+        AVA_VOICE_OPTIONS.find((option) => option.key === fields.preferredVoice)?.label ||
+          'No preference',
+      ],
       ['Stripe Checkout session', fields.sessionId || 'Not provided'],
       ['Selected plan', fields.plan || 'Not provided'],
       ['Onboarding record', onboardingId || 'Not persisted — use the answers in this email'],

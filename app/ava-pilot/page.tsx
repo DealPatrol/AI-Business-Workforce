@@ -47,7 +47,7 @@ export default function AvaPilotPage() {
           <div className="pilot-price">
             <div>
               <small>AVA PLANS</small>
-              <strong>From $59/mo</strong>
+              <strong>From $79/mo</strong>
             </div>
           </div>
           <p className="pilot-terms">
@@ -114,7 +114,7 @@ export default function AvaPilotPage() {
           <div>
             <small>14-DAY PAID PILOT</small>
             <h3>
-              Plans from $59/month
+              Plans from $79/month
             </h3>
             <p>
               {AVA_PILOT_OFFER.usageLimit}. {AVA_PILOT_OFFER.cancelPolicy}. We configure Ava for

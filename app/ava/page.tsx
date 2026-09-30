@@ -1,66 +1,32 @@
 import Link from 'next/link';
-import { ArrowRight, Check, Headphones, PhoneCall, ShieldCheck, Sparkles } from 'lucide-react';
+import {
+  ArrowRight,
+  Check,
+  ClipboardList,
+  Headphones,
+  PhoneCall,
+  ShieldCheck,
+  Sparkles,
+} from 'lucide-react';
 import SalesAvaQualify from '@/components/SalesAvaQualify';
 import { AvaFooter } from '@/components/ava/AvaFooter';
 import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
+import {
+  AVA_ASSISTED_LAUNCH,
+  AVA_PLANS,
+  avaPricingSummaryCopy,
+  avaTrialThenPriceCopy,
+  type AvaPlanKey,
+} from '@/lib/ava/pricing';
 
-const plans = [
-  {
-    key: 'starter',
-    name: 'Starter',
-    price: '$59',
-    minutes: '250 voice minutes / month',
-    overage: '$0.25/min after included usage',
-    description: 'For smaller service businesses that want affordable 24/7 call coverage.',
-    features: [
-      'Ava AI receptionist',
-      '24/7 answering',
-      'Lead qualification + summaries',
-      'Lead texts to your phone',
-      'Business-specific greeting & FAQs',
-    ],
-    featured: false,
-  },
-  {
-    key: 'growth',
-    name: 'Growth',
-    price: '$129',
-    minutes: '650 voice minutes / month',
-    overage: '$0.22/min after included usage',
-    description: 'For businesses that depend on steady inbound calls and estimates.',
-    features: [
-      'Everything in Starter',
-      'More custom call flows',
-      'Multiple service types',
-      'Advanced lead qualification',
-      'Advanced routing',
-    ],
-    featured: true,
-  },
-  {
-    key: 'pro',
-    name: 'Pro',
-    price: '$249',
-    minutes: '1,300 voice minutes / month',
-    overage: '$0.20/min after included usage',
-    description: 'For higher-volume teams that want a deeply customized front desk.',
-    features: [
-      'Everything in Growth',
-      'Multiple call experiences',
-      'Advanced routing logic',
-      'Priority customization',
-      'Deeper business configuration',
-    ],
-    featured: false,
-  },
-];
+const plans = (Object.keys(AVA_PLANS) as AvaPlanKey[]).map((key) => AVA_PLANS[key]);
 
 const industryPages = [
   ['HVAC', '/ava/ai-receptionist-hvac-companies', 'No-cool, no-heat, maintenance, replacement and after-hours calls.'],
   ['Plumbing', '/ava/ai-receptionist-plumbers', 'Leaks, drains, water heaters and urgent plumbing intake.'],
   ['Roofing', '/ava/ai-receptionist-roofers', 'Storm, leak, inspection and replacement estimate calls.'],
+  ['Electrical', '/ava/ai-answering-service-contractors', 'Outages, panel issues, and estimate routing with safety escalation.'],
   ['Landscaping', '/ava/ai-receptionist-landscapers', 'Mowing, cleanup and landscape project estimate leads.'],
-  ['Contractors', '/ava/ai-answering-service-contractors', 'General home-service answering and qualification.'],
   ['Missed Calls', '/ava/missed-call-answering-home-services', 'Overflow and after-hours coverage for home-service teams.'],
 ];
 
@@ -85,12 +51,12 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
           <span>
             <Sparkles size={17} />
           </span>{' '}
-          Workforce AI
+          Ava
         </Link>
         <div>
           <a href="#talk-to-ava">Talk to Ava</a>
           <a href="#how">How It Works</a>
-          <a href="#industries">Industries</a>
+          <a href="#offer">What You Get</a>
           <a href="#pricing">Pricing</a>
         </div>
         <Link className="nav-cta" href="/onboarding/ava">
@@ -100,13 +66,14 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
 
       <section className="sales-hero">
         <div className="hero-copy">
-          <span className="kicker">AI RECEPTIONIST FOR HOME SERVICES</span>
+          <span className="kicker">AVA · AI FRONT DESK FOR HOME SERVICES</span>
           <h1>
-            Ava answers your calls 24/7 and <em>texts you the lead.</em>
+            Turn missed and after-hours calls into <em>qualified leads on your phone.</em>
           </h1>
           <p>
-            A friendly Southern voice picks up, collects the caller’s name, number, and what they need, then texts
-            that lead to you. {heroNext}
+            Ava answers when you cannot, captures name, number, service, and urgency, then texts you
+            the lead so you can book the job. Built for HVAC, plumbing, electrical, roofing, and
+            other home-service shops that already buy demand and lose work to voicemail. {heroNext}
           </p>
           <div className="hero-actions">
             <a className="sales-btn" href="#talk-to-ava">
@@ -116,16 +83,16 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
               Start free 7-day trial <ArrowRight size={18} />
             </Link>
           </div>
-          <p className="trial-line">Free 7-day trial, then $59/mo. $0 setup.</p>
+          <p className="trial-line">{avaTrialThenPriceCopy('starter')}</p>
           <div className="trust-row">
             <span>
               <Check /> Free 7-day trial
             </span>
             <span>
-              <Check /> $0 setup fee
+              <Check /> $0 setup on self-serve
             </span>
             <span>
-              <Check /> Then $59/mo
+              <Check /> Then from {AVA_PLANS.starter.monthlyLabel}/mo
             </span>
           </div>
         </div>
@@ -141,7 +108,7 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
                 <PhoneCall /> Ava answers
               </span>
               <span>
-                <Headphones /> Takes the caller’s details
+                <Headphones /> Qualifies the job
               </span>
               <span>
                 <ShieldCheck /> Texts you the lead
@@ -155,27 +122,62 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
 
       <section id="how" className="how-section">
         <div className="section-title">
-          <span className="kicker">FROM MISSED CALL TO A LEAD ON YOUR PHONE</span>
-          <h2>Ava handles the front desk while you handle the work.</h2>
+          <span className="kicker">FROM MISSED CALL TO A LEAD YOU CAN WORK</span>
+          <h2>Ava covers the front desk. You keep the relationship.</h2>
+          <p>
+            Sell recovered response coverage — not vague “AI automation.” Ava handles intake; you
+            close the sale and decide pricing.
+          </p>
         </div>
         <div className="steps-grid">
           <article>
             <span>01</span>
             <PhoneCall />
-            <h3>Customer calls</h3>
-            <p>Ava answers 24/7, including after-hours and overflow.</p>
+            <h3>Capture</h3>
+            <p>Missed, overflow, and after-hours calls land with Ava instead of voicemail.</p>
           </article>
           <article>
             <span>02</span>
-            <Headphones />
-            <h3>Ava takes the details</h3>
-            <p>She collects the caller’s name, number, and what they need.</p>
+            <ClipboardList />
+            <h3>Qualify</h3>
+            <p>She collects service, location cues, urgency, and callback details under your rules.</p>
           </article>
           <article>
             <span>03</span>
             <ShieldCheck />
-            <h3>You get a text</h3>
-            <p>Ava texts that lead to you so you can call them back.</p>
+            <h3>Handoff</h3>
+            <p>You get a texted lead summary so a human can call back, book, or escalate.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="offer" className="bad-options">
+        <div className="section-title">
+          <span className="kicker">CLEAR SCOPE</span>
+          <h2>What Ava does — and what stays human.</h2>
+          <p>
+            No invented revenue claims. Ava promises coverage, intake, and lead handoff. Bookings,
+            quotes, and exceptions stay with your team.
+          </p>
+        </div>
+        <div className="options-grid">
+          <article>
+            <span>01</span>
+            <PhoneCall />
+            <h3>Automated</h3>
+            <p>24/7 answer, FAQ handling, lead fields, urgency flags, and owner text alerts.</p>
+          </article>
+          <article>
+            <span>02</span>
+            <Headphones />
+            <h3>Human</h3>
+            <p>Final sales calls, firm pricing, complaints, emergencies, and refunds.</p>
+          </article>
+          <article>
+            <span>03</span>
+            <ShieldCheck />
+            <h3>Boundaries</h3>
+            <p>No medical, legal, or emergency-dispatch niches. Safety keywords escalate to you.</p>
           </article>
         </div>
       </section>
@@ -203,9 +205,12 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
 
       <section id="pricing" className="pricing">
         <div className="section-title">
-          <span className="kicker">AVA PRICING · $0 SETUP</span>
-          <h2>Choose the call coverage that fits your business.</h2>
-          <p>Free 7-day trial, then $59/mo. $0 setup. Growth is $129 and Pro is $249, with the same $0 setup.</p>
+          <span className="kicker">AVA PRICING · SELF-SERVE</span>
+          <h2>Credible coverage pricing — not agency retainers.</h2>
+          <p>
+            {avaPricingSummaryCopy()} Optional assisted launch is {AVA_ASSISTED_LAUNCH.oneTimeLabel}{' '}
+            one-time if you want Cole’s help before you forward the line.
+          </p>
           {checkoutUnavailable && (
             <p className="usage-note">
               Checkout could not open a Stripe payment page. Email colecollins763@gmail.com and Cole can start the plan
@@ -213,19 +218,19 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
             </p>
           )}
         </div>
-        <p className="trial-note">Free 7-day trial, then $59/mo. $0 setup.</p>
+        <p className="trial-note">{avaTrialThenPriceCopy('starter')}</p>
         <div className="plan-grid">
           {plans.map((plan) => (
             <article className={plan.featured ? 'plan featured' : 'plan'} key={plan.key}>
               {plan.featured && <span className="popular">MOST POPULAR</span>}
-              <h3>{plan.name}</h3>
+              <h3>{plan.label}</h3>
               <p>{plan.description}</p>
               <div className="price">
-                <strong>{plan.price}</strong>
+                <strong>{plan.monthlyLabel}</strong>
                 <span>/month</span>
               </div>
-              <small>{plan.minutes}</small>
-              <small>{plan.overage}</small>
+              <small>{plan.minutes} voice minutes / month</small>
+              <small>{plan.overageLabel}</small>
               <ul>
                 {plan.features.map((feature) => (
                   <li key={feature}>
@@ -238,21 +243,24 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
                 Start free 7-day trial
               </Link>
               <TrackedCheckoutLink className="plan-checkout" href={`/api/checkout?plan=${plan.key}`} plan={plan.key}>
-                Checkout {plan.name}
+                Checkout {plan.label}
               </TrackedCheckoutLink>
             </article>
           ))}
         </div>
         <p className="usage-note">
           Included minutes reset monthly. Usage above the included allowance is billed at the plan&apos;s published
-          per-minute overage rate. Special telephony or integration requirements are quoted before launch.
+          per-minute overage rate. {AVA_ASSISTED_LAUNCH.description} Special telephony or integration requirements are
+          quoted before launch. This is self-serve receptionist software — not a $1,250/mo managed agency desk.
         </p>
       </section>
 
       <section className="final-cta">
         <span className="kicker">FREE 7-DAY TRIAL</span>
-        <h2>Talk to Ava, then start the trial.</h2>
-        <p>Free 7-day trial, then $59/mo. $0 setup. She answers 24/7 and texts you the lead.</p>
+        <h2>Talk to Ava, then start coverage.</h2>
+        <p>
+          {avaTrialThenPriceCopy('starter')} She answers 24/7, qualifies the caller, and texts you the lead.
+        </p>
         <div>
           <Link className="sales-btn light" href="/onboarding/ava">
             Start free 7-day trial
