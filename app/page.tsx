@@ -10,7 +10,7 @@ import {
   ShieldCheck,
   Sparkles,
 } from 'lucide-react';
-import { FOUNDING_CTA, foundingCheckoutHref } from '@/lib/payments';
+import { FOUNDING_CTA, foundingCheckoutHref, getDemo10Payment } from '@/lib/payments';
 import styles from './home.module.css';
 
 const CONTACT_EMAIL = 'colecollins763@gmail.com';
@@ -52,6 +52,8 @@ const packageItems = [
 ];
 
 export default function HomePage() {
+  const demo10 = getDemo10Payment();
+
   return (
     <main className={styles.page}>
       <nav className={styles.nav}>
@@ -63,6 +65,7 @@ export default function HomePage() {
         </Link>
         <div className={styles.navLinks}>
           <a href="#how">How it works</a>
+          <a href="#demo10">Demo Blast 10</a>
           <a href="#package">What you get</a>
           <Link href="/visual-canvasser">See examples</Link>
         </div>
@@ -87,8 +90,8 @@ export default function HomePage() {
             <a className={styles.primaryButton} href={foundingCheckoutHref('/#package')}>
               {FOUNDING_CTA} <ArrowRight size={18} />
             </a>
-            <a className={styles.secondaryButton} href="#how">
-              See how it works
+            <a className={styles.secondaryButton} href="#demo10">
+              See the $49 Demo Blast 10
             </a>
           </div>
           <p className={styles.heroNote}>
@@ -132,6 +135,29 @@ export default function HomePage() {
         <span>
           <Check /> Built for landscaping and home services
         </span>
+      </section>
+
+      <section className={styles.demoOffer} id="demo10">
+        <div>
+          <span>LOW-RISK STARTER</span>
+          <h2>See 10 homes before you scale.</h2>
+          <p>
+            Choose your trade and provide up to 10 addresses—or ask Cole to help choose the area.
+            Each card pairs authorized Current imagery when available with a clearly labeled After concept.
+          </p>
+        </div>
+        <div>
+          <strong>$49</strong>
+          <ul>
+            <li><Check /> Up to 10 before/after concepts</li>
+            <li><Check /> Per-card approve, swap, regenerate, or request changes</li>
+            <li><Check /> QR estimate-page structure</li>
+            <li><Check /> Manual mailing only after your approval</li>
+          </ul>
+          <a className={styles.primaryButton} href={demo10.href}>
+            {demo10.label} <ArrowRight size={18} />
+          </a>
+        </div>
       </section>
 
       <section className={styles.section} id="how">

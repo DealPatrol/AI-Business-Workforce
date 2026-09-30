@@ -59,7 +59,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
       .from('campaign_recipients')
       .select('id, campaigns!inner(status)')
       .eq('public_token', token)
-      .eq('campaigns.status', 'active')
+      .in('campaigns.status', ['active', 'ready_to_mail'])
       .single();
 
     if (recipientError || !recipient) {
