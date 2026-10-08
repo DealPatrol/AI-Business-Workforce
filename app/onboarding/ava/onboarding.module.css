@@ -244,6 +244,14 @@
   width: 18px;
 }
 
+.form button.secondary {
+  margin-top: 10px;
+  background: #fff;
+  color: #205c39;
+  border: 1px solid #9bc5a9;
+  font-weight: 800;
+}
+
 .privacy {
   display: flex;
   align-items: center;

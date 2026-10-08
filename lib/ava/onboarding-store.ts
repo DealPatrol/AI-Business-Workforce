@@ -1,5 +1,10 @@
 import { createAdminClient } from '@/lib/supabase/admin';
 import { linkAvaCustomerToOnboarding } from '@/lib/ava/customers';
+import { assertNotificationDestinationChange } from '@/lib/ava/destination-guard';
+import {
+  notificationDestinationsChanged,
+  notificationDestinationsFromParts,
+} from '@/lib/ava/destination-edit';
 import {
   AvaOnboardingDetails,
   AvaProvisioningResult,
@@ -12,6 +17,7 @@ export type AvaOnboardingInput = AvaOnboardingDetails & {
   staffEmail?: string;
   staffPhone?: string;
   preferredVoice?: string;
+  editToken?: string;
 };
 
 type AvaOnboardingRow = {
@@ -22,6 +28,8 @@ type AvaOnboardingRow = {
   call_handling_rules: string;
   staff_name: string;
   staff_contact: string;
+  staff_email?: string | null;
+  staff_phone?: string | null;
   calendar_preference: string;
   urgent_call_rules: string;
   stripe_session_id: string | null;
@@ -61,6 +69,24 @@ export async function saveAvaOnboarding(input: AvaOnboardingInput) {
       throw new Error(`Unable to check Ava onboarding: ${existingError.message}`);
     }
     if (existing) {
+      const stored = existing as AvaOnboardingRow;
+      const currentDestinations = notificationDestinationsFromParts({
+        staffEmail: stored.staff_email,
+        staffPhone: stored.staff_phone,
+        staffContact: stored.staff_contact,
+      });
+      const nextDestinations = notificationDestinationsFromParts({
+        staffEmail: input.staffEmail,
+        staffPhone: input.staffPhone,
+        staffContact: input.staffContact,
+      });
+      if (notificationDestinationsChanged(currentDestinations, nextDestinations)) {
+        await assertNotificationDestinationChange({
+          sessionId: input.sessionId,
+          editToken: input.editToken || '',
+        });
+      }
+
       const { data, error } = await supabase
         .from('ava_onboardings')
         .update({
@@ -84,7 +110,7 @@ export async function saveAvaOnboarding(input: AvaOnboardingInput) {
       }
 
       const saved = data as AvaOnboardingRow;
-      await saveOptionalOnboardingFields(saved.id, input);
+      await saveOptionalOnboardingFields(saved.id, input, { replaceDestinations: true });
       await linkAvaCustomerToOnboarding({
         sessionId: input.sessionId,
         onboardingId: saved.id,
@@ -125,10 +151,19 @@ export async function saveAvaOnboarding(input: AvaOnboardingInput) {
   return saved;
 }
 
-async function saveOptionalOnboardingFields(id: string, input: AvaOnboardingInput) {
+async function saveOptionalOnboardingFields(
+  id: string,
+  input: AvaOnboardingInput,
+  options?: { replaceDestinations?: boolean },
+) {
   const fields: Record<string, string | null> = {};
-  if (input.staffEmail) fields.staff_email = input.staffEmail;
-  if (input.staffPhone) fields.staff_phone = input.staffPhone;
+  if (options?.replaceDestinations) {
+    fields.staff_email = input.staffEmail?.trim() || null;
+    fields.staff_phone = input.staffPhone?.trim() || null;
+  } else {
+    if (input.staffEmail) fields.staff_email = input.staffEmail;
+    if (input.staffPhone) fields.staff_phone = input.staffPhone;
+  }
   if (input.preferredVoice) fields.preferred_voice = input.preferredVoice;
   if (Object.keys(fields).length === 0) return;
 

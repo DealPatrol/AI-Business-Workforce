@@ -1,3 +1,4 @@
+import { normalizeEmail } from '@/lib/analytics/contact';
 import { AVA_PLANS, isAvaPlanKey } from '@/lib/ava/pricing';
 
 const STRIPE_API = 'https://api.stripe.com/v1';
@@ -7,8 +8,19 @@ type StripeCheckoutSession = {
   payment_link?: string | null;
   payment_status?: string;
   status?: string;
+  customer_email?: string | null;
+  customer_details?: { email?: string | null } | null;
   subscription?: string | { id?: string; status?: string } | null;
 };
+
+type AvaCheckoutOutcome =
+  | 'missing_session'
+  | 'missing_secret'
+  | 'stripe_error'
+  | 'incomplete'
+  | 'unpaid'
+  | 'not_ava'
+  | 'ok';
 
 const ACCEPTABLE_SUBSCRIPTION_STATUSES = new Set(['trialing', 'active']);
 
@@ -40,23 +52,62 @@ export type AvaCheckoutVerification = {
   message: string;
 };
 
-export async function verifyAvaCheckoutSession(
-  sessionId: string,
-): Promise<AvaCheckoutVerification> {
-  if (!sessionId) {
-    return {
-      verified: false,
-      message: 'Automatic creation needs a Stripe Checkout Session ID.',
-    };
+export type AvaCheckoutIdentity = AvaCheckoutVerification & {
+  email: string;
+  subscriptionStatus: string;
+  recognizedAvaCheckout: boolean;
+  outcome: AvaCheckoutOutcome;
+};
+
+function checkoutEmail(session: StripeCheckoutSession) {
+  return normalizeEmail(session.customer_details?.email || session.customer_email || '');
+}
+
+function messageFor(outcome: AvaCheckoutOutcome, subscriptionStatus: string) {
+  switch (outcome) {
+    case 'missing_session':
+      return 'Automatic creation needs a Stripe Checkout Session ID.';
+    case 'missing_secret':
+      return 'Automatic creation is waiting for Stripe verification credentials.';
+    case 'stripe_error':
+      return 'Stripe could not verify this Checkout Session.';
+    case 'incomplete':
+      return 'Stripe does not report this Checkout Session as complete.';
+    case 'unpaid':
+      return 'Stripe does not report this Checkout Session as paid or trialing.';
+    case 'not_ava':
+      return 'This session is not identified as Ava checkout; use Cole’s manual trigger after review.';
+    case 'ok':
+      return subscriptionStatus === 'trialing'
+        ? 'Stripe confirmed a trialing Ava Checkout Session.'
+        : 'Stripe confirmed a paid Ava Checkout Session.';
+    default: {
+      const unexpected: never = outcome;
+      throw new Error(`Unexpected Ava checkout outcome: ${unexpected}`);
+    }
   }
+}
+
+function identityFrom(
+  outcome: AvaCheckoutOutcome,
+  extras?: { email?: string; subscriptionStatus?: string; recognizedAvaCheckout?: boolean },
+): AvaCheckoutIdentity {
+  const subscriptionStatus = extras?.subscriptionStatus || '';
+  return {
+    outcome,
+    verified: outcome === 'ok',
+    message: messageFor(outcome, subscriptionStatus),
+    email: extras?.email || '',
+    subscriptionStatus,
+    recognizedAvaCheckout: Boolean(extras?.recognizedAvaCheckout),
+  };
+}
+
+export async function readAvaCheckoutIdentity(sessionId: string): Promise<AvaCheckoutIdentity> {
+  if (!sessionId) return identityFrom('missing_session');
 
   const secret = process.env.STRIPE_SECRET_KEY;
-  if (!secret) {
-    return {
-      verified: false,
-      message: 'Automatic creation is waiting for Stripe verification credentials.',
-    };
-  }
+  if (!secret) return identityFrom('missing_secret');
 
   const response = await fetch(
     `${STRIPE_API}/checkout/sessions/${encodeURIComponent(sessionId)}`,
@@ -69,20 +120,11 @@ export async function verifyAvaCheckoutSession(
     },
   );
   const session = (await response.json().catch(() => ({}))) as StripeCheckoutSession;
+  const email = checkoutEmail(session);
 
-  if (!response.ok) {
-    return {
-      verified: false,
-      message: 'Stripe could not verify this Checkout Session.',
-    };
-  }
+  if (!response.ok) return identityFrom('stripe_error', { email });
 
-  if (session.status !== 'complete') {
-    return {
-      verified: false,
-      message: 'Stripe does not report this Checkout Session as complete.',
-    };
-  }
+  if (session.status !== 'complete') return identityFrom('incomplete', { email });
 
   const paymentAccepted =
     session.payment_status === 'paid' || session.payment_status === 'no_payment_required';
@@ -91,10 +133,7 @@ export async function verifyAvaCheckoutSession(
   // Trials often complete with payment_status "no_payment_required" or, less often, "unpaid"
   // while the subscription itself is "trialing". Either a collected payment or a live trial counts.
   if (!paymentAccepted && !trialingOrActive) {
-    return {
-      verified: false,
-      message: 'Stripe does not report this Checkout Session as paid or trialing.',
-    };
+    return identityFrom('unpaid', { email, subscriptionStatus });
   }
 
   const checkoutPlan = session.metadata?.plan?.toLowerCase() || '';
@@ -104,18 +143,15 @@ export async function verifyAvaCheckoutSession(
     Boolean(avaPaymentLinkId && session.payment_link === avaPaymentLinkId);
 
   if (!recognizedAvaCheckout) {
-    return {
-      verified: false,
-      message:
-        'This session is not identified as Ava checkout; use Cole’s manual trigger after review.',
-    };
+    return identityFrom('not_ava', { email, subscriptionStatus });
   }
 
-  return {
-    verified: true,
-    message:
-      subscriptionStatus === 'trialing'
-        ? 'Stripe confirmed a trialing Ava Checkout Session.'
-        : 'Stripe confirmed a paid Ava Checkout Session.',
-  };
+  return identityFrom('ok', { email, subscriptionStatus, recognizedAvaCheckout: true });
+}
+
+export async function verifyAvaCheckoutSession(
+  sessionId: string,
+): Promise<AvaCheckoutVerification> {
+  const identity = await readAvaCheckoutIdentity(sessionId);
+  return { verified: identity.verified, message: identity.message };
 }

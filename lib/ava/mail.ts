@@ -41,6 +41,15 @@ export function avaOnboardingUrl(sessionId: string, plan?: string) {
   return url.toString();
 }
 
+/** Signed, expiring link mailed to the Stripe checkout email. Not a guessable session URL. */
+export function avaDestinationEditUrl(sessionId: string, token: string, plan?: string) {
+  const url = new URL('/onboarding/ava', appBaseUrl());
+  if (sessionId) url.searchParams.set('session_id', sessionId);
+  if (plan) url.searchParams.set('plan', plan);
+  if (token) url.searchParams.set('edit_token', token);
+  return url.toString();
+}
+
 type SendEmailInput = {
   to: string | string[];
   subject: string;
