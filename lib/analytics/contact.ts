@@ -27,3 +27,12 @@ export function splitContact(value: string | undefined | null) {
   }
   return { email: '', phone: toE164(trimmed) };
 }
+
+/** Pull an email and a phone out of a free-text staff contact, including "phone / email". */
+export function parseStaffContacts(value: string | undefined | null) {
+  const raw = String(value || '');
+  const emailMatch = raw.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
+  const email = emailMatch ? normalizeEmail(emailMatch[0]) : '';
+  const withoutEmail = emailMatch ? raw.replace(emailMatch[0], ' ') : raw;
+  return { email, phone: toE164(withoutEmail) };
+}

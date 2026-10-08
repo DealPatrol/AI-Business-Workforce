@@ -5,7 +5,13 @@ import {
 } from '@/lib/ava/onboarding-store';
 import { verifyAvaCheckoutSession } from '@/lib/ava/checkout';
 import { AvaProvisioningResult } from '@/lib/ava/provisioning';
-import { splitContact } from '@/lib/analytics/contact';
+import { parseStaffContacts, splitContact } from '@/lib/analytics/contact';
+import {
+  AVA_PHONE_RUNBOOK_PATH,
+  AVA_PHONE_RUNBOOK_URL,
+  avaFromAddress,
+  avaOwnerEmail,
+} from '@/lib/ava/mail';
 import { sendMetaServerEvent } from '@/lib/analytics/meta-capi';
 import {
   clientIp,
@@ -100,7 +106,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const staffContact = fields.staffContact || fields.staffPhone || fields.staffEmail;
+    const parsedStaff = parseStaffContacts(
+      [fields.staffPhone, fields.staffEmail, fields.staffContact].filter(Boolean).join(' '),
+    );
+    const staffContact = [parsedStaff.phone, parsedStaff.email].filter(Boolean).join(' / ');
     if (!staffContact) {
       return NextResponse.json(
         { error: 'Add a phone number or email for the staff contact.' },
@@ -116,7 +125,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Choose a valid Ava voice option.' }, { status: 400 });
     }
 
-    const replyTo = EMAIL_PATTERN.test(staffContact) ? staffContact : fields.staffEmail;
+    const replyTo = parsedStaff.email || (EMAIL_PATTERN.test(fields.staffEmail) ? fields.staffEmail : '');
     const apiKey = process.env.RESEND_API_KEY;
 
     const submittedAt = new Date().toISOString();
@@ -137,6 +146,9 @@ export async function POST(request: NextRequest) {
         callHandlingRules: fields.callHandlingRules,
         staffName: fields.staffName,
         staffContact,
+        staffEmail: parsedStaff.email,
+        staffPhone: parsedStaff.phone,
+        preferredVoice: fields.preferredVoice,
         calendarPreference: fields.calendarPreference,
         urgentCallRules: fields.urgentCallRules,
         sessionId: fields.sessionId,
@@ -178,7 +190,12 @@ export async function POST(request: NextRequest) {
       ['Services offered', fields.services],
       ['Call-handling rules', fields.callHandlingRules],
       ['Staff contact', fields.staffName],
-      ['Staff phone or email', staffContact],
+      ['Staff phone', parsedStaff.phone || 'Not provided'],
+      ['Staff email', parsedStaff.email || 'Not provided'],
+      [
+        'Phone setup runbook',
+        `${AVA_PHONE_RUNBOOK_PATH} (${AVA_PHONE_RUNBOOK_URL})`,
+      ],
       ['Lead handoff notes', fields.calendarPreference],
       ['Urgent-call rules', fields.urgentCallRules],
       [
@@ -226,11 +243,11 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Ava <onboarding@resend.dev>',
-        to: [NOTIFICATION_EMAIL],
+        from: avaFromAddress(),
+        to: [avaOwnerEmail()],
         ...(replyTo ? { reply_to: replyTo } : {}),
         subject: `Ava paid pilot setup — ${fields.businessName}`,
-        html: `<div style="font-family:Arial,sans-serif;max-width:760px;margin:auto;color:#17211b"><h1>New Ava setup</h1><p>Use these answers to configure the customer&apos;s Ava workflow and run one live test call before launch.</p><table style="border-collapse:collapse;width:100%">${htmlRows}</table></div>`,
+        html: `<div style="font-family:Arial,sans-serif;max-width:760px;margin:auto;color:#17211b"><h1>New Ava setup</h1><p>The phone number stays <b>pending_manual</b>. Attach one using <a href="${AVA_PHONE_RUNBOOK_URL}">${AVA_PHONE_RUNBOOK_PATH}</a>, then run one live test call before launch.</p><table style="border-collapse:collapse;width:100%">${htmlRows}</table></div>`,
       }),
     });
     const result = await response.json().catch(() => ({}));

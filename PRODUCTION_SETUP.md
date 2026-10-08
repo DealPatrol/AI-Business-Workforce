@@ -25,7 +25,7 @@ Add `RESEND_API_KEY` as a server-only Vercel environment variable. The public fo
 Add `STRIPE_SECRET_KEY` as a server-only Vercel environment variable. `/api/checkout` creates Stripe Checkout Sessions in subscription mode:
 
 - Founding (`/api/checkout?offer=founding`): $99/month subscription only. Product name from code is `YardProof Founding Plan`. Buttons use this route. If `STRIPE_SECRET_KEY` is missing, the route does not charge anything and sends the visitor to `/founding?checkout=error`.
-- Ava (`/api/checkout?plan=starter|growth|pro`): $79 / $149 / $299 per month with a 7-day Checkout trial. Product names from code are `Ava Receptionist – Starter`, `Ava Receptionist – Growth`, and `Ava Receptionist – Pro`. Successful sessions return to `/onboarding/ava`. Without the secret key these buttons return to `/ava?checkout=unavailable#pricing`.
+- Ava (`/api/checkout?plan=starter|growth|pro`): $79 / $149 / $299 per month with a 7-day Checkout trial and $0 setup. Included minutes are 300 / 800 / 1,800. Product names from code are `Ava Receptionist – Starter`, `Ava Receptionist – Growth`, and `Ava Receptionist – Pro`. Successful sessions return to `/onboarding/ava?session_id={CHECKOUT_SESSION_ID}`. Without the secret key these buttons return to `/ava?checkout=unavailable#pricing`.
 
 Optional price IDs override inline `price_data`. If you use a price ID, set the Dashboard product name to the same string above — code only sets the name when it sends `price_data`. Recreate Dashboard prices when amounts change.
 
@@ -34,7 +34,7 @@ Optional price IDs override inline `price_data`. If you use a price ID, set the 
 - `STRIPE_AVA_GROWTH_PRICE_ID`
 - `STRIPE_AVA_PRO_PRICE_ID`
 
-`POST /api/webhooks/stripe` verifies Stripe signatures when `STRIPE_WEBHOOK_SECRET` is set and acknowledges checkout/subscription/invoice events. It does not yet mutate onboarding or auto-provision; expand handlers only after the Dashboard endpoint is live. Ava payment checks and `/api/ava/billing/reconcile` already expect a subscription-mode Checkout Session. Founding sessions are tagged `metadata.product=yardproof` and are skipped by Ava usage billing. The Checkout business name "Billing" is the Stripe account public business name (Dashboard → Settings → Business details / Branding), not a value in this repo.
+`POST /api/webhooks/stripe` verifies Stripe signatures with `STRIPE_WEBHOOK_SECRET`. For `checkout.session.completed` where `metadata.product=ava`, it upserts `ava_customers` (plan, included minutes, trialing/active status) and emails the buyer an onboarding link plus the owner at `AVA_LEAD_NOTIFICATION_EMAIL`. `customer.subscription.updated` and `customer.subscription.deleted` sync that status. Retries are idempotent. Apply `supabase/migrations/006_ava_go_live.sql` first. Founding sessions stay `metadata.product=yardproof` and are not stored as Ava customers. The manual sequence is `docs/AVA_GO_LIVE_CHECKLIST.md`. The Checkout business name "Billing" is the Stripe account public business name (Dashboard → Settings → Business details / Branding), not a value in this repo.
 
 The compatibility route `/onboarding` also sends customers to the Ava setup form.
 
@@ -51,7 +51,9 @@ Add these server-only variables:
 - `AVA_AUTO_PROVISION_AGENT=true` — optional; leave false until automatic creation has been tested
 - `AVA_STRIPE_PAYMENT_LINK_ID` — required only when an Ava-specific Payment Link should qualify for automatic creation
 
-With automatic creation disabled, Cole can use the authenticated internal endpoint described in [`docs/AVA_PHONE_SETUP_RUNBOOK.md`](docs/AVA_PHONE_SETUP_RUNBOOK.md). The endpoint duplicates the template through ElevenLabs' supported agent-duplicate API, updates the customer's prompt and greeting, and saves the returned agent ID. Missing credentials result in a pending status. Submit-time automatic creation also requires Stripe to report the session as paid and complete and identify it through `/api/checkout` Ava plan metadata or the configured Ava-specific Payment Link ID.
+With automatic creation disabled, Cole can use the authenticated internal endpoint described in [`docs/AVA_PHONE_SETUP_RUNBOOK.md`](docs/AVA_PHONE_SETUP_RUNBOOK.md). The endpoint duplicates the template through ElevenLabs' supported agent-duplicate API, updates the customer's prompt and greeting, and saves the returned agent ID. Missing credentials result in a pending status. Submit-time automatic creation accepts a paid or trialing Ava Checkout Session identified through `/api/checkout` plan metadata or the configured Ava-specific Payment Link ID. Phone status stays `pending_manual`.
+
+`POST /api/webhooks/elevenlabs` verifies `ElevenLabs-Signature` with `ELEVENLABS_WEBHOOK_SECRET`, maps `agent_id` to the onboarding row, and writes `ava_call_leads`. Lead email uses `AVA_FROM_EMAIL` (default `onboarding@resend.dev`) and the business staff email, falling back to `AVA_LEAD_NOTIFICATION_EMAIL`. SMS uses the staff phone, falling back to `AVA_LEAD_SMS_TO`.
 
 See [`docs/AVA_VOICE_OPTIONS.md`](docs/AVA_VOICE_OPTIONS.md) for the dashboard duplication checklist and voice-option boundaries. Customer provisioning deliberately continues to duplicate `ELEVENLABS_AGENT_ID`; a preferred voice submitted during onboarding is a setup note and does not change the duplicate source.
 

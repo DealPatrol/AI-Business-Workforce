@@ -53,6 +53,7 @@ function SalesAvaQualifyContent() {
   const [error, setError] = useState('');
   const [callState, setCallState] = useState<CallState>('preparing');
   const [qualification, setQualification] = useState<QualificationResult | null>(null);
+  const [micBlocked, setMicBlocked] = useState(false);
   const conversationId = useRef<string | null>(null);
   const signedUrl = useRef<string | null>(null);
   const preparedConversationId = useRef<string | null>(null);
@@ -109,12 +110,20 @@ function SalesAvaQualifyContent() {
     if (!['ready', 'idle'].includes(callState)) return;
     setQualification(null);
     setError('');
+    setMicBlocked(false);
     demoTracked.current = false;
     setCallState('connecting');
     try {
       if (!signedUrl.current) {
         await prepareSession();
         if (!signedUrl.current) throw new Error('Ava is still preparing. Try once more.');
+      }
+      if (!navigator.mediaDevices?.getUserMedia) {
+        const unsupported = new Error(
+          'This browser or device does not support microphone access.',
+        ) as Error & { name: string };
+        unsupported.name = 'NotSupportedError';
+        throw unsupported;
       }
       await navigator.mediaDevices.getUserMedia({ audio: true });
       conversationId.current = preparedConversationId.current;
@@ -125,7 +134,18 @@ function SalesAvaQualifyContent() {
       markDemoConnected();
     } catch (e: unknown) {
       const err = e as { name?: string; message?: string };
-      setError(err?.message || 'Unable to start Sales Ava.');
+      const micErrorNames = [
+        'NotAllowedError',
+        'NotFoundError',
+        'OverconstrainedError',
+        'NotSupportedError',
+      ];
+      if (micErrorNames.includes(err?.name || '')) {
+        setMicBlocked(true);
+        setError('Microphone access was blocked, so the live voice demo can\u2019t start here.');
+      } else {
+        setError(err?.message || 'Unable to start Sales Ava.');
+      }
       setCallState('ready');
     }
   }
@@ -394,7 +414,35 @@ function SalesAvaQualifyContent() {
                   : 'Ava is listening…'
                 : avaPricingSummaryCopy()}
             </small>
-            {error && <p className="call-error">{error}</p>}
+            {error && !micBlocked && <p className="call-error">{error}</p>}
+            {micBlocked && (
+              <div
+                className="mic-fallback"
+                style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 12 }}
+              >
+                <p className="call-error" style={{ margin: 0 }}>
+                  {error}
+                </p>
+                <p style={{ margin: 0, fontWeight: 600 }}>
+                  No microphone? Hear Ava handle a real customer call instead.
+                </p>
+                <video
+                  controls
+                  preload="none"
+                  playsInline
+                  src="/ava-sample-call.mp4"
+                  style={{ width: '100%', borderRadius: 12, background: '#000' }}
+                />
+                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                  <button className="text-switch" type="button" onClick={startCall}>
+                    <Mic2 size={14} /> Enable mic &amp; try the live demo
+                  </button>
+                  <Link className="text-next" href={onboardingHref}>
+                    Skip to free trial <ArrowRight size={14} />
+                  </Link>
+                </div>
+              </div>
+            )}
           </>
         )}
       </div>

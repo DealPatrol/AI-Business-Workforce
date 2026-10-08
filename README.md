@@ -50,4 +50,4 @@ The app records page-open activity for valid recipient pages and deduplicates re
 
 ## Ava operations
 
-Cole's current post-purchase and phone-launch checklist, plus the first automated agent-provisioning path, is in [`docs/AVA_PHONE_SETUP_RUNBOOK.md`](docs/AVA_PHONE_SETUP_RUNBOOK.md). Production credentials and rollout boundaries are documented in [`PRODUCTION_SETUP.md`](PRODUCTION_SETUP.md).
+Cole's current post-purchase and phone-launch checklist, plus the first automated agent-provisioning path, is in [`docs/AVA_PHONE_SETUP_RUNBOOK.md`](docs/AVA_PHONE_SETUP_RUNBOOK.md). The manual steps to take a paying customer live are in [`docs/AVA_GO_LIVE_CHECKLIST.md`](docs/AVA_GO_LIVE_CHECKLIST.md). Production credentials and rollout boundaries are documented in [`PRODUCTION_SETUP.md`](PRODUCTION_SETUP.md).

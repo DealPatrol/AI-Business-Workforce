@@ -1,26 +1,24 @@
-import { createHmac, timingSafeEqual } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
+import { createHmac, timingSafeEqual } from 'crypto';
+import { AVA_PLANS, isAvaPlanKey } from '@/lib/ava/pricing';
+import {
+  markAvaCustomerNotified,
+  recordWebhookEvent,
+  syncExistingAvaSubscription,
+  upsertAvaCustomer,
+  webhookEventProcessed,
+  type AvaCustomerRecord,
+} from '@/lib/ava/customers';
+import {
+  avaOnboardingUrl,
+  avaOwnerEmail,
+  escapeHtml,
+  sendResendEmail,
+} from '@/lib/ava/mail';
 import { STRIPE_API_VERSION } from '@/lib/stripe-checkout';
 
-/**
- * Stripe webhook receiver for Ava / YardProof billing events.
- *
- * Production steps (manual — secrets never committed):
- * 1. Stripe Dashboard → Developers → Webhooks → Add endpoint
- *    URL: https://<your-domain>/api/webhooks/stripe
- * 2. Subscribe at minimum to:
- *    - checkout.session.completed
- *    - customer.subscription.updated
- *    - customer.subscription.deleted
- *    - invoice.paid
- *    - invoice.payment_failed
- * 3. Copy the signing secret into Vercel as STRIPE_WEBHOOK_SECRET (whsec_...)
- *
- * This route verifies signatures and acknowledges events. It does not yet mutate
- * onboarding rows or auto-provision agents — Cole/ops still use the runbook and
- * `/api/ava/billing/reconcile` for usage. Expand handlers only after Dashboard
- * endpoint + secret are live.
- */
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 type StripeEvent = {
   id?: string;
@@ -62,36 +60,164 @@ function verifyStripeSignature(rawBody: string, header: string, secret: string) 
   });
 }
 
-function summarizeAvaSession(object: Record<string, unknown> | undefined) {
-  if (!object) return null;
-  const metadata = (object.metadata || {}) as Record<string, string>;
-  if (metadata.product && metadata.product !== 'ava') {
-    return { product: metadata.product, skipped: true as const };
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === 'object' ? (value as Record<string, unknown>) : {};
+}
+
+function asString(value: unknown) {
+  return typeof value === 'string' ? value : '';
+}
+
+function stripeId(value: unknown) {
+  if (typeof value === 'string') return value;
+  return asString(asRecord(value).id);
+}
+
+function asMetadata(value: unknown) {
+  const record = asRecord(value);
+  const metadata: Record<string, string> = {};
+  for (const [key, entry] of Object.entries(record)) {
+    if (typeof entry === 'string') metadata[key] = entry;
+    else if (typeof entry === 'number' && Number.isFinite(entry)) metadata[key] = String(entry);
   }
-  return {
-    product: metadata.product || 'unknown',
-    plan: metadata.plan || null,
-    sessionId: typeof object.id === 'string' ? object.id : null,
-    customer: typeof object.customer === 'string' ? object.customer : null,
-    subscription:
-      typeof object.subscription === 'string'
-        ? object.subscription
-        : object.subscription && typeof object.subscription === 'object' && 'id' in object.subscription
-          ? String((object.subscription as { id?: string }).id || '')
-          : null,
-    paymentStatus: typeof object.payment_status === 'string' ? object.payment_status : null,
-    status: typeof object.status === 'string' ? object.status : null,
+  return metadata;
+}
+
+function readCount(value: string | undefined) {
+  if (!value) return null;
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed < 0) return null;
+  return Math.round(parsed);
+}
+
+function customerEmail(object: Record<string, unknown>) {
+  const details = asRecord(object.customer_details);
+  return asString(details.email) || asString(object.customer_email);
+}
+
+function customerName(object: Record<string, unknown>) {
+  const details = asRecord(object.customer_details);
+  return asString(details.name);
+}
+
+async function notifyCheckout(customer: AvaCustomerRecord, sessionId: string) {
+  const planKey = customer.plan && isAvaPlanKey(customer.plan) ? customer.plan : null;
+  const plan = planKey ? AVA_PLANS[planKey] : null;
+  const link = avaOnboardingUrl(sessionId, customer.plan || undefined);
+  const planLabel = plan?.label || customer.plan || 'Ava';
+  const priceLabel = plan?.monthlyLabel || '';
+  const minutes = customer.included_minutes ?? plan?.minutes;
+
+  if (customer.email && !customer.buyer_onboarding_email_sent_at) {
+    await sendResendEmail({
+      to: customer.email,
+      subject: `Finish setting up Ava ${planLabel}`,
+      html: `<div style="font-family:Arial,sans-serif;max-width:640px;margin:auto;color:#17211b"><h1>Your Ava trial is started</h1><p>Thanks for starting Ava ${escapeHtml(planLabel)}${priceLabel ? ` (${escapeHtml(priceLabel)}/mo after the 7-day trial)` : ''}. Setup fee is $0.</p><p><a href="${escapeHtml(link)}">Finish setup</a> so we can build your receptionist from your hours, services, and call rules.</p><p>Cole attaches the phone number after you submit the form. Ava is not answering your business line until that number is connected and you pass a test call.</p></div>`,
+    });
+    await markAvaCustomerNotified(customer.id, 'buyer_onboarding_email_sent_at');
+    customer.buyer_onboarding_email_sent_at = new Date().toISOString();
+  } else if (!customer.email && !customer.buyer_onboarding_email_sent_at) {
+    await markAvaCustomerNotified(customer.id, 'buyer_onboarding_email_sent_at');
+    customer.buyer_onboarding_email_sent_at = new Date().toISOString();
+  }
+
+  if (!customer.owner_checkout_email_sent_at) {
+    await sendResendEmail({
+      to: avaOwnerEmail(),
+      replyTo: customer.email || undefined,
+      subject: `New Ava checkout — ${planLabel}${customer.email ? ` — ${customer.email}` : ''}`,
+      html: `<div style="font-family:Arial,sans-serif;max-width:640px;margin:auto;color:#17211b"><h1>New Ava checkout</h1><table style="border-collapse:collapse;width:100%"><tr><td><b>Plan</b></td><td>${escapeHtml(planLabel)}</td></tr><tr><td><b>Status</b></td><td>${escapeHtml(customer.subscription_status)}</td></tr><tr><td><b>Included minutes</b></td><td>${escapeHtml(minutes == null ? 'Not on the session' : String(minutes))}</td></tr><tr><td><b>Buyer</b></td><td>${escapeHtml(customer.email || 'No email on the Checkout Session')}</td></tr><tr><td><b>Name</b></td><td>${escapeHtml(customer.name || 'Not provided')}</td></tr><tr><td><b>Session</b></td><td>${escapeHtml(sessionId)}</td></tr></table><p><a href="${escapeHtml(link)}">Onboarding link</a></p><p>Phone setup stays manual. Use <a href="https://github.com/DealPatrol/AI-Business-Workforce/blob/main/docs/AVA_PHONE_SETUP_RUNBOOK.md">docs/AVA_PHONE_SETUP_RUNBOOK.md</a> after they submit the form.</p></div>`,
+    });
+    await markAvaCustomerNotified(customer.id, 'owner_checkout_email_sent_at');
+  }
+}
+
+async function handleCheckoutCompleted(object: Record<string, unknown>) {
+  const metadata = asMetadata(object.metadata);
+  if (metadata.product !== 'ava') {
+    return { skipped: true as const };
+  }
+
+  const sessionId = asString(object.id);
+  const fallbackStatus =
+    object.payment_status === 'paid'
+      ? 'active'
+      : object.payment_status === 'no_payment_required'
+        ? 'trialing'
+        : 'incomplete';
+  const subscriptionStatus = await readSubscriptionStatus(
+    stripeId(object.subscription),
+    fallbackStatus,
+  );
+
+  const customer = await upsertAvaCustomer({
+    stripeCustomerId: stripeId(object.customer),
+    stripeSubscriptionId: stripeId(object.subscription),
+    stripeCheckoutSessionId: sessionId,
+    email: customerEmail(object),
+    name: customerName(object),
+    plan: metadata.plan,
+    includedMinutes: readCount(metadata.included_minutes),
+    overageCents: readCount(metadata.overage_cents),
+    subscriptionStatus,
+    product: 'ava',
+  });
+
+  await notifyCheckout(customer, sessionId);
+  return { skipped: false as const, customerId: customer.id };
+}
+
+async function readSubscriptionStatus(subscriptionId: string, fallback: string) {
+  const secret = process.env.STRIPE_SECRET_KEY?.trim();
+  if (!secret || !subscriptionId) return fallback;
+  const response = await fetch(
+    `https://api.stripe.com/v1/subscriptions/${encodeURIComponent(subscriptionId)}`,
+    {
+      headers: {
+        Authorization: `Bearer ${secret}`,
+        'Stripe-Version': STRIPE_API_VERSION,
+      },
+      cache: 'no-store',
+    },
+  );
+  const data = (await response.json().catch(() => ({}))) as { status?: string };
+  if (!response.ok || !data.status) return fallback;
+  return data.status;
+}
+
+async function handleSubscriptionChange(object: Record<string, unknown>, deleted: boolean) {
+  const metadata = asMetadata(object.metadata);
+  if (metadata.product && metadata.product !== 'ava') {
+    return { skipped: true as const };
+  }
+
+  const subscriptionId = asString(object.id);
+  const customerId = stripeId(object.customer);
+  if (!subscriptionId && !customerId) return { skipped: true as const };
+
+  const write = {
+    stripeCustomerId: customerId,
+    stripeSubscriptionId: subscriptionId,
+    plan: metadata.plan,
+    includedMinutes: readCount(metadata.included_minutes),
+    overageCents: readCount(metadata.overage_cents),
+    subscriptionStatus: deleted ? 'canceled' : asString(object.status) || 'incomplete',
+    product: 'ava' as const,
   };
+
+  const customer =
+    metadata.product === 'ava'
+      ? await upsertAvaCustomer(write)
+      : await syncExistingAvaSubscription(write);
+  if (!customer) return { skipped: true as const };
+  return { skipped: false as const, customerId: customer.id };
 }
 
 export async function POST(req: NextRequest) {
   const secret = process.env.STRIPE_WEBHOOK_SECRET?.trim();
   if (!secret) {
     console.error('STRIPE_WEBHOOK_SECRET is not set; rejecting Stripe webhook.');
-    return NextResponse.json(
-      { error: 'Stripe webhook secret is not configured.' },
-      { status: 503 },
-    );
+    return NextResponse.json({ error: 'Stripe webhook secret is not configured.' }, { status: 503 });
   }
 
   const rawBody = await req.text();
@@ -108,37 +234,35 @@ export async function POST(req: NextRequest) {
   }
 
   const type = event.type || 'unknown';
-  const object = event.data?.object;
+  const eventId = event.id || '';
+  const object = asRecord(event.data?.object);
 
-  switch (type) {
-    case 'checkout.session.completed': {
-      const summary = summarizeAvaSession(object);
-      console.info('stripe.webhook.checkout.session.completed', {
-        eventId: event.id,
-        apiVersion: STRIPE_API_VERSION,
-        summary,
-      });
-      break;
+  try {
+    if (eventId && (await webhookEventProcessed('stripe', eventId))) {
+      return NextResponse.json({ received: true, duplicate: true });
     }
-    case 'customer.subscription.updated':
-    case 'customer.subscription.deleted':
-    case 'invoice.paid':
-    case 'invoice.payment_failed': {
-      const metadata = (object?.metadata || {}) as Record<string, string>;
-      console.info(`stripe.webhook.${type}`, {
-        eventId: event.id,
-        objectId: typeof object?.id === 'string' ? object.id : null,
-        product: metadata.product || null,
-        plan: metadata.plan || null,
-        status: typeof object?.status === 'string' ? object.status : null,
-      });
-      break;
+
+    switch (type) {
+      case 'checkout.session.completed':
+        await handleCheckoutCompleted(object);
+        break;
+      case 'customer.subscription.updated':
+        await handleSubscriptionChange(object, false);
+        break;
+      case 'customer.subscription.deleted':
+        await handleSubscriptionChange(object, true);
+        break;
+      case 'invoice.paid':
+      case 'invoice.payment_failed':
+        break;
+      default:
+        break;
     }
-    default: {
-      console.info('stripe.webhook.unhandled', { eventId: event.id, type });
-      break;
-    }
+
+    if (eventId) await recordWebhookEvent('stripe', eventId, type);
+    return NextResponse.json({ received: true });
+  } catch (error) {
+    console.error('Stripe webhook handler failed', error);
+    return NextResponse.json({ error: 'Webhook handling failed.' }, { status: 500 });
   }
-
-  return NextResponse.json({ received: true });
 }

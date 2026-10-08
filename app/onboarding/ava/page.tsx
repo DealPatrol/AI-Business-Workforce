@@ -70,7 +70,8 @@ function buildEmailFallback(
       `Call-handling rules:\n${data.get('callHandlingRules') || ''}`,
       '',
       `Staff contact: ${data.get('staffName') || ''}`,
-      `Phone or email: ${data.get('staffContact') || ''}`,
+      `Phone: ${data.get('staffPhone') || ''}`,
+      `Email: ${data.get('staffEmail') || ''}`,
       `Lead handoff: ${data.get('leadHandoff') || ''}`,
       '',
       `Urgent-call rules:\n${data.get('urgentCallRules') || ''}`,
@@ -93,6 +94,7 @@ function AvaOnboardingForm() {
   const searchParams = useSearchParams();
   const qualificationId = searchParams.get('qualificationId') || '';
   const prefillToken = searchParams.get('prefillToken') || searchParams.get('token') || '';
+  const [provisionNote, setProvisionNote] = useState('');
   const [status, setStatus] = useState<SubmissionStatus>('idle');
   const [error, setError] = useState('');
   const [emailFallback, setEmailFallback] = useState('');
@@ -175,7 +177,10 @@ function AvaOnboardingForm() {
     const eventId = crypto.randomUUID();
     const attribution = readAttribution();
     const { fbp, fbc } = readBrowserIds();
-    const contact = splitContact(String(payload.staffContact || ''));
+    const contact = {
+      email: String(payload.staffEmail || splitContact(String(payload.staffContact || '')).email),
+      phone: String(payload.staffPhone || splitContact(String(payload.staffContact || '')).phone),
+    };
 
     try {
       const response = await fetch('/api/ava/onboarding', {
@@ -203,6 +208,9 @@ function AvaOnboardingForm() {
         throw new Error(result.error || 'Could not send your setup details.');
       }
 
+      setProvisionNote(
+        typeof result.provisioning?.message === 'string' ? result.provisioning.message : '',
+      );
       trackOnboardingSubmitted({
         eventId: typeof result.eventId === 'string' ? result.eventId : eventId,
         email: contact.email,
@@ -245,8 +253,8 @@ function AvaOnboardingForm() {
               : 'Start your free 7-day trial.'}
           </h1>
           <p>
-            {searchParams.get('session_id')
-              ? 'Payment is complete. Fill this out, Cole sets up Ava, you test one live call together, then Ava launches.'
+              {searchParams.get('session_id')
+              ? 'Checkout is confirmed — you are paid or on the 7-day trial. Submit this form and Ava’s agent is created from your answers. The phone number stays pending until Cole attaches it.'
               : `Tell us how your calls work. Cole sets Ava up. Free 7-day trial, then ${avaPlanPriceLine(selectedPlan)}. $0 setup.`}
           </p>
           {prefillNote ? <p className={styles.notice}>{prefillNote}</p> : null}
@@ -295,7 +303,8 @@ function AvaOnboardingForm() {
             <CheckCircle2 />
             <h2>Cole has your setup details.</h2>
             <p>
-              He&apos;ll set up Ava and contact you to run one live test call before launch.
+              {provisionNote ||
+                'If automatic setup is on, Ava’s agent is created from this form. The phone number stays pending until Cole attaches it and you pass one live test call.'}
             </p>
             <Link href="/ava">Return to Ava</Link>
           </section>
@@ -380,16 +389,27 @@ function AvaOnboardingForm() {
                   />
                 </label>
                 <label>
-                  Phone or email
+                  Phone for lead texts
                   <input
-                    name="staffContact"
-                    required
-                    placeholder="(205) 555-0123 or sam@example.com"
-                    autoComplete="off"
-                    defaultValue={prefill.staffContact}
+                    name="staffPhone"
+                    inputMode="tel"
+                    autoComplete="tel"
+                    placeholder="(205) 555-0123"
+                    defaultValue={prefill.staffContact.includes('@') ? '' : prefill.staffContact}
+                  />
+                </label>
+                <label>
+                  Email for lead alerts
+                  <input
+                    name="staffEmail"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="sam@example.com"
+                    defaultValue={prefill.staffContact.includes('@') ? prefill.staffContact : ''}
                   />
                 </label>
               </div>
+              <p className={styles.notice}>Add a phone, an email, or both. Real call leads go to these.</p>
             </fieldset>
 
             <fieldset className={styles.section}>

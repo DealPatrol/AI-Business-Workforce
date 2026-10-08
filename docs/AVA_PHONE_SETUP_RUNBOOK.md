@@ -29,7 +29,7 @@ After onboarding, the app stores a private `ava_onboardings` record in Supabase 
 There are two agent-create modes:
 
 - Default/manual trigger: call `POST /api/ava/provision` with `{"onboardingId":"..."}` and `Authorization: Bearer $AVA_PROVISIONING_SECRET`.
-- Opt-in automatic trigger: set `AVA_AUTO_PROVISION_AGENT=true`. A form submission with a paid, complete Ava Checkout Session then duplicates `ELEVENLABS_AGENT_ID`, patches the new agent with the customer's greeting and operating rules, and records the returned agent ID. `/api/checkout` sessions are recognized by their Ava plan metadata. For an Ava-specific Payment Link, also set `AVA_STRIPE_PAYMENT_LINK_ID` and configure its completion URL to pass `{CHECKOUT_SESSION_ID}`.
+- Opt-in automatic trigger: set `AVA_AUTO_PROVISION_AGENT=true`. A form submission with a paid or trialing Ava Checkout Session then duplicates `ELEVENLABS_AGENT_ID`, patches the new agent with the customer's greeting and operating rules, and records the returned agent ID. Phone status stays `pending_manual`. Cole's email includes a link to this runbook. `/api/checkout` sessions are recognized by their Ava plan metadata. For an Ava-specific Payment Link, also set `AVA_STRIPE_PAYMENT_LINK_ID` and configure its completion URL to pass `{CHECKOUT_SESSION_ID}`.
 
 Example manual trigger:
 
