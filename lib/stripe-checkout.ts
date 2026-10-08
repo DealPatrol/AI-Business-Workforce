@@ -3,6 +3,7 @@ import {
   type AvaPlanKey,
   isAvaPlanKey,
 } from '@/lib/ava/pricing';
+import { avaPricingPathForOrigin } from '@/lib/site';
 
 const STRIPE_API = 'https://api.stripe.com/v1';
 export const STRIPE_API_VERSION = '2026-07-29.dahlia';
@@ -94,7 +95,7 @@ export function buildAvaCheckoutParams(input: AvaCheckoutInput) {
   ];
   params.set('mode', 'subscription');
   params.set('success_url', `${input.origin}/onboarding/ava?${successParts.join('&')}`);
-  params.set('cancel_url', `${input.origin}/ava#pricing`);
+  params.set('cancel_url', `${input.origin}${avaPricingPathForOrigin(input.origin)}`);
   params.set('billing_address_collection', 'auto');
   params.set('allow_promotion_codes', 'true');
   // Stripe Checkout trial: 7 days before first charge when using price_data or Dashboard prices without their own trial.

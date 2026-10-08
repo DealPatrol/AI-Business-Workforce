@@ -48,6 +48,10 @@ For a real campaign, use the same SQL shape as the seed: create one `campaigns` 
 
 The app records page-open activity for valid recipient pages and deduplicates repeated opens from the same request source within 30 minutes. This is useful response activity, but it can include link-preview bots as well as homeowner QR scans.
 
+## Ava on its own domain
+
+Set `NEXT_PUBLIC_SITE_URL` and `SITE_URL` to the Ava domain (no trailing slash) and add that host in Vercel. Exact steps, including `AVA_MARKETING_HOSTS` for `www`, are in [`docs/AVA_STANDALONE_DOMAIN.md`](docs/AVA_STANDALONE_DOMAIN.md).
+
 ## Ava operations
 
 Cole's current post-purchase and phone-launch checklist, plus the first automated agent-provisioning path, is in [`docs/AVA_PHONE_SETUP_RUNBOOK.md`](docs/AVA_PHONE_SETUP_RUNBOOK.md). The manual steps to take a paying customer live are in [`docs/AVA_GO_LIVE_CHECKLIST.md`](docs/AVA_GO_LIVE_CHECKLIST.md). Production credentials and rollout boundaries are documented in [`PRODUCTION_SETUP.md`](PRODUCTION_SETUP.md).

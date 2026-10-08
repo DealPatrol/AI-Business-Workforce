@@ -20,6 +20,10 @@ Add `OPENAI_API_KEY` to Vercel as a server-only environment variable. `OPENAI_AU
 
 Add `RESEND_API_KEY` as a server-only Vercel environment variable. The public founding form and Ava paid-pilot onboarding form send requests directly to `colecollins763@gmail.com`. If email delivery is unavailable, each form explicitly opens the visitor's email client with their answers preserved instead of displaying a false success state.
 
+## Ava on its own domain
+
+Canonicals, the sitemap, and Open Graph for Ava read `NEXT_PUBLIC_SITE_URL`, then `SITE_URL`. Host-based rewrites are documented in [`docs/AVA_STANDALONE_DOMAIN.md`](docs/AVA_STANDALONE_DOMAIN.md). Leaving those variables empty keeps today’s `ai-business-workforce.vercel.app` URLs.
+
 ## Checkout
 
 Add `STRIPE_SECRET_KEY` as a server-only Vercel environment variable. `/api/checkout` creates Stripe Checkout Sessions in subscription mode:

@@ -14,7 +14,9 @@ import {
 import styles from './onboarding.module.css';
 import { readAttribution, readBrowserIds } from '@/lib/analytics/attribution';
 import { splitContact } from '@/lib/analytics/contact';
+import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
 import { trackOnboardingSubmitted } from '@/lib/analytics/events';
+import { trackVercelEvent } from '@/lib/analytics/vercel-events';
 
 const CONTACT_EMAIL = 'colecollins763@gmail.com';
 
@@ -311,17 +313,17 @@ function AvaOnboardingForm() {
       <div className={styles.content}>
         <header className={styles.intro}>
           <span className={styles.eyebrow}>
-            {searchParams.get('session_id') ? 'AVA SETUP' : 'FREE 7-DAY TRIAL'}
+            {searchParams.get('session_id') ? 'AVA SETUP' : 'CHECKOUT STARTS THE TRIAL'}
           </span>
           <h1>
             {searchParams.get('session_id')
               ? "You're in. Let's get Ava ready."
-              : 'Start your free 7-day trial.'}
+              : 'Start the trial in Stripe, then send setup notes.'}
           </h1>
           <p>
               {searchParams.get('session_id')
               ? 'Checkout is confirmed — you are paid or on the 7-day trial. Submit this form and Ava’s agent is created from your answers. The phone number stays pending until Cole attaches it.'
-              : `Tell us how your calls work. Cole sets Ava up. Free 7-day trial, then ${avaPlanPriceLine(selectedPlan)}. $0 setup.`}
+              : `Stripe creates the 7-day trial for ${AVA_PLANS[selectedPlan].label}, then ${avaPlanPriceLine(selectedPlan)}. $0 setup. This form emails Cole. It does not start billing by itself.`}
           </p>
           {prefillNote ? <p className={styles.notice}>{prefillNote}</p> : null}
         </header>
@@ -358,7 +360,13 @@ function AvaOnboardingForm() {
             </div>
             <Link href="/ava#talk-to-ava">Or talk to Sales Ava</Link>
           </div>
-          <video className={styles.sampleVideo} controls playsInline preload="metadata">
+          <video
+            className={styles.sampleVideo}
+            controls
+            playsInline
+            preload="metadata"
+            onPlay={() => trackVercelEvent('demo-play', { surface: 'onboarding-sample' })}
+          >
             <source src="/ava-sample-call.mp4" type="video/mp4" />
             Your browser does not support HTML5 video.
           </video>
@@ -377,6 +385,25 @@ function AvaOnboardingForm() {
         ) : !prefillReady ? (
             <p className={styles.notice}><Loader2 className={styles.spin} /> Loading your Sales Ava answers…</p>
           ) : (
+          <>
+          {!sessionId ? (
+            <section className={styles.paywall}>
+              <h2>The free trial starts at Stripe.</h2>
+              <p>
+                {AVA_PLANS[selectedPlan].label} is {avaPlanPriceLine(selectedPlan)} after 7 days. Checkout
+                returns you here with the session attached.
+              </p>
+              <TrackedCheckoutLink
+                className={styles.checkout}
+                href={`/api/checkout?plan=${selectedPlan}${
+                  qualificationId ? `&qualificationId=${encodeURIComponent(qualificationId)}` : ''
+                }${prefillToken ? `&prefillToken=${encodeURIComponent(prefillToken)}` : ''}`}
+                plan={selectedPlan}
+              >
+                Start free 7-day trial
+              </TrackedCheckoutLink>
+            </section>
+          ) : null}
           <form className={styles.form} onSubmit={submit}>
             <header className={styles.formHeader}>
               <h2>How should Ava handle your calls?</h2>
@@ -568,6 +595,7 @@ function AvaOnboardingForm() {
               <Mail /> Sent directly to Cole for setup. <Link href="/privacy">Privacy</Link>
             </small>
           </form>
+          </>
         )}
       </div>
       <footer className={styles.footer}>

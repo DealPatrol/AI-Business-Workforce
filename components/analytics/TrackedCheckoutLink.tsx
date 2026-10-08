@@ -2,6 +2,7 @@
 
 import type { ReactNode } from 'react';
 import { trackCheckoutStarted } from '@/lib/analytics/events';
+import { trackVercelEvent } from '@/lib/analytics/vercel-events';
 
 type TrackedCheckoutLinkProps = {
   href: string;
@@ -17,6 +18,7 @@ export function TrackedCheckoutLink({ href, className, plan, children }: Tracked
       href={href}
       onClick={() => {
         trackCheckoutStarted(plan);
+        trackVercelEvent('signup-click', { plan: plan || 'starter', destination: 'checkout' });
       }}
     >
       {children}

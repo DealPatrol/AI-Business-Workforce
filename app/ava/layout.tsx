@@ -6,47 +6,32 @@ import './ava-redesign.css';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { AvaViewContent } from '@/components/analytics/AvaViewContent';
-import { AVA_PLANS } from '@/lib/ava/pricing';
+import { avaAbsoluteUrl } from '@/lib/site';
+
+const title = 'Ava AI Receptionist for Contractors and Small Businesses';
+const description =
+  'Ava answers missed and after-hours calls, qualifies the lead, and texts you. Hear a sample call, then start a free 7-day trial. Plans are $79, $149, and $299 a month with $0 setup.';
 
 export const metadata: Metadata = {
-  title: 'Ava AI Receptionist for Home Service Businesses',
-  description:
-    'Ava answers missed and after-hours calls for HVAC, plumbing, electrical, roofing, and other home-service shops, qualifies the lead, and texts you. Self-serve plans from $79/month with a free 7-day trial.',
-  alternates: { canonical: '/ava' },
+  metadataBase: new URL(avaAbsoluteUrl('/')),
+  title,
+  description,
   openGraph: {
-    title: 'Ava AI Receptionist for Home Service Businesses',
-    description:
-      'Turn missed and after-hours calls into qualified leads. Ava answers 24/7, captures job details, and texts your phone. Plans from $79/month.',
-    url: '/ava',
+    title,
+    description,
     siteName: 'Ava',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Ava AI Receptionist for Home Service Businesses',
-    description: 'Self-serve plans from $79/month. Built for contractors and home-service businesses.',
+    title,
+    description,
   },
 };
 
 export default function AvaLayout({ children }: { children: ReactNode }) {
-  const structuredData = {
-    '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    name: 'Ava AI Receptionist',
-    applicationCategory: 'BusinessApplication',
-    operatingSystem: 'Web',
-    description:
-      'AI receptionist for home-service businesses that answers calls, qualifies leads, captures job details and routes follow-up.',
-    offers: [
-      { '@type': 'Offer', name: AVA_PLANS.starter.label, price: '79', priceCurrency: 'USD' },
-      { '@type': 'Offer', name: AVA_PLANS.growth.label, price: '149', priceCurrency: 'USD' },
-      { '@type': 'Offer', name: AVA_PLANS.pro.label, price: '299', priceCurrency: 'USD' },
-    ],
-  };
-
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       <AvaViewContent />
       {children}
     </>
