@@ -4,6 +4,7 @@ import { Fraunces, IBM_Plex_Mono } from 'next/font/google';
 import SalesAvaQualify from '@/components/SalesAvaQualify';
 import { AvaFooter } from '@/components/ava/AvaFooter';
 import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
+import { AVA_PLANS, avaTrialThenPriceCopy, type AvaPlanKey } from '@/lib/ava/pricing';
 
 const display = Fraunces({
   subsets: ['latin'],
@@ -20,38 +21,7 @@ const mono = IBM_Plex_Mono({
   display: 'swap',
 });
 
-const plans = [
-  {
-    key: 'starter',
-    name: 'Starter',
-    price: '$59',
-    minutes: '250 voice minutes / month',
-    overage: '$0.25/min after included usage',
-    description: 'For smaller shops that want affordable 24/7 call coverage.',
-    features: ['Ava AI receptionist', '24/7 answering', 'Lead qualification + summaries', 'Lead texts to your phone', 'Business-specific greeting & FAQs'],
-    featured: false,
-  },
-  {
-    key: 'growth',
-    name: 'Growth',
-    price: '$129',
-    minutes: '650 voice minutes / month',
-    overage: '$0.22/min after included usage',
-    description: 'For businesses that live on inbound calls and estimates.',
-    features: ['Everything in Starter', 'More custom call flows', 'Multiple service types', 'Advanced lead qualification', 'Advanced routing'],
-    featured: true,
-  },
-  {
-    key: 'pro',
-    name: 'Pro',
-    price: '$249',
-    minutes: '1,300 voice minutes / month',
-    overage: '$0.20/min after included usage',
-    description: 'For higher-volume teams that want a deeply customized front desk.',
-    features: ['Everything in Growth', 'Multiple call experiences', 'Advanced routing logic', 'Priority customization', 'Deeper business configuration'],
-    featured: false,
-  },
-];
+const plans = (Object.keys(AVA_PLANS) as AvaPlanKey[]).map((key) => AVA_PLANS[key]);
 
 const industryPages = [
   ['HVAC', '/ava/ai-receptionist-hvac-companies', 'No-cool, no-heat, maintenance, replacement and after-hours calls.'],
@@ -99,9 +69,9 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
           <a href="#how">How it works</a>
           <a href="#pricing">Rate card</a>
         </nav>
-        <Link className="btn btn-ink" href="/onboarding/ava">
+        <TrackedCheckoutLink className="btn btn-ink" href="/api/checkout?plan=starter" plan="starter">
           Start free trial
-        </Link>
+        </TrackedCheckoutLink>
       </header>
 
       {/* ── Hero ─────────────────────────────────────────────── */}
@@ -119,11 +89,11 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
             <a className="btn btn-signal" href="#talk-to-ava">
               Talk to Ava
             </a>
-            <Link className="btn btn-outline" href="/onboarding/ava">
+            <TrackedCheckoutLink className="btn btn-outline" href="/api/checkout?plan=starter" plan="starter">
               Start free 7-day trial <ArrowRight size={17} />
-            </Link>
+            </TrackedCheckoutLink>
           </div>
-          <p className="hero-fine">Free 7-day trial · then $59/mo · $0 setup · cancel anytime</p>
+          <p className="hero-fine">{avaTrialThenPriceCopy('starter')} Cancel anytime.</p>
         </div>
 
         <aside className="call-log" aria-label="Sample of calls Ava answered tonight">
@@ -224,7 +194,7 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
             <article className={plan.featured ? 'plan featured' : 'plan'} key={plan.key}>
               <div className="plan-main">
                 <div className="plan-head">
-                  <h3>{plan.name}</h3>
+                  <h3>{plan.label}</h3>
                   {plan.featured && <span className="stamp-sm">Most booked</span>}
                 </div>
                 <p className="plan-desc">{plan.description}</p>
@@ -236,17 +206,17 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
                   ))}
                 </ul>
                 <p className="plan-minutes">
-                  {plan.minutes} · {plan.overage}
+                  {plan.minutes.toLocaleString('en-US')} voice minutes / month · {plan.overageLabel}
                 </p>
               </div>
               <div className="plan-side">
                 <p className="plan-price">
-                  <strong>{plan.price}</strong>
+                  <strong>{plan.monthlyLabel}</strong>
                   <span>/mo</span>
                 </p>
-                <Link className="btn btn-signal" href={`/onboarding/ava?plan=${plan.key}`}>
+                <TrackedCheckoutLink className="btn btn-signal" href={`/api/checkout?plan=${plan.key}`} plan={plan.key}>
                   Start free trial
-                </Link>
+                </TrackedCheckoutLink>
                 <TrackedCheckoutLink className="plan-direct" href={`/api/checkout?plan=${plan.key}`} plan={plan.key}>
                   or check out directly <ArrowUpRight size={13} />
                 </TrackedCheckoutLink>
@@ -255,7 +225,7 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
           ))}
         </div>
         <p className="ratecard-fine">
-          Special telephony or integration requirements are quoted before launch. Cancel anytime.
+          Special telephony or integration requirements are quoted before launch. Cancel anytime. $0 setup.
         </p>
       </section>
 
@@ -287,11 +257,14 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
         <h2>
           Put Ava on the <em>phones.</em>
         </h2>
-        <p>Talk to her above, then start the trial. Tomorrow&apos;s after-hours calls answer themselves.</p>
+        <p>
+          Talk to her above, then start the trial. {AVA_PLANS.starter.monthlyLabel}, {AVA_PLANS.growth.monthlyLabel}, or{' '}
+          {AVA_PLANS.pro.monthlyLabel} a month after the trial. Tomorrow&apos;s after-hours calls answer themselves.
+        </p>
         <div className="hero-ctas">
-          <Link className="btn btn-paper" href="/onboarding/ava">
+          <TrackedCheckoutLink className="btn btn-paper" href="/api/checkout?plan=starter" plan="starter">
             Start free 7-day trial <ArrowRight size={17} />
-          </Link>
+          </TrackedCheckoutLink>
           <a className="btn btn-ghostlight" href="#talk-to-ava">
             Talk to Ava first
           </a>

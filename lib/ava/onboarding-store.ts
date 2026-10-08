@@ -1,4 +1,5 @@
 import { createAdminClient } from '@/lib/supabase/admin';
+import { linkAvaCustomerToOnboarding } from '@/lib/ava/customers';
 import {
   AvaOnboardingDetails,
   AvaProvisioningResult,
@@ -8,6 +9,9 @@ import {
 export type AvaOnboardingInput = AvaOnboardingDetails & {
   sessionId: string;
   plan: string;
+  staffEmail?: string;
+  staffPhone?: string;
+  preferredVoice?: string;
 };
 
 type AvaOnboardingRow = {
@@ -57,7 +61,36 @@ export async function saveAvaOnboarding(input: AvaOnboardingInput) {
       throw new Error(`Unable to check Ava onboarding: ${existingError.message}`);
     }
     if (existing) {
-      return existing as AvaOnboardingRow;
+      const { data, error } = await supabase
+        .from('ava_onboardings')
+        .update({
+          business_name: input.businessName,
+          business_hours: input.businessHours,
+          services: input.services,
+          call_handling_rules: input.callHandlingRules,
+          staff_name: input.staffName,
+          staff_contact: input.staffContact,
+          calendar_preference: input.calendarPreference,
+          urgent_call_rules: input.urgentCallRules,
+          selected_plan: input.plan || null,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', existing.id)
+        .select()
+        .single();
+
+      if (error) {
+        throw new Error(`Unable to update Ava onboarding: ${error.message}`);
+      }
+
+      const saved = data as AvaOnboardingRow;
+      await saveOptionalOnboardingFields(saved.id, input);
+      await linkAvaCustomerToOnboarding({
+        sessionId: input.sessionId,
+        onboardingId: saved.id,
+        businessName: input.businessName,
+      });
+      return saved;
     }
   }
 
@@ -82,7 +115,33 @@ export async function saveAvaOnboarding(input: AvaOnboardingInput) {
     throw new Error(`Unable to save Ava onboarding: ${error.message}`);
   }
 
-  return data as AvaOnboardingRow;
+  const saved = data as AvaOnboardingRow;
+  await saveOptionalOnboardingFields(saved.id, input);
+  await linkAvaCustomerToOnboarding({
+    sessionId: input.sessionId,
+    onboardingId: saved.id,
+    businessName: input.businessName,
+  });
+  return saved;
+}
+
+async function saveOptionalOnboardingFields(id: string, input: AvaOnboardingInput) {
+  const fields: Record<string, string | null> = {};
+  if (input.staffEmail) fields.staff_email = input.staffEmail;
+  if (input.staffPhone) fields.staff_phone = input.staffPhone;
+  if (input.preferredVoice) fields.preferred_voice = input.preferredVoice;
+  if (Object.keys(fields).length === 0) return;
+
+  try {
+    const supabase = createAdminClient();
+    const { error } = await supabase
+      .from('ava_onboardings')
+      .update({ ...fields, updated_at: new Date().toISOString() })
+      .eq('id', id);
+    if (error) console.error('Optional Ava onboarding fields were not saved', error.message);
+  } catch (error) {
+    console.error('Optional Ava onboarding fields were not saved', error);
+  }
 }
 
 export async function getAvaOnboarding(id: string) {
