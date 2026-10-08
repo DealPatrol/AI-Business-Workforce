@@ -42,6 +42,8 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    // Unknown agent ids (public demo, Sales Ava, canceled shops) return
+    // { skipped: true, reason: 'ignored_agent' } with no lead, email, or SMS.
     const result = await savePostCallLead(lead);
     return NextResponse.json({ received: true, ...result });
   } catch (error) {

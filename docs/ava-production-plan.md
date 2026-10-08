@@ -20,7 +20,7 @@ Goal: ship Ava (AI receptionist) as a production-ready, payments-capable product
 - Centralized Ava pricing in `lib/ava/pricing.ts` wired through checkout, layout JSON-LD, industry pages, onboarding, Sales Ava, demos.
 - Stripe Checkout subscriptions now send `subscription_data[trial_period_days]=7`.
 - `POST /api/webhooks/stripe` verifies signatures, upserts Ava customers, emails the onboarding link, and syncs subscription status.
-- `POST /api/webhooks/elevenlabs` verifies the post-call HMAC signature and saves real-call leads.
+- `POST /api/webhooks/elevenlabs` verifies the post-call HMAC signature and saves leads only for provisioned Ava customers on an active or trialing subscription. Demo and Sales Ava calls are acknowledged and ignored, with no Twilio SMS.
 - Southern voice picker + preferred-voice onboarding note.
 - Onboarding row update on Stripe session reuse.
 

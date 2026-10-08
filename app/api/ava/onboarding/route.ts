@@ -20,6 +20,7 @@ import {
   readRequestAttribution,
   safePageUrl,
 } from '@/lib/analytics/request-context';
+import { DestinationLockedError } from '@/lib/ava/destination-edit';
 import { AVA_VOICE_OPTIONS, isAvaVoiceKey } from '@/lib/ava/voice-options';
 
 const NOTIFICATION_EMAIL = 'colecollins763@gmail.com';
@@ -153,6 +154,9 @@ export async function POST(request: NextRequest) {
         urgentCallRules: fields.urgentCallRules,
         sessionId: fields.sessionId,
         plan: fields.plan,
+        editToken: String(body.editToken ?? '')
+          .trim()
+          .slice(0, 2_000),
       });
       onboardingId = onboarding.id;
 
@@ -177,6 +181,12 @@ export async function POST(request: NextRequest) {
         };
       }
     } catch (persistenceError) {
+      if (persistenceError instanceof DestinationLockedError) {
+        return NextResponse.json(
+          { error: persistenceError.message, code: persistenceError.code },
+          { status: 403 },
+        );
+      }
       persistenceWarning =
         persistenceError instanceof Error
           ? persistenceError.message

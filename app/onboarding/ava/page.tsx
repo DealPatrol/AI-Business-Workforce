@@ -104,6 +104,33 @@ function AvaOnboardingForm() {
   });
   const [prefillNote, setPrefillNote] = useState('');
   const [prefillReady, setPrefillReady] = useState(!qualificationId);
+  const [linkState, setLinkState] = useState<'idle' | 'sending' | 'sent'>('idle');
+  const [linkMessage, setLinkMessage] = useState('');
+  const [linkError, setLinkError] = useState('');
+  const sessionId = searchParams.get('session_id') || '';
+  const [editToken, setEditToken] = useState(searchParams.get('edit_token') || '');
+
+  useEffect(() => {
+    if (!sessionId) {
+      setEditToken('');
+      return;
+    }
+    const storageKey = `ava-destination-edit:${sessionId}`;
+    const params = new URLSearchParams(window.location.search);
+    const fromUrl = params.get('edit_token') || '';
+    const fromStorage = window.sessionStorage.getItem(storageKey) || '';
+    const token = fromUrl || fromStorage;
+    setEditToken(token);
+    if (fromUrl) window.sessionStorage.setItem(storageKey, fromUrl);
+    if (!fromUrl) return;
+    params.delete('edit_token');
+    const query = params.toString();
+    window.history.replaceState(
+      window.history.state,
+      '',
+      `${window.location.pathname}${query ? `?${query}` : ''}${window.location.hash}`,
+    );
+  }, [sessionId]);
 
   useEffect(() => {
     if (!qualificationId) {
@@ -157,6 +184,36 @@ function AvaOnboardingForm() {
     };
   }, [qualificationId, prefillToken, searchParams]);
 
+  async function requestDestinationLink() {
+    setLinkState('sending');
+    setLinkMessage('');
+    setLinkError('');
+    try {
+      const response = await fetch('/api/ava/onboarding/destination-link', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId }),
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || 'Could not send the change link.');
+      }
+      setLinkMessage(
+        typeof result.message === 'string'
+          ? result.message
+          : 'We sent a change link to the email on your Stripe checkout.',
+      );
+      setLinkState('sent');
+    } catch (linkRequestError) {
+      setLinkError(
+        linkRequestError instanceof Error
+          ? linkRequestError.message
+          : 'Could not send the change link.',
+      );
+      setLinkState('idle');
+    }
+  }
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setStatus('sending');
@@ -198,6 +255,15 @@ function AvaOnboardingForm() {
       const result = await response.json();
 
       if (!response.ok) {
+        if (result.code === 'destination_locked') {
+          setError(
+            typeof result.error === 'string'
+              ? result.error
+              : 'Lead phone and email are locked. Request a change link below.',
+          );
+          setStatus('idle');
+          return;
+        }
         if (result.emailFallback) {
           const fallback = buildEmailFallback(form, result, attribution);
           setEmailFallback(fallback);
@@ -410,6 +476,35 @@ function AvaOnboardingForm() {
                 </label>
               </div>
               <p className={styles.notice}>Add a phone, an email, or both. Real call leads go to these.</p>
+              {sessionId ? (
+                <>
+                  <p className={styles.notice}>
+                    After the first successful submit, this checkout link cannot change the lead
+                    phone or email. Request a change link and we email it to the address on your
+                    Stripe checkout. It expires in 30 minutes.
+                  </p>
+                  {editToken ? (
+                    <p className={styles.notice}>
+                      This page was opened from a change link. You can update the lead phone and
+                      email until that link expires.
+                    </p>
+                  ) : null}
+                  <button
+                    type="button"
+                    className={styles.secondary}
+                    onClick={requestDestinationLink}
+                    disabled={linkState === 'sending'}
+                  >
+                    {linkState === 'sending' ? 'Sending change link…' : 'Email me a change link'}
+                  </button>
+                  {linkMessage ? <p className={styles.notice}>{linkMessage}</p> : null}
+                  {linkError ? (
+                    <p className={styles.error} role="alert">
+                      {linkError}
+                    </p>
+                  ) : null}
+                </>
+              ) : null}
             </fieldset>
 
             <fieldset className={styles.section}>
@@ -436,7 +531,8 @@ function AvaOnboardingForm() {
               name="leadHandoff"
               defaultValue={prefill.calendarPreference || 'Text the lead to the owner for a callback.'}
             />
-            <input type="hidden" name="sessionId" value={searchParams.get('session_id') || ''} />
+            <input type="hidden" name="sessionId" value={sessionId} />
+            <input type="hidden" name="editToken" value={editToken} />
             <input type="hidden" name="plan" value={prefill.plan || searchParams.get('plan') || ''} />
             <input type="hidden" name="qualificationId" value={qualificationId} />
             <p className={styles.notice}>
