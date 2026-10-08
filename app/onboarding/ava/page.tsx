@@ -606,9 +606,29 @@ function AvaOnboardingForm() {
   );
 }
 
+function OnboardingFallback() {
+  return (
+    <main className={styles.page}>
+      <div className={styles.content}>
+        <header className={styles.intro}>
+          <span className={styles.eyebrow}>CHECKOUT STARTS THE TRIAL</span>
+          <h1>Start the trial in Stripe, then send setup notes.</h1>
+          <p>
+            The 7-day trial is created at checkout. Starter is $79 a month after that, with $0 setup.
+            The setup form loads on this page next.
+          </p>
+          <a className={styles.checkout} href="/api/checkout?plan=starter">
+            Start free 7-day trial
+          </a>
+        </header>
+      </div>
+    </main>
+  );
+}
+
 export default function AvaOnboardingPage() {
   return (
-    <Suspense>
+    <Suspense fallback={<OnboardingFallback />}>
       <AvaOnboardingForm />
     </Suspense>
   );
