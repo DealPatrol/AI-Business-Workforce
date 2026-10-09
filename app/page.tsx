@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -12,6 +13,11 @@ import {
 } from 'lucide-react';
 import { FOUNDING_CTA, foundingCheckoutHref, getDemo10Payment } from '@/lib/payments';
 import styles from './home.module.css';
+
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+  openGraph: { url: '/' },
+};
 
 const CONTACT_EMAIL = 'colecollins763@gmail.com';
 
