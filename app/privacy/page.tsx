@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     description,
     siteName: 'Ava by Workforce AI',
     type: 'website',
-    url: 'https://ai-business-workforce.vercel.app/privacy',
+    url: '/privacy',
   },
   twitter: {
     card: 'summary',

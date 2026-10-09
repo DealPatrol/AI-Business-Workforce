@@ -1,3 +1,7 @@
+# Front Porch Growth
+
+The public homepage is the Front Porch Growth suite at `/`: YardProof postcards, Ava, Lead Finder, and an invoicing waitlist. The previous YardProof homepage is `/postcards`. Old anchors `/#how`, `/#demo10`, and `/#package` 308-redirect to `/postcards`. Apply `supabase/migrations/008_invoicing_waitlist.sql` before the invoicing form can save.
+
 # YardProof
 
 AI-powered business automation platform focused on measurable outcomes for service businesses.
@@ -61,7 +65,7 @@ Apply `supabase/migrations/007_prospector.sql` in the Supabase SQL editor before
 3. "Find emails" fetches the business homepage and likely contact or about pages, pulls public addresses (including mailto and Cloudflare-protected addresses), and drops obvious junk. Businesses with no email are marked call-only. Phone numbers stay on the row. Batches stay small (5 sites, 2 at a time).
 4. The table filters by email, rating, review count, category, and status. Statuses are new, drafted, approved, sent, replied, booked, not interested, and do-not-contact. Export CSV from the list header. Saved lists persist in Supabase.
 5. Open a lead to generate a short first email and two follow-ups. Every draft is editable. Sending that draft stays disabled until you click Approve. Editing after approval clears it.
-6. "Send approved" sends one approved draft at a time from your Resend domain, then waits for the spacing setting (default 90 seconds). The daily cap defaults to 25 successful sends and resets at 00:00 UTC. Stop leaves the rest unsent.
+6. "Send approved" attempts one approved draft at a time, then waits for the spacing setting (default 90 seconds). The daily cap defaults to 25 successful sends and resets at 00:00 UTC. Stop leaves the rest unsent. Cold email stays off unless `COLD_EMAIL_ENABLED` is true, and the SMTP/Instantly transport is a stub, so a send does not leave the building.
 
 ### Sending and compliance
 
@@ -70,16 +74,17 @@ Settings are at `/dashboard/prospector/settings`: sender name, sender email, phy
 Nothing sends unless all of these are true:
 
 - The draft was explicitly approved, and it has not been edited since.
-- `RESEND_API_KEY` is set and the From address is a single mailbox on a domain you verified in Resend.
+- `COLD_EMAIL_ENABLED` is true. It defaults off. Resend is not used for this mail.
+- The selected transport (`COLD_EMAIL_TRANSPORT`, default `stub`, or `smtp` / `instantly`) is actually connected. The shipped adapters do not send.
 - Sender name and a physical mailing address of at least 10 characters are saved. The address is not hardcoded.
-- The message includes an accurate From and subject, a commercial-message line, that mailing address, and an unsubscribe link.
+- The message includes an accurate From and subject, a commercial-message line, that mailing address, an unsubscribe link, and the headers `List-Unsubscribe` plus `List-Unsubscribe-Post: List-Unsubscribe=One-Click`. `/prospector/unsubscribe` stays public.
 - The address is not already on the suppression list. Unsubscribe and do-not-contact both write to that list, and every send checks it.
 - The daily cap and the gap since the last successful send both allow it.
 - Every attempt is stored in `prospector_sends` (sent, failed, or suppressed).
 
-If Resend or the Maps key is missing, list building, drafting, copy, and CSV export still work. The page says what to set instead of crashing.
+If cold email is off or the Maps key is missing, list building, drafting, copy, and CSV export still work. The page says what to set instead of crashing.
 
-Gmail / Google Workspace OAuth is not included. Sending is Resend-only so mail leaves a domain Cole controls, without a shared sending pool.
+Gmail / Google Workspace OAuth is not included. Prospect mail is the SMTP/Instantly stub, not Resend. Resend remains the transactional sender for Ava and founding requests.
 
 ### Environment
 
@@ -90,8 +95,9 @@ Lead Finder reuses server variables that are already in `.env.example`:
 | `GOOGLE_MAPS_API_KEY` | Places API (New) Text Search and Geocoding. Also used by postcard imagery. Enable Places API (New) on this key. Server only. |
 | `OPENAI_API_KEY` | Buyer types and email drafts. |
 | `OPENAI_AUDIT_MODEL` | Optional model override. Defaults to `gpt-5-mini`. |
-| `RESEND_API_KEY` | Sends from the From address in Lead Finder settings. |
-| `NEXT_PUBLIC_APP_URL` | Builds the unsubscribe link. |
+| `COLD_EMAIL_ENABLED` | Must be `true` before any prospect send is attempted. Default off. |
+| `COLD_EMAIL_TRANSPORT` | `stub` (default), `smtp`, or `instantly`. None of these send yet. |
+| `NEXT_PUBLIC_SITE_URL` | Public origin for unsubscribe links. Falls back to `https://frontporchgrowth.com`. |
 | `SUPABASE_SECRET_KEY` | Signs unsubscribe links when `PROSPECTOR_UNSUBSCRIBE_SECRET` is unset, and writes the public unsubscribe. |
 | `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Sign-in and saved lists. |
 

@@ -8,6 +8,16 @@ type CookieToSet = {
 };
 
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  if (pathname === '/prospector/unsubscribe') {
+    if (request.method === 'POST') {
+      const url = request.nextUrl.clone();
+      url.pathname = '/api/prospector/unsubscribe';
+      return NextResponse.rewrite(url);
+    }
+    return NextResponse.next();
+  }
+
   let response = NextResponse.next({ request });
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
@@ -34,5 +44,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/login'],
+  matcher: ['/dashboard/:path*', '/login', '/prospector/unsubscribe'],
 };

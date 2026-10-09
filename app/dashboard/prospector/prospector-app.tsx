@@ -304,10 +304,10 @@ export default function ProspectorApp({
       {!config.openai && (
         <p className={styles.alert}>OpenAI is not configured. Set OPENAI_API_KEY to suggest buyer types and draft emails.</p>
       )}
-      {!config.resend && (
-        <p className={styles.info}>Sending is off because RESEND_API_KEY is not set. You can still build lists, draft, copy, and export emails from your own account.</p>
+      {!config.coldEmail && (
+        <p className={styles.info}>Cold email is off. Set COLD_EMAIL_ENABLED=true to send. You can still build lists, draft, copy, and export. Nothing is sent while the flag is off. Resend is not used for prospect mail.</p>
       )}
-      {config.resend && !config.unsubscribe && (
+      {config.coldEmail && !config.unsubscribe && (
         <p className={styles.alert}>Sending also needs PROSPECTOR_UNSUBSCRIBE_SECRET or SUPABASE_SECRET_KEY so every email can include a working unsubscribe link.</p>
       )}
       {error && <p className={styles.alert} role="alert">{error}</p>}
@@ -453,7 +453,7 @@ export default function ProspectorApp({
                   <button className={styles.secondary} type="button" disabled={Boolean(busy) || leads.length === 0} onClick={enrich}>
                     {busy === 'enrich' ? 'Checking sites…' : 'Find emails'}
                   </button>
-                  <button className={styles.primary} type="button" disabled={Boolean(busy) || !config.resend || approved === 0} onClick={sendQueue}>
+                  <button className={styles.primary} type="button" disabled={Boolean(busy) || !config.coldEmail || approved === 0} onClick={sendQueue}>
                     Send approved
                   </button>
                 </div>
@@ -532,7 +532,7 @@ export default function ProspectorApp({
       {activeLeadId && (
         <DraftDrawer
           leadId={activeLeadId}
-          resendReady={config.resend && config.unsubscribe}
+          sendReady={config.coldEmail && config.unsubscribe}
           onClose={() => setActiveLeadId(null)}
           onLead={(lead) => setLeads((current) => current.map((item) => (item.id === lead.id ? lead : item)))}
         />

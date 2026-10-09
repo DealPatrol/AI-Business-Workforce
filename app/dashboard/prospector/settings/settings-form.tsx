@@ -42,10 +42,10 @@ export default function SettingsForm({
       <div className={styles.eyebrow}>YOUR DOMAIN</div>
       <h2>Sending settings</h2>
       <p className={styles.quiet}>
-        Mail goes out from the address you enter here, through Resend on a domain you have verified. Nothing is sent until you approve a draft.
+        Mail would leave from the address you enter here through the SMTP or Instantly transport. Cold email stays off until COLD_EMAIL_ENABLED is true, and the connected transport is still a stub, so nothing is sent. Approve a draft before a send is even attempted. Resend is not used for this mail.
       </p>
-      {!config.resend && (
-        <p className={styles.info}>RESEND_API_KEY is not set. Saving these settings still works. Sending stays off until the key and a verified domain are in place.</p>
+      {!config.coldEmail && (
+        <p className={styles.info}>COLD_EMAIL_ENABLED is off. Saving these settings still works. Prospect sending stays off.</p>
       )}
       {error && <p className={styles.alert} role="alert">{error}</p>}
       {notice && <p className={styles.info}>{notice}</p>}

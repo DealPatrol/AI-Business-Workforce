@@ -1,5 +1,6 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
 import { normalizeEmail } from '@/lib/prospector/gates';
+import { getSiteUrl } from '@/lib/site';
 
 type UnsubscribePayload = {
   o: string;
@@ -51,7 +52,7 @@ export function verifyUnsubscribeToken(
 export function unsubscribeUrl(ownerId: string, email: string): string | null {
   const secret = unsubscribeSecret();
   if (!secret) return null;
-  const base = (process.env.NEXT_PUBLIC_APP_URL?.trim() || 'http://localhost:3000').replace(/\/$/, '');
+  const base = getSiteUrl();
   const token = signUnsubscribeToken(ownerId, email, secret);
   return `${base}/prospector/unsubscribe?token=${encodeURIComponent(token)}`;
 }

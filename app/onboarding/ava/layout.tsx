@@ -8,12 +8,14 @@ const description =
 export const metadata: Metadata = {
   title: { absolute: title },
   description,
+  alternates: { canonical: '/onboarding/ava' },
+  robots: { index: false, follow: false },
   openGraph: {
     title,
     description,
     siteName: 'Ava by Workforce AI',
     type: 'website',
-    url: 'https://ai-business-workforce.vercel.app/onboarding/ava',
+    url: '/onboarding/ava',
   },
   twitter: {
     card: 'summary_large_image',

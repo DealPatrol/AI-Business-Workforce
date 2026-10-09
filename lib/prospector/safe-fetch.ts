@@ -2,6 +2,7 @@ import { lookup } from 'node:dns/promises';
 import { isIP } from 'node:net';
 import { htmlTitle, htmlToText } from '@/lib/prospector/email-extract';
 import { PublicFetchError } from '@/lib/prospector/errors';
+import { getSiteUrl } from '@/lib/site';
 
 const BLOCKED_HOSTS = new Set([
   'localhost',
@@ -120,7 +121,7 @@ export async function fetchPublicHtml(rawUrl: string): Promise<FetchedPage> {
       redirect: 'manual',
       headers: {
         Accept: 'text/html,application/xhtml+xml;q=0.9,text/plain;q=0.5',
-        'User-Agent': 'YardProofLeadFinder/1.0 (+https://ai-business-workforce.vercel.app)',
+        'User-Agent': `YardProofLeadFinder/1.0 (+${getSiteUrl()})`,
       },
       signal: AbortSignal.timeout(6_000),
     });

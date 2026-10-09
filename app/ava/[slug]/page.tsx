@@ -3,8 +3,9 @@ import Link from 'next/link';
 import { ArrowRight, Check, PhoneCall, ShieldCheck, Sparkles } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { AvaFooter } from '@/components/ava/AvaFooter';
+import { getSiteUrl } from '@/lib/site';
 
-const base = 'https://ai-business-workforce.vercel.app';
+const base = getSiteUrl();
 
 type PageData = {
   title: string;

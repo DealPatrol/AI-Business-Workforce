@@ -1,7 +1,8 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { ProspectorSetupError, ValidationError } from '@/lib/prospector/errors';
 import { buildCanSpamFooter, evaluateSend, startOfUtcDay } from '@/lib/prospector/gates';
-import { renderHtmlEmail, renderPlainEmail, sendProspectorEmail } from '@/lib/prospector/resend';
+import { renderHtmlEmail, renderPlainEmail } from '@/lib/prospector/render-email';
+import { coldEmailEnabled, createColdEmailTransport, listUnsubscribeHeaders } from '@/lib/prospector/transport';
 import {
   findSentDraft,
   getDraft,
@@ -78,6 +79,7 @@ export async function deliverDraft(
       body: draft.body,
       status: 'suppressed',
       error: gate.message,
+      provider: 'suppression',
     });
     await updateLead(supabase, ownerId, lead.id, { status: 'do_not_contact' });
     return { ok: false, status: 409, message: gate.message, code: gate.code, send };
@@ -105,14 +107,23 @@ export async function deliverDraft(
   const text = renderPlainEmail(draft.body, footer);
   const html = renderHtmlEmail(draft.body, footer);
 
+  if (!coldEmailEnabled()) {
+    return {
+      ok: false,
+      status: 503,
+      message: 'Cold email is turned off. Set COLD_EMAIL_ENABLED=true to send. Nothing was sent.',
+    };
+  }
+
+  const transport = createColdEmailTransport();
   try {
-    const result = await sendProspectorEmail({
+    const result = await transport.send({
       from: gate.fromHeader,
       to: gate.toEmail,
       subject: gate.subject,
       text,
       html,
-      unsubscribeUrl: link,
+      headers: listUnsubscribeHeaders(link),
     });
     const send = await insertSend(supabase, {
       ownerId,
@@ -122,6 +133,7 @@ export async function deliverDraft(
       fromEmail: gate.fromHeader,
       subject: gate.subject,
       body: text,
+      provider: transport.name,
       providerMessageId: result.id,
       status: 'sent',
       sentAt: new Date().toISOString(),
@@ -144,6 +156,7 @@ export async function deliverDraft(
       fromEmail: gate.fromHeader,
       subject: gate.subject,
       body: text,
+      provider: transport.name,
       status: 'failed',
       error: message.slice(0, 400),
     });
