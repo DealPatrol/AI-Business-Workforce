@@ -6,6 +6,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
   return [
     { url: absoluteSiteUrl('/'), lastModified: now, changeFrequency: 'weekly', priority: 1 },
+    { url: absoluteSiteUrl('/postcards'), lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
+    { url: absoluteSiteUrl('/pricing'), lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
+    { url: absoluteSiteUrl('/terms'), lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
     { url: absoluteSiteUrl('/ava'), lastModified: now, changeFrequency: 'weekly', priority: 0.95 },
     { url: absoluteSiteUrl('/privacy'), lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
     { url: absoluteSiteUrl('/receptionist-demo'), lastModified: now, changeFrequency: 'weekly', priority: 0.8 },

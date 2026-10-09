@@ -9,6 +9,8 @@ const description =
 export const metadata: Metadata = {
   title: { absolute: title },
   description,
+  alternates: { canonical: '/onboarding/ava' },
+  robots: { index: false, follow: false },
   openGraph: {
     title,
     description,

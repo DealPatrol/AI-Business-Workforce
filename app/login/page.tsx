@@ -7,7 +7,12 @@ type LoginPageProps = {
   searchParams: Promise<{ next?: string }>;
 };
 
-const ALLOWED_RETURN_PATHS = new Set(['/dashboard', '/dashboard/campaigns']);
+const ALLOWED_RETURN_PATHS = new Set([
+  '/dashboard',
+  '/dashboard/campaigns',
+  '/dashboard/prospector',
+  '/dashboard/prospector/settings',
+]);
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
   const { next } = await searchParams;

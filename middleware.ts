@@ -57,6 +57,12 @@ export async function middleware(request: NextRequest) {
   if (standalone) return standalone;
 
   const { pathname } = request.nextUrl;
+  if (pathname === '/prospector/unsubscribe' && request.method === 'POST') {
+    const url = request.nextUrl.clone();
+    url.pathname = '/api/prospector/unsubscribe';
+    return NextResponse.rewrite(url);
+  }
+
   if (!pathname.startsWith('/dashboard') && pathname !== '/login') {
     return NextResponse.next();
   }

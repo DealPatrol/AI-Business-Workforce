@@ -1,3 +1,7 @@
+# Front Porch Growth
+
+The public homepage is the Front Porch Growth suite at `/`: YardProof postcards, Ava, Lead Finder, and an invoicing waitlist. The previous YardProof homepage is `/postcards`. Old anchors `/#how`, `/#demo10`, and `/#package` 308-redirect to `/postcards`. Apply `supabase/migrations/008_invoicing_waitlist.sql` before the invoicing form can save.
+
 # YardProof
 
 AI-powered business automation platform focused on measurable outcomes for service businesses.
@@ -47,6 +51,61 @@ The production-ready slice of the postcard workflow uses Supabase for recipient 
 For a real campaign, use the same SQL shape as the seed: create one `campaigns` row with the contractor Auth user's ID, then add one `campaign_recipients` row per mailed address. Leave `public_token` out of inserts so Postgres generates a high-entropy unique token.
 
 The app records page-open activity for valid recipient pages and deduplicates repeated opens from the same request source within 30 minutes. This is useful response activity, but it can include link-preview bots as well as homeowner QR scans.
+
+## Lead Finder
+
+Lead Finder is Cole's operator tool for finding local buyers, drafting cold email, and sending it from his own domain. It lives at `/dashboard/prospector` (sign in with the same Supabase user as the campaign inbox). `/leads` stays the public redirect it already was.
+
+Apply `supabase/migrations/007_prospector.sql` in the Supabase SQL editor before using it. Lists, leads, drafts, the send log, and the do-not-contact list are stored there with row-level security.
+
+### What it does
+
+1. Paste a website, optional notes, and a city or state (radius is optional, capped at 30 miles). The app reads the page and asks the existing OpenAI model for 3–6 buyer types, each with a reason, fit score, and Google Maps queries. Edit or uncheck them before searching.
+2. Search uses Google Places API (New) Text Search. Each run is capped at 6 queries and 2 pages of 10, and the screen shows that request count before anything is called. Confirm the quota checkbox to run it. Results are deduped by place id inside the saved list.
+3. "Find emails" fetches the business homepage and likely contact or about pages, pulls public addresses (including mailto and Cloudflare-protected addresses), and drops obvious junk. Businesses with no email are marked call-only. Phone numbers stay on the row. Batches stay small (5 sites, 2 at a time).
+4. The table filters by email, rating, review count, category, and status. Statuses are new, drafted, approved, sent, replied, booked, not interested, and do-not-contact. Export CSV from the list header. Saved lists persist in Supabase.
+5. Open a lead to generate a short first email and two follow-ups. Every draft is editable. Sending that draft stays disabled until you click Approve. Editing after approval clears it.
+6. "Send approved" attempts one approved draft at a time, then waits for the spacing setting (default 90 seconds). The daily cap defaults to 25 successful sends and resets at 00:00 UTC. Stop leaves the rest unsent. Cold email stays off unless `COLD_EMAIL_ENABLED` is true, and the SMTP/Instantly transport is a stub, so a send does not leave the building.
+
+### Sending and compliance
+
+Settings are at `/dashboard/prospector/settings`: sender name, sender email, physical mailing address, booking link (Calendly or Cal.com), daily cap, spacing, and default location.
+
+Nothing sends unless all of these are true:
+
+- The draft was explicitly approved, and it has not been edited since.
+- `COLD_EMAIL_ENABLED` is true. It defaults off. Resend is not used for this mail.
+- The selected transport (`COLD_EMAIL_TRANSPORT`, default `stub`, or `smtp` / `instantly`) is actually connected. The shipped adapters do not send.
+- Sender name and a physical mailing address of at least 10 characters are saved. The address is not hardcoded.
+- The message includes an accurate From and subject, a commercial-message line, that mailing address, an unsubscribe link, and the headers `List-Unsubscribe` plus `List-Unsubscribe-Post: List-Unsubscribe=One-Click`. `/prospector/unsubscribe` stays public.
+- The address is not already on the suppression list. Unsubscribe and do-not-contact both write to that list, and every send checks it.
+- The daily cap and the gap since the last successful send both allow it.
+- Every attempt is stored in `prospector_sends` (sent, failed, or suppressed).
+
+If cold email is off or the Maps key is missing, list building, drafting, copy, and CSV export still work. The page says what to set instead of crashing.
+
+Gmail / Google Workspace OAuth is not included. Prospect mail is the SMTP/Instantly stub, not Resend. Resend remains the transactional sender for Ava and founding requests.
+
+### Environment
+
+Lead Finder reuses server variables that are already in `.env.example`:
+
+| Variable | Role |
+| --- | --- |
+| `GOOGLE_MAPS_API_KEY` | Places API (New) Text Search and Geocoding. Also used by postcard imagery. Enable Places API (New) on this key. Server only. |
+| `OPENAI_API_KEY` | Buyer types and email drafts. |
+| `OPENAI_AUDIT_MODEL` | Optional model override. Defaults to `gpt-5-mini`. |
+| `COLD_EMAIL_ENABLED` | Must be `true` before any prospect send is attempted. Default off. |
+| `COLD_EMAIL_TRANSPORT` | `stub` (default), `smtp`, or `instantly`. None of these send yet. |
+| `NEXT_PUBLIC_SITE_URL` | Public origin for unsubscribe links. Falls back to `https://frontporchgrowth.com`. |
+| `SUPABASE_SECRET_KEY` | Signs unsubscribe links when `PROSPECTOR_UNSUBSCRIBE_SECRET` is unset, and writes the public unsubscribe. |
+| `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Sign-in and saved lists. |
+
+New optional variable:
+
+- `PROSPECTOR_UNSUBSCRIBE_SECRET` — dedicated HMAC secret for unsubscribe links. Falls back to `SUPABASE_SECRET_KEY`, then `SUPABASE_SERVICE_ROLE_KEY`.
+
+Do not create a `NEXT_PUBLIC_GOOGLE_MAPS_*` key. The browser never sees the Maps key.
 
 ## Ava operations
 

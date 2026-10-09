@@ -5,20 +5,25 @@ import type { ReactNode } from 'react';
 import { Analytics } from '@vercel/analytics/next';
 import { AdTracking } from '@/components/analytics/AdTracking';
 import { CaptureAttribution } from '@/components/analytics/CaptureAttribution';
+import { legacyHomeAnchorScript } from '@/lib/legacy-home-anchors';
 import { getSiteUrl } from '@/lib/site-url';
 
-const title = 'YardProof | Managed Postcard Campaigns for Home Services';
+const title = 'Front Porch Growth';
 const description =
-  'Launch a managed property-concept postcard campaign with QR estimate pages for landscaping and home-service businesses.';
+  'Front Porch Growth is the home for YardProof postcards, the Ava AI receptionist, Lead Finder, and invoicing for home-service businesses.';
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
-  title,
+  title: {
+    default: title,
+    template: '%s | Front Porch Growth',
+  },
   description,
   openGraph: {
     title,
     description,
-    siteName: 'YardProof',
+    url: '/',
+    siteName: 'Front Porch Growth',
     type: 'website',
   },
   twitter: {
@@ -39,6 +44,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className="bg-background">
       <body>
+        <script dangerouslySetInnerHTML={{ __html: legacyHomeAnchorScript() }} />
         <CaptureAttribution />
         <AdTracking />
         {children}
