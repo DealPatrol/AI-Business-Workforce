@@ -6,7 +6,7 @@ import { Analytics } from '@vercel/analytics/next';
 import { AdTracking } from '@/components/analytics/AdTracking';
 import { CaptureAttribution } from '@/components/analytics/CaptureAttribution';
 import { legacyHomeAnchorScript } from '@/lib/legacy-home-anchors';
-import { getSiteUrl } from '@/lib/site';
+import { getSiteUrl } from '@/lib/site-url';
 
 const title = 'Front Porch Growth';
 const description =

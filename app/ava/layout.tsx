@@ -6,7 +6,6 @@ import './ava-redesign.css';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { AvaViewContent } from '@/components/analytics/AvaViewContent';
-import { AVA_PLANS } from '@/lib/ava/pricing';
 
 export const metadata: Metadata = {
   title: 'Ava AI Receptionist for Home Service Businesses',
@@ -29,24 +28,8 @@ export const metadata: Metadata = {
 };
 
 export default function AvaLayout({ children }: { children: ReactNode }) {
-  const structuredData = {
-    '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    name: 'Ava AI Receptionist',
-    applicationCategory: 'BusinessApplication',
-    operatingSystem: 'Web',
-    description:
-      'AI receptionist for home-service businesses that answers calls, qualifies leads, captures job details and routes follow-up.',
-    offers: [
-      { '@type': 'Offer', name: AVA_PLANS.starter.label, price: '79', priceCurrency: 'USD' },
-      { '@type': 'Offer', name: AVA_PLANS.growth.label, price: '149', priceCurrency: 'USD' },
-      { '@type': 'Offer', name: AVA_PLANS.pro.label, price: '299', priceCurrency: 'USD' },
-    ],
-  };
-
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       <AvaViewContent />
       {children}
     </>

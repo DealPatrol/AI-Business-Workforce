@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import styles from './privacy.module.css';
+import { absoluteSiteUrl } from '@/lib/site-url';
 
 const title = 'Privacy | Ava by Workforce AI';
 const description =
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
     description,
     siteName: 'Ava by Workforce AI',
     type: 'website',
-    url: '/privacy',
+    url: absoluteSiteUrl('/privacy'),
   },
   twitter: {
     card: 'summary',

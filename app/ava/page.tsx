@@ -1,10 +1,22 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, ArrowUpRight, Check } from 'lucide-react';
 import { Fraunces, IBM_Plex_Mono } from 'next/font/google';
 import SalesAvaQualify from '@/components/SalesAvaQualify';
 import { AvaFooter } from '@/components/ava/AvaFooter';
+import { JsonLd } from '@/components/ava/JsonLd';
+import { SampleCall } from '@/components/ava/SampleCall';
 import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
+import { AVA_HOME_FAQS } from '@/lib/ava/home-faq';
 import { AVA_PLANS, avaTrialThenPriceCopy, type AvaPlanKey } from '@/lib/ava/pricing';
+import { avaProductNode, avaServiceNode, avaSoftwareNode, faqNode, jsonLdGraph } from '@/lib/ava/structured-data';
+import { AVA_GUIDES } from '@/lib/ava/trade-pages';
+import { absoluteSiteUrl } from '@/lib/site-url';
+
+export const metadata: Metadata = {
+  alternates: { canonical: absoluteSiteUrl('/ava') },
+  openGraph: { url: absoluteSiteUrl('/ava') },
+};
 
 const display = Fraunces({
   subsets: ['latin'],
@@ -22,15 +34,8 @@ const mono = IBM_Plex_Mono({
 });
 
 const plans = (Object.keys(AVA_PLANS) as AvaPlanKey[]).map((key) => AVA_PLANS[key]);
-
-const industryPages = [
-  ['HVAC', '/ava/ai-receptionist-hvac-companies', 'No-cool, no-heat, maintenance, replacement and after-hours calls.'],
-  ['Plumbing', '/ava/ai-receptionist-plumbers', 'Leaks, drains, water heaters and urgent plumbing intake.'],
-  ['Roofing', '/ava/ai-receptionist-roofers', 'Storm, leak, inspection and replacement estimate calls.'],
-  ['Landscaping', '/ava/ai-receptionist-landscapers', 'Mowing, cleanup and landscape project estimate leads.'],
-  ['Contractors', '/ava/ai-answering-service-contractors', 'General home-service answering and qualification.'],
-  ['Missed Calls', '/ava/missed-call-answering-home-services', 'Overflow and after-hours coverage for home-service teams.'],
-];
+const tradeGuides = AVA_GUIDES.filter((guide) => guide.kind === 'trade');
+const buyerGuides = AVA_GUIDES.filter((guide) => guide.kind !== 'trade');
 
 const callLog = [
   { time: '7:42 PM', from: '(205) 555-0143', note: '“No cool — house is 88 degrees”' },
@@ -53,9 +58,32 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
   const heroNext = SETUP_CALL_URL
     ? 'She’ll ask the setup questions. After that you can request a short setup call with Cole, or start the free trial.'
     : 'She’ll ask the setup questions, then you can start the free trial with answers prefilled.';
+  const canonical = absoluteSiteUrl('/ava');
+  const structuredData = jsonLdGraph([
+    avaSoftwareNode({
+      description:
+        'AI receptionist that answers calls for contractors and small businesses, qualifies the lead, and texts the owner.',
+      url: canonical,
+    }),
+    avaServiceNode({
+      name: 'Ava AI answering service',
+      description:
+        '24/7 call answering for home-service businesses and other small teams. Ava captures the job and texts you the lead.',
+      url: canonical,
+      audience: 'contractors and small businesses',
+      serviceType: 'AI answering service',
+    }),
+    avaProductNode({
+      name: 'Ava AI Receptionist',
+      description: `Self-serve AI receptionist with a free 7-day trial. Starter ${AVA_PLANS.starter.monthlyLabel}, Growth ${AVA_PLANS.growth.monthlyLabel}, Pro ${AVA_PLANS.pro.monthlyLabel} per month. $0 setup.`,
+      url: canonical,
+    }),
+    faqNode([...AVA_HOME_FAQS]),
+  ]);
 
   return (
     <main className={`ava-redesign ${display.variable} ${mono.variable}`}>
+      <JsonLd data={structuredData} />
       <div className="paper-grain" aria-hidden="true" />
 
       {/* ── Masthead ─────────────────────────────────────────── */}
@@ -93,6 +121,20 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
               Start free 7-day trial <ArrowRight size={17} />
             </TrackedCheckoutLink>
           </div>
+          <SampleCall
+            title="Hear a demo call"
+            detail="Prerecorded landscaping estimate. Not a live customer."
+            surface="ava-home"
+          />
+          <p className="hero-prices">
+            <a href="#pricing">Starter {AVA_PLANS.starter.monthlyLabel}</a>
+            <span aria-hidden="true">·</span>
+            Growth {AVA_PLANS.growth.monthlyLabel}
+            <span aria-hidden="true">·</span>
+            Pro {AVA_PLANS.pro.monthlyLabel}
+            <span aria-hidden="true">·</span>
+            7-day trial · $0 setup
+          </p>
           <p className="hero-fine">{avaTrialThenPriceCopy('starter')} Cancel anytime.</p>
         </div>
 
@@ -113,7 +155,7 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
               </li>
             ))}
           </ol>
-          <p className="call-log-foot">5 after-hours calls · 0 missed · every lead on the owner&apos;s phone</p>
+          <p className="call-log-foot">Illustrated example. Not a live feed and not a performance claim.</p>
         </aside>
       </section>
 
@@ -236,19 +278,44 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
           Fluent in <em>your</em> trade.
         </h2>
         <p className="trades-sub">
-          Every trade has its own urgency and intake questions. These guides show the exact call flow Ava runs for yours.
+          Each page is the calls, the questions, and a missed-call example for that buyer. The live demo is the same Ava.
         </p>
         <ul className="trades-list">
-          {industryPages.map(([name, href, desc]) => (
-            <li key={href}>
-              <Link href={href}>
-                <span className="trade-name">{name}</span>
-                <span className="trade-desc">{desc}</span>
+          {tradeGuides.map((guide) => (
+            <li key={guide.slug}>
+              <Link href={`/ava/${guide.slug}`}>
+                <span className="trade-name">{guide.navLabel}</span>
+                <span className="trade-desc">{guide.blurb}</span>
                 <ArrowUpRight size={18} aria-hidden="true" />
               </Link>
             </li>
           ))}
         </ul>
+        <h3 className="guides-label">Buyer guides</h3>
+        <ul className="trades-list">
+          {buyerGuides.map((guide) => (
+            <li key={guide.slug}>
+              <Link href={`/ava/${guide.slug}`}>
+                <span className="trade-name">{guide.navLabel}</span>
+                <span className="trade-desc">{guide.blurb}</span>
+                <ArrowUpRight size={18} aria-hidden="true" />
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="paper-faq" id="faq">
+        <p className="section-kicker">Before you forward the line</p>
+        <h2>
+          Straight <em>answers.</em>
+        </h2>
+        {AVA_HOME_FAQS.map((faq) => (
+          <details key={faq.q}>
+            <summary>{faq.q}</summary>
+            <p>{faq.a}</p>
+          </details>
+        ))}
       </section>
 
       {/* ── Final CTA ────────────────────────────────────────── */}

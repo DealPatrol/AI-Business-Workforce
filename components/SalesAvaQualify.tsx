@@ -351,9 +351,7 @@ function SalesAvaQualifyContent() {
             <Link
               className="text-next"
               href={onboardingHref}
-              onClick={() =>
-                trackVercelEvent('signup-click', { plan: planKey, destination: 'onboarding' })
-              }
+              onClick={() => trackVercelEvent('signup-click', { plan: planKey, destination: 'onboarding' })}
             >
               Or send setup notes first <ArrowRight size={14} />
             </Link>

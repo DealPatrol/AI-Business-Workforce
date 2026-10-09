@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 import { sanitizeAttribution, type Attribution } from '@/lib/analytics/attribution';
-import { getSiteUrl } from '@/lib/site';
+import { getSiteUrl } from '@/lib/site-url';
 
 const EVENT_ID = /^[A-Za-z0-9-]{8,64}$/;
 const COOKIE_ID = /^[A-Za-z0-9._-]{1,200}$/;
@@ -24,8 +24,7 @@ export function safePageUrl(value: unknown, origin: string) {
   if (!raw) return origin;
   try {
     const url = new URL(raw);
-    const allowed = new Set([origin, getSiteUrl(), 'https://ai-business-workforce.vercel.app']);
-    if (!allowed.has(url.origin)) return origin;
+    if (url.origin !== origin && url.origin !== getSiteUrl()) return origin;
     return url.toString().slice(0, 500);
   } catch {
     return origin;

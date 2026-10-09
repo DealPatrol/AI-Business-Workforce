@@ -62,7 +62,14 @@ function ReceptionistDemoContent(){
  const wageGap=monthlyWage-79;
 
  const conversation=useConversation({
-  onConnect:()=>{setError('');setCallState('connected')},
+  onConnect:()=>{
+   setError('');
+   setCallState('connected');
+   if(!demoTracked.current){
+    demoTracked.current=true;
+    trackVercelEvent('demo-play',{surface:'receptionist-live'});
+   }
+  },
   onDisconnect:()=>{setCallState(s=>s==='processing'?s:'ready')},
   onError:(m:any)=>{setError(typeof m==='string'?m:'Ava could not continue the call.');setCallState(s=>s==='processing'?s:'ready')}
  });

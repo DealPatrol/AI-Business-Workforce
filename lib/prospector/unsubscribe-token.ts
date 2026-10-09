@@ -1,6 +1,6 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
 import { normalizeEmail } from '@/lib/prospector/gates';
-import { getSiteUrl } from '@/lib/site';
+import { getSiteUrl } from '@/lib/site-url';
 
 type UnsubscribePayload = {
   o: string;

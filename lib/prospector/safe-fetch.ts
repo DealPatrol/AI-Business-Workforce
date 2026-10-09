@@ -2,7 +2,7 @@ import { lookup } from 'node:dns/promises';
 import { isIP } from 'node:net';
 import { htmlTitle, htmlToText } from '@/lib/prospector/email-extract';
 import { PublicFetchError } from '@/lib/prospector/errors';
-import { getSiteUrl } from '@/lib/site';
+import { getSiteUrl } from '@/lib/site-url';
 
 const BLOCKED_HOSTS = new Set([
   'localhost',

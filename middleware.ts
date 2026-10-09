@@ -1,5 +1,12 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import {
+  LEGACY_VERCEL_HOST,
+  getSiteUrl,
+  hostnameOf,
+  isAvaStandaloneHost,
+  isLegacyHostPagePath,
+} from '@/lib/site-url';
 
 type CookieToSet = {
   name: string;
@@ -7,14 +14,56 @@ type CookieToSet = {
   options?: Parameters<NextResponse['cookies']['set']>[2];
 };
 
-export async function middleware(request: NextRequest) {
+function requestHost(request: NextRequest) {
+  return request.headers.get('x-forwarded-host') || request.headers.get('host');
+}
+
+/**
+ * 308 page routes off the old Vercel host. /api stays put so the Stripe and
+ * ElevenLabs webhooks configured on that host keep working. /_next and files
+ * with an extension stay put too.
+ */
+function legacyHostRedirect(request: NextRequest) {
+  if (hostnameOf(requestHost(request)) !== LEGACY_VERCEL_HOST) return null;
+  if (!isLegacyHostPagePath(request.nextUrl.pathname)) return null;
+  const destinationOrigin = getSiteUrl();
+  if (hostnameOf(destinationOrigin) === LEGACY_VERCEL_HOST) return null;
+  const destination = new URL(`${request.nextUrl.pathname}${request.nextUrl.search}`, destinationOrigin);
+  return NextResponse.redirect(destination, 308);
+}
+
+/** Only when AVA_STANDALONE_HOST is set to some other host. Unset in production. */
+function standaloneAvaResponse(request: NextRequest) {
+  if (!isAvaStandaloneHost(requestHost(request))) return null;
   const { pathname } = request.nextUrl;
-  if (pathname === '/prospector/unsubscribe') {
-    if (request.method === 'POST') {
-      const url = request.nextUrl.clone();
-      url.pathname = '/api/prospector/unsubscribe';
-      return NextResponse.rewrite(url);
-    }
+  if (pathname === '/ava' || pathname === '/ava/') {
+    const url = request.nextUrl.clone();
+    url.pathname = '/';
+    return NextResponse.redirect(url, 308);
+  }
+  if (pathname === '/') {
+    const url = request.nextUrl.clone();
+    url.pathname = '/ava';
+    return NextResponse.rewrite(url);
+  }
+  return null;
+}
+
+export async function middleware(request: NextRequest) {
+  const redirected = legacyHostRedirect(request);
+  if (redirected) return redirected;
+
+  const standalone = standaloneAvaResponse(request);
+  if (standalone) return standalone;
+
+  const { pathname } = request.nextUrl;
+  if (pathname === '/prospector/unsubscribe' && request.method === 'POST') {
+    const url = request.nextUrl.clone();
+    url.pathname = '/api/prospector/unsubscribe';
+    return NextResponse.rewrite(url);
+  }
+
+  if (!pathname.startsWith('/dashboard') && pathname !== '/login') {
     return NextResponse.next();
   }
 
@@ -44,5 +93,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/login', '/prospector/unsubscribe'],
+  matcher: ['/((?!api/|_next/|.*\\..*).*)'],
 };

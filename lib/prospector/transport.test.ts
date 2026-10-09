@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { FOUNDING_MONTHLY_CENTS } from '@/lib/stripe-checkout';
-import { getSiteUrl } from '@/lib/site';
+import { getSiteUrl } from '@/lib/site-url';
 import {
   LIST_UNSUBSCRIBE_POST,
   coldEmailEnabled,
@@ -50,11 +50,15 @@ describe('cold email stays off and unsent', () => {
 
 describe('public site url', () => {
   it('falls back to frontporchgrowth.com', () => {
-    const previous = process.env.NEXT_PUBLIC_SITE_URL;
+    const previousSite = process.env.NEXT_PUBLIC_SITE_URL;
+    const previousApp = process.env.NEXT_PUBLIC_APP_URL;
     delete process.env.NEXT_PUBLIC_SITE_URL;
+    delete process.env.NEXT_PUBLIC_APP_URL;
     assert.equal(getSiteUrl(), 'https://frontporchgrowth.com');
     assert.equal(FOUNDING_MONTHLY_CENTS, 9900);
-    if (previous === undefined) delete process.env.NEXT_PUBLIC_SITE_URL;
-    else process.env.NEXT_PUBLIC_SITE_URL = previous;
+    if (previousSite === undefined) delete process.env.NEXT_PUBLIC_SITE_URL;
+    else process.env.NEXT_PUBLIC_SITE_URL = previousSite;
+    if (previousApp === undefined) delete process.env.NEXT_PUBLIC_APP_URL;
+    else process.env.NEXT_PUBLIC_APP_URL = previousApp;
   });
 });

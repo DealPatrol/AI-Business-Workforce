@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { absoluteSiteUrl } from '@/lib/site-url';
 
 const title = 'Ava setup | Ava by Workforce AI';
 const description =
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
     description,
     siteName: 'Ava by Workforce AI',
     type: 'website',
-    url: '/onboarding/ava',
+    url: absoluteSiteUrl('/onboarding/ava'),
   },
   twitter: {
     card: 'summary_large_image',

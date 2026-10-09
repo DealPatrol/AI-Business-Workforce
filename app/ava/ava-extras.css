@@ -27,6 +27,139 @@
   padding: 0;
 }
 
+.ava-sales .guide-sample {
+  margin: 0;
+  background: #102419;
+  border: 1px solid #31503d;
+  border-radius: 18px;
+  padding: 22px;
+}
+
+.ava-sales .guide-sample figcaption {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.ava-sales .guide-sample strong {
+  font: 600 28px Georgia, serif;
+}
+
+.ava-sales .guide-sample span {
+  color: #c5d0c8;
+  line-height: 1.5;
+}
+
+.ava-sales .source-list,
+.ava-sales .source-list a {
+  color: #1d4d32;
+  line-height: 1.5;
+}
+
+.ava-sales .missed-calc .missed-calc-note {
+  color: #3e4f44;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.ava-sales .guide-sample audio,
+.ava-redesign .sample-call audio {
+  width: 100%;
+}
+
+.ava-sales .comparison-grid.split-two {
+  grid-template-columns: 1.15fr 0.85fr;
+}
+
+@media (max-width: 900px) {
+  .ava-sales .comparison-grid.split-two,
+  .ava-sales .sales-hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ava-sales .comparison-grid ul {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+  display: grid;
+  gap: 10px;
+}
+
+.ava-sales .comparison-grid li {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  color: #243128;
+  line-height: 1.45;
+}
+
+.ava-sales .comparison-grid li svg {
+  width: 16px;
+  color: #31884c;
+  flex: none;
+  margin-top: 2px;
+}
+
+.ava-sales .source-list {
+  max-width: 860px;
+  margin: 28px auto 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.ava-sales .missed-calc {
+  max-width: 640px;
+  margin: 0 auto;
+  display: grid;
+  gap: 14px;
+  background: #fff;
+  color: #102017;
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid #d5dfd5;
+}
+
+.ava-sales .missed-calc label {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.ava-sales .missed-calc input {
+  font: inherit;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #c9d5cb;
+}
+
+.ava-sales .missed-calc-result {
+  display: grid;
+  gap: 4px;
+  padding-top: 8px;
+}
+
+.ava-sales .missed-calc-result strong {
+  font: 600 42px Georgia, serif;
+}
+
+.ava-sales .missed-calc-result code {
+  font-size: 13px;
+  color: #56705d;
+}
+
+.ava-sales .options-grid article a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  color: #1b6d3d;
+  font-weight: 800;
+}
+
 .sales-footer a.footer-privacy {
   display: inline-flex !important;
   color: #b0bab4;
