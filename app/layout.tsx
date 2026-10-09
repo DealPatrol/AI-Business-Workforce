@@ -2,14 +2,17 @@ import './globals.css';
 import './campaign-demo.css';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { Analytics } from '@vercel/analytics/next';
 import { AdTracking } from '@/components/analytics/AdTracking';
 import { CaptureAttribution } from '@/components/analytics/CaptureAttribution';
+import { getSiteUrl } from '@/lib/site-url';
 
 const title = 'YardProof | Managed Postcard Campaigns for Home Services';
 const description =
   'Launch a managed property-concept postcard campaign with QR estimate pages for landscaping and home-service businesses.';
 
 export const metadata: Metadata = {
+  metadataBase: new URL(getSiteUrl()),
   title,
   description,
   openGraph: {
@@ -39,6 +42,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <CaptureAttribution />
         <AdTracking />
         {children}
+        <Analytics />
       </body>
     </html>
   );

@@ -251,6 +251,80 @@
   margin: 0;
 }
 
+.ava-redesign .sample-call {
+  margin: 0 0 16px;
+  max-width: 34rem;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 14px 16px 12px;
+}
+
+.ava-redesign .sample-call figcaption {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.ava-redesign .sample-call strong {
+  font-family: var(--ava-display), Georgia, serif;
+  font-size: 22px;
+}
+
+.ava-redesign .sample-call span {
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.ava-redesign .hero-prices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 10px;
+  font-family: var(--ava-mono), ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+}
+
+.ava-redesign .hero-prices a {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.ava-redesign .paper-faq {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 20px clamp(20px, 5vw, 64px) 80px;
+}
+
+.ava-redesign .paper-faq details {
+  border-bottom: 1px solid var(--line);
+  padding: 16px 0;
+}
+
+.ava-redesign .paper-faq summary {
+  cursor: pointer;
+  font-weight: 750;
+  font-size: 18px;
+}
+
+.ava-redesign .paper-faq details p {
+  color: var(--ink-soft);
+  line-height: 1.6;
+  margin: 10px 0 0;
+}
+
+.ava-redesign .guides-label {
+  margin: 48px 0 0;
+  font-family: var(--ava-mono), ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
 /* ── Call log panel ──────────────────────────────────────── */
 .ava-redesign .call-log {
   background: var(--moss-deep);

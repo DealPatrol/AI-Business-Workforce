@@ -25,6 +25,8 @@ import {
   Voicemail,
   Wrench,
 } from 'lucide-react';
+import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
+import { trackVercelEvent } from '@/lib/analytics/vercel-events';
 import { FOUNDING_CTA, foundingCheckoutHref } from '@/lib/payments';
 
 type CallState='idle'|'preparing'|'ready'|'connecting'|'connected'|'ending'|'processing';
@@ -54,9 +56,17 @@ function ReceptionistDemoContent(){
  const conversationId=useRef<string|null>(null);
  const signedUrl=useRef<string|null>(null);
  const preparedConversationId=useRef<string|null>(null);
+ const demoTracked=useRef(false);
 
  const conversation=useConversation({
-  onConnect:()=>{setError('');setCallState('connected')},
+  onConnect:()=>{
+   setError('');
+   setCallState('connected');
+   if(!demoTracked.current){
+    demoTracked.current=true;
+    trackVercelEvent('demo-play',{surface:'receptionist-live'});
+   }
+  },
   onDisconnect:()=>{setCallState(s=>s==='processing'?s:'ready')},
   onError:(m:any)=>{setError(typeof m==='string'?m:'Ava could not continue the call.');setCallState(s=>s==='processing'?s:'ready')}
  });
@@ -167,7 +177,7 @@ function ReceptionistDemoContent(){
 
   <section id="hear-ava" className="sample-section">
    <div className="sample-copy"><span className="kicker">HEAR THE ACTUAL EXPERIENCE</span><h2>Sample landscaping estimate call</h2><p>Hear how Ava greets a homeowner, asks useful qualification questions, and keeps the conversation moving. No stock voice montage or invented customer story.</p><div className="sample-tags"><span><Check/> Estimate intent</span><span><Check/> Property details</span><span><Check/> Clear next step</span></div></div>
-   <div className="audio-card"><div className="audio-icon"><Headphones/></div><div><b>Ava sample call</b><span>Landscaping estimate · prerecorded example</span></div><audio controls preload="metadata"><source src="/ava-sample-call.mp4" type="audio/mp4"/>Your browser does not support audio playback.</audio></div>
+   <div className="audio-card"><div className="audio-icon"><Headphones/></div><div><b>Ava sample call</b><span>Landscaping estimate · prerecorded example</span></div><audio controls preload="metadata" onPlay={()=>trackVercelEvent('demo-play',{surface:'receptionist-sample'})}><source src="/ava-sample-call.mp4" type="audio/mp4"/>Your browser does not support audio playback.</audio></div>
   </section>
 
   <section className="bad-options">
@@ -204,7 +214,7 @@ function ReceptionistDemoContent(){
 
   <section className="customize"><div className="section-title"><span className="kicker">DONE-FOR-YOU MEANS DONE WITH YOU</span><h2>We stand Ava up for your trucks—not hand you another app.</h2><p>You bring the way your business actually handles calls. We turn it into a working receptionist, test realistic scenarios together, and tune the rough edges before customers hear it.</p></div><div className="setup-steps"><article><b>1</b><div><h3>45-minute setup conversation</h3><p>We map services, service area, common questions, urgency rules, transfer preferences, and the lead details your team needs.</p></div></article><article><b>2</b><div><h3>We configure the receptionist</h3><p>We write the greeting and qualification flow, add your business knowledge, and choose a voice and speaking style that fit.</p></div></article><article><b>3</b><div><h3>You pressure-test Ava with us</h3><p>Run normal calls, awkward questions, emergencies, and transfer scenarios. We make the changes—not you.</p></div></article><article><b>4</b><div><h3>Launch, review, and refine</h3><p>Use Ava after hours or for broader coverage, review lead quality, and send us script or routing updates as the business changes.</p></div></article></div></section>
 
-  <section id="pricing" className="pricing"><div className="section-title"><span className="kicker">PUBLISHED PRICING · HUMAN SETUP INCLUDED</span><h2>Managed service without call-center mystery pricing.</h2><p>Ava is not a $10–$49 set-and-forget app. Starter, Growth, and Pro are $79, $149, and $299 a month with a free 7-day trial and $0 setup.</p></div><div className="plan-grid">{plans.map(p=><article className={p.featured?'plan featured':'plan'} key={p.name}>{p.featured&&<span className="popular">MOST POPULAR</span>}<h3>{p.name}</h3><p>{p.desc}</p><div className="price"><strong>${p.price}</strong><span>/month</span></div><small>{p.minutes}</small><ul>{p.items.map(i=><li key={i}><Check/>{i}</li>)}</ul><Link className="plan-btn" href={`/api/checkout?plan=${p.key}`}>{p.cta}</Link></article>)}</div><div className="setup-offer"><div><small>YARDPROOF FOUNDING PLAN</small><h3>$99/month</h3><p>We map your calls, configure Ava with your business information, customize the voice and call flow, test it with you, and prepare launch.</p></div><a className="sales-btn" href={foundingCheckoutHref('/receptionist-demo')}>{FOUNDING_CTA} <ArrowRight/></a></div><p className="usage-note">Plan minute allowances are included usage targets; unusual call volume or telephony needs may require a clearly quoted adjustment before launch.</p></section>
+  <section id="pricing" className="pricing"><div className="section-title"><span className="kicker">PUBLISHED PRICING · HUMAN SETUP INCLUDED</span><h2>Managed service without call-center mystery pricing.</h2><p>Ava is not a $10–$49 set-and-forget app. Starter, Growth, and Pro are $79, $149, and $299 a month with a free 7-day trial and $0 setup.</p></div><div className="plan-grid">{plans.map(p=><article className={p.featured?'plan featured':'plan'} key={p.name}>{p.featured&&<span className="popular">MOST POPULAR</span>}<h3>{p.name}</h3><p>{p.desc}</p><div className="price"><strong>${p.price}</strong><span>/month</span></div><small>{p.minutes}</small><ul>{p.items.map(i=><li key={i}><Check/>{i}</li>)}</ul><TrackedCheckoutLink className="plan-btn" href={`/api/checkout?plan=${p.key}`} plan={p.key}>{p.cta}</TrackedCheckoutLink></article>)}</div><div className="setup-offer"><div><small>YARDPROOF FOUNDING PLAN</small><h3>$99/month</h3><p>We map your calls, configure Ava with your business information, customize the voice and call flow, test it with you, and prepare launch.</p></div><a className="sales-btn" href={foundingCheckoutHref('/receptionist-demo')}>{FOUNDING_CTA} <ArrowRight/></a></div><p className="usage-note">Plan minute allowances are included usage targets; unusual call volume or telephony needs may require a clearly quoted adjustment before launch.</p></section>
 
   <section id="faq" className="faq"><div className="section-title"><span className="kicker">STRAIGHT ANSWERS BEFORE YOU LAUNCH</span><h2>Ava FAQ</h2></div><div className="faq-grid"><details open><summary>Is Ava AI?</summary><p>Yes. Ava is an AI receptionist, not a person. The live demo labels her clearly, and we configure an appropriate disclosure in your call experience.</p></details><details><summary>Can I keep my current phone number?</summary><p>Usually. Ava can be introduced through call forwarding or a configured number depending on your carrier and call flow. We confirm the routing plan during setup.</p></details><details><summary>Can I use Ava after hours only?</summary><p>Yes. After-hours, overflow, or broader coverage can be configured around how your team already answers calls.</p></details><details><summary>What if Ava gives a wrong answer or a caller needs a person?</summary><p>We limit Ava to approved business knowledge, test difficult scenarios, and configure transfer or escalation rules. No AI is perfect, so call review and clear fallback behavior are part of setup.</p></details><details><summary>How does Ava handle spam?</summary><p>Ava can use conversation rules to avoid treating obvious spam or solicitations as qualified leads. Edge cases are reviewed and the flow can be refined.</p></details><details><summary>Can I change scripts and questions later?</summary><p>Yes. Managed updates are part of the service. Tell us what changed and we help revise greetings, questions, business knowledge, or routing.</p></details><details><summary>How long does setup take?</summary><p>Timing depends on your call flow and routing. After the setup conversation, we configure and test Ava with you before agreeing on a launch date.</p></details><details><summary>Can I test Ava before paying?</summary><p>Yes. Use the live AI demo on this page or play the sample call. No public phone number is required.</p></details></div></section>
 

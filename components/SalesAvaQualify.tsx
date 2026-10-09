@@ -15,8 +15,9 @@ import {
   UserRound,
 } from 'lucide-react';
 import { trackDemoStarted } from '@/lib/analytics/events';
+import { trackVercelEvent } from '@/lib/analytics/vercel-events';
 import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
-import { AVA_PLANS, avaPricingSummaryCopy } from '@/lib/ava/pricing';
+import { avaPricingSummaryCopy } from '@/lib/ava/pricing';
 
 type CallState = 'idle' | 'preparing' | 'ready' | 'connecting' | 'connected' | 'ending' | 'processing';
 
@@ -63,6 +64,7 @@ function SalesAvaQualifyContent() {
     if (demoTracked.current) return;
     demoTracked.current = true;
     trackDemoStarted();
+    trackVercelEvent('demo-play', { surface: 'sales-live' });
   }
 
   const conversation = useConversation({
@@ -256,12 +258,6 @@ function SalesAvaQualifyContent() {
     : (qualification?.planInterest || '').toLowerCase().includes('pro')
       ? 'pro'
       : 'growth';
-  const planLabel =
-    planKey === 'starter'
-      ? `Starter ${AVA_PLANS.starter.monthlyLabel}`
-      : planKey === 'pro'
-        ? `Pro ${AVA_PLANS.pro.monthlyLabel}`
-        : `Growth ${AVA_PLANS.growth.monthlyLabel}`;
   const prefillQs = qualification
     ? [
         `qualificationId=${encodeURIComponent(qualification.id)}`,
@@ -349,12 +345,16 @@ function SalesAvaQualifyContent() {
                 {qualification.summary ? ` — ${qualification.summary.slice(0, 180)}` : ''}.
               </p>
             </div>
-            <Link className="talk-btn" href={onboardingHref}>
+            <TrackedCheckoutLink className="talk-btn" href={checkoutHref} plan={planKey}>
               Start free 7-day trial <ArrowRight size={16} />
-            </Link>
-            <TrackedCheckoutLink className="text-next" href={checkoutHref} plan={planKey}>
-              Checkout {planLabel} <ArrowRight size={14} />
             </TrackedCheckoutLink>
+            <Link
+              className="text-next"
+              href={onboardingHref}
+              onClick={() => trackVercelEvent('signup-click', { plan: planKey, destination: 'onboarding' })}
+            >
+              Or send setup notes first <ArrowRight size={14} />
+            </Link>
             {SETUP_CALL_URL ? (
               <a className="text-fallback" href={SETUP_CALL_URL} target="_blank" rel="noreferrer">
                 Request a setup call with Cole
@@ -432,14 +432,15 @@ function SalesAvaQualifyContent() {
                   playsInline
                   src="/ava-sample-call.mp4"
                   style={{ width: '100%', borderRadius: 12, background: '#000' }}
+                  onPlay={() => trackVercelEvent('demo-play', { surface: 'sales-fallback-video' })}
                 />
                 <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                   <button className="text-switch" type="button" onClick={startCall}>
                     <Mic2 size={14} /> Enable mic &amp; try the live demo
                   </button>
-                  <Link className="text-next" href={onboardingHref}>
-                    Skip to free trial <ArrowRight size={14} />
-                  </Link>
+                  <TrackedCheckoutLink className="text-next" href={checkoutHref} plan={planKey}>
+                    Start free 7-day trial <ArrowRight size={14} />
+                  </TrackedCheckoutLink>
                 </div>
               </div>
             )}
