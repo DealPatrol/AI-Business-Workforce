@@ -3,10 +3,11 @@ import Link from 'next/link';
 import { InvoicingWaitlistForm } from '@/components/suite/InvoicingWaitlistForm';
 import { SuiteShell } from '@/components/suite/SuiteShell';
 import styles from '@/components/suite/suite.module.css';
+import { absoluteSiteUrl } from '@/lib/site-url';
 
 const title = 'Front Porch Growth';
 const description =
-  'Front Porch Growth is the home for YardProof postcards, the Ava AI receptionist, Lead Finder, and invoicing for home-service businesses.';
+  'Tools that bring home-service businesses more jobs. Front Porch Growth is the home for YardProof postcards, the Ava AI receptionist, Lead Finder, and invoicing for home-service businesses.';
 
 export const metadata: Metadata = {
   title: { absolute: title },
@@ -26,13 +27,33 @@ export const metadata: Metadata = {
   },
 };
 
+const orgJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${absoluteSiteUrl('/')}#org`,
+      name: 'Front Porch Growth',
+      url: absoluteSiteUrl('/'),
+      description: 'Tools that bring home-service businesses more jobs.',
+      email: 'hello@frontporchgrowth.com',
+      makesOffer: [
+        { '@type': 'Offer', name: 'YardProof postcards', url: absoluteSiteUrl('/postcards') },
+        { '@type': 'Offer', name: 'Ava AI receptionist', url: absoluteSiteUrl('/ava') },
+      ],
+    },
+    { '@type': 'WebSite', name: 'Front Porch Growth', url: absoluteSiteUrl('/'), publisher: { '@id': `${absoluteSiteUrl('/')}#org` } },
+  ],
+};
+
 export default function SuiteHomePage() {
   return (
     <SuiteShell>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd).replace(/</g, '\\u003c') }} />
       <section className={styles.hero}>
         <div>
           <span className={styles.eyebrow}>HOME-SERVICE TOOLS</span>
-          <h1>The front porch for growing a service business.</h1>
+          <h1>Tools that bring home-service businesses more jobs.</h1>
           <p className={styles.lede}>
             Postcards that show the job, an AI receptionist that answers the call, a lead finder you approve before anything sends, and invoicing when it is ready.
           </p>
