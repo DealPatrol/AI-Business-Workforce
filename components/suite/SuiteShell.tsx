@@ -14,7 +14,14 @@ export function SuiteShell({ children }: { children: ReactNode }) {
     <div className={styles.page}>
       <nav className={styles.nav}>
         <Link className={styles.brand} href="/">
-          Front Porch <b>Growth</b>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand-header.png"
+            alt="Front Porch Growth"
+            width={275}
+            height={36}
+            style={{ display: 'block', height: 36, width: 'auto', maxWidth: '62vw', objectFit: 'contain', objectPosition: 'left center' }}
+          />
         </Link>
         <div className={styles.navLinks}>
           {NAV.map((item) => (

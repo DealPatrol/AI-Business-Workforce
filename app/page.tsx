@@ -35,6 +35,7 @@ const orgJsonLd = {
       '@id': `${absoluteSiteUrl('/')}#org`,
       name: 'Front Porch Growth',
       url: absoluteSiteUrl('/'),
+      logo: absoluteSiteUrl('/brand-logo.png'),
       description: 'Tools that bring home-service businesses more jobs.',
       email: 'hello@frontporchgrowth.com',
       makesOffer: [
