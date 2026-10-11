@@ -2,8 +2,12 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { ExternalLink, Inbox, Leaf, Mail, MapPin, QrCode } from 'lucide-react';
 import { formatRecipientAddress } from '@/lib/campaigns';
+import { purgeQueuedGoogleImagery } from '@/lib/imagery/purge';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
+import CampaignMailPanel from './campaign-mail-panel';
 import LogoutButton from './logout-button';
+import RecipientWorkflow from './recipient-workflow';
 import styles from './campaigns.module.css';
 
 export const dynamic = 'force-dynamic';
@@ -37,8 +41,16 @@ type Recipient = {
   city: string;
   state: string;
   postal_code: string;
+  current_image_url: string | null;
+  current_image_source: string | null;
+  after_image_url: string | null;
+  review_status: string;
+  street_view_available: boolean | null;
+  mail_status: string;
   campaigns: {
+    id: string;
     name: string;
+    status: string;
   };
   recipient_scans: Array<{ count: number }>;
   estimate_requests: Array<{ count: number }>;
@@ -56,6 +68,13 @@ export default async function CampaignInboxPage() {
   const supabase = await createClient();
   const { data: authData } = await supabase.auth.getUser();
   if (!authData.user) redirect('/login?next=/dashboard/campaigns');
+  await purgeQueuedGoogleImagery({
+    userId: authData.user.id,
+    admin: createAdminClient(),
+  }).catch((purgeError: unknown) => {
+    console.error('Unable to purge queued legacy Google imagery', purgeError);
+    return { purged: 0, failed: 0 };
+  });
 
   const [
     { data: recipientData, error: recipientError },
@@ -72,7 +91,13 @@ export default async function CampaignInboxPage() {
         city,
         state,
         postal_code,
-        campaigns!inner (name),
+        current_image_url,
+        current_image_source,
+        after_image_url,
+        review_status,
+        street_view_available,
+        mail_status,
+        campaigns!inner (id, name, status),
         recipient_scans (count),
         estimate_requests (count)
       `)
@@ -115,6 +140,11 @@ export default async function CampaignInboxPage() {
     0,
   );
   const appUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') ?? '';
+  const campaigns = Array.from(
+    new Map(
+      recipients.map((recipient) => [recipient.campaigns.id, recipient.campaigns]),
+    ).values(),
+  );
 
   return (
     <main className={styles.page}>
@@ -150,6 +180,25 @@ export default async function CampaignInboxPage() {
           <article><QrCode /><span><small>PAGE OPENS</small><b>{scanCount}</b></span></article>
           <article><Inbox /><span><small>ESTIMATE REQUESTS</small><b>{estimateCount}</b></span></article>
         </div>
+
+        <section className={styles.mailSection}>
+          <div className={styles.sectionHeading}>
+            <span>CAMPAIGN APPROVAL</span>
+            <h2>Cost preview and mailing</h2>
+            <p>Every send requires this explicit approval. Test mode is the default.</p>
+          </div>
+          {campaigns.map((campaign) => (
+            <div key={campaign.id}>
+              <Link className={styles.captureLink} href={`/capture/${campaign.id}`}>
+                Open mobile crew capture
+              </Link>
+              <CampaignMailPanel
+                campaignId={campaign.id}
+                campaignName={campaign.name}
+              />
+            </div>
+          ))}
+        </section>
 
         <div className={styles.grid}>
           <section className={styles.panel}>
@@ -218,6 +267,15 @@ export default async function CampaignInboxPage() {
                     Open page <ExternalLink size={13} />
                   </a>
                   <code>{`${appUrl}${qrPath}`}</code>
+                  <RecipientWorkflow
+                    recipientId={recipient.id}
+                    initialCurrentUrl={recipient.current_image_url}
+                    initialCurrentSource={recipient.current_image_source}
+                    initialAfterUrl={recipient.after_image_url}
+                    initialReviewStatus={recipient.review_status}
+                    streetViewAvailable={recipient.street_view_available}
+                    mailStatus={recipient.mail_status}
+                  />
                 </article>
               );
             })}

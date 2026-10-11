@@ -72,28 +72,30 @@ Never commit secrets to GitHub. Configure them in Vercel/Supabase secret managem
 Migrations:
 
 - `supabase/migrations/20260924120000_postcard_recipient_imagery.sql` — per-recipient Current/After/review + campaign geo parity
-- `supabase/migrations/20260924130000_streetview_printable_current.sql` — allows `current_image_source=street_view`
+- `supabase/migrations/20260924130000_streetview_printable_current.sql` — historical filename; now enforces rights-cleared sources
+- `supabase/migrations/20260927031945_owned_photo_capture_and_suppression.sql` — reverses live Street View rows, queues legacy objects for Storage API deletion, and adds capture rights/redaction/suppression fields
 
-**Product rules (Cole 2026-09-24 — supersede prior internal-only locks):**
+**Product rules:**
 
-1. **Google Street View Static** = printable **Current** (before) on the postcard and `/q/[token]`.
-2. **After-render** uses that Street View Current as AI input → **After** (modest AL lawn refresh).
-3. **Crew/owner photos** (`POST /api/imagery/crew-photo`) remain **optional alternate** Current sources, not required.
-4. **Human review** (`POST /api/imagery/review`) remains required before mail-ready.
-5. `POST /api/imagery/streetview-preview` downloads Static pixels into Storage (`IMAGERY_STORAGE_BUCKET`, default `yardproof-imagery`) because Maps Static URLs are ephemeral, then sets `current_image_source=street_view`.
-6. Satellite preview is operator fallback only when Street View metadata is unavailable — not printable Current by default.
+1. Google Street View/satellite are streamed with `no-store` headers for authenticated scouting only.
+2. Printable/AI Current sources are `crew_photo`, `owner_upload`, or `licensed`, with a documented rights basis.
+3. Google Cloud Vision identifies faces, text/house numbers, and localized license plates; Sharp blurs every returned region before storage. Redaction fails closed.
+4. AI output receives a second privacy pass before storage.
+5. Human review remains required before mail-ready.
+6. Do-not-photograph and do-not-mail suppressions are checked before capture matching and immediately before Lob.
 
 **Still required before claiming imagery is live:**
 
-1. Apply both additive migrations in Supabase (especially `…130000…` so `street_view` passes the check constraint).
+1. Apply every migration through `20260927031945_owned_photo_capture_and_suppression.sql`.
 2. Create private Storage bucket `yardproof-imagery` (or the configured name).
-3. Add server-only Vercel env: `GOOGLE_MAPS_API_KEY` (Geocoding + Street View Static + Maps Static, restricted), optional `GOOGLE_MAPS_URL_SIGNING_SECRET`, confirm `OPENAI_API_KEY` Images access / `OPENAI_IMAGE_MODEL`, optional `IMAGERY_PROVIDER`, `AFTER_PROMPT_VERSION`, `IMAGERY_STORAGE_BUCKET`, `IMAGERY_DAILY_CAP`.
-4. Do **not** invent or paste secrets into git. Cole configures Vercel/GCP.
+3. Add server-only Vercel env: `GOOGLE_MAPS_API_KEY` (scouting), `GOOGLE_CLOUD_VISION_API_KEY` (privacy detection), optional `GOOGLE_MAPS_URL_SIGNING_SECRET`, `OPENAI_API_KEY` Images access / `OPENAI_IMAGE_MODEL`, `IMAGERY_PROVIDER`, `AFTER_PROMPT_VERSION`, `IMAGERY_STORAGE_BUCKET`, and `IMAGERY_DAILY_CAP`.
+4. Open `/dashboard/campaigns` once after migration (or POST `/api/imagery/purge-google`) to delete queued legacy Google objects through the supported Storage API.
+5. Do **not** invent or paste secrets into git. Cole configures Vercel/GCP.
 
 **Imagery security notes:**
 
-- `GOOGLE_MAPS_API_KEY` is server-only. Never create a `NEXT_PUBLIC_GOOGLE_MAPS_*` var. API responses never include `maps.googleapis.com` URLs (they embed the key); Street View and satellite preview bytes are downloaded server-side and served via short-lived Storage signed URLs.
-- Server-side image fetches go through `lib/imagery/safe-fetch.ts`: https only, host must be the `NEXT_PUBLIC_SUPABASE_URL` host under `/storage/v1/object/`, or `maps.googleapis.com` under `/maps/api/streetview|staticmap`. No redirects, 20 MB cap.
+- `GOOGLE_MAPS_API_KEY` is server-only. Google preview bytes are streamed directly to the authenticated operator and never stored.
+- `lib/imagery/safe-fetch.ts`, used by AI, accepts only private Supabase Storage references. Google hosts are structurally excluded.
 - After-render uses `gpt-image-1` image **edit** with the Current as input. gpt-image models always return base64 and reject `response_format` (400), so it is only sent for legacy `dall-e-*` overrides.
 
 **Hanceville demo QR 404 (`/q/f4db2ae44db4886b70d6b6060751cc70b95b`) — diagnosed 2026-09-24:**
@@ -102,6 +104,6 @@ Migrations:
 - Prod `campaign_recipients` only has the legacy columns; migrations `20260924120000_postcard_recipient_imagery.sql` and `20260924130000_streetview_printable_current.sql` are **not applied** (latest applied: `fix_extension_schemas_and_fk_index`).
 - `/q/[token]` selected `current_image_url, current_image_source, after_image_url, review_status`, PostgREST returned `42703 undefined_column`, and the page treated any error as `notFound()` → 404.
 - Code fix: `/q/[token]` now falls back to the legacy column set on `42703`, so the page renders (legacy concept image only) even before migrations.
-- To enable Current|After on that page: apply both migrations above (in order), create the private Storage bucket `yardproof-imagery` (none exists in prod yet), then run streetview-preview → after-render → review for that recipient.
+- To enable Current|After on that page: apply all migrations, create the private Storage bucket, then crew/homeowner capture → privacy redaction → after-render → review.
 
 Postcard **printing and fulfillment** (Lob / vendor mail) remain out of scope until explicitly authorized.

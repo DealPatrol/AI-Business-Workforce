@@ -62,12 +62,20 @@ export async function assertRecipientOwned(
         public_token: string;
         current_image_url: string | null;
         current_image_source: string | null;
+        current_storage_path: string | null;
         after_image_url: string | null;
         review_status: string;
+        rights_basis: string | null;
+        privacy_redaction_status: string;
+        do_not_photograph: boolean;
+        do_not_mail: boolean;
         latitude: number | null;
         longitude: number | null;
         normalized_address: string | null;
         street_view_pano_id: string | null;
+        street_view_heading: number | null;
+        street_view_pitch: number | null;
+        street_view_fov: number | null;
         concept_json: Record<string, unknown> | null;
       };
     }
@@ -94,12 +102,20 @@ export async function assertRecipientOwned(
       public_token,
       current_image_url,
       current_image_source,
+      current_storage_path,
       after_image_url,
       review_status,
+      rights_basis,
+      privacy_redaction_status,
+      do_not_photograph,
+      do_not_mail,
       latitude,
       longitude,
       normalized_address,
       street_view_pano_id,
+      street_view_heading,
+      street_view_pitch,
+      street_view_fov,
       concept_json,
       campaigns!inner ( owner_id )
     `,
@@ -142,12 +158,20 @@ export async function assertRecipientOwned(
       public_token: String(row.public_token),
       current_image_url: (row.current_image_url as string | null) ?? null,
       current_image_source: (row.current_image_source as string | null) ?? null,
+      current_storage_path: (row.current_storage_path as string | null) ?? null,
       after_image_url: (row.after_image_url as string | null) ?? null,
       review_status: String(row.review_status ?? 'pending'),
+      rights_basis: (row.rights_basis as string | null) ?? null,
+      privacy_redaction_status: String(row.privacy_redaction_status ?? 'pending'),
+      do_not_photograph: Boolean(row.do_not_photograph),
+      do_not_mail: Boolean(row.do_not_mail),
       latitude: (row.latitude as number | null) ?? null,
       longitude: (row.longitude as number | null) ?? null,
       normalized_address: (row.normalized_address as string | null) ?? null,
       street_view_pano_id: (row.street_view_pano_id as string | null) ?? null,
+      street_view_heading: (row.street_view_heading as number | null) ?? null,
+      street_view_pitch: (row.street_view_pitch as number | null) ?? null,
+      street_view_fov: (row.street_view_fov as number | null) ?? null,
       concept_json: (row.concept_json as Record<string, unknown> | null) ?? null,
     },
   };
