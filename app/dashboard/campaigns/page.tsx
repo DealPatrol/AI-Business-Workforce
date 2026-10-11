@@ -38,6 +38,7 @@ type Recipient = {
   state: string;
   postal_code: string;
   campaigns: {
+    id: string;
     name: string;
   };
   recipient_scans: Array<{ count: number }>;
@@ -72,7 +73,7 @@ export default async function CampaignInboxPage() {
         city,
         state,
         postal_code,
-        campaigns!inner (name),
+        campaigns!inner (id, name),
         recipient_scans (count),
         estimate_requests (count)
       `)
@@ -125,6 +126,7 @@ export default async function CampaignInboxPage() {
         <nav>
           <Link href="/dashboard">Overview</Link>
           <Link className={styles.active} href="/dashboard/campaigns">Campaign inbox</Link>
+          <Link href="/dashboard/prospector">Lead Finder</Link>
           <Link href="/visual-canvasser">Campaign offer</Link>
         </nav>
         <LogoutButton />
@@ -217,6 +219,9 @@ export default async function CampaignInboxPage() {
                   <a href={`${appUrl}${qrPath}`} target="_blank" rel="noreferrer">
                     Open page <ExternalLink size={13} />
                   </a>
+                  <Link href={`/dashboard/campaigns/${campaign.id}/review`}>
+                    Review cards
+                  </Link>
                   <code>{`${appUrl}${qrPath}`}</code>
                 </article>
               );

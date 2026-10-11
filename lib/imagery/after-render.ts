@@ -8,7 +8,12 @@
  */
 
 import OpenAI, { toFile } from 'openai';
-import catalog from '@/lib/catalogs/al-lawn-v1.json';
+import {
+  getConceptProfile,
+  normalizeTrade,
+  selectCatalogChoices,
+} from '@/lib/concept-profiles';
+import gardenCatalog from '@/lib/catalogs/local-garden-center.json';
 
 export type ImageryProvider = 'openai' | 'gemini';
 
@@ -27,14 +32,21 @@ export type AfterRenderResult = {
   provider: ImageryProvider;
   model: string;
   promptVersion: string;
-  plantPlan: {
-    items: Array<{ id: string; commonName: string; qty: number; typicalUnitUsd: number }>;
-    estimatedMaterialsUsd: number;
+  conceptPlan: {
+    trade: string;
+    selectedCatalogItems: Array<{
+      id: string;
+      name: string;
+      category: string;
+      note: string;
+    }>;
+    scopeBullets: string[];
     notes: string;
+    catalogDisclosure: string;
   };
 };
 
-const DEFAULT_PROMPT_VERSION = 'al-lawn-v1';
+const DEFAULT_PROMPT_VERSION = 'demo10-multitrade-v1';
 
 export function getImageryProvider(): ImageryProvider {
   const raw = (process.env.IMAGERY_PROVIDER || 'openai').trim().toLowerCase();
@@ -48,70 +60,44 @@ export function isAfterRenderConfigured(provider = getImageryProvider()): boolea
   return Boolean(process.env.OPENAI_API_KEY?.trim());
 }
 
-type CatalogItem = {
-  id: string;
-  commonName: string;
-  category: string;
-  typicalUnitUsd: number;
-  defaultQty: number;
-};
-
-function pickPlantPlan(skuIds?: string[], budgetMax = catalog.budgetMaxUsd) {
-  const items = catalog.items as CatalogItem[];
-  const selected = (skuIds?.length
-    ? items.filter((item) => skuIds.includes(item.id))
-    : items.filter((item) =>
-        ['boxwood_dwarf', 'hydrangea_oakleaf', 'daylily', 'liriope', 'mulch_dyed', 'edging_plastic', 'annual_color'].includes(
-          item.id,
-        ),
-      )
-  ).map((item) => ({
-    id: item.id,
-    commonName: item.commonName,
-    qty: item.defaultQty,
-    typicalUnitUsd: item.typicalUnitUsd,
-  }));
-
-  let estimated = selected.reduce((sum, row) => sum + row.qty * row.typicalUnitUsd, 0);
-  // Trim qty if over budget
-  while (estimated > budgetMax && selected.length) {
-    const heaviest = selected.reduce((a, b) =>
-      a.qty * a.typicalUnitUsd >= b.qty * b.typicalUnitUsd ? a : b,
-    );
-    if (heaviest.qty <= 1) break;
-    heaviest.qty -= 1;
-    estimated = selected.reduce((sum, row) => sum + row.qty * row.typicalUnitUsd, 0);
-  }
-
+function buildConceptPlan(tradeValue?: string, selectedIds?: string[]) {
+  const trade = normalizeTrade(tradeValue);
+  const profile = getConceptProfile(trade);
+  const selectedCatalogItems = selectCatalogChoices(profile, selectedIds);
   return {
-    items: selected,
-    estimatedMaterialsUsd: Math.round(estimated),
-    notes:
-      'Modest North Alabama curb-appeal refresh: trim existing hedges, edged beds, mulch, limited color. Not a luxury redesign.',
+    trade,
+    selectedCatalogItems,
+    scopeBullets: profile.scopeTemplates,
+    notes: profile.promptStyle,
+    catalogDisclosure: profile.catalogDisclosure,
   };
 }
 
-function buildEditPrompt(plantPlan: AfterRenderResult['plantPlan'], promptVersion: string): string {
-  const plantList = plantPlan.items
-    .map((p) => `${p.qty}× ${p.commonName}`)
+function buildEditPrompt(conceptPlan: AfterRenderResult['conceptPlan'], promptVersion: string): string {
+  const profile = getConceptProfile(conceptPlan.trade);
+  const selectedList = conceptPlan.selectedCatalogItems
+    .map((item) => `${item.id} (${item.name})`)
     .join(', ');
 
   return [
     'Edit this real front-yard photo into a photoreal AFTER shot of the SAME property.',
     'Keep the same camera angle, house structure, roof, siding color, windows, driveway, sidewalk, and neighbors.',
-    'Apply a modest Alabama lawn / plant refresh only: neatly trimmed hedges, clean mow lines, edged beds, fresh mulched beds, limited seasonal color.',
-    `Prefer these retail-style materials (~$${plantPlan.estimatedMaterialsUsd} materials look, max ~$3000): ${plantList}.`,
-    'Do NOT add pools, large new trees, fountains, luxury hardscape, lighting systems, sky swaps, CGI gloss, mansion-garden density, or recolor the house.',
+    `Trade: ${profile.label}. ${profile.promptStyle}`,
+    `Prefer these exact curated reference ids and names: ${selectedList}.`,
+    `Visible scope: ${conceptPlan.scopeBullets.join('; ')}.`,
+    'Make a reasonable educational design guess only. Keep it clean, simple, buildable, and not overdone.',
+    'Do NOT add unrelated work, pools, luxury features, sky swaps, CGI gloss, or mansion-level density.',
     'Daylight, natural photo look — not illustration or fantasy marketing CGI.',
+    `Catalog disclosure: ${conceptPlan.catalogDisclosure}`,
     `Prompt version: ${promptVersion}.`,
   ].join(' ');
 }
 
 async function renderWithOpenAI(
   input: AfterRenderInput,
-  plantPlan: AfterRenderResult['plantPlan'],
+  conceptPlan: AfterRenderResult['conceptPlan'],
   promptVersion: string,
-): Promise<Omit<AfterRenderResult, 'plantPlan'>> {
+): Promise<Omit<AfterRenderResult, 'conceptPlan'>> {
   const apiKey = process.env.OPENAI_API_KEY?.trim();
   if (!apiKey) throw new Error('OPENAI_API_KEY is not configured.');
 
@@ -128,7 +114,7 @@ async function renderWithOpenAI(
   const result = await openai.images.edit({
     model,
     image: file,
-    prompt: buildEditPrompt(plantPlan, promptVersion),
+    prompt: buildEditPrompt(conceptPlan, promptVersion),
     size: '1024x1024',
     n: 1,
     ...(isLegacyDalle ? { response_format: 'b64_json' as const } : {}),
@@ -177,9 +163,9 @@ function sniffImageMime(bytes: Buffer): 'image/png' | 'image/jpeg' | 'image/webp
 
 async function renderWithGemini(
   _input: AfterRenderInput,
-  _plantPlan: AfterRenderResult['plantPlan'],
+  _conceptPlan: AfterRenderResult['conceptPlan'],
   _promptVersion: string,
-): Promise<Omit<AfterRenderResult, 'plantPlan'>> {
+): Promise<Omit<AfterRenderResult, 'conceptPlan'>> {
   // Hook only — wire Gemini/Imagen when GEMINI_API_KEY + model are confirmed.
   if (!process.env.GEMINI_API_KEY?.trim()) {
     throw new Error('GEMINI_API_KEY is not configured.');
@@ -194,16 +180,15 @@ export async function renderAfter(input: AfterRenderInput): Promise<AfterRenderR
     input.promptVersion?.trim() ||
     process.env.AFTER_PROMPT_VERSION?.trim() ||
     DEFAULT_PROMPT_VERSION;
-  const budgetMax = input.budgetMax ?? catalog.budgetMaxUsd;
-  const plantPlan = pickPlantPlan(input.catalogSkus, budgetMax);
+  const conceptPlan = buildConceptPlan(input.trade, input.catalogSkus);
   const provider = getImageryProvider();
 
   const rendered =
     provider === 'gemini'
-      ? await renderWithGemini(input, plantPlan, promptVersion)
-      : await renderWithOpenAI(input, plantPlan, promptVersion);
+      ? await renderWithGemini(input, conceptPlan, promptVersion)
+      : await renderWithOpenAI(input, conceptPlan, promptVersion);
 
-  return { ...rendered, plantPlan };
+  return { ...rendered, conceptPlan };
 }
 
-export { catalog };
+export { gardenCatalog as catalog };

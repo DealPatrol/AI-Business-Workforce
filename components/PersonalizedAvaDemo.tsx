@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { ConversationProvider, useConversation } from '@elevenlabs/react';
 import { AVA_PILOT_OFFER, AVA_PILOT_PAYMENT_LINK } from '@/lib/ava-pilot-offer';
+import { AVA_PLANS } from '@/lib/ava/pricing';
 import {
   AVA_VOICE_OPTIONS,
   DEFAULT_AVA_VOICE,
@@ -513,8 +514,7 @@ function PersonalizedDemoContent({ prospect }: { prospect: Prospect }) {
           <span className="demo-kicker">14-DAY PAID PILOT</span>
           <h2>Try Ava for {prospect.companyName}</h2>
           <p>
-            ${AVA_PILOT_OFFER.setupFee} setup · ${AVA_PILOT_OFFER.monthlyFee}/month after{' '}
-            {AVA_PILOT_OFFER.pilotDays} days · {AVA_PILOT_OFFER.usageLimit} ·{' '}
+            Plans from {AVA_PLANS.starter.monthlyLabel}/month · {AVA_PILOT_OFFER.usageLimit} ·{' '}
             {AVA_PILOT_OFFER.cancelPolicy}
           </p>
           <ul className="pilot-checks">

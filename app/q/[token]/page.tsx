@@ -62,7 +62,7 @@ async function loadPublicRecipient(
       .from('campaign_recipients')
       .select(columns)
       .eq('public_token', token)
-      .eq('campaigns.status', 'active')
+      .in('campaigns.status', ['active', 'ready_to_mail'])
       .single();
 
   const full = await query(`${IMAGERY_COLUMNS}${BASE_COLUMNS}`);
@@ -178,7 +178,7 @@ export default async function RecipientPage({ params }: PageProps) {
                 </div>
               </div>
               <p className={styles.imageryNote}>
-                Illustrative concept after a light plant &amp; trim refresh (approx. $1–3k plant materials).
+                Illustrative After concept based on contractor-reviewed scope and curated references.
               </p>
             </div>
           )}

@@ -83,6 +83,16 @@ export async function GET(req: NextRequest) {
       const sessionRes = await stripeGet(`/checkout/sessions/${encodeURIComponent(row.stripe_session_id)}`, stripeSecret);
       if (!sessionRes.ok) throw new Error('Stripe session lookup failed');
       const session = sessionRes.data;
+      if (session.metadata?.product && session.metadata.product !== 'ava') {
+        results.push({
+          onboardingId: row.id,
+          business: row.business_name,
+          ok: true,
+          skipped: true,
+          reason: 'Checkout session is not an Ava subscription.',
+        });
+        continue;
+      }
       const customer = typeof session.customer === 'string' ? session.customer : session.customer?.id;
       const subscriptionId = typeof session.subscription === 'string' ? session.subscription : session.subscription?.id;
       if (!customer || !subscriptionId) throw new Error('Missing Stripe customer/subscription');

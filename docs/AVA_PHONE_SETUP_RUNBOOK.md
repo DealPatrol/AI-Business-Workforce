@@ -7,8 +7,10 @@ Launch rule: Ava is not live until a customer test call passes.
 
 1. The customer pays through Ava Checkout (`POST /api/checkout`) or an **Ava-specific** Stripe Payment Link.
 2. Stripe returns the customer to `/onboarding/ava`.
-3. The customer submits business name, hours, services, call-handling rules, staff name and phone/email, calendar preference, and urgent-call rules.
+3. The customer submits business name, hours, services, call-handling rules, staff name and phone/email, calendar preference, and urgent-call rules. That first submit sets where leads go.
 4. Cole receives the setup answers by Resend. If Resend is unavailable, the page opens a pre-filled email to `colecollins763@gmail.com`.
+
+Anyone who later opens `/onboarding/ava?session_id=...` can still update hours, services, and call rules. They cannot change the lead phone or email. After the first successful submit, those destinations stay locked. The buyer requests “Email me a change link” on that page. The server re-checks the Checkout Session with Stripe and sends a signed link only to the email currently on that session, and only when the subscription is `active` or `trialing`. The link expires 30 minutes after it is created. Submitting the form from that link checks Stripe again and applies the new phone/email only if the token still matches that inbox. The signature uses `AVA_DESTINATION_EDIT_SECRET` when set, otherwise `STRIPE_SECRET_KEY`. No new vendor. Requests are limited to one email a minute per checkout. If Stripe or email is down, the old destinations stay in place.
 
 Never use the shared founding Payment Link for this handoff. Visual Canvasser also uses it, so changing its completion URL to Ava onboarding sends the wrong buyers into Ava setup. An Ava Payment Link should have its own completion URL and include `{CHECKOUT_SESSION_ID}` when possible.
 
@@ -29,7 +31,7 @@ After onboarding, the app stores a private `ava_onboardings` record in Supabase 
 There are two agent-create modes:
 
 - Default/manual trigger: call `POST /api/ava/provision` with `{"onboardingId":"..."}` and `Authorization: Bearer $AVA_PROVISIONING_SECRET`.
-- Opt-in automatic trigger: set `AVA_AUTO_PROVISION_AGENT=true`. A form submission with a paid, complete Ava Checkout Session then duplicates `ELEVENLABS_AGENT_ID`, patches the new agent with the customer's greeting and operating rules, and records the returned agent ID. `/api/checkout` sessions are recognized by their Ava plan metadata. For an Ava-specific Payment Link, also set `AVA_STRIPE_PAYMENT_LINK_ID` and configure its completion URL to pass `{CHECKOUT_SESSION_ID}`.
+- Opt-in automatic trigger: set `AVA_AUTO_PROVISION_AGENT=true`. A form submission with a paid or trialing Ava Checkout Session then duplicates `ELEVENLABS_AGENT_ID`, patches the new agent with the customer's greeting and operating rules, and records the returned agent ID. Phone status stays `pending_manual`. Cole's email includes a link to this runbook. `/api/checkout` sessions are recognized by their Ava plan metadata. For an Ava-specific Payment Link, also set `AVA_STRIPE_PAYMENT_LINK_ID` and configure its completion URL to pass `{CHECKOUT_SESSION_ID}`.
 
 Example manual trigger:
 

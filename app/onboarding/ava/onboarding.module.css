@@ -220,6 +220,36 @@
   border-color: #2e8b57;
 }
 
+.paywall {
+  background: #fff;
+  border: 1px solid #d7e3d8;
+  border-radius: 16px;
+  padding: 22px;
+  margin-bottom: 18px;
+}
+
+.paywall h2 {
+  margin: 0 0 8px;
+  font-size: 26px;
+}
+
+.paywall p {
+  margin: 0 0 14px;
+  color: #4d5b52;
+  line-height: 1.5;
+}
+
+.checkout {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #205c39;
+  color: #fff;
+  border-radius: 9px;
+  padding: 14px 18px;
+  font-weight: 850;
+}
+
 .form button {
   width: 100%;
   border: 0;
@@ -244,6 +274,14 @@
   width: 18px;
 }
 
+.form button.secondary {
+  margin-top: 10px;
+  background: #fff;
+  color: #205c39;
+  border: 1px solid #9bc5a9;
+  font-weight: 800;
+}
+
 .privacy {
   display: flex;
   align-items: center;
@@ -256,6 +294,27 @@
 
 .privacy svg {
   width: 14px;
+}
+
+.privacy a,
+.footer a {
+  color: #205c39;
+  font-weight: 800;
+}
+
+.nav a:last-child {
+  font-weight: 800;
+  color: #205c39;
+}
+
+.footer {
+  width: min(1080px, calc(100% - 40px));
+  margin: 36px auto 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  color: #657168;
+  font-size: 13px;
 }
 
 .notice {

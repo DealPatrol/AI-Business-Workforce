@@ -10,6 +10,7 @@ import {
   renderAfter,
 } from '@/lib/imagery/after-render';
 import { fetchAllowedImage } from '@/lib/imagery/safe-fetch';
+import { getCampaignTrade } from '@/lib/campaign-trade';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -80,11 +81,12 @@ export async function POST(request: NextRequest) {
     const catalogSkus = Array.isArray(body.catalogSkus)
       ? body.catalogSkus.map(String)
       : undefined;
+    const trade = await getCampaignTrade(auth.ctx.admin, recipient.campaign_id);
 
     const rendered = await renderAfter({
       currentBytes,
       currentMimeType,
-      trade: String(body.trade ?? 'landscaping'),
+      trade,
       catalogSkus,
       budgetMax:
         body.budgetMax != null && Number.isFinite(Number(body.budgetMax))
@@ -119,7 +121,11 @@ export async function POST(request: NextRequest) {
 
     const conceptJson = {
       ...(recipient.concept_json ?? {}),
-      plantPlan: rendered.plantPlan,
+      trade: rendered.conceptPlan.trade,
+      selectedCatalogItems: rendered.conceptPlan.selectedCatalogItems,
+      scopeBullets: rendered.conceptPlan.scopeBullets,
+      conceptNotes: rendered.conceptPlan.notes,
+      catalogDisclosure: rendered.conceptPlan.catalogDisclosure,
       after: {
         provider: rendered.provider,
         model: rendered.model,
@@ -144,7 +150,7 @@ export async function POST(request: NextRequest) {
         // Keep legacy concept_image_url pointing at After for older UI paths
         concept_image_url: signed.signedUrl,
         concept_summary:
-          'Illustrative concept after a light plant & trim refresh (approx. $1–3k plant materials). Subject to contractor review.',
+          `Illustrative ${rendered.conceptPlan.trade.replaceAll('_', ' ')} concept based on the reviewed scope and curated references. Subject to contractor review.`,
       })
       .eq('id', recipient.id);
 
@@ -158,7 +164,7 @@ export async function POST(request: NextRequest) {
       provider: rendered.provider,
       model: rendered.model,
       promptVersion: rendered.promptVersion,
-      plantPlan: rendered.plantPlan,
+      conceptPlan: rendered.conceptPlan,
       currentImageSource: recipient.current_image_source,
       reviewStatus: 'pending_review',
       note: 'Human review required before mailing. Call POST /api/imagery/review to approve.',

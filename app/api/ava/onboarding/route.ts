@@ -5,6 +5,22 @@ import {
 } from '@/lib/ava/onboarding-store';
 import { verifyAvaCheckoutSession } from '@/lib/ava/checkout';
 import { AvaProvisioningResult } from '@/lib/ava/provisioning';
+import { parseStaffContacts, splitContact } from '@/lib/analytics/contact';
+import {
+  AVA_PHONE_RUNBOOK_PATH,
+  AVA_PHONE_RUNBOOK_URL,
+  avaFromAddress,
+  avaOwnerEmail,
+} from '@/lib/ava/mail';
+import { sendMetaServerEvent } from '@/lib/analytics/meta-capi';
+import {
+  clientIp,
+  readCookieId,
+  readEventId,
+  readRequestAttribution,
+  safePageUrl,
+} from '@/lib/analytics/request-context';
+import { DestinationLockedError } from '@/lib/ava/destination-edit';
 import { AVA_VOICE_OPTIONS, isAvaVoiceKey } from '@/lib/ava/voice-options';
 
 const NOTIFICATION_EMAIL = 'colecollins763@gmail.com';
@@ -91,7 +107,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const staffContact = fields.staffContact || fields.staffPhone || fields.staffEmail;
+    const parsedStaff = parseStaffContacts(
+      [fields.staffPhone, fields.staffEmail, fields.staffContact].filter(Boolean).join(' '),
+    );
+    const staffContact = [parsedStaff.phone, parsedStaff.email].filter(Boolean).join(' / ');
     if (!staffContact) {
       return NextResponse.json(
         { error: 'Add a phone number or email for the staff contact.' },
@@ -107,7 +126,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Choose a valid Ava voice option.' }, { status: 400 });
     }
 
-    const replyTo = EMAIL_PATTERN.test(staffContact) ? staffContact : fields.staffEmail;
+    const replyTo = parsedStaff.email || (EMAIL_PATTERN.test(fields.staffEmail) ? fields.staffEmail : '');
     const apiKey = process.env.RESEND_API_KEY;
 
     const submittedAt = new Date().toISOString();
@@ -128,10 +147,16 @@ export async function POST(request: NextRequest) {
         callHandlingRules: fields.callHandlingRules,
         staffName: fields.staffName,
         staffContact,
+        staffEmail: parsedStaff.email,
+        staffPhone: parsedStaff.phone,
+        preferredVoice: fields.preferredVoice,
         calendarPreference: fields.calendarPreference,
         urgentCallRules: fields.urgentCallRules,
         sessionId: fields.sessionId,
         plan: fields.plan,
+        editToken: String(body.editToken ?? '')
+          .trim()
+          .slice(0, 2_000),
       });
       onboardingId = onboarding.id;
 
@@ -156,6 +181,12 @@ export async function POST(request: NextRequest) {
         };
       }
     } catch (persistenceError) {
+      if (persistenceError instanceof DestinationLockedError) {
+        return NextResponse.json(
+          { error: persistenceError.message, code: persistenceError.code },
+          { status: 403 },
+        );
+      }
       persistenceWarning =
         persistenceError instanceof Error
           ? persistenceError.message
@@ -169,8 +200,13 @@ export async function POST(request: NextRequest) {
       ['Services offered', fields.services],
       ['Call-handling rules', fields.callHandlingRules],
       ['Staff contact', fields.staffName],
-      ['Staff phone or email', staffContact],
-      ['Calendar preference', fields.calendarPreference],
+      ['Staff phone', parsedStaff.phone || 'Not provided'],
+      ['Staff email', parsedStaff.email || 'Not provided'],
+      [
+        'Phone setup runbook',
+        `${AVA_PHONE_RUNBOOK_PATH} (${AVA_PHONE_RUNBOOK_URL})`,
+      ],
+      ['Lead handoff notes', fields.calendarPreference],
       ['Urgent-call rules', fields.urgentCallRules],
       [
         'Preferred Ava voice',
@@ -186,6 +222,9 @@ export async function POST(request: NextRequest) {
       ['Next provisioning step', provisioning.message],
       ['Persistence warning', persistenceWarning || 'None'],
       ['Submitted at', submittedAt],
+      ...Object.entries(readRequestAttribution(body.attribution)).map(
+        ([key, value]) => [key, value] as [string, string],
+      ),
     ];
     const htmlRows = rows
       .map(
@@ -214,11 +253,11 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'YardProof <onboarding@resend.dev>',
-        to: [NOTIFICATION_EMAIL],
+        from: avaFromAddress(),
+        to: [avaOwnerEmail()],
         ...(replyTo ? { reply_to: replyTo } : {}),
         subject: `Ava paid pilot setup — ${fields.businessName}`,
-        html: `<div style="font-family:Arial,sans-serif;max-width:760px;margin:auto;color:#17211b"><h1>New Ava paid pilot onboarding</h1><p>Use these answers to configure the customer&apos;s Ava workflow and schedule one live test call before launch.</p><table style="border-collapse:collapse;width:100%">${htmlRows}</table></div>`,
+        html: `<div style="font-family:Arial,sans-serif;max-width:760px;margin:auto;color:#17211b"><h1>New Ava setup</h1><p>The phone number stays <b>pending_manual</b>. Attach one using <a href="${AVA_PHONE_RUNBOOK_URL}">${AVA_PHONE_RUNBOOK_PATH}</a>, then run one live test call before launch.</p><table style="border-collapse:collapse;width:100%">${htmlRows}</table></div>`,
       }),
     });
     const result = await response.json().catch(() => ({}));
@@ -237,9 +276,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const eventId = readEventId(body.eventId);
+    const contact = splitContact(staffContact);
+    await sendMetaServerEvent({
+      eventName: 'Lead',
+      eventId,
+      eventSourceUrl: safePageUrl(body.pageUrl, request.nextUrl.origin),
+      email: contact.email || fields.staffEmail,
+      phone: contact.phone,
+      clientIp: clientIp(request.headers.get('x-forwarded-for')),
+      userAgent: request.headers.get('user-agent') || '',
+      fbp: readCookieId(body.fbp),
+      fbc: readCookieId(body.fbc),
+    });
+
     return NextResponse.json({
       sent: true,
       onboardingId,
+      eventId,
       provisioning,
       ...(persistenceWarning ? { warning: persistenceWarning } : {}),
     });

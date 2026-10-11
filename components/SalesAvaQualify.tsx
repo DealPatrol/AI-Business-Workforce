@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { ConversationProvider, useConversation } from '@elevenlabs/react';
 import {
   ArrowRight,
-  Calendar,
   Check,
   Loader2,
   Mic2,
@@ -15,6 +14,10 @@ import {
   Sparkles,
   UserRound,
 } from 'lucide-react';
+import { trackDemoStarted } from '@/lib/analytics/events';
+import { trackVercelEvent } from '@/lib/analytics/vercel-events';
+import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
+import { avaPricingSummaryCopy } from '@/lib/ava/pricing';
 
 type CallState = 'idle' | 'preparing' | 'ready' | 'connecting' | 'connected' | 'ending' | 'processing';
 
@@ -26,7 +29,7 @@ type QualificationResult = {
   summary?: string;
 };
 
-const BOOKING_URL = process.env.NEXT_PUBLIC_AVA_SETUP_BOOKING_URL || '';
+const SETUP_CALL_URL = process.env.NEXT_PUBLIC_AVA_SETUP_BOOKING_URL || '';
 
 function valueOf(item: unknown) {
   if (!item || typeof item !== 'object') return null;
@@ -51,14 +54,24 @@ function SalesAvaQualifyContent() {
   const [error, setError] = useState('');
   const [callState, setCallState] = useState<CallState>('preparing');
   const [qualification, setQualification] = useState<QualificationResult | null>(null);
+  const [micBlocked, setMicBlocked] = useState(false);
   const conversationId = useRef<string | null>(null);
   const signedUrl = useRef<string | null>(null);
   const preparedConversationId = useRef<string | null>(null);
+  const demoTracked = useRef(false);
+
+  function markDemoConnected() {
+    if (demoTracked.current) return;
+    demoTracked.current = true;
+    trackDemoStarted();
+    trackVercelEvent('demo-play', { surface: 'sales-live' });
+  }
 
   const conversation = useConversation({
     onConnect: () => {
       setError('');
       setCallState('connected');
+      markDemoConnected();
     },
     onDisconnect: () => {
       setCallState((s) => (s === 'processing' ? s : 'ready'));
@@ -99,11 +112,20 @@ function SalesAvaQualifyContent() {
     if (!['ready', 'idle'].includes(callState)) return;
     setQualification(null);
     setError('');
+    setMicBlocked(false);
+    demoTracked.current = false;
     setCallState('connecting');
     try {
       if (!signedUrl.current) {
         await prepareSession();
         if (!signedUrl.current) throw new Error('Ava is still preparing. Try once more.');
+      }
+      if (!navigator.mediaDevices?.getUserMedia) {
+        const unsupported = new Error(
+          'This browser or device does not support microphone access.',
+        ) as Error & { name: string };
+        unsupported.name = 'NotSupportedError';
+        throw unsupported;
       }
       await navigator.mediaDevices.getUserMedia({ audio: true });
       conversationId.current = preparedConversationId.current;
@@ -111,9 +133,21 @@ function SalesAvaQualifyContent() {
       signedUrl.current = null;
       preparedConversationId.current = null;
       setCallState('connected');
+      markDemoConnected();
     } catch (e: unknown) {
       const err = e as { name?: string; message?: string };
-      setError(err?.message || 'Unable to start Sales Ava.');
+      const micErrorNames = [
+        'NotAllowedError',
+        'NotFoundError',
+        'OverconstrainedError',
+        'NotSupportedError',
+      ];
+      if (micErrorNames.includes(err?.name || '')) {
+        setMicBlocked(true);
+        setError('Microphone access was blocked, so the live voice demo can\u2019t start here.');
+      } else {
+        setError(err?.message || 'Unable to start Sales Ava.');
+      }
       setCallState('ready');
     }
   }
@@ -169,7 +203,7 @@ function SalesAvaQualifyContent() {
         calendarPreference:
           q.calendarPreference ||
           pickCollected(collected, 'calendarPreference', 'calendar_preference') ||
-          'Lead notify only until calendar is connected',
+          'Text the lead to the owner for a callback.',
         companyWebsite:
           q.companyWebsite ||
           pickCollected(collected, 'companyWebsite', 'company_website') ||
@@ -224,8 +258,6 @@ function SalesAvaQualifyContent() {
     : (qualification?.planInterest || '').toLowerCase().includes('pro')
       ? 'pro'
       : 'growth';
-  const planLabel =
-    planKey === 'starter' ? 'Starter $59' : planKey === 'pro' ? 'Pro $249' : 'Growth $129';
   const prefillQs = qualification
     ? [
         `qualificationId=${encodeURIComponent(qualification.id)}`,
@@ -263,7 +295,7 @@ function SalesAvaQualifyContent() {
             <Check /> Call handling + urgent rules
           </li>
           <li>
-            <Check /> Staff contact and calendar preference
+            <Check /> Where to text the lead
           </li>
           <li>
             <Check /> Prefill onboarding after the call
@@ -313,15 +345,19 @@ function SalesAvaQualifyContent() {
                 {qualification.summary ? ` — ${qualification.summary.slice(0, 180)}` : ''}.
               </p>
             </div>
-            <a className="talk-btn" href={checkoutHref}>
-              Start {planLabel} — $0 setup <ArrowRight size={16} />
-            </a>
-            <Link className="text-next" href={onboardingHref}>
-              Continue to onboarding (prefilled) <ArrowRight size={14} />
+            <TrackedCheckoutLink className="talk-btn" href={checkoutHref} plan={planKey}>
+              Start free 7-day trial <ArrowRight size={16} />
+            </TrackedCheckoutLink>
+            <Link
+              className="text-next"
+              href={onboardingHref}
+              onClick={() => trackVercelEvent('signup-click', { plan: planKey, destination: 'onboarding' })}
+            >
+              Or send setup notes first <ArrowRight size={14} />
             </Link>
-            {BOOKING_URL ? (
-              <a className="text-fallback" href={BOOKING_URL} target="_blank" rel="noreferrer">
-                <Calendar size={14} /> Book a setup call with Cole
+            {SETUP_CALL_URL ? (
+              <a className="text-fallback" href={SETUP_CALL_URL} target="_blank" rel="noreferrer">
+                Request a setup call with Cole
               </a>
             ) : null}
             <button className="text-switch" type="button" onClick={() => setQualification(null)}>
@@ -376,9 +412,38 @@ function SalesAvaQualifyContent() {
                 ? conversation.isSpeaking
                   ? 'Ava is speaking…'
                   : 'Ava is listening…'
-                : 'Plans: Starter $59 · Growth $129 · Pro $249 · $0 setup'}
+                : avaPricingSummaryCopy()}
             </small>
-            {error && <p className="call-error">{error}</p>}
+            {error && !micBlocked && <p className="call-error">{error}</p>}
+            {micBlocked && (
+              <div
+                className="mic-fallback"
+                style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 12 }}
+              >
+                <p className="call-error" style={{ margin: 0 }}>
+                  {error}
+                </p>
+                <p style={{ margin: 0, fontWeight: 600 }}>
+                  No microphone? Hear Ava handle a real customer call instead.
+                </p>
+                <video
+                  controls
+                  preload="none"
+                  playsInline
+                  src="/ava-sample-call.mp4"
+                  style={{ width: '100%', borderRadius: 12, background: '#000' }}
+                  onPlay={() => trackVercelEvent('demo-play', { surface: 'sales-fallback-video' })}
+                />
+                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                  <button className="text-switch" type="button" onClick={startCall}>
+                    <Mic2 size={14} /> Enable mic &amp; try the live demo
+                  </button>
+                  <TrackedCheckoutLink className="text-next" href={checkoutHref} plan={planKey}>
+                    Start free 7-day trial <ArrowRight size={14} />
+                  </TrackedCheckoutLink>
+                </div>
+              </div>
+            )}
           </>
         )}
       </div>

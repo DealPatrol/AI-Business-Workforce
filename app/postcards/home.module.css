@@ -265,6 +265,67 @@
   color: #2e8b57;
 }
 
+.demoOffer {
+  width: min(1080px, calc(100% - 40px));
+  margin: 80px auto 0;
+  padding: 38px;
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap: 55px;
+  border-radius: 16px;
+  background: #173d28;
+  color: #fff;
+  box-shadow: 0 20px 55px rgba(28, 50, 34, .13);
+}
+
+.demoOffer > div:first-child > span {
+  color: #9ed6b2;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .12em;
+}
+
+.demoOffer h2 {
+  margin: 10px 0;
+  font: 500 44px/1.04 Georgia, serif;
+}
+
+.demoOffer p {
+  color: #bed0c2;
+  line-height: 1.65;
+}
+
+.demoOffer strong {
+  font: 500 58px Georgia, serif;
+}
+
+.demoOffer ul {
+  margin: 11px 0 22px;
+  padding: 0;
+  display: grid;
+  gap: 9px;
+  list-style: none;
+  color: #dbe7de;
+  font-size: 12px;
+}
+
+.demoOffer li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.demoOffer li svg {
+  width: 15px;
+  color: #9ed6b2;
+}
+
+.demoOffer .primaryButton {
+  background: #fff;
+  color: #173d28;
+  box-shadow: none;
+}
+
 .section {
   width: min(1160px, calc(100% - 40px));
   margin: auto;
@@ -608,11 +669,13 @@
   }
 
   .exampleGrid,
-  .packageSection {
+  .packageSection,
+  .demoOffer {
     grid-template-columns: 1fr;
   }
 
-  .packageSection {
+  .packageSection,
+  .demoOffer {
     gap: 35px;
   }
 }
@@ -720,6 +783,16 @@
   .packageSection {
     width: min(100% - 32px, 1080px);
     padding: 75px 0;
+  }
+
+  .demoOffer {
+    width: min(100% - 32px, 1080px);
+    margin-top: 60px;
+    padding: 28px 22px;
+  }
+
+  .demoOffer h2 {
+    font-size: 36px;
   }
 
   .offerCard {

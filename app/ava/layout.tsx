@@ -1,47 +1,36 @@
 import '../receptionist-demo/receptionist.css';
 import '../receptionist-demo/sales-upgrade.css';
 import '../receptionist-demo/text-preview.css';
+import './ava-extras.css';
+import './ava-redesign.css';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { AvaViewContent } from '@/components/analytics/AvaViewContent';
 
 export const metadata: Metadata = {
-  title: 'AI Receptionist for Home Service Businesses | Ava by Workforce AI',
+  title: 'Ava AI Receptionist for Home Service Businesses',
   description:
-    'Ava answers calls 24/7 for landscapers, HVAC companies, roofers, plumbers, fencing companies and other home-service businesses. Plans start at $59/month with $0 setup.',
+    'Ava answers missed and after-hours calls for HVAC, plumbing, electrical, roofing, and other home-service shops, qualifies the lead, and texts you. Self-serve plans from $79/month with a free 7-day trial.',
   alternates: { canonical: '/ava' },
   openGraph: {
     title: 'Ava AI Receptionist for Home Service Businesses',
     description:
-      '24/7 AI receptionist for home-service companies. Qualify leads, capture job details, book appointments and stop losing missed calls.',
+      'Turn missed and after-hours calls into qualified leads. Ava answers 24/7, captures job details, and texts your phone. Plans from $79/month.',
     url: '/ava',
+    siteName: 'Ava',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Ava AI Receptionist for Home Service Businesses',
-    description: 'Plans from $59/month. $0 setup. Built for contractors and home-service businesses.',
+    description: 'Self-serve plans from $79/month. Built for contractors and home-service businesses.',
   },
 };
 
 export default function AvaLayout({ children }: { children: ReactNode }) {
-  const structuredData = {
-    '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    name: 'Ava AI Receptionist',
-    applicationCategory: 'BusinessApplication',
-    operatingSystem: 'Web',
-    description:
-      'AI receptionist for home-service businesses that answers calls, qualifies leads, captures job details and routes follow-up.',
-    offers: [
-      { '@type': 'Offer', name: 'Starter', price: '59', priceCurrency: 'USD' },
-      { '@type': 'Offer', name: 'Growth', price: '129', priceCurrency: 'USD' },
-      { '@type': 'Offer', name: 'Pro', price: '249', priceCurrency: 'USD' },
-    ],
-  };
-
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+      <AvaViewContent />
       {children}
     </>
   );

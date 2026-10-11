@@ -5,7 +5,18 @@ import Link from 'next/link';
 import { ArrowLeft, CheckCircle2, Loader2, Mail, Sparkles } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { AVA_VOICE_OPTIONS } from '@/lib/ava/voice-options';
+import {
+  AVA_PLANS,
+  avaPlanPriceLine,
+  isAvaPlanKey,
+  type AvaPlanKey,
+} from '@/lib/ava/pricing';
 import styles from './onboarding.module.css';
+import { readAttribution, readBrowserIds } from '@/lib/analytics/attribution';
+import { splitContact } from '@/lib/analytics/contact';
+import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
+import { trackOnboardingSubmitted } from '@/lib/analytics/events';
+import { trackVercelEvent } from '@/lib/analytics/vercel-events';
 
 const CONTACT_EMAIL = 'colecollins763@gmail.com';
 
@@ -43,7 +54,11 @@ const emptyPrefill: Prefill = {
   plan: '',
 };
 
-function buildEmailFallback(form: HTMLFormElement, result: OnboardingResponse) {
+function buildEmailFallback(
+  form: HTMLFormElement,
+  result: OnboardingResponse,
+  attribution: Record<string, string>,
+) {
   const data = new FormData(form);
   const subject = encodeURIComponent(
     `Ava paid pilot setup — ${String(data.get('businessName') || 'New business')}`,
@@ -57,8 +72,9 @@ function buildEmailFallback(form: HTMLFormElement, result: OnboardingResponse) {
       `Call-handling rules:\n${data.get('callHandlingRules') || ''}`,
       '',
       `Staff contact: ${data.get('staffName') || ''}`,
-      `Phone or email: ${data.get('staffContact') || ''}`,
-      `Calendar preference: ${data.get('calendarPreference') || ''}`,
+      `Phone: ${data.get('staffPhone') || ''}`,
+      `Email: ${data.get('staffEmail') || ''}`,
+      `Lead handoff: ${data.get('leadHandoff') || ''}`,
       '',
       `Urgent-call rules:\n${data.get('urgentCallRules') || ''}`,
       `Preferred Ava voice: ${data.get('preferredVoice') || 'No preference'}`,
@@ -69,6 +85,7 @@ function buildEmailFallback(form: HTMLFormElement, result: OnboardingResponse) {
       `Onboarding record: ${result.onboardingId || 'Not persisted'}`,
       `Agent status: ${result.provisioning?.status || 'pending_manual'}`,
       `Next provisioning step: ${result.provisioning?.message || 'Cole must complete setup.'}`,
+      ...Object.entries(attribution).map(([key, value]) => `${key}: ${value}`),
     ].join('\n'),
   );
 
@@ -79,6 +96,7 @@ function AvaOnboardingForm() {
   const searchParams = useSearchParams();
   const qualificationId = searchParams.get('qualificationId') || '';
   const prefillToken = searchParams.get('prefillToken') || searchParams.get('token') || '';
+  const [provisionNote, setProvisionNote] = useState('');
   const [status, setStatus] = useState<SubmissionStatus>('idle');
   const [error, setError] = useState('');
   const [emailFallback, setEmailFallback] = useState('');
@@ -88,6 +106,33 @@ function AvaOnboardingForm() {
   });
   const [prefillNote, setPrefillNote] = useState('');
   const [prefillReady, setPrefillReady] = useState(!qualificationId);
+  const [linkState, setLinkState] = useState<'idle' | 'sending' | 'sent'>('idle');
+  const [linkMessage, setLinkMessage] = useState('');
+  const [linkError, setLinkError] = useState('');
+  const sessionId = searchParams.get('session_id') || '';
+  const [editToken, setEditToken] = useState(searchParams.get('edit_token') || '');
+
+  useEffect(() => {
+    if (!sessionId) {
+      setEditToken('');
+      return;
+    }
+    const storageKey = `ava-destination-edit:${sessionId}`;
+    const params = new URLSearchParams(window.location.search);
+    const fromUrl = params.get('edit_token') || '';
+    const fromStorage = window.sessionStorage.getItem(storageKey) || '';
+    const token = fromUrl || fromStorage;
+    setEditToken(token);
+    if (fromUrl) window.sessionStorage.setItem(storageKey, fromUrl);
+    if (!fromUrl) return;
+    params.delete('edit_token');
+    const query = params.toString();
+    window.history.replaceState(
+      window.history.state,
+      '',
+      `${window.location.pathname}${query ? `?${query}` : ''}${window.location.hash}`,
+    );
+  }, [sessionId]);
 
   useEffect(() => {
     if (!qualificationId) {
@@ -141,6 +186,36 @@ function AvaOnboardingForm() {
     };
   }, [qualificationId, prefillToken, searchParams]);
 
+  async function requestDestinationLink() {
+    setLinkState('sending');
+    setLinkMessage('');
+    setLinkError('');
+    try {
+      const response = await fetch('/api/ava/onboarding/destination-link', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId }),
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || 'Could not send the change link.');
+      }
+      setLinkMessage(
+        typeof result.message === 'string'
+          ? result.message
+          : 'We sent a change link to the email on your Stripe checkout.',
+      );
+      setLinkState('sent');
+    } catch (linkRequestError) {
+      setLinkError(
+        linkRequestError instanceof Error
+          ? linkRequestError.message
+          : 'Could not send the change link.',
+      );
+      setLinkState('idle');
+    }
+  }
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setStatus('sending');
@@ -148,19 +223,51 @@ function AvaOnboardingForm() {
     setEmailFallback('');
 
     const form = event.currentTarget;
-    const payload = Object.fromEntries(new FormData(form).entries());
+    const formPayload = Object.fromEntries(new FormData(form).entries()) as Record<
+      string,
+      FormDataEntryValue
+    >;
+    const payload: Record<string, FormDataEntryValue | string> = {
+      ...formPayload,
+      calendarPreference: String(
+        formPayload.leadHandoff || 'Text the lead to the owner for a callback.',
+      ),
+    };
+    const eventId = crypto.randomUUID();
+    const attribution = readAttribution();
+    const { fbp, fbc } = readBrowserIds();
+    const contact = {
+      email: String(payload.staffEmail || splitContact(String(payload.staffContact || '')).email),
+      phone: String(payload.staffPhone || splitContact(String(payload.staffContact || '')).phone),
+    };
 
     try {
       const response = await fetch('/api/ava/onboarding', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          ...payload,
+          eventId,
+          fbp,
+          fbc,
+          pageUrl: window.location.href,
+          attribution,
+        }),
       });
       const result = await response.json();
 
       if (!response.ok) {
+        if (result.code === 'destination_locked') {
+          setError(
+            typeof result.error === 'string'
+              ? result.error
+              : 'Lead phone and email are locked. Request a change link below.',
+          );
+          setStatus('idle');
+          return;
+        }
         if (result.emailFallback) {
-          const fallback = buildEmailFallback(form, result);
+          const fallback = buildEmailFallback(form, result, attribution);
           setEmailFallback(fallback);
           setStatus('email');
           window.location.href = fallback;
@@ -169,6 +276,14 @@ function AvaOnboardingForm() {
         throw new Error(result.error || 'Could not send your setup details.');
       }
 
+      setProvisionNote(
+        typeof result.provisioning?.message === 'string' ? result.provisioning.message : '',
+      );
+      trackOnboardingSubmitted({
+        eventId: typeof result.eventId === 'string' ? result.eventId : eventId,
+        email: contact.email,
+        phone: contact.phone,
+      });
       setStatus('sent');
     } catch (submissionError) {
       setError(
@@ -180,6 +295,9 @@ function AvaOnboardingForm() {
     }
   }
 
+  const selectedPlanRaw = (prefill.plan || searchParams.get('plan') || 'starter').toLowerCase();
+  const selectedPlan: AvaPlanKey = isAvaPlanKey(selectedPlanRaw) ? selectedPlanRaw : 'starter';
+
   return (
     <main className={styles.page}>
       <nav className={styles.nav}>
@@ -187,17 +305,25 @@ function AvaOnboardingForm() {
           <ArrowLeft /> Ava
         </Link>
         <b>
-          <Sparkles /> YardProof
+          <Sparkles /> Ava
         </b>
+        <Link href="/privacy">Privacy</Link>
       </nav>
 
       <div className={styles.content}>
         <header className={styles.intro}>
-          <span className={styles.eyebrow}>AVA PAID PILOT ONBOARDING</span>
-          <h1>You&apos;re in. Let&apos;s get Ava ready.</h1>
+          <span className={styles.eyebrow}>
+            {searchParams.get('session_id') ? 'AVA SETUP' : 'CHECKOUT STARTS THE TRIAL'}
+          </span>
+          <h1>
+            {searchParams.get('session_id')
+              ? "You're in. Let's get Ava ready."
+              : 'Start the trial in Stripe, then send setup notes.'}
+          </h1>
           <p>
-            Payment is complete. Fill this out, Cole sets up Ava, you test one live call together,
-            then Ava launches.
+              {searchParams.get('session_id')
+              ? 'Checkout is confirmed — you are paid or on the 7-day trial. Submit this form and Ava’s agent is created from your answers. The phone number stays pending until Cole attaches it.'
+              : `Stripe creates the 7-day trial for ${AVA_PLANS[selectedPlan].label}, then ${avaPlanPriceLine(selectedPlan)}. $0 setup. This form emails Cole. It does not start billing by itself.`}
           </p>
           {prefillNote ? <p className={styles.notice}>{prefillNote}</p> : null}
         </header>
@@ -234,7 +360,13 @@ function AvaOnboardingForm() {
             </div>
             <Link href="/ava#talk-to-ava">Or talk to Sales Ava</Link>
           </div>
-          <video className={styles.sampleVideo} controls playsInline preload="metadata">
+          <video
+            className={styles.sampleVideo}
+            controls
+            playsInline
+            preload="metadata"
+            onPlay={() => trackVercelEvent('demo-play', { surface: 'onboarding-sample' })}
+          >
             <source src="/ava-sample-call.mp4" type="video/mp4" />
             Your browser does not support HTML5 video.
           </video>
@@ -245,13 +377,33 @@ function AvaOnboardingForm() {
             <CheckCircle2 />
             <h2>Cole has your setup details.</h2>
             <p>
-              He&apos;ll set up Ava and contact you to run one live test call before launch.
+              {provisionNote ||
+                'If automatic setup is on, Ava’s agent is created from this form. The phone number stays pending until Cole attaches it and you pass one live test call.'}
             </p>
             <Link href="/ava">Return to Ava</Link>
           </section>
         ) : !prefillReady ? (
             <p className={styles.notice}><Loader2 className={styles.spin} /> Loading your Sales Ava answers…</p>
           ) : (
+          <>
+          {!sessionId ? (
+            <section className={styles.paywall}>
+              <h2>The free trial starts at Stripe.</h2>
+              <p>
+                {AVA_PLANS[selectedPlan].label} is {avaPlanPriceLine(selectedPlan)} after 7 days. Checkout
+                returns you here with the session attached.
+              </p>
+              <TrackedCheckoutLink
+                className={styles.checkout}
+                href={`/api/checkout?plan=${selectedPlan}${
+                  qualificationId ? `&qualificationId=${encodeURIComponent(qualificationId)}` : ''
+                }${prefillToken ? `&prefillToken=${encodeURIComponent(prefillToken)}` : ''}`}
+                plan={selectedPlan}
+              >
+                Start free 7-day trial
+              </TrackedCheckoutLink>
+            </section>
+          ) : null}
           <form className={styles.form} onSubmit={submit}>
             <header className={styles.formHeader}>
               <h2>How should Ava handle your calls?</h2>
@@ -301,17 +453,8 @@ function AvaOnboardingForm() {
                   name="callHandlingRules"
                   required
                   rows={4}
-                  placeholder="Ask what they need, collect their address, book estimates, and transfer warranty calls."
+                  placeholder="Ask what they need, collect their name and number, and text you the lead."
                   defaultValue={prefill.callHandlingRules}
-                />
-              </label>
-              <label>
-                How should bookings work?
-                <input
-                  name="calendarPreference"
-                  required
-                  placeholder="Google Calendar, booking link, or phone callback"
-                  defaultValue={prefill.calendarPreference}
                 />
               </label>
               <label>
@@ -339,16 +482,56 @@ function AvaOnboardingForm() {
                   />
                 </label>
                 <label>
-                  Phone or email
+                  Phone for lead texts
                   <input
-                    name="staffContact"
-                    required
-                    placeholder="(205) 555-0123 or sam@example.com"
-                    autoComplete="off"
-                    defaultValue={prefill.staffContact}
+                    name="staffPhone"
+                    inputMode="tel"
+                    autoComplete="tel"
+                    placeholder="(205) 555-0123"
+                    defaultValue={prefill.staffContact.includes('@') ? '' : prefill.staffContact}
+                  />
+                </label>
+                <label>
+                  Email for lead alerts
+                  <input
+                    name="staffEmail"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="sam@example.com"
+                    defaultValue={prefill.staffContact.includes('@') ? prefill.staffContact : ''}
                   />
                 </label>
               </div>
+              <p className={styles.notice}>Add a phone, an email, or both. Real call leads go to these.</p>
+              {sessionId ? (
+                <>
+                  <p className={styles.notice}>
+                    After the first successful submit, this checkout link cannot change the lead
+                    phone or email. Request a change link and we email it to the address on your
+                    Stripe checkout. It expires in 30 minutes.
+                  </p>
+                  {editToken ? (
+                    <p className={styles.notice}>
+                      This page was opened from a change link. You can update the lead phone and
+                      email until that link expires.
+                    </p>
+                  ) : null}
+                  <button
+                    type="button"
+                    className={styles.secondary}
+                    onClick={requestDestinationLink}
+                    disabled={linkState === 'sending'}
+                  >
+                    {linkState === 'sending' ? 'Sending change link…' : 'Email me a change link'}
+                  </button>
+                  {linkMessage ? <p className={styles.notice}>{linkMessage}</p> : null}
+                  {linkError ? (
+                    <p className={styles.error} role="alert">
+                      {linkError}
+                    </p>
+                  ) : null}
+                </>
+              ) : null}
             </fieldset>
 
             <fieldset className={styles.section}>
@@ -359,16 +542,30 @@ function AvaOnboardingForm() {
                   <option value="">No preference — Cole can recommend one</option>
                   {AVA_VOICE_OPTIONS.map((option) => (
                     <option value={option.key} key={option.key}>
-                      {option.label}
+                      {option.label} — {option.description}
                     </option>
                   ))}
                 </select>
               </label>
+              <p className={styles.notice}>
+                Demo voices use separate ElevenLabs agents when configured. Customer provisioning still
+                duplicates the shared template agent; this preference is a setup note for Cole.
+              </p>
             </fieldset>
 
-            <input type="hidden" name="sessionId" value={searchParams.get('session_id') || ''} />
+            <input
+              type="hidden"
+              name="leadHandoff"
+              defaultValue={prefill.calendarPreference || 'Text the lead to the owner for a callback.'}
+            />
+            <input type="hidden" name="sessionId" value={sessionId} />
+            <input type="hidden" name="editToken" value={editToken} />
             <input type="hidden" name="plan" value={prefill.plan || searchParams.get('plan') || ''} />
             <input type="hidden" name="qualificationId" value={qualificationId} />
+            <p className={styles.notice}>
+              Selected plan: {AVA_PLANS[selectedPlan].label} · {AVA_PLANS[selectedPlan].monthlyLabel}
+              /mo after trial · {AVA_PLANS[selectedPlan].minutes} included minutes
+            </p>
             <label className={styles.honeypot} aria-hidden="true">
               Company website
               <input name="companyWebsite" tabIndex={-1} autoComplete="off" />
@@ -395,10 +592,35 @@ function AvaOnboardingForm() {
               </p>
             )}
             <small className={styles.privacy}>
-              <Mail /> Sent directly to Cole for setup.
+              <Mail /> Sent directly to Cole for setup. <Link href="/privacy">Privacy</Link>
             </small>
           </form>
+          </>
         )}
+      </div>
+      <footer className={styles.footer}>
+        <span>Ava by Workforce AI · DealPatrol</span>
+        <Link href="/privacy">Privacy</Link>
+      </footer>
+    </main>
+  );
+}
+
+function OnboardingFallback() {
+  return (
+    <main className={styles.page}>
+      <div className={styles.content}>
+        <header className={styles.intro}>
+          <span className={styles.eyebrow}>CHECKOUT STARTS THE TRIAL</span>
+          <h1>Start the trial in Stripe, then send setup notes.</h1>
+          <p>
+            The 7-day trial is created at checkout. Starter is $79 a month after that, with $0 setup.
+            The setup form loads on this page next.
+          </p>
+          <a className={styles.checkout} href="/api/checkout?plan=starter">
+            Start free 7-day trial
+          </a>
+        </header>
       </div>
     </main>
   );
@@ -406,7 +628,7 @@ function AvaOnboardingForm() {
 
 export default function AvaOnboardingPage() {
   return (
-    <Suspense>
+    <Suspense fallback={<OnboardingFallback />}>
       <AvaOnboardingForm />
     </Suspense>
   );
