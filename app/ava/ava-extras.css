@@ -165,3 +165,39 @@
   color: #b0bab4;
   font-weight: 750;
 }
+
+.sales-footer {
+  height: auto;
+  min-height: 72px;
+  flex-wrap: wrap;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.sales-footer p {
+  margin-left: 0;
+}
+
+.sales-footer .footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 18px;
+  margin-left: auto;
+}
+
+.sales-footer .footer-links a {
+  color: #b0bab4;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+@media (max-width: 900px) {
+  .sales-footer p {
+    display: block;
+    flex-basis: 100%;
+  }
+
+  .sales-footer .footer-links {
+    margin-left: 0;
+  }
+}

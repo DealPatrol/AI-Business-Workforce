@@ -10,10 +10,13 @@ export function AvaFooter({ homeHref = '/ava' }: { homeHref?: string }) {
         </span>{' '}
         Ava
       </Link>
-      <p>Ava by Workforce AI · DealPatrol</p>
-      <Link className="footer-privacy" href="/privacy">
-        Privacy
-      </Link>
+      <p>Part of Front Porch Growth. Operated by DealPatrol.</p>
+      <nav className="footer-links" aria-label="Ava">
+        <Link href="/">Front Porch Growth</Link>
+        <Link href="/pricing">Pricing</Link>
+        <Link href="/terms">Terms</Link>
+        <Link href="/privacy">Privacy</Link>
+      </nav>
     </footer>
   );
 }
