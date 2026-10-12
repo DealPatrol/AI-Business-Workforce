@@ -9,7 +9,6 @@ export function AvaPlanCards() {
     <div className="plan-grid">
       {plans.map((plan) => (
         <article className={plan.featured ? 'plan featured' : 'plan'} key={plan.key}>
-          {plan.featured ? <span className="popular">MOST BOOKED</span> : null}
           <h3>{plan.label}</h3>
           <p>{plan.description}</p>
           <div className="price">

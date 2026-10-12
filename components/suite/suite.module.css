@@ -67,6 +67,7 @@
 }
 
 .hero,
+.grid,
 .section,
 .footer {
   width: min(1120px, calc(100% - 40px));
@@ -77,7 +78,7 @@
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
   gap: 48px;
-  align-items: end;
+  align-items: center;
   padding: 72px 0 28px;
 }
 
@@ -117,13 +118,130 @@
   margin-top: 0;
 }
 
+.priceRow a,
 .priceRow span {
   border: 1px solid #d7e0d8;
   background: #fff;
   border-radius: 999px;
   padding: 8px 12px;
+  color: #17201a;
   font-size: 13px;
   font-weight: 720;
+  text-decoration: none;
+}
+
+.heroActions,
+.cardActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  align-items: center;
+}
+
+.heroActions {
+  margin-top: 22px;
+}
+
+.cardActions {
+  margin-top: auto;
+}
+
+.cardActions .button {
+  margin-top: 0;
+}
+
+.buttonSecondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 9px;
+  border: 1px solid #205c39;
+  background: #fff;
+  color: #205c39;
+  text-decoration: none;
+  font-weight: 780;
+  padding: 12px 16px;
+  font-size: 14px;
+}
+
+.fine {
+  margin: 14px 0 0;
+  color: #6a756c;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.textLink {
+  color: #205c39;
+  font-size: 14px;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.chooser {
+  display: grid;
+  gap: 14px;
+  background: #fff;
+  border: 1px solid #e1e7e1;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 16px 40px rgba(23, 32, 26, 0.04);
+}
+
+.chooser h2,
+.faq h2 {
+  margin: 0;
+  font: 560 32px/1.15 Georgia, serif;
+  letter-spacing: -0.02em;
+}
+
+.choice {
+  display: grid;
+  gap: 6px;
+  padding-top: 12px;
+  border-top: 1px solid #e7ece7;
+}
+
+.choice h3 {
+  margin: 0;
+  font: 600 22px/1.25 Georgia, serif;
+}
+
+.choice p,
+.faq p {
+  margin: 0;
+  color: #59645c;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.faq {
+  width: min(760px, calc(100% - 40px));
+  margin: 0 auto 72px;
+}
+
+.faq h2 {
+  margin: 10px 0 8px;
+}
+
+.faq details {
+  border-top: 1px solid #e0e6e0;
+  padding: 14px 0;
+}
+
+.faq details:last-child {
+  border-bottom: 1px solid #e0e6e0;
+}
+
+.faq summary {
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: 750;
+}
+
+.faq details p {
+  margin-top: 10px;
 }
 
 .grid {
@@ -315,8 +433,25 @@
 }
 
 @media (max-width: 800px) {
+  .nav {
+    height: auto;
+    flex-wrap: wrap;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    row-gap: 10px;
+  }
+
   .navLinks {
-    display: none;
+    display: flex;
+    order: 3;
+    flex-basis: 100%;
+    margin-left: 0;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+  }
+
+  .navCta {
+    margin-left: auto;
   }
 
   .hero,
@@ -340,5 +475,16 @@
 
   .footer nav {
     margin-left: 0;
+  }
+
+  .heroActions .button,
+  .heroActions .buttonSecondary,
+  .cardActions .button {
+    width: 100%;
+  }
+
+  .chooser h2,
+  .faq h2 {
+    font-size: 28px;
   }
 }

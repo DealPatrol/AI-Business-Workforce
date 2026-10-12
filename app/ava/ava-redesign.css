@@ -791,8 +791,19 @@
   .ava-redesign .trade-desc {
     grid-column: 1 / -1;
   }
+  .ava-redesign .masthead {
+    flex-wrap: wrap;
+    row-gap: 12px;
+  }
   .ava-redesign .masthead-links {
-    display: none;
+    display: flex;
+    order: 3;
+    flex-basis: 100%;
+    flex-wrap: wrap;
+    gap: 10px 22px;
+  }
+  .ava-redesign .masthead .btn {
+    margin-left: auto;
   }
 }
 

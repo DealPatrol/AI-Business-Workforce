@@ -617,8 +617,9 @@
   min-height: 115px;
   padding: 25px max(20px, calc((100vw - 1160px) / 2));
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 30px;
+  gap: 16px 30px;
   border-top: 1px solid #e0e5e0;
   background: #fff;
 }
@@ -629,6 +630,19 @@
   font-size: 12px;
 }
 
+.footerLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
+.footerLinks a {
+  color: #5b675e;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
 .footerPay {
   color: #205c39;
   font-size: 13px;
@@ -636,8 +650,21 @@
 }
 
 @media (max-width: 860px) {
+  .nav {
+    height: auto;
+    flex-wrap: wrap;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    row-gap: 10px;
+  }
+
   .navLinks {
-    display: none;
+    display: flex;
+    order: 3;
+    flex-basis: 100%;
+    margin-left: 0;
+    flex-wrap: wrap;
+    gap: 8px 16px;
   }
 
   .navCta {
@@ -682,7 +709,8 @@
 
 @media (max-width: 560px) {
   .nav {
-    height: 66px;
+    height: auto;
+    min-height: 66px;
   }
 
   .brand {

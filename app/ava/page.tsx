@@ -90,9 +90,10 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
       <header className="masthead">
         <Link className="wordmark" href="/ava">
           <span className="wordmark-ava">Ava</span>
-          <span className="wordmark-sub">by Workforce AI</span>
+          <span className="wordmark-sub">by Front Porch Growth</span>
         </Link>
         <nav className="masthead-links">
+          <Link href="/">Front Porch</Link>
           <a href="#talk-to-ava">Hear her</a>
           <a href="#how">How it works</a>
           <a href="#pricing">Rate card</a>
@@ -203,7 +204,7 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
 
       {/* ── Demo ─────────────────────────────────────────────── */}
       <section className="demo-intro">
-        <p className="section-kicker">Don&apos;t take our word for it</p>
+        <p className="section-kicker">Hear it yourself</p>
         <h2>
           Pick up the <em>phone.</em>
         </h2>
@@ -237,7 +238,6 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
               <div className="plan-main">
                 <div className="plan-head">
                   <h3>{plan.label}</h3>
-                  {plan.featured && <span className="stamp-sm">Most booked</span>}
                 </div>
                 <p className="plan-desc">{plan.description}</p>
                 <ul className="plan-features">

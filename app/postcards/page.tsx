@@ -323,6 +323,12 @@ export default function HomePage() {
         <p>
           Cole · <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
         </p>
+        <nav className={styles.footerLinks} aria-label="Site">
+          <Link href="/">Front Porch Growth</Link>
+          <Link href="/pricing">Pricing</Link>
+          <Link href="/terms">Terms</Link>
+          <Link href="/privacy">Privacy</Link>
+        </nav>
         <a className={styles.footerPay} href={foundingCheckoutHref('/postcards#package')}>
           {FOUNDING_CTA}
         </a>

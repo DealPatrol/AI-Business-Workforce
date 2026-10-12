@@ -319,7 +319,7 @@ function SalesAvaQualifyContent() {
           <div>
             <h3>Ava</h3>
             <p>
-              Workforce AI ·{' '}
+              Front Porch Growth ·{' '}
               {active
                 ? 'Live now'
                 : callState === 'preparing'
