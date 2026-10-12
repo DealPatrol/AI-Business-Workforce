@@ -28,7 +28,11 @@ export default async function UnsubscribePage({
             and it is checked before every send.
           </p>
         ) : (
-          <p>This unsubscribe link is invalid or could not be saved. Reply to the message you received and ask to be removed.</p>
+          <p>
+            {result.serverError
+              ? 'We could not save your unsubscribe request because of a server error. Reply to the message you received and ask to be removed, and we will remove you manually.'
+              : 'This unsubscribe link is invalid or expired. Reply to the message you received and ask to be removed.'}
+          </p>
         )}
       </section>
     </main>
