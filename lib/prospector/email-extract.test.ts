@@ -41,6 +41,9 @@ describe('email extraction', () => {
   it('rejects obvious junk addresses', () => {
     for (const email of [
       'noreply@shop.com',
+      'no-reply@shop.com',
+      'do-not-reply@shop.com',
+      'mailer-daemon@shop.com',
       'name@example.com',
       'logo@2x.png',
       'person@yoursite.com',
@@ -50,6 +53,62 @@ describe('email extraction', () => {
       assert.equal(isJunkEmail(email), true, email);
     }
     assert.equal(isJunkEmail('owner@shop.com'), false);
+  });
+
+  it('drops placeholder addresses and image filenames from a funeral home page', () => {
+    const html = `
+      <img src="/images/chapel@2x.jpg" alt="chapel">
+      <img src="banner@3x.webp">
+      <img src="icon@2x.png">
+      <img src="photo@2x.jpeg">
+      <form>
+        <input type="email" placeholder="mymail@mailservice.com" value="mymail@mailservice.com">
+      </form>
+      <p>yourname@example.com</p>
+      <p>your.name@gmail.com</p>
+      <p>email@domain.com</p>
+      <p>test@test.com</p>
+      <p>test@gmail.com</p>
+      <a href="mailto:director@oaklawnfuneral.com">Email the director</a>
+      <p>maria@oaklawnfuneral.com</p>
+      <p>info@oaklawnfuneral.com</p>
+    `;
+    assert.deepEqual(extractEmails(html).sort(), [
+      'director@oaklawnfuneral.com',
+      'info@oaklawnfuneral.com',
+      'maria@oaklawnfuneral.com',
+    ]);
+    for (const email of [
+      'mymail@mailservice.com',
+      'mymail@oaklawnfuneral.com',
+      'yourname@example.com',
+      'your-name@shop.com',
+      'email@domain.com',
+      'email@domain.net',
+      'test@test.com',
+      'test@gmail.com',
+      'testing@shop.com',
+      'chapel@2x.jpg',
+      'banner@3x.webp',
+      'hero@2x.avif',
+      'sprite@2x.gif',
+      'contact@mailservice.co.uk',
+      'someone@emailservice.com',
+    ]) {
+      assert.equal(isJunkEmail(email), true, email);
+    }
+    for (const email of [
+      'owner@shop.com',
+      'director@oaklawnfuneral.com',
+      'maria@oaklawnfuneral.com',
+      'info@oaklawnfuneral.com',
+      'contact@oaklawnfuneral.com',
+      'sales@monumentco.com',
+      'cole@mail.com',
+      'owner@sample.com',
+    ]) {
+      assert.equal(isJunkEmail(email), false, email);
+    }
   });
 
   it('finds owner and manager names without treating labels as names', () => {

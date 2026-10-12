@@ -6,11 +6,30 @@ const JUNK_DOMAINS = [
   'example.com',
   'example.org',
   'example.net',
+  'example.co',
+  'example.io',
+  'example.email',
   'test.com',
+  'test.org',
+  'test.net',
+  'test.io',
+  'test.email',
   'email.com',
   'domain.com',
+  'domain.org',
+  'domain.net',
+  'domain.co',
+  'domain.io',
   'yourdomain.com',
   'yoursite.com',
+  'yourname.com',
+  'youremail.com',
+  'emailaddress.com',
+  'mailservice.com',
+  'mailservice.net',
+  'mailservice.org',
+  'emailservice.com',
+  'emailservice.net',
   'sentry.io',
   'wixpress.com',
   'schema.org',
@@ -18,35 +37,57 @@ const JUNK_DOMAINS = [
   'cloudflare.com',
   'mysite.com',
   'company.com',
-  'domain.org',
   'wix.com',
   'squarespace.com',
   'placeholder.com',
+  'placeholder.net',
+  'placeholder.org',
   'sentry-next.wixpress.com',
 ];
 
+const JUNK_DOMAIN_LABELS = new Set([
+  'example',
+  'mailservice',
+  'emailservice',
+  'placeholder',
+  'yourdomain',
+  'yoursite',
+  'emailaddress',
+]);
+
 const JUNK_LOCAL = new Set([
   'noreply',
-  'no-reply',
   'donotreply',
-  'do-not-reply',
-  'mailer-daemon',
+  'mailerdaemon',
   'postmaster',
   'bounce',
   'bounces',
   'example',
   'test',
+  'testing',
+  'testuser',
+  'testemail',
   'username',
   'yourname',
   'youremail',
   'email',
+  'emailaddress',
+  'mymail',
+  'myemail',
+  'firstname',
+  'lastname',
+  'sample',
+  'demo',
+  'placeholder',
+  'someone',
+  'somebody',
   'name',
   'user',
   'null',
   'undefined',
 ]);
 
-const FILE_EXT = /\.(png|jpe?g|gif|svg|webp|css|js|ico|woff2?)$/i;
+const FILE_EXT = /\.(?:png|jpe?g|gif|svg|webp|avif|bmp|tiff?|ico|css|js|pdf|woff2?)$/i;
 const NAME_PART = "[A-Z][a-z]+(?:[\\s'-][A-Z][a-z]+){0,3}";
 
 export function htmlToText(html: string): string {
@@ -97,10 +138,23 @@ export function isJunkEmail(email: string): boolean {
   const domain = normalized.slice(at + 1);
   if (!local || !domain || local.includes('..') || domain.includes('..')) return true;
   if (FILE_EXT.test(normalized) || FILE_EXT.test(local) || FILE_EXT.test(domain)) return true;
-  if (JUNK_LOCAL.has(local)) return true;
-  if (local.includes('example') || local.includes('placeholder') || local.includes('sentry')) return true;
-  if (JUNK_DOMAINS.some((suffix) => domain === suffix || domain.endsWith(`.${suffix}`))) return true;
+  if (isJunkLocal(local)) return true;
+  if (isJunkDomain(domain)) return true;
   return false;
+}
+
+function isJunkLocal(local: string): boolean {
+  const compact = local.replace(/[._-]/g, '');
+  if (JUNK_LOCAL.has(local) || JUNK_LOCAL.has(compact)) return true;
+  if (local.includes('example') || local.includes('placeholder') || local.includes('sentry')) return true;
+  if (compact.includes('example') || compact.includes('placeholder') || compact.includes('sentry')) return true;
+  return false;
+}
+
+function isJunkDomain(domain: string): boolean {
+  if (JUNK_DOMAINS.some((suffix) => domain === suffix || domain.endsWith(`.${suffix}`))) return true;
+  const labels = domain.split('.');
+  return labels.slice(0, -1).some((label) => JUNK_DOMAIN_LABELS.has(label));
 }
 
 function rememberEmail(found: Set<string>, raw: string) {

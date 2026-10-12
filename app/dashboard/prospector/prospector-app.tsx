@@ -532,6 +532,7 @@ export default function ProspectorApp({
       {activeLeadId && (
         <DraftDrawer
           leadId={activeLeadId}
+          senderName={settings.senderName}
           resendReady={config.resend && config.unsubscribe}
           onClose={() => setActiveLeadId(null)}
           onLead={(lead) => setLeads((current) => current.map((item) => (item.id === lead.id ? lead : item)))}
