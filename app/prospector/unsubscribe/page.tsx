@@ -20,6 +20,12 @@ export default async function UnsubscribePage({
   const secret = unsubscribeSecret();
   const verified = token && secret ? verifyUnsubscribeToken(token, secret) : null;
   let saved = false;
+  let setupError = false;
+
+  if (token && !secret) {
+    console.error('unsubscribe: no PROSPECTOR_UNSUBSCRIBE_SECRET / SUPABASE_SECRET_KEY / SUPABASE_SERVICE_ROLE_KEY configured');
+    setupError = true;
+  }
 
   if (verified) {
     try {
@@ -29,17 +35,22 @@ export default async function UnsubscribePage({
         { owner_id: verified.ownerId, email, reason: 'unsubscribe' },
         { onConflict: 'owner_id,email' },
       );
-      if (!error) {
+      if (error) {
+        console.error('unsubscribe: suppression upsert failed', error);
+        setupError = true;
+      } else {
         saved = true;
-        await admin
+        const { error: leadError } = await admin
           .from('prospector_leads')
           .update({ status: 'do_not_contact', updated_at: new Date().toISOString() })
           .eq('owner_id', verified.ownerId)
           .contains('emails', [email]);
+        if (leadError) console.error('unsubscribe: lead status update failed', leadError);
       }
     } catch (error) {
       console.error('unsubscribe failed', error);
       saved = false;
+      setupError = true;
     }
   }
 
@@ -53,7 +64,11 @@ export default async function UnsubscribePage({
             and it is checked before every send.
           </p>
         ) : (
-          <p>This unsubscribe link is invalid or could not be saved. Reply to the message you received and ask to be removed.</p>
+          <p>
+            {setupError
+              ? 'We could not save your unsubscribe request because of a server error. Reply to the message you received and ask to be removed, and we will remove you manually.'
+              : 'This unsubscribe link is invalid or expired. Reply to the message you received and ask to be removed.'}
+          </p>
         )}
       </section>
     </main>
