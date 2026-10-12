@@ -3,10 +3,12 @@ import { createClient as createUserClient } from '@/lib/supabase/server';
 
 export function createAdminClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const secretKey = process.env.SUPABASE_SECRET_KEY;
+  const secretKey = process.env.SUPABASE_SECRET_KEY?.trim() || process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
 
   if (!url || !secretKey) {
-    throw new Error('Server-side Supabase environment variables are not configured.');
+    throw new Error(
+      'Server-side Supabase is not configured: set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY (or SUPABASE_SERVICE_ROLE_KEY).',
+    );
   }
 
   return createClient(url, secretKey, {
