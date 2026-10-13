@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { AGENTS } from '@/lib/agents/catalog';
 import { avaGuideSlugs } from '@/lib/ava/trade-pages';
+import { POSTCARD_TRADES } from '@/lib/postcards/trade-pages';
 import { TRADE_PAGES } from '@/lib/trades/pages';
 import { absoluteSiteUrl } from '@/lib/site-url';
 
@@ -19,6 +20,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: absoluteSiteUrl('/receptionist/missed-calls'), lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
     { url: absoluteSiteUrl('/privacy'), lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
     { url: absoluteSiteUrl('/receptionist-demo'), lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
+    ...POSTCARD_TRADES.map((t) => ({
+      url: absoluteSiteUrl(`/postcards/${t.slug}`),
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    })),
     ...avaGuideSlugs().map((slug) => ({
       url: absoluteSiteUrl(`/receptionist/${slug}`),
       lastModified: now,
