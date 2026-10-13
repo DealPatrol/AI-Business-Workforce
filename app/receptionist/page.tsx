@@ -5,7 +5,7 @@ import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink'
 import { ExclusiveAudio } from '@/components/receptionist/ExclusiveAudio';
 import { VoicePicker } from '@/components/receptionist/VoicePicker';
 import { AVA_PLANS, type AvaPlanKey } from '@/lib/ava/pricing';
-import { EXAMPLE_NOTES, EXECUTIVE_FAQS, EXECUTIVE_INDUSTRIES } from '@/lib/executive-receptionist';
+import { EXAMPLE_NOTES, EXECUTIVE_FAQS, EXECUTIVE_INDUSTRIES, SAMPLE_CALLS } from '@/lib/executive-receptionist';
 import { hostnameOf, isExecutiveReceptionistHost } from '@/lib/site-url';
 import styles from './receptionist.module.css';
 
@@ -97,17 +97,17 @@ export default function ReceptionistPage() {
       <section className={styles.band} id="samples">
         <div className={styles.sectionHead}>
           <p className={styles.kicker}>Sample calls</p>
-          <h2>One recorded example for each kind of office.</h2>
-          <p>These are scripted samples, not recordings of your clients.</p>
+          <h2>Home-service calls answered when no one can pick up.</h2>
+          <p>Scripted overflow calls for home-service businesses, not recordings of real customers.</p>
         </div>
         <ul className={styles.sampleList}>
-          {EXECUTIVE_INDUSTRIES.map((industry) => (
-            <li key={industry.slug}>
+          {SAMPLE_CALLS.map((call) => (
+            <li key={call.file}>
               <div>
-                <h3>{industry.name}</h3>
-                <p>{industry.sample}</p>
+                <h3>{call.label}</h3>
+                <p>{call.description}</p>
               </div>
-              <ExclusiveAudio src={`/voices/samples/${industry.slug}.mp3`}>{industry.name} sample</ExclusiveAudio>
+              <ExclusiveAudio src={`/voices/samples/${call.file}.mp3`}>{call.label}</ExclusiveAudio>
             </li>
           ))}
         </ul>
