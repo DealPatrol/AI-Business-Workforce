@@ -8,15 +8,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Business type and goal are required.' }, { status: 400 });
     }
 
-    const fallback = {
-      summary: `A focused AI workforce for a ${body.businessType} business prioritizing ${body.goal}.`,
-      agents: ['Lead Machine', 'Follow-Up Machine', 'AI Receptionist'],
-      firstAutomation: 'Capture every inbound lead, respond immediately, qualify the opportunity, and keep following up until the prospect books or opts out.',
-      expectedOutcome: 'Faster response time, fewer lost leads, and a measurable pipeline of opportunities.',
-      pilot: 'Start with one revenue-linked workflow, measure it for 30 days, then add the next automation.'
-    };
-
-    if (!process.env.OPENAI_API_KEY) return NextResponse.json({ recommendation: fallback, mode: 'fallback' });
+    if (!process.env.OPENAI_API_KEY?.trim()) {
+      return NextResponse.json(
+        { error: 'OpenAI is not configured. Set OPENAI_API_KEY on the server. No recommendation was requested.' },
+        { status: 503 },
+      );
+    }
 
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const response = await openai.responses.create({
@@ -25,7 +22,14 @@ export async function POST(request: Request) {
       text: { format: { type: 'json_object' } }
     });
 
-    const recommendation = JSON.parse(response.output_text || JSON.stringify(fallback));
+    const text = response.output_text?.trim();
+    if (!text) {
+      return NextResponse.json({ error: 'The model returned an empty recommendation.' }, { status: 502 });
+    }
+    const recommendation = JSON.parse(text) as { summary?: string; agents?: string[]; firstAutomation?: string; expectedOutcome?: string; pilot?: string };
+    if (!recommendation.summary || !Array.isArray(recommendation.agents)) {
+      return NextResponse.json({ error: 'The model recommendation was incomplete.' }, { status: 502 });
+    }
     return NextResponse.json({ recommendation, mode: 'ai' });
   } catch (error) {
     console.error('audit route error', error);

@@ -16,8 +16,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const prospect = getProspectBySlug(slug);
   if (!prospect) return { title: 'Demo not found' };
   return {
-    title: `${prospect.companyName} — Front Porch Dispatch AI Receptionist Demo`,
-    description: `See how Front Porch Dispatch handles missed calls for ${prospect.companyName}. Built for ${prospect.ownerName}.`,
+    title: `${prospect.companyName} — Executive Receptionist AI Receptionist Demo`,
+    description: `See how Executive Receptionist handles missed calls for ${prospect.companyName}. Built for ${prospect.ownerName}.`,
   };
 }
 

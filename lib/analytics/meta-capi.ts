@@ -2,7 +2,7 @@ import { createHash } from 'crypto';
 import { metaPhoneDigits, normalizeEmail } from '@/lib/analytics/contact';
 import { readMetaPixelId } from '@/lib/analytics/config';
 
-export type MetaServerEventName = 'Lead' | 'InitiateCheckout' | 'DemoStarted' | 'ViewContent';
+export type MetaServerEventName = 'Lead' | 'StartTrial' | 'InitiateCheckout' | 'DemoStarted' | 'ViewContent';
 
 export type MetaServerEventInput = {
   eventName: MetaServerEventName;
@@ -32,6 +32,7 @@ function sha256(value: string) {
 function isMetaServerEventName(value: string): value is MetaServerEventName {
   switch (value) {
     case 'Lead':
+    case 'StartTrial':
     case 'InitiateCheckout':
     case 'DemoStarted':
     case 'ViewContent':
@@ -44,6 +45,7 @@ function isMetaServerEventName(value: string): value is MetaServerEventName {
 function eventNameForApi(eventName: MetaServerEventName): MetaServerEventName {
   switch (eventName) {
     case 'Lead':
+    case 'StartTrial':
     case 'InitiateCheckout':
     case 'DemoStarted':
     case 'ViewContent':

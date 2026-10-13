@@ -1,4 +1,4 @@
-/** Subscription states that still belong to a paying Front Porch Dispatch customer. */
+/** Subscription states that still belong to a paying Executive Receptionist customer. */
 export const PAYING_AVA_SUBSCRIPTION_STATUSES = ['active', 'trialing'] as const;
 
 export function isPayingAvaSubscriptionStatus(status: string | null | undefined) {
@@ -23,8 +23,8 @@ export type PostCallGateDecision =
   | { process: false; reason: 'ignored_agent' };
 
 /**
- * Workspace post-call webhooks include the public demo and Sales Front Porch Dispatch.
- * Only a provisioned onboarding whose agent id matches, tied to an Front Porch Dispatch
+ * Workspace post-call webhooks include the public demo and Sales Executive Receptionist.
+ * Only a provisioned onboarding whose agent id matches, tied to an Executive Receptionist
  * customer on an active or trialing subscription, may create a lead.
  */
 export function decidePostCallGate(input: PostCallGateInput): PostCallGateDecision {

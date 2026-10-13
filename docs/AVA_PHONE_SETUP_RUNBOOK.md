@@ -1,26 +1,26 @@
-# Front Porch Dispatch phone setup runbook
+# Executive Receptionist phone setup runbook
 
 Owner: Cole
-Launch rule: Front Porch Dispatch is not live until a customer test call passes.
+Launch rule: Executive Receptionist is not live until a customer test call passes.
 
 ## Customer path (live today)
 
-1. The customer pays through Front Porch Dispatch Checkout (`POST /api/checkout`) or an **Front Porch Dispatch-specific** Stripe Payment Link.
+1. The customer pays through Executive Receptionist Checkout (`POST /api/checkout`) or an **Executive Receptionist-specific** Stripe Payment Link.
 2. Stripe returns the customer to `/onboarding/ava`.
 3. The customer submits business name, hours, services, call-handling rules, staff name and phone/email, calendar preference, and urgent-call rules. That first submit sets where leads go.
 4. Cole receives the setup answers by Resend. If Resend is unavailable, the page opens a pre-filled email to `colecollins763@gmail.com`.
 
 Anyone who later opens `/onboarding/ava?session_id=...` can still update hours, services, and call rules. They cannot change the lead phone or email. After the first successful submit, those destinations stay locked. The buyer requests “Email me a change link” on that page. The server re-checks the Checkout Session with Stripe and sends a signed link only to the email currently on that session, and only when the subscription is `active` or `trialing`. The link expires 30 minutes after it is created. Submitting the form from that link checks Stripe again and applies the new phone/email only if the token still matches that inbox. The signature uses `AVA_DESTINATION_EDIT_SECRET` when set, otherwise `STRIPE_SECRET_KEY`. No new vendor. Requests are limited to one email a minute per checkout. If Stripe or email is down, the old destinations stay in place.
 
-Never use the shared founding Payment Link for this handoff. Visual Canvasser also uses it, so changing its completion URL to Front Porch Dispatch onboarding sends the wrong buyers into Front Porch Dispatch setup. An Front Porch Dispatch Payment Link should have its own completion URL and include `{CHECKOUT_SESSION_ID}` when possible.
+Never use the shared founding Payment Link for this handoff. Visual Canvasser also uses it, so changing its completion URL to Executive Receptionist onboarding sends the wrong buyers into Executive Receptionist setup. An Executive Receptionist Payment Link should have its own completion URL and include `{CHECKOUT_SESSION_ID}` when possible.
 
 ## Cole's current phone launch checklist
 
-1. In ElevenLabs ConvAI, create an agent for the customer or duplicate the Front Porch Dispatch template agent. The browser demo uses `ELEVENLABS_API_KEY` and `ELEVENLABS_AGENT_ID`.
+1. In ElevenLabs ConvAI, create an agent for the customer or duplicate the Executive Receptionist template agent. The browser demo uses `ELEVENLABS_API_KEY` and `ELEVENLABS_AGENT_ID`.
 2. Put the onboarding answers into the agent prompt/knowledge: greeting, services, hours, qualification and booking rules, escalation and urgent rules, and staff handoff.
 3. Attach a phone number in ElevenLabs. If Twilio is the source, buy/select the number in Twilio and import it into ElevenLabs.
-4. Give the customer the Front Porch Dispatch number, or have the customer/carrier forward the existing business line to it.
-5. Confirm lead summaries reach the intended email/inbox. `AVA_LEAD_NOTIFICATION_EMAIL` controls the existing Front Porch Dispatch lead email destination. Optional Twilio SMS alerts (`TWILIO_*` + `AVA_LEAD_SMS_TO`) are additive when configured — they are not live until those env vars are set and tested.
+4. Give the customer the Executive Receptionist number, or have the customer/carrier forward the existing business line to it.
+5. Confirm lead summaries reach the intended email/inbox. `AVA_LEAD_NOTIFICATION_EMAIL` controls the existing Executive Receptionist lead email destination. Optional Twilio SMS alerts (`TWILIO_*` + `AVA_LEAD_SMS_TO`) are additive when configured — they are not live until those env vars are set and tested.
 6. Make a live test call with the customer. Test normal, booking, out-of-hours, urgent, and staff-handoff cases.
 7. Launch only after the test passes. Do not describe phone, SMS, calendar writes, or transfers as live until each is configured and tested.
 
@@ -31,7 +31,7 @@ After onboarding, the app stores a private `ava_onboardings` record in Supabase 
 There are two agent-create modes:
 
 - Default/manual trigger: call `POST /api/ava/provision` with `{"onboardingId":"..."}` and `Authorization: Bearer $AVA_PROVISIONING_SECRET`.
-- Opt-in automatic trigger: set `AVA_AUTO_PROVISION_AGENT=true`. A form submission with a paid or trialing Front Porch Dispatch Checkout Session then duplicates `ELEVENLABS_AGENT_ID`, patches the new agent with the customer's greeting and operating rules, and records the returned agent ID. Phone status stays `pending_manual`. Cole's email includes a link to this runbook. `/api/checkout` sessions are recognized by their Front Porch Dispatch plan metadata. For an Front Porch Dispatch-specific Payment Link, also set `AVA_STRIPE_PAYMENT_LINK_ID` and configure its completion URL to pass `{CHECKOUT_SESSION_ID}`.
+- Opt-in automatic trigger: set `AVA_AUTO_PROVISION_AGENT=true`. A form submission with a paid or trialing Executive Receptionist Checkout Session then duplicates `ELEVENLABS_AGENT_ID`, patches the new agent with the customer's greeting and operating rules, and records the returned agent ID. Phone status stays `pending_manual`. Cole's email includes a link to this runbook. `/api/checkout` sessions are recognized by their Executive Receptionist plan metadata. For an Executive Receptionist-specific Payment Link, also set `AVA_STRIPE_PAYMENT_LINK_ID` and configure its completion URL to pass `{CHECKOUT_SESSION_ID}`.
 
 Example manual trigger:
 
@@ -44,7 +44,7 @@ curl -X POST "$APP_URL/api/ava/provision" \
 
 A successful response/status of `agent_ready_phone_pending` means only that the customer agent exists and is configured. It does **not** mean a number is attached or calls/SMS are live. Agent retries reuse a recorded agent ID rather than cloning another agent.
 
-Target path: verified Front Porch Dispatch payment → onboarding → saved record → customer agent creation → number allocation/import and assignment → lead-delivery check → customer test call → explicit launch approval. ElevenLabs supports importing a Twilio/SIP number and assigning an agent, but number purchase/allocation and safe inventory selection are intentionally still manual in this slice.
+Target path: verified Executive Receptionist payment → onboarding → saved record → customer agent creation → number allocation/import and assignment → lead-delivery check → customer test call → explicit launch approval. ElevenLabs supports importing a Twilio/SIP number and assigning an agent, but number purchase/allocation and safe inventory selection are intentionally still manual in this slice.
 
 ## Environment variables
 
@@ -57,11 +57,11 @@ Required for stored onboarding and notifications:
 Required to create/configure an agent:
 
 - `ELEVENLABS_API_KEY`
-- `ELEVENLABS_AGENT_ID` (the Front Porch Dispatch template; it also remains the browser-demo agent)
+- `ELEVENLABS_AGENT_ID` (the Executive Receptionist template; it also remains the browser-demo agent)
 - `AVA_PROVISIONING_SECRET` (long random server-only value for the internal trigger)
 - `AVA_AUTO_PROVISION_AGENT=true` only after the template and workflow have been tested
 - `STRIPE_SECRET_KEY` (used to verify payment before submit-time creation)
-- `AVA_STRIPE_PAYMENT_LINK_ID` when an Front Porch Dispatch-specific Payment Link should qualify for automatic creation
+- `AVA_STRIPE_PAYMENT_LINK_ID` when an Executive Receptionist-specific Payment Link should qualify for automatic creation
 
 Related production settings:
 
@@ -73,4 +73,4 @@ Do not commit any value. Missing credentials leave a truthful pending status; th
 
 ## What to tell the customer
 
-> Payment and your setup form reserve your Front Porch Dispatch build. We configure Front Porch Dispatch around your hours, services, booking and urgent-call rules, connect or forward your business number, and test a live call with you. Your phone service does not launch until that test passes.
+> Payment and your setup form reserve your Executive Receptionist build. We configure Executive Receptionist around your hours, services, booking and urgent-call rules, connect or forward your business number, and test a live call with you. Your phone service does not launch until that test passes.

@@ -1,6 +1,6 @@
 # Front Porch Growth
 
-The public homepage is the Front Porch Growth suite at `/`: YardProof postcards, Front Porch Dispatch, Lead Finder, and an invoicing waitlist. The previous YardProof homepage is `/postcards`. Old anchors `/#how`, `/#demo10`, and `/#package` 308-redirect to `/postcards`. Apply `supabase/migrations/008_invoicing_waitlist.sql` before the invoicing form can save.
+The public homepage is the Front Porch Growth suite at `/`: YardProof postcards, Executive Receptionist, Lead Finder, and an invoicing waitlist. Cole bought executivereceptionist.com. That domain is not attached to this deployment, and the app does not depend on it. The live product stays at frontporchgrowth.com/receptionist until the domain is connected. The previous YardProof homepage is `/postcards`. Old anchors `/#how`, `/#demo10`, and `/#package` 308-redirect to `/postcards`. Apply `supabase/migrations/008_invoicing_waitlist.sql` before the invoicing form can save.
 
 # YardProof
 
@@ -24,12 +24,12 @@ AI-powered business automation platform focused on measurable outcomes for servi
 
 ## Sales week (HVAC & plumbing)
 
-One offer: Front Porch Dispatch answers missed and after-hours calls, handles common questions, captures job details, and sends the owner a qualified lead summary.
+One offer: Executive Receptionist answers missed and after-hours calls, handles common questions, captures job details, and sends the owner a qualified lead summary.
 
-- Front Porch Dispatch plans from **$79/month** · 300 voice minutes on Starter · cancel anytime after trial
+- Executive Receptionist plans from **$79/month** · 300 voice minutes on Starter · cancel anytime after trial
 - YardProof founding plan: **$99/month**
 - Personalized demos: `/demo/acexperts`, `/demo/family-comfort-hvac`, `/demo/after-hours-hvacr`, `/demo/underwood-hvac`, `/demo/posey-family-plumbing`
-- Offer page: `/dispatch` · sales video: `/video` (`/ava-hvac-pilot.mp4`) · tracker: `/sales`
+- Offer page: `/receptionist` · sales video: `/video` (`/ava-hvac-pilot.mp4`) · tracker: `/sales`
 - Prospect list and outreach copy: `sales/prospect-list.md`, `sales/outreach-templates.md`
 - Supabase events: `sales_prospect_events` + `sales_prospect_status` via `/api/sales/events`. Apply migrations `003` and `004`.
 
@@ -84,7 +84,7 @@ Nothing sends unless all of these are true:
 
 If cold email is off or the Maps key is missing, list building, drafting, copy, and CSV export still work. The page says what to set instead of crashing.
 
-Gmail / Google Workspace OAuth is not included. Prospect mail is the SMTP/Instantly stub, not Resend. Resend remains the transactional sender for Front Porch Dispatch and founding requests.
+Gmail / Google Workspace OAuth is not included. Prospect mail is the SMTP/Instantly stub, not Resend. Resend remains the transactional sender for Executive Receptionist and founding requests.
 
 ### Environment
 
@@ -107,6 +107,6 @@ New optional variable:
 
 Do not create a `NEXT_PUBLIC_GOOGLE_MAPS_*` key. The browser never sees the Maps key.
 
-## Front Porch Dispatch operations
+## Executive Receptionist operations
 
 Cole's current post-purchase and phone-launch checklist, plus the first automated agent-provisioning path, is in [`docs/AVA_PHONE_SETUP_RUNBOOK.md`](docs/AVA_PHONE_SETUP_RUNBOOK.md). The manual steps to take a paying customer live are in [`docs/AVA_GO_LIVE_CHECKLIST.md`](docs/AVA_GO_LIVE_CHECKLIST.md). Production credentials and rollout boundaries are documented in [`PRODUCTION_SETUP.md`](PRODUCTION_SETUP.md).

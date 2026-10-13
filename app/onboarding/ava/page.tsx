@@ -61,7 +61,7 @@ function buildEmailFallback(
 ) {
   const data = new FormData(form);
   const subject = encodeURIComponent(
-    `Front Porch Dispatch paid pilot setup — ${String(data.get('businessName') || 'New business')}`,
+    `Executive Receptionist paid pilot setup — ${String(data.get('businessName') || 'New business')}`,
   );
   const body = encodeURIComponent(
     [
@@ -77,7 +77,7 @@ function buildEmailFallback(
       `Lead handoff: ${data.get('leadHandoff') || ''}`,
       '',
       `Urgent-call rules:\n${data.get('urgentCallRules') || ''}`,
-      `Preferred Front Porch Dispatch voice: ${data.get('preferredVoice') || 'No preference'}`,
+      `Preferred Executive Receptionist voice: ${data.get('preferredVoice') || 'No preference'}`,
       '',
       `Stripe Checkout session: ${data.get('sessionId') || ''}`,
       `Selected plan: ${data.get('plan') || ''}`,
@@ -150,7 +150,7 @@ function AvaOnboardingForm() {
         const data = await res.json();
         if (!res.ok || !data.qualification) {
           if (!cancelled) {
-            setPrefillNote('Could not load Sales Front Porch Dispatch answers — fill the form manually.');
+            setPrefillNote('Could not load Sales Executive Receptionist answers — fill the form manually.');
             setPrefillReady(true);
           }
           return;
@@ -170,13 +170,13 @@ function AvaOnboardingForm() {
         });
         setPrefillNote(
           data.access === 'full'
-            ? 'Prefilling from your Sales Front Porch Dispatch conversation.'
+            ? 'Prefilling from your Sales Executive Receptionist conversation.'
             : 'Prefilling business answers. Re-enter staff contact if blank (token expired or missing).',
         );
         setPrefillReady(true);
       } catch {
         if (!cancelled) {
-          setPrefillNote('Could not load Sales Front Porch Dispatch answers — fill the form manually.');
+          setPrefillNote('Could not load Sales Executive Receptionist answers — fill the form manually.');
           setPrefillReady(true);
         }
       }
@@ -301,11 +301,11 @@ function AvaOnboardingForm() {
   return (
     <main className={styles.page}>
       <nav className={styles.nav}>
-        <Link href="/dispatch">
-          <ArrowLeft /> Front Porch Dispatch
+        <Link href="/receptionist">
+          <ArrowLeft /> Executive Receptionist
         </Link>
         <b>
-          <Sparkles /> Front Porch Dispatch
+          <Sparkles /> Executive Receptionist
         </b>
         <Link href="/privacy">Privacy</Link>
       </nav>
@@ -317,12 +317,12 @@ function AvaOnboardingForm() {
           </span>
           <h1>
             {searchParams.get('session_id')
-              ? "You're in. Let's get Front Porch Dispatch ready."
+              ? "You're in. Let's get Executive Receptionist ready."
               : 'Start the trial in Stripe, then send setup notes.'}
           </h1>
           <p>
               {searchParams.get('session_id')
-              ? 'Checkout is confirmed — you are paid or on the 7-day trial. Submit this form and Front Porch Dispatch’s agent is created from your answers. The phone number stays pending until Cole attaches it.'
+              ? 'Checkout is confirmed — you are paid or on the 7-day trial. Submit this form and Executive Receptionist’s agent is created from your answers. The phone number stays pending until Cole attaches it.'
               : `Stripe creates the 7-day trial for ${AVA_PLANS[selectedPlan].label}, then ${avaPlanPriceLine(selectedPlan)}. $0 setup. This form emails Cole. It does not start billing by itself.`}
           </p>
           {prefillNote ? <p className={styles.notice}>{prefillNote}</p> : null}
@@ -336,7 +336,7 @@ function AvaOnboardingForm() {
           </article>
           <article className={styles.step}>
             <span>2</span>
-            <b>We set up Front Porch Dispatch</b>
+            <b>We set up Executive Receptionist</b>
             <p>Cole builds your call flow.</p>
           </article>
           <article className={styles.step}>
@@ -355,10 +355,10 @@ function AvaOnboardingForm() {
           <div className={styles.sampleHeader}>
             <div>
               <span className={styles.eyebrow}>HEAR AVA ON A CALL</span>
-              <h2>Hear Front Porch Dispatch on a call</h2>
+              <h2>Hear Executive Receptionist on a call</h2>
               <p>Sample landscaping receptionist call · about 54 seconds</p>
             </div>
-            <Link href="/dispatch#talk-to-ava">Or talk to Sales Front Porch Dispatch</Link>
+            <Link href="/receptionist#talk-to-ava">Or talk to Sales Executive Receptionist</Link>
           </div>
           <video
             className={styles.sampleVideo}
@@ -378,12 +378,12 @@ function AvaOnboardingForm() {
             <h2>Cole has your setup details.</h2>
             <p>
               {provisionNote ||
-                'If automatic setup is on, Front Porch Dispatch’s agent is created from this form. The phone number stays pending until Cole attaches it and you pass one live test call.'}
+                'If automatic setup is on, Executive Receptionist’s agent is created from this form. The phone number stays pending until Cole attaches it and you pass one live test call.'}
             </p>
-            <Link href="/dispatch">Return to Front Porch Dispatch</Link>
+            <Link href="/receptionist">Return to Executive Receptionist</Link>
           </section>
         ) : !prefillReady ? (
-            <p className={styles.notice}><Loader2 className={styles.spin} /> Loading your Sales Front Porch Dispatch answers…</p>
+            <p className={styles.notice}><Loader2 className={styles.spin} /> Loading your Sales Executive Receptionist answers…</p>
           ) : (
           <>
           {!sessionId ? (
@@ -406,7 +406,7 @@ function AvaOnboardingForm() {
           ) : null}
           <form className={styles.form} onSubmit={submit}>
             <header className={styles.formHeader}>
-              <h2>How should Front Porch Dispatch handle your calls?</h2>
+              <h2>How should Executive Receptionist handle your calls?</h2>
               <p>Short answers are fine. Cole will confirm the details during your live test.</p>
             </header>
 
@@ -448,7 +448,7 @@ function AvaOnboardingForm() {
             <fieldset className={styles.section}>
               <legend>Call flow</legend>
               <label>
-                What should Front Porch Dispatch do?
+                What should Executive Receptionist do?
                 <textarea
                   name="callHandlingRules"
                   required
@@ -535,7 +535,7 @@ function AvaOnboardingForm() {
             </fieldset>
 
             <fieldset className={styles.section}>
-              <legend>Front Porch Dispatch voice (optional)</legend>
+              <legend>Executive Receptionist voice (optional)</legend>
               <label>
                 Preferred voice
                 <select name="preferredVoice" defaultValue="">
@@ -599,7 +599,7 @@ function AvaOnboardingForm() {
         )}
       </div>
       <footer className={styles.footer}>
-        <span>Front Porch Dispatch by Workforce AI · DealPatrol</span>
+        <span>Executive Receptionist by Workforce AI · DealPatrol</span>
         <Link href="/privacy">Privacy</Link>
       </footer>
     </main>

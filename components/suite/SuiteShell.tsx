@@ -3,16 +3,19 @@ import type { ReactNode } from 'react';
 import styles from './suite.module.css';
 
 const NAV = [
+  { href: '/receptionist', label: 'Executive Receptionist' },
   { href: '/postcards', label: 'Postcards' },
-  { href: '/dispatch', label: 'Front Porch Dispatch' },
-  { href: '/dashboard/prospector', label: 'Lead Finder' },
+  { href: '/reputation', label: 'Reviews' },
+  { href: '/lead-scout', label: 'Leads' },
+  { href: '/agents', label: 'Agents' },
+  { href: '/compare', label: 'Compare' },
   { href: '/pricing', label: 'Pricing' },
 ];
 
 export function SuiteShell({ children }: { children: ReactNode }) {
   return (
     <div className={styles.page}>
-      <nav className={styles.nav}>
+      <nav className={styles.nav} aria-label="Primary">
         <Link className={styles.brand} href="/">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img

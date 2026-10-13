@@ -1,34 +1,34 @@
-# Front Porch Dispatch production plan
+# Executive Receptionist production plan
 
-Goal: ship Front Porch Dispatch (AI receptionist) as a production-ready, payments-capable product that can take paid customers daily. Postcard mailer remains a separate product track.
+Goal: ship Executive Receptionist (AI receptionist) as a production-ready, payments-capable product that can take paid customers daily. Postcard mailer remains a separate product track.
 
 ## Branches to merge
 
 | Order | Branch / PR | Why | Status |
 |---|---|---|---|
-| 1 | `main` | Deploy path, auth, Stripe checkout, Front Porch Dispatch UX, qualify funnel, metering already landed | Current base |
+| 1 | `main` | Deploy path, auth, Stripe checkout, Executive Receptionist UX, qualify funnel, metering already landed | Current base |
 | 2 | Voice picker (from `cursor/ava-southern-voice-picker-5883` / #31) | Demo voice choice + onboarding preference | Included in production PR (resolves #31 conflicts) |
-| 3 | Onboarding session reuse (`611bef1`) | Updates Front Porch Dispatch onboarding when the same Stripe session is reused | Included in production PR |
+| 3 | Onboarding session reuse (`611bef1`) | Updates Executive Receptionist onboarding when the same Stripe session is reused | Included in production PR |
 | 4 | `cursor/ava-production-golive-873b` | Pricing, checkout trial, Stripe + ElevenLabs webhooks, docs | **This PR** |
 
-**Do not merge** postcard branches (`cursor/automate-streetview-postcards-6528`, imagery/Lob/mail race fixes, etc.) into Front Porch Dispatch production for this pass. Full inventory lives in the Project store at `internal/ava-branch-audit.md`.
+**Do not merge** postcard branches (`cursor/automate-streetview-postcards-6528`, imagery/Lob/mail race fixes, etc.) into Executive Receptionist production for this pass. Full inventory lives in the Project store at `internal/ava-branch-audit.md`.
 
 ## What shipped in this pass
 
-- `/dispatch` repositioned around recovered missed/after-hours calls → qualified lead handoff (Muse “sell recovered revenue” framing without agency pricing).
+- `/receptionist` repositioned around recovered missed/after-hours calls → qualified lead handoff (Muse “sell recovered revenue” framing without agency pricing).
 - Clear automated vs human scope; no fake testimonials or invented revenue claims.
-- Centralized Front Porch Dispatch pricing in `lib/ava/pricing.ts` wired through checkout, layout JSON-LD, industry pages, onboarding, Sales Front Porch Dispatch, demos.
+- Centralized Executive Receptionist pricing in `lib/ava/pricing.ts` wired through checkout, layout JSON-LD, industry pages, onboarding, Sales Executive Receptionist, demos.
 - Stripe Checkout subscriptions now send `subscription_data[trial_period_days]=7`.
-- `POST /api/webhooks/stripe` verifies signatures, upserts Front Porch Dispatch customers, emails the onboarding link, and syncs subscription status.
-- `POST /api/webhooks/elevenlabs` verifies the post-call HMAC signature and saves leads only for provisioned Front Porch Dispatch customers on an active or trialing subscription. Demo and Sales Front Porch Dispatch calls are acknowledged and ignored, with no Twilio SMS.
+- `POST /api/webhooks/stripe` verifies signatures, upserts Executive Receptionist customers, emails the onboarding link, and syncs subscription status.
+- `POST /api/webhooks/elevenlabs` verifies the post-call HMAC signature and saves leads only for provisioned Executive Receptionist customers on an active or trialing subscription. Demo and Sales Executive Receptionist calls are acknowledged and ignored, with no Twilio SMS.
 - Southern voice picker + preferred-voice onboarding note.
 - Onboarding row update on Stripe session reuse.
 
 ## Pricing recommendation vs Muse
 
-Muse / FirstMinute blueprint targets a **managed** front desk: **$2,000 implementation + $1,250/month**, plus usage. That is credible for white-glove ops with weekly scorecards and human QA — and too high for Front Porch Dispatch as it exists today (self-serve software + Cole-assisted launch).
+Muse / FirstMinute blueprint targets a **managed** front desk: **$2,000 implementation + $1,250/month**, plus usage. That is credible for white-glove ops with weekly scorecards and human QA — and too high for Executive Receptionist as it exists today (self-serve software + Cole-assisted launch).
 
-**Front Porch Dispatch self-serve (implemented):**
+**Executive Receptionist self-serve (implemented):**
 
 | Plan | Price | Included minutes | Overage |
 |---|---|---|---|
@@ -40,7 +40,7 @@ Muse / FirstMinute blueprint targets a **managed** front desk: **$2,000 implemen
 - **Optional assisted launch $299** one-time (manual Cole/ops — messaging only; not an automated Stripe SKU yet).
 - **Free 7-day trial** via Stripe Checkout trial days.
 
-Rationale: previous $59 entry underpriced a 24/7 voice product relative to answering services; Muse $1,250 is the wrong comparison set for software-led Front Porch Dispatch. $79–$299 keeps a contractor-friendly break-even (a handful of recovered jobs) while funding minutes + support margin. Revisit a true managed tier only after phone provisioning and calendar booking are live.
+Rationale: previous $59 entry underpriced a 24/7 voice product relative to answering services; Muse $1,250 is the wrong comparison set for software-led Executive Receptionist. $79–$299 keeps a contractor-friendly break-even (a handful of recovered jobs) while funding minutes + support margin. Revisit a true managed tier only after phone provisioning and calendar booking are live.
 
 ## Payments / go-live blockers (manual)
 
@@ -50,7 +50,7 @@ Repo can create Checkout Sessions and verify paid sessions for provisioning when
 2. Stripe Dashboard → Webhooks → endpoint `https://<domain>/api/webhooks/stripe` for `checkout.session.completed`, `customer.subscription.updated`, and `customer.subscription.deleted`.
 2b. ElevenLabs post-call webhook → `https://<domain>/api/webhooks/elevenlabs`. See `docs/AVA_GO_LIVE_CHECKLIST.md`.
 3. Confirm Stripe business name/branding (Dashboard → Settings) so Checkout does not show a generic “Billing” label.
-4. Supabase: Front Porch Dispatch onboarding + sales qualification migrations applied; `SUPABASE_*` keys on Vercel.
+4. Supabase: Executive Receptionist onboarding + sales qualification migrations applied; `SUPABASE_*` keys on Vercel.
 5. ElevenLabs: `ELEVENLABS_API_KEY`, `ELEVENLABS_AGENT_ID`, optional voice agent IDs, separate `ELEVENLABS_SALES_AGENT_ID`.
 6. Resend (`RESEND_API_KEY`) for onboarding/lead email; optional Twilio lead SMS.
 7. Phone launch remains **manual** per `docs/AVA_PHONE_SETUP_RUNBOOK.md` (buy/assign number, forwarding, live test call). `AVA_AUTO_PROVISION_AGENT` stays false until tested.
@@ -60,6 +60,6 @@ Repo can create Checkout Sessions and verify paid sessions for provisioning when
 
 1. Merge production PR → Vercel production deploy.
 2. Complete Stripe + ElevenLabs + Supabase secrets checklist above.
-3. Run one test Checkout (Starter) through `/dispatch` → onboarding → Cole notification.
+3. Run one test Checkout (Starter) through `/receptionist` → onboarding → Cole notification.
 4. Close superseded OPEN #31 after this PR lands (or mark duplicate).
 5. Keep postcard PR #34 on its own track.

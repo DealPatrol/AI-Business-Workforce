@@ -14,8 +14,8 @@ import { AVA_GUIDES } from '@/lib/ava/trade-pages';
 import { absoluteSiteUrl } from '@/lib/site-url';
 
 export const metadata: Metadata = {
-  alternates: { canonical: absoluteSiteUrl('/dispatch') },
-  openGraph: { url: absoluteSiteUrl('/dispatch') },
+  alternates: { canonical: absoluteSiteUrl('/receptionist') },
+  openGraph: { url: absoluteSiteUrl('/receptionist') },
 };
 
 const display = Fraunces({
@@ -58,7 +58,7 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
   const heroNext = SETUP_CALL_URL
     ? 'It will ask the setup questions. After that you can request a short setup call with Cole, or start the free trial.'
     : 'It will ask the setup questions, then you can start the free trial with answers prefilled.';
-  const canonical = absoluteSiteUrl('/dispatch');
+  const canonical = absoluteSiteUrl('/receptionist');
   const structuredData = jsonLdGraph([
     avaSoftwareNode({
       description:
@@ -66,15 +66,15 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
       url: canonical,
     }),
     avaServiceNode({
-      name: 'Front Porch Dispatch AI answering service',
+      name: 'Executive Receptionist AI answering service',
       description:
-        '24/7 call answering for home-service businesses and other small teams. Front Porch Dispatch captures the job and texts you the lead.',
+        '24/7 call answering for home-service businesses and other small teams. Executive Receptionist captures the job and texts you the lead.',
       url: canonical,
       audience: 'contractors and small businesses',
       serviceType: 'AI answering service',
     }),
     avaProductNode({
-      name: 'Front Porch Dispatch AI Receptionist',
+      name: 'Executive Receptionist AI Receptionist',
       description: `Self-serve AI receptionist with a free 7-day trial. Starter ${AVA_PLANS.starter.monthlyLabel}, Growth ${AVA_PLANS.growth.monthlyLabel}, Pro ${AVA_PLANS.pro.monthlyLabel} per month. $0 setup.`,
       url: canonical,
     }),
@@ -88,8 +88,8 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
 
       {/* ── Masthead ─────────────────────────────────────────── */}
       <header className="masthead">
-        <Link className="wordmark" href="/dispatch">
-          <span className="wordmark-ava">Front Porch Dispatch</span>
+        <Link className="wordmark" href="/receptionist">
+          <span className="wordmark-ava">Executive Receptionist</span>
           <span className="wordmark-sub">by Front Porch Growth</span>
         </Link>
         <nav className="masthead-links">
@@ -106,17 +106,17 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section className="hero">
         <div className="hero-main">
-          <p className="stamp">AI receptionist and dispatcher · home services</p>
+          <p className="stamp">AI receptionist · home services</p>
           <h1>
             Never miss <em>another</em> call.
           </h1>
           <p className="lede">
-            Front Porch Dispatch answers your business line 24/7 in a friendly Southern voice — takes the caller&apos;s
+            Executive Receptionist answers your business line 24/7 in a friendly Southern voice — takes the caller&apos;s
             name, number, and what they need, then <strong>texts you the lead</strong>. {heroNext}
           </p>
           <div className="hero-ctas">
             <a className="btn btn-signal" href="#talk-to-ava">
-              Talk to Front Porch Dispatch
+              Talk to Executive Receptionist
             </a>
             <TrackedCheckoutLink className="btn btn-outline" href="/api/checkout?plan=starter" plan="starter">
               Start free 7-day trial <ArrowRight size={17} />
@@ -139,10 +139,10 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
           <p className="hero-fine">{avaTrialThenPriceCopy('starter')} Cancel anytime.</p>
         </div>
 
-        <aside className="call-log" aria-label="Sample of calls Front Porch Dispatch answered tonight">
+        <aside className="call-log" aria-label="Sample of calls Executive Receptionist answered tonight">
           <div className="call-log-head">
             <span className="live-dot" aria-hidden="true" />
-            <span>Tonight on Front Porch Dispatch&apos;s line</span>
+            <span>Tonight on Executive Receptionist&apos;s line</span>
           </div>
           <ol>
             {callLog.map((call, i) => (
@@ -187,11 +187,11 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
           <article>
             <span className="how-num">01</span>
             <h3>The phone rings</h3>
-            <p>Front Porch Dispatch picks up on the first ring — 24/7, including nights, weekends, and when you&apos;re up a ladder.</p>
+            <p>Executive Receptionist picks up on the first ring — 24/7, including nights, weekends, and when you&apos;re up a ladder.</p>
           </article>
           <article>
             <span className="how-num">02</span>
-            <h3>Dispatch works the call</h3>
+            <h3>Executive Receptionist works the call</h3>
             <p>A friendly Southern voice collects the caller&apos;s name, number, and what they need, using the questions you approve.</p>
           </article>
           <article>
@@ -209,7 +209,7 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
           Pick up the <em>phone.</em>
         </h2>
         <p className="demo-sub">
-          Talk to Front Porch Dispatch right now. It asks the same kind of setup questions it asks your customers. No signup and no
+          Talk to Executive Receptionist right now. It asks the same kind of setup questions it asks your customers. No signup and no
           credit card. If your mic is blocked, play the sample call instead.
         </p>
       </section>
@@ -218,7 +218,7 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
 
       {/* ── Pricing ──────────────────────────────────────────── */}
       <section id="pricing" className="ratecard">
-        <p className="section-kicker">Front Porch Dispatch pricing · $0 setup</p>
+        <p className="section-kicker">Executive Receptionist pricing · $0 setup</p>
         <h2>
           The <em>rate card.</em>
         </h2>
@@ -278,12 +278,12 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
           Fluent in <em>your</em> trade.
         </h2>
         <p className="trades-sub">
-          Each page is the calls, the questions, and a missed-call example for that buyer. The live demo is the same Front Porch Dispatch.
+          Each page is the calls, the questions, and a missed-call example for that buyer. The live demo is the same Executive Receptionist.
         </p>
         <ul className="trades-list">
           {tradeGuides.map((guide) => (
             <li key={guide.slug}>
-              <Link href={`/dispatch/${guide.slug}`}>
+              <Link href={`/receptionist/${guide.slug}`}>
                 <span className="trade-name">{guide.navLabel}</span>
                 <span className="trade-desc">{guide.blurb}</span>
                 <ArrowUpRight size={18} aria-hidden="true" />
@@ -295,7 +295,7 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
         <ul className="trades-list">
           {buyerGuides.map((guide) => (
             <li key={guide.slug}>
-              <Link href={`/dispatch/${guide.slug}`}>
+              <Link href={`/receptionist/${guide.slug}`}>
                 <span className="trade-name">{guide.navLabel}</span>
                 <span className="trade-desc">{guide.blurb}</span>
                 <ArrowUpRight size={18} aria-hidden="true" />
@@ -322,7 +322,7 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
       <section className="finale">
         <p className="stamp stamp-light">Free 7-day trial · $0 setup</p>
         <h2>
-          Put Front Porch Dispatch on the <em>phones.</em>
+          Put Executive Receptionist on the <em>phones.</em>
         </h2>
         <p>
           Talk to it above, then start the trial. {AVA_PLANS.starter.monthlyLabel}, {AVA_PLANS.growth.monthlyLabel}, or{' '}
@@ -333,7 +333,7 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
             Start free 7-day trial <ArrowRight size={17} />
           </TrackedCheckoutLink>
           <a className="btn btn-ghostlight" href="#talk-to-ava">
-            Talk to Front Porch Dispatch first
+            Talk to Executive Receptionist first
           </a>
         </div>
       </section>

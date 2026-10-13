@@ -66,7 +66,7 @@ export async function saveAvaOnboarding(input: AvaOnboardingInput) {
       .maybeSingle();
 
     if (existingError) {
-      throw new Error(`Unable to check Front Porch Dispatch onboarding: ${existingError.message}`);
+      throw new Error(`Unable to check Executive Receptionist onboarding: ${existingError.message}`);
     }
     if (existing) {
       const stored = existing as AvaOnboardingRow;
@@ -106,7 +106,7 @@ export async function saveAvaOnboarding(input: AvaOnboardingInput) {
         .single();
 
       if (error) {
-        throw new Error(`Unable to update Front Porch Dispatch onboarding: ${error.message}`);
+        throw new Error(`Unable to update Executive Receptionist onboarding: ${error.message}`);
       }
 
       const saved = data as AvaOnboardingRow;
@@ -138,7 +138,7 @@ export async function saveAvaOnboarding(input: AvaOnboardingInput) {
     .single();
 
   if (error) {
-    throw new Error(`Unable to save Front Porch Dispatch onboarding: ${error.message}`);
+    throw new Error(`Unable to save Executive Receptionist onboarding: ${error.message}`);
   }
 
   const saved = data as AvaOnboardingRow;
@@ -173,9 +173,9 @@ async function saveOptionalOnboardingFields(
       .from('ava_onboardings')
       .update({ ...fields, updated_at: new Date().toISOString() })
       .eq('id', id);
-    if (error) console.error('Optional Front Porch Dispatch onboarding fields were not saved', error.message);
+    if (error) console.error('Optional Executive Receptionist onboarding fields were not saved', error.message);
   } catch (error) {
-    console.error('Optional Front Porch Dispatch onboarding fields were not saved', error);
+    console.error('Optional Executive Receptionist onboarding fields were not saved', error);
   }
 }
 
@@ -188,7 +188,7 @@ export async function getAvaOnboarding(id: string) {
     .single();
 
   if (error) {
-    throw new Error(`Unable to load Front Porch Dispatch onboarding: ${error.message}`);
+    throw new Error(`Unable to load Executive Receptionist onboarding: ${error.message}`);
   }
 
   return data as AvaOnboardingRow;
@@ -206,7 +206,7 @@ export async function provisionStoredAvaOnboarding(
       .eq('id', row.id);
 
     if (error) {
-      throw new Error(`Unable to update Front Porch Dispatch provisioning status: ${error.message}`);
+      throw new Error(`Unable to update Executive Receptionist provisioning status: ${error.message}`);
     }
   });
 }

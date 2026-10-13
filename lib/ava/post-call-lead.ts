@@ -110,7 +110,7 @@ export function extractPostCallLead(event: unknown): ExtractedCallLead | null {
     asString(analysis.transcript_summary) ||
     asString(analysis.call_summary_title) ||
     transcriptText ||
-    'Completed Front Porch Dispatch call';
+    'Completed Executive Receptionist call';
 
   return {
     conversationId: asString(data.conversation_id),
@@ -150,7 +150,7 @@ async function listOnboardingsByAgent(agentId: string): Promise<OnboardingMatch[
     .limit(5);
   if (!full.error) return (full.data ?? []) as OnboardingMatch[];
   if (!isMissingColumn(full.error.message)) {
-    throw new Error(`Unable to match Front Porch Dispatch agent: ${full.error.message}`);
+    throw new Error(`Unable to match Executive Receptionist agent: ${full.error.message}`);
   }
 
   const basic = await supabase
@@ -160,7 +160,7 @@ async function listOnboardingsByAgent(agentId: string): Promise<OnboardingMatch[
     .order('created_at', { ascending: false })
     .limit(5);
   if (basic.error) {
-    throw new Error(`Unable to match Front Porch Dispatch agent: ${basic.error.message}`);
+    throw new Error(`Unable to match Executive Receptionist agent: ${basic.error.message}`);
   }
   return (basic.data ?? []) as OnboardingMatch[];
 }
@@ -173,7 +173,7 @@ async function listCustomersForOnboarding(row: OnboardingMatch): Promise<Custome
     .eq('onboarding_id', row.id)
     .limit(5);
   if (byOnboarding.error) {
-    throw new Error(`Unable to match Front Porch Dispatch customer: ${byOnboarding.error.message}`);
+    throw new Error(`Unable to match Executive Receptionist customer: ${byOnboarding.error.message}`);
   }
 
   const rows = [...((byOnboarding.data ?? []) as CustomerGateRow[])];
@@ -185,7 +185,7 @@ async function listCustomersForOnboarding(row: OnboardingMatch): Promise<Custome
     .eq('stripe_checkout_session_id', row.stripe_session_id)
     .limit(5);
   if (bySession.error) {
-    throw new Error(`Unable to match Front Porch Dispatch customer: ${bySession.error.message}`);
+    throw new Error(`Unable to match Executive Receptionist customer: ${bySession.error.message}`);
   }
 
   const seen = new Set(rows.map((item) => item.id));
@@ -252,7 +252,7 @@ function isMissingColumn(message: string) {
 export async function savePostCallLead(lead: ExtractedCallLead) {
   const target = await resolvePostCallTarget(lead.agentId);
   const effects = planPostCallEffects(target.decision);
-  // Demo agents, Sales Front Porch Dispatch, and any other unknown agent_id stop here.
+  // Demo agents, Sales Executive Receptionist, and any other unknown agent_id stop here.
   // effects.sendSms is false, so Twilio is not called and no credit is spent.
   if (!effects.saveLead || !target.onboarding) {
     return { skipped: true as const, reason: 'ignored_agent' as const };
@@ -309,7 +309,7 @@ export async function savePostCallLead(lead: ExtractedCallLead) {
   }
 
   if (saved.error || !saved.data) {
-    throw new Error(saved.error?.message || 'Unable to save Front Porch Dispatch call lead.');
+    throw new Error(saved.error?.message || 'Unable to save Executive Receptionist call lead.');
   }
 
   const row = saved.data as SavedLead;
@@ -317,8 +317,8 @@ export async function savePostCallLead(lead: ExtractedCallLead) {
     return { skipped: false as const, duplicate: true, leadId: row.id };
   }
 
-  const subject = `New Front Porch Dispatch lead${lead.callerName ? ` — ${lead.callerName}` : ''}${lead.need ? ` — ${lead.need}` : ''}`;
-  const html = `<div style="font-family:Arial,sans-serif;max-width:680px;margin:auto;color:#17211b"><h1 style="font-size:22px">New Front Porch Dispatch lead</h1><p>Front Porch Dispatch finished a call for ${escapeHtml(match?.business_name || 'your business')}.</p><table style="border-collapse:collapse;width:100%"><tr><td><b>Caller</b></td><td>${escapeHtml(lead.callerName || 'Not provided')}</td></tr><tr><td><b>Phone</b></td><td>${escapeHtml(lead.callerPhone || 'Not provided')}</td></tr><tr><td><b>Need</b></td><td>${escapeHtml(lead.need || 'Not provided')}</td></tr><tr><td><b>Address</b></td><td>${escapeHtml(lead.address || 'Not provided')}</td></tr><tr><td><b>Urgency</b></td><td>${escapeHtml(lead.urgency || 'Not provided')}</td></tr></table><h2 style="font-size:18px">Summary</h2><p style="white-space:pre-wrap">${escapeHtml(lead.summary)}</p></div>`;
+  const subject = `New Executive Receptionist lead${lead.callerName ? ` — ${lead.callerName}` : ''}${lead.need ? ` — ${lead.need}` : ''}`;
+  const html = `<div style="font-family:Arial,sans-serif;max-width:680px;margin:auto;color:#17211b"><h1 style="font-size:22px">New Executive Receptionist lead</h1><p>Executive Receptionist finished a call for ${escapeHtml(match?.business_name || 'your business')}.</p><table style="border-collapse:collapse;width:100%"><tr><td><b>Caller</b></td><td>${escapeHtml(lead.callerName || 'Not provided')}</td></tr><tr><td><b>Phone</b></td><td>${escapeHtml(lead.callerPhone || 'Not provided')}</td></tr><tr><td><b>Need</b></td><td>${escapeHtml(lead.need || 'Not provided')}</td></tr><tr><td><b>Address</b></td><td>${escapeHtml(lead.address || 'Not provided')}</td></tr><tr><td><b>Urgency</b></td><td>${escapeHtml(lead.urgency || 'Not provided')}</td></tr></table><h2 style="font-size:18px">Summary</h2><p style="white-space:pre-wrap">${escapeHtml(lead.summary)}</p></div>`;
 
   let sms: AvaLeadSmsResult = {
     sent: false,
@@ -343,7 +343,7 @@ export async function savePostCallLead(lead: ExtractedCallLead) {
       }),
     });
     if (!sms.sent && !sms.skipped) {
-      console.error('Front Porch Dispatch post-call SMS failed', sms.error);
+      console.error('Executive Receptionist post-call SMS failed', sms.error);
     }
   }
 
@@ -353,7 +353,7 @@ export async function savePostCallLead(lead: ExtractedCallLead) {
     .update({ notified_at: notifiedAt })
     .eq('id', row.id);
   if (notifyError) {
-    console.error('Front Porch Dispatch lead email sent, but notified_at was not saved', notifyError.message);
+    console.error('Executive Receptionist lead email sent, but notified_at was not saved', notifyError.message);
   }
 
   return { skipped: false as const, duplicate: false, leadId: row.id, sms };

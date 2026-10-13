@@ -8,22 +8,22 @@ import { faqNode } from '@/lib/ava/structured-data';
 import { FOUNDING_CTA, foundingCheckoutHref } from '@/lib/payments';
 import { absoluteSiteUrl } from '@/lib/site-url';
 
-const title = 'Front Porch Growth | Postcards and an AI receptionist for home services';
+const title = 'Front Porch Growth | The AI suite for home-service businesses';
 const description =
-  'YardProof postcards are $99/month. Front Porch Dispatch, the AI receptionist, has a free 7-day trial, then $79, $149, or $299 a month. For home-service businesses.';
+  'Executive Receptionist answers missed calls from $79/month after a 7-day trial. YardProof postcards are $99/month. ReputationFlow, Lead Scout, and writing agents are on the same site. Prices are published.';
 
 const HOME_FAQS = [
   {
     q: 'What can I buy on this site today?',
-    a: 'Two products have a checkout. YardProof postcards are a managed campaign at $99/month, and Demo Blast 10 is $49 for up to 10 concepts. Front Porch Dispatch is a separate AI receptionist: Starter $79, Growth $149, and Pro $299 a month after a free 7-day trial, with a $0 setup fee. Lead Finder is a signed-in workspace with no separate public price. Invoicing is a waitlist and is not for sale.',
+    a: 'Two products have a checkout on this site. YardProof postcards are a managed campaign at $99/month, and Demo Blast 10 is $49 for up to 10 concepts. Executive Receptionist is Starter $79, Growth $149, and Pro $299 a month after a free 7-day trial, with a $0 setup fee. ReputationFlow is a separate site with a free starter and Professional at $20/month. Lead Scout and the writing agents have no separate public price. Invoicing is a waitlist.',
   },
   {
-    q: 'How is Front Porch Dispatch different from the postcard campaign?',
-    a: 'Postcards are mail. You approve the concept, the audience, and the costs before anything is sent, and each card has a QR page where a homeowner can request an estimate. Front Porch Dispatch answers phone calls, asks for the caller’s name, number, and what they need, and texts you that lead. They are separate products. You can buy one without the other.',
+    q: 'How is Executive Receptionist different from the postcard campaign?',
+    a: 'Postcards are mail. You approve the concept, the audience, and the costs before anything is sent, and each card has a QR page where a homeowner can request an estimate. Executive Receptionist answers phone calls, asks for the caller’s name, number, and what they need, and texts you that lead. They are separate products. You can buy one without the other.',
   },
   {
     q: 'How do I start?',
-    a: 'For postcards, use the $99/month founding checkout or email Cole at colecollins763@gmail.com. For Front Porch Dispatch, choose a plan and Stripe starts the 7-day trial. After checkout you finish a setup form. A person attaches the phone number. The browser demo is not your business line.',
+    a: 'For postcards, use the $99/month founding checkout or email Cole at colecollins763@gmail.com. For Executive Receptionist, choose a plan and Stripe starts the 7-day trial. After checkout you finish a setup form. A person attaches the phone number. The browser demo is not your business line.',
   },
   {
     q: 'Does the invoicing form email me?',
@@ -71,8 +71,8 @@ const orgJsonLd = {
         },
         {
           '@type': 'Offer',
-          name: 'Front Porch Dispatch AI receptionist, plans from $79/month after a 7-day trial',
-          url: absoluteSiteUrl('/dispatch'),
+          name: 'Executive Receptionist AI receptionist, plans from $79/month after a 7-day trial',
+          url: absoluteSiteUrl('/receptionist'),
         },
       ],
     },
@@ -87,25 +87,26 @@ export default function SuiteHomePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd).replace(/</g, '\\u003c') }} />
       <section className={styles.hero} id="start">
         <div>
-          <span className={styles.eyebrow}>HOME-SERVICE TOOLS</span>
-          <h1>Tools that bring home-service businesses more jobs.</h1>
+          <span className={styles.eyebrow}>HOME-SERVICE AI</span>
+          <h1>The AI service provider for home-service businesses.</h1>
           <p className={styles.lede}>
-            Postcards that show the job, an AI receptionist that answers the call, a lead finder you approve before anything sends, and invoicing when it is ready.
+            Answering, postcards, review requests, a public lead search, and drafts. The prices are on the page. The comparison uses each company’s own published numbers.
           </p>
           <div className={styles.heroActions}>
             <TrackedCheckoutLink className={styles.button} href="/api/checkout?plan=starter" plan="starter">
-              Start Front Porch Dispatch’s free trial
+              Start Executive Receptionist’s free trial
             </TrackedCheckoutLink>
             <TrackedCheckoutLink className={styles.buttonSecondary} href={foundingCheckoutHref('/#start')} plan="founding">
               {FOUNDING_CTA}
             </TrackedCheckoutLink>
           </div>
           <p className={styles.fine}>
-            Front Porch Dispatch is a 7-day trial, then $79, $149, or $299 a month. The postcard founding offer is $99/month. You approve the concept, audience, and mailing costs before anything mails.
+            Executive Receptionist is a 7-day trial, then $79, $149, or $299 a month. The postcard founding offer is $99/month. You approve the concept, audience, and mailing costs before anything mails.
           </p>
           <div className={styles.priceRow}>
-            <Link href="/dispatch">Front Porch Dispatch from $79/month</Link>
+            <Link href="/receptionist">Executive Receptionist from $79/month</Link>
             <Link href="/postcards">Postcards founding offer $99/month</Link>
+            <Link href="/compare">Compare published prices</Link>
             <Link href="/pricing">All prices</Link>
           </div>
         </div>
@@ -113,10 +114,10 @@ export default function SuiteHomePage() {
           <h2>Two products you can start today.</h2>
           <div className={styles.choice}>
             <span className={styles.kicker}>CALLS</span>
-            <h3>Front Porch Dispatch answers the phone.</h3>
+            <h3>Executive Receptionist answers the phone.</h3>
             <p>Missed and after-hours calls. It takes the name, number, and job, then texts you.</p>
-            <Link className={styles.textLink} href="/dispatch">
-              See how Front Porch Dispatch works
+            <Link className={styles.textLink} href="/receptionist">
+              See how Executive Receptionist works
             </Link>
           </div>
           <div className={styles.choice}>
@@ -155,17 +156,63 @@ export default function SuiteHomePage() {
         <article className={styles.card}>
           <span className={styles.kicker}>AI RECEPTIONIST</span>
           <h2>
-            <Link href="/dispatch">Front Porch Dispatch</Link>
+            <Link href="/receptionist">Executive Receptionist</Link>
           </h2>
-          <p>Front Porch Dispatch answers missed and after-hours calls, qualifies the lead, and texts you. Starter, Growth, and Pro stay on their own prices.</p>
+          <p>Executive Receptionist answers missed and after-hours calls, qualifies the lead, and texts you. Starter, Growth, and Pro stay on their own prices.</p>
           <p className={styles.price}>$79 / $149 / $299 a month</p>
           <p className={styles.quiet}>Free 7-day trial. $0 setup.</p>
           <div className={styles.cardActions}>
             <TrackedCheckoutLink className={styles.button} href="/api/checkout?plan=starter" plan="starter">
               Start free 7-day trial
             </TrackedCheckoutLink>
-            <Link className={styles.textLink} href="/dispatch">
-              See Front Porch Dispatch
+            <Link className={styles.textLink} href="/receptionist">
+              See Executive Receptionist
+            </Link>
+          </div>
+        </article>
+
+        <article className={styles.card}>
+          <span className={styles.kicker}>REVIEWS</span>
+          <h2>
+            <Link href="/reputation">ReputationFlow</Link>
+          </h2>
+          <p>Request a review and draft the reply. The free Google review QR lives on ReputationFlow. The public review links stay the same no matter the rating.</p>
+          <p className={styles.price}>Free, or $20/month</p>
+          <p className={styles.quiet}>Professional price is published on tryreputationflow.com. No customer-count claim.</p>
+          <div className={styles.cardActions}>
+            <a className={styles.button} href="https://tryreputationflow.com/tools/qr-code">
+              Free review QR
+            </a>
+            <Link className={styles.textLink} href="/reputation">
+              How reviews work
+            </Link>
+          </div>
+        </article>
+
+        <article className={styles.card}>
+          <span className={styles.kicker}>LEAD SCOUT</span>
+          <h2>
+            <Link href="/lead-scout">Lead Scout</Link>
+          </h2>
+          <p>Search public listings by trade and city. The page shows the results. It does not email or text them.</p>
+          <p className={styles.price}>No separate price</p>
+          <div className={styles.cardActions}>
+            <Link className={styles.button} href="/lead-scout">
+              Search a city
+            </Link>
+          </div>
+        </article>
+
+        <article className={styles.card}>
+          <span className={styles.kicker}>WRITING AGENTS</span>
+          <h2>
+            <Link href="/agents">Six drafts</Link>
+          </h2>
+          <p>Estimate, review reply, job ad, follow-up text, service-area page, and invoice reminder. You copy the draft. Nothing is sent.</p>
+          <p className={styles.price}>Included on the site</p>
+          <div className={styles.cardActions}>
+            <Link className={styles.button} href="/agents">
+              Open the agents
             </Link>
           </div>
         </article>
@@ -191,6 +238,27 @@ export default function SuiteHomePage() {
           <p>Estimates and invoices for the jobs the other tools bring in. Join the list and we save it. This form does not send email.</p>
           <InvoicingWaitlistForm />
         </article>
+      </section>
+
+      <section className={styles.section} id="tour">
+        <span className={styles.eyebrow}>PRODUCT TOUR</span>
+        <h2>A short look at the suite.</h2>
+        <p>The video is the pages on this site, with captions. It is not a customer testimonial.</p>
+        <video
+          controls
+          playsInline
+          preload="metadata"
+          style={{ width: '100%', borderRadius: 16, background: '#10281c' }}
+          aria-label="Front Porch Growth product tour"
+        >
+          <source src="/suite-tour.mp4" type="video/mp4" />
+        </video>
+        <p className={styles.quiet}>
+          Trades: <Link href="/trades/plumbers">plumbers</Link>, <Link href="/trades/hvac">HVAC</Link>,{' '}
+          <Link href="/trades/roofers">roofers</Link>, <Link href="/trades/lawn-care">lawn care</Link>,{' '}
+          <Link href="/trades/cleaners">cleaners</Link>. After-hours ad page:{' '}
+          <Link href="/receptionist/missed-calls">missed calls</Link>.
+        </p>
       </section>
 
       <section className={styles.faq} id="faq">

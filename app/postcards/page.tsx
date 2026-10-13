@@ -305,11 +305,11 @@ export default function HomePage() {
           <small>OPTIONAL ADD-ON</small>
           <h2>Want someone answering the leads your campaign creates?</h2>
           <p>
-            Front Porch Dispatch is a separate AI receptionist add-on for businesses that want 24/7 call coverage. The postcard campaign remains the main service.
+            Executive Receptionist is a separate AI receptionist add-on for businesses that want 24/7 call coverage. The postcard campaign remains the main service.
           </p>
         </div>
-        <Link href="/dispatch">
-          See Front Porch Dispatch add-on <ArrowRight size={16} />
+        <Link href="/receptionist">
+          See Executive Receptionist add-on <ArrowRight size={16} />
         </Link>
       </section>
 

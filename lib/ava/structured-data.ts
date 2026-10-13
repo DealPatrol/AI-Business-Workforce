@@ -42,7 +42,7 @@ export function avaProductNode(input: { name: string; description: string; url: 
     '@type': 'Product',
     name: input.name,
     description: input.description,
-    brand: { '@type': 'Brand', name: 'Front Porch Dispatch' },
+    brand: { '@type': 'Brand', name: 'Executive Receptionist' },
     url: input.url,
     offers: avaOfferNodes(input.url),
   };
@@ -51,7 +51,7 @@ export function avaProductNode(input: { name: string; description: string; url: 
 export function avaSoftwareNode(input: { description: string; url: string }) {
   return {
     '@type': 'SoftwareApplication',
-    name: 'Front Porch Dispatch',
+    name: 'Executive Receptionist',
     applicationCategory: 'BusinessApplication',
     operatingSystem: 'Web',
     url: input.url,

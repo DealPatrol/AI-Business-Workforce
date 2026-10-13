@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
   const secret = process.env.AVA_PROVISIONING_SECRET;
   if (!secret) {
     return NextResponse.json(
-      { error: 'Internal Front Porch Dispatch provisioning is not configured.' },
+      { error: 'Internal Executive Receptionist provisioning is not configured.' },
       { status: 503 },
     );
   }
@@ -44,10 +44,10 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ onboardingId, provisioning });
   } catch (error) {
-    console.error('Front Porch Dispatch internal provisioning error', error);
+    console.error('Executive Receptionist internal provisioning error', error);
     return NextResponse.json(
       {
-        error: error instanceof Error ? error.message : 'Could not provision the Front Porch Dispatch agent.',
+        error: error instanceof Error ? error.message : 'Could not provision the Executive Receptionist agent.',
       },
       { status: 502 },
     );

@@ -22,5 +22,5 @@ export default async function CheckoutPage({ searchParams }: CheckoutPageProps) 
     redirect(`/api/checkout?plan=${plan}`);
   }
 
-  redirect('/dispatch#pricing');
+  redirect('/receptionist#pricing');
 }

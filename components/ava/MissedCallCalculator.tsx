@@ -60,7 +60,7 @@ export function MissedCallCalculator() {
         <code>{result.formula}</code>
       </div>
       <p className="missed-calc-note">
-        Front Porch Dispatch Starter is {AVA_PLANS.starter.monthlyLabel}/month after the 7-day trial. Growth is{' '}
+        Executive Receptionist Starter is {AVA_PLANS.starter.monthlyLabel}/month after the 7-day trial. Growth is{' '}
         {AVA_PLANS.growth.monthlyLabel}. Pro is {AVA_PLANS.pro.monthlyLabel}. The calculator does not
         subtract the plan, so you can compare the two figures yourself.
       </p>

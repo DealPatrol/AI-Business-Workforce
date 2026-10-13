@@ -47,9 +47,9 @@ export function absoluteSiteUrl(path: string) {
 }
 
 /**
- * Dispatch-at-root mode. Off unless AVA_STANDALONE_HOST names a host that is
+ * Executive Receptionist at the site root. Off unless AVA_STANDALONE_HOST names a host that is
  * neither the public site nor the legacy Vercel host. Leave it unset:
- * YardProof stays at / and Front Porch Dispatch stays at /dispatch.
+ * YardProof stays at / and Executive Receptionist stays at /receptionist.
  */
 export function isAvaStandaloneHost(hostHeader: string | null | undefined) {
   const configured = hostnameOf(process.env.AVA_STANDALONE_HOST);

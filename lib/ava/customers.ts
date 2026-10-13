@@ -72,7 +72,7 @@ async function findExistingCustomer(input: AvaCustomerWrite) {
     .select('*')
     .or(clauses.join(','))
     .limit(1);
-  if (error) throw new Error(`Unable to load Front Porch Dispatch customer: ${error.message}`);
+  if (error) throw new Error(`Unable to load Executive Receptionist customer: ${error.message}`);
   return ((data && data[0]) as AvaCustomerRecord | undefined) ?? null;
 }
 
@@ -121,7 +121,7 @@ export async function upsertAvaCustomer(input: AvaCustomerWrite) {
       .eq('id', existing.id)
       .select('*')
       .single();
-    if (error) throw new Error(`Unable to update Front Porch Dispatch customer: ${error.message}`);
+    if (error) throw new Error(`Unable to update Executive Receptionist customer: ${error.message}`);
     return data as AvaCustomerRecord;
   }
 
@@ -133,18 +133,18 @@ export async function upsertAvaCustomer(input: AvaCustomerWrite) {
 
   if (error && error.code === '23505') {
     const raced = await findExistingCustomer(input);
-    if (!raced) throw new Error(`Unable to save Front Porch Dispatch customer: ${error.message}`);
+    if (!raced) throw new Error(`Unable to save Executive Receptionist customer: ${error.message}`);
     const { data: updated, error: updateError } = await supabase
       .from('ava_customers')
       .update({ ...buildPatch(input, raced), updated_at: now })
       .eq('id', raced.id)
       .select('*')
       .single();
-    if (updateError) throw new Error(`Unable to update Front Porch Dispatch customer: ${updateError.message}`);
+    if (updateError) throw new Error(`Unable to update Executive Receptionist customer: ${updateError.message}`);
     return updated as AvaCustomerRecord;
   }
 
-  if (error) throw new Error(`Unable to save Front Porch Dispatch customer: ${error.message}`);
+  if (error) throw new Error(`Unable to save Executive Receptionist customer: ${error.message}`);
   return data as AvaCustomerRecord;
 }
 
@@ -165,7 +165,7 @@ export async function markAvaCustomerNotified(
     .from('ava_customers')
     .update({ [column]: now, updated_at: now })
     .eq('id', id);
-  if (error) throw new Error(`Unable to record Front Porch Dispatch customer notification: ${error.message}`);
+  if (error) throw new Error(`Unable to record Executive Receptionist customer notification: ${error.message}`);
 }
 
 /** Best-effort link so a missing migration does not block the onboarding form. */
@@ -186,10 +186,10 @@ export async function linkAvaCustomerToOnboarding(input: {
       })
       .eq('stripe_checkout_session_id', input.sessionId);
     if (error) {
-      console.error('Unable to link Front Porch Dispatch customer to onboarding', error.message);
+      console.error('Unable to link Executive Receptionist customer to onboarding', error.message);
     }
   } catch (error) {
-    console.error('Unable to link Front Porch Dispatch customer to onboarding', error);
+    console.error('Unable to link Executive Receptionist customer to onboarding', error);
   }
 }
 

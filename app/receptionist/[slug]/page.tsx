@@ -16,7 +16,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const page = getAvaGuide(slug);
   if (!page) return {};
-  const url = absoluteSiteUrl(`/dispatch/${slug}`);
+  const url = absoluteSiteUrl(`/receptionist/${slug}`);
   return {
     title: { absolute: page.metaTitle },
     description: page.description,
@@ -25,7 +25,7 @@ export async function generateMetadata({
       title: page.metaTitle,
       description: page.description,
       url,
-      siteName: 'Front Porch Dispatch',
+      siteName: 'Executive Receptionist',
       type: 'website',
     },
     twitter: {
@@ -40,5 +40,5 @@ export default async function IndustryPage({ params }: { params: Promise<{ slug:
   const { slug } = await params;
   const page = getAvaGuide(slug);
   if (!page) notFound();
-  return <AvaGuidePage guide={page} homeHref="/dispatch" />;
+  return <AvaGuidePage guide={page} homeHref="/receptionist" />;
 }

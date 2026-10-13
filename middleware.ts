@@ -36,14 +36,21 @@ function legacyHostRedirect(request: NextRequest) {
 function standaloneAvaResponse(request: NextRequest) {
   if (!isAvaStandaloneHost(requestHost(request))) return null;
   const { pathname } = request.nextUrl;
-  if (pathname === '/ava' || pathname === '/ava/' || pathname === '/dispatch' || pathname === '/dispatch/') {
+  if (
+    pathname === '/ava' ||
+    pathname === '/ava/' ||
+    pathname === '/dispatch' ||
+    pathname === '/dispatch/' ||
+    pathname === '/receptionist' ||
+    pathname === '/receptionist/'
+  ) {
     const url = request.nextUrl.clone();
     url.pathname = '/';
     return NextResponse.redirect(url, 308);
   }
   if (pathname === '/') {
     const url = request.nextUrl.clone();
-    url.pathname = '/dispatch';
+    url.pathname = '/receptionist';
     return NextResponse.rewrite(url);
   }
   return null;

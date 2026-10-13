@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { absoluteSiteUrl } from '@/lib/site-url';
 
-const title = 'Front Porch Dispatch setup | Front Porch Dispatch by Workforce AI';
+const title = 'Executive Receptionist setup | Executive Receptionist by Workforce AI';
 const description =
-  'Tell us about your business so Cole can set up Front Porch Dispatch. It answers calls and texts you the lead. Free 7-day trial, then $79/mo. $0 setup.';
+  'Tell us about your business so Cole can set up Executive Receptionist. It answers calls and texts you the lead. Free 7-day trial, then $79/mo. $0 setup.';
 
 export const metadata: Metadata = {
   title: { absolute: title },
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   openGraph: {
     title,
     description,
-    siteName: 'Front Porch Dispatch by Workforce AI',
+    siteName: 'Executive Receptionist by Workforce AI',
     type: 'website',
     url: absoluteSiteUrl('/onboarding/ava'),
   },
