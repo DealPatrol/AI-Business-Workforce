@@ -1,3 +1,5 @@
+import 'server-only';
+
 export type ProspectIndustry = 'HVAC' | 'Plumbing';
 
 export type ProspectStatus =
