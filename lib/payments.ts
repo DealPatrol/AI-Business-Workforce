@@ -1,6 +1,6 @@
-export const FOUNDING_CTA = 'Start for $99/month';
+export const FOUNDING_CTA = 'Start for $389 + $129/month';
 
-/** Subscription Checkout Session for the $99/month YardProof founding plan. */
+/** Checkout for the YardMailer founding plan: $389 setup and $129/month. */
 export function foundingCheckoutHref(cancelPath?: string) {
   if (!cancelPath || cancelPath === '/') return '/api/checkout?offer=founding';
   return `/api/checkout?offer=founding&cancel=${encodeURIComponent(cancelPath)}`;
@@ -22,7 +22,7 @@ export function getDemo10Payment(): Demo10Payment {
       if (url.protocol === 'https:') {
         return {
           href: url.toString(),
-          label: 'Buy Demo Blast 10 — $49',
+          label: 'Buy Demo Blast 10 — $64',
           configured: true,
         };
       }

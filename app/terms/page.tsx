@@ -5,7 +5,7 @@ import styles from '@/components/suite/suite.module.css';
 
 const title = 'Terms | Front Porch Growth';
 const description =
-  'Terms for Front Porch Growth: YardProof postcards at $99/month, Ava receptionist plans, Lead Finder, and the invoicing waitlist.';
+  'Terms for Front Porch Growth: YardMailer postcards at $389 setup + $129/month, Executive Receptionist plans, Lead Finder, and the invoicing waitlist.';
 
 export const metadata: Metadata = {
   title: { absolute: title },
@@ -31,15 +31,15 @@ export default function TermsPage() {
       <article className={styles.legal}>
         <h1>Terms</h1>
         <p>
-          Front Porch Growth is operated by DealPatrol. These terms cover the public site at this domain, including YardProof postcards, Ava, Lead Finder, and the invoicing waitlist.
+          Front Porch Growth is operated by DealPatrol. These terms cover the public site at this domain, including YardMailer postcards, Executive Receptionist, Lead Finder, and the invoicing waitlist.
         </p>
         <h2>Postcards</h2>
         <p>
-          The YardProof founding offer is $99/month for the managed postcard campaign described on the postcards page. Demo Blast 10 is $49 when a payment link is connected. You approve the concept, audience, and mailing costs before anything is mailed. Checkout is handled by Stripe.
+          The YardMailer founding offer is $389 setup + $129/month for the managed postcard campaign described on the postcards page. Demo Blast 10 is $64 when a payment link is connected. You approve the concept, audience, and mailing costs before anything is mailed. Checkout is handled by Stripe.
         </p>
-        <h2>Ava</h2>
+        <h2>Executive Receptionist</h2>
         <p>
-          Ava plans are Starter $79/month, Growth $149/month, and Pro $299/month, each with a 7-day Stripe trial and $0 setup. Those prices are Ava’s. They are not the postcard founding offer. A phone number is attached by a person after setup. The browser demo is not a live business line.
+          Executive Receptionist plans are Starter $77/month, Growth $168/month, and Pro $324/month, each with a 7-day Stripe trial and $0 setup. Those prices are Executive Receptionist’s. They are not the postcard founding offer. A phone number is attached by a person after setup. The browser demo is not a live business line.
         </p>
         <h2>Lead Finder</h2>
         <p>

@@ -3,9 +3,9 @@ import './sales-upgrade.css';
 import './text-preview.css';
 import type { Metadata } from 'next';
 
-const title = 'Try the Ava AI Receptionist Demo';
+const title = 'Try the Executive Receptionist AI Receptionist Demo';
 const description =
-  'Hear a prerecorded Ava call or talk to her in the browser, then start a free 7-day Stripe trial. Plans are $79, $149, and $299 a month.';
+  'Hear a prerecorded Executive Receptionist call or talk to her in the browser, then start a free 7-day Stripe trial. Plans are $77, $168, and $324 a month.';
 
 export const metadata: Metadata = {
   title,
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     title,
     description,
     url: '/receptionist-demo',
-    siteName: 'Ava',
+    siteName: 'Executive Receptionist',
     type: 'website',
   },
 };

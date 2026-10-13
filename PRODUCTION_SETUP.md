@@ -18,9 +18,9 @@ Add `OPENAI_API_KEY` to Vercel as a server-only environment variable. `OPENAI_AU
 
 ## Customer-request email
 
-Add `RESEND_API_KEY` as a server-only Vercel environment variable. Resend is for transactional mail only: founding requests, Ava checkout, and lead alerts. Lead Finder prospect mail does not use it. `COLD_EMAIL_ENABLED` defaults off, and the SMTP/Instantly transport is a stub, so prospect sends do not leave the app.
+Add `RESEND_API_KEY` as a server-only Vercel environment variable. Resend is for transactional mail only: founding requests, Executive Receptionist checkout, and lead alerts. Lead Finder prospect mail does not use it. `COLD_EMAIL_ENABLED` defaults off, and the SMTP/Instantly transport is a stub, so prospect sends do not leave the app.
 
-The public founding form and Ava paid-pilot onboarding form send requests directly to `colecollins763@gmail.com`. If email delivery is unavailable, each form explicitly opens the visitor's email client with their answers preserved instead of displaying a false success state.
+The public founding form and Executive Receptionist paid-pilot onboarding form send requests directly to `colecollins763@gmail.com`. If email delivery is unavailable, each form explicitly opens the visitor's email client with their answers preserved instead of displaying a false success state.
 
 Set `NEXT_PUBLIC_SITE_URL` to `https://frontporchgrowth.com` (no trailing slash). Metadata, canonicals, the sitemap, robots, and Open Graph use that value, and fall back to the same URL when it is unset.
 
@@ -28,34 +28,35 @@ Set `NEXT_PUBLIC_SITE_URL` to `https://frontporchgrowth.com` (no trailing slash)
 
 Add `STRIPE_SECRET_KEY` as a server-only Vercel environment variable. `/api/checkout` creates Stripe Checkout Sessions in subscription mode:
 
-- Founding (`/api/checkout?offer=founding`): $99/month subscription only. Product name from code is `YardProof Founding Plan`. Buttons use this route. If `STRIPE_SECRET_KEY` is missing, the route does not charge anything and sends the visitor to `/founding?checkout=error`.
-- Ava (`/api/checkout?plan=starter|growth|pro`): $79 / $149 / $299 per month with a 7-day Checkout trial and $0 setup. Included minutes are 300 / 800 / 1,800. Product names from code are `Ava Receptionist – Starter`, `Ava Receptionist – Growth`, and `Ava Receptionist – Pro`. Successful sessions return to `/onboarding/ava?session_id={CHECKOUT_SESSION_ID}`. Without the secret key these buttons return to `/ava?checkout=unavailable#pricing`.
+- Founding (`/api/checkout?offer=founding`): $389 setup + $129/month subscription only. Product name from code is `YardMailer Founding Plan`. Buttons use this route. If `STRIPE_SECRET_KEY` is missing, the route does not charge anything and sends the visitor to `/founding?checkout=error`.
+- Executive Receptionist (`/api/checkout?plan=starter|growth|pro`): $77 / $168 / $324 per month with a 7-day Checkout trial and $0 setup. Included minutes are 300 / 800 / 1,800. Product names from code are `Executive Receptionist – Starter`, `Executive Receptionist – Growth`, and `Executive Receptionist – Pro`. Successful sessions return to `/onboarding/ava?session_id={CHECKOUT_SESSION_ID}`. Without the secret key these buttons return to `/ava?checkout=unavailable#pricing`.
 
 Optional price IDs override inline `price_data`. If you use a price ID, set the Dashboard product name to the same string above — code only sets the name when it sends `price_data`. Recreate Dashboard prices when amounts change.
 
+- `STRIPE_FOUNDING_SETUP_PRICE_ID`
 - `STRIPE_FOUNDING_MONTHLY_PRICE_ID`
 - `STRIPE_AVA_STARTER_PRICE_ID`
 - `STRIPE_AVA_GROWTH_PRICE_ID`
 - `STRIPE_AVA_PRO_PRICE_ID`
 
-`POST /api/webhooks/stripe` verifies Stripe signatures with `STRIPE_WEBHOOK_SECRET`. For `checkout.session.completed` where `metadata.product=ava`, it upserts `ava_customers` (plan, included minutes, trialing/active status) and emails the buyer an onboarding link plus the owner at `AVA_LEAD_NOTIFICATION_EMAIL`. `customer.subscription.updated` and `customer.subscription.deleted` sync that status. Retries are idempotent. Apply `supabase/migrations/006_ava_go_live.sql` first. Founding sessions stay `metadata.product=yardproof` and are not stored as Ava customers. The manual sequence is `docs/AVA_GO_LIVE_CHECKLIST.md`. The Checkout business name "Billing" is the Stripe account public business name (Dashboard → Settings → Business details / Branding), not a value in this repo.
+`POST /api/webhooks/stripe` verifies Stripe signatures with `STRIPE_WEBHOOK_SECRET`. For `checkout.session.completed` where `metadata.product=ava`, it upserts `ava_customers` (plan, included minutes, trialing/active status) and emails the buyer an onboarding link plus the owner at `AVA_LEAD_NOTIFICATION_EMAIL`. `customer.subscription.updated` and `customer.subscription.deleted` sync that status. Retries are idempotent. Apply `supabase/migrations/006_ava_go_live.sql` first. Founding sessions stay `metadata.product=yardproof` and are not stored as Executive Receptionist customers. The manual sequence is `docs/AVA_GO_LIVE_CHECKLIST.md`. The Checkout business name "Billing" is the Stripe account public business name (Dashboard → Settings → Business details / Branding), not a value in this repo.
 
-The compatibility route `/onboarding` also sends customers to the Ava setup form.
+The compatibility route `/onboarding` also sends customers to the Executive Receptionist setup form.
 
-## Ava agent provisioning
+## Executive Receptionist agent provisioning
 
-Apply `supabase/migrations/003_ava_onboarding_provisioning.sql` before enabling provisioning. Ava onboarding then saves a private, service-role-only record and includes the record ID and provisioning status in Cole's Resend notification.
+Apply `supabase/migrations/003_ava_onboarding_provisioning.sql` before enabling provisioning. Executive Receptionist onboarding then saves a private, service-role-only record and includes the record ID and provisioning status in Cole's Resend notification.
 
 Add these server-only variables:
 
 - `ELEVENLABS_API_KEY`
-- `ELEVENLABS_AGENT_ID` — the tested Ava template agent used by the browser demo and as the duplication source
+- `ELEVENLABS_AGENT_ID` — the tested Executive Receptionist template agent used by the browser demo and as the duplication source
 - `ELEVENLABS_AGENT_ID_SOUTHERN_MAN`, `ELEVENLABS_AGENT_ID_SOUTHERN_WOMAN`, and `ELEVENLABS_AGENT_ID_AMERICAN_WOMAN` — optional separate browser-demo agents; each falls back to `ELEVENLABS_AGENT_ID` when unset
 - `AVA_PROVISIONING_SECRET` — a long random bearer secret for `POST /api/ava/provision`
 - `AVA_AUTO_PROVISION_AGENT=true` — optional; leave false until automatic creation has been tested
-- `AVA_STRIPE_PAYMENT_LINK_ID` — required only when an Ava-specific Payment Link should qualify for automatic creation
+- `AVA_STRIPE_PAYMENT_LINK_ID` — required only when an Executive Receptionist-specific Payment Link should qualify for automatic creation
 
-With automatic creation disabled, Cole can use the authenticated internal endpoint described in [`docs/AVA_PHONE_SETUP_RUNBOOK.md`](docs/AVA_PHONE_SETUP_RUNBOOK.md). The endpoint duplicates the template through ElevenLabs' supported agent-duplicate API, updates the customer's prompt and greeting, and saves the returned agent ID. Missing credentials result in a pending status. Submit-time automatic creation accepts a paid or trialing Ava Checkout Session identified through `/api/checkout` plan metadata or the configured Ava-specific Payment Link ID. Phone status stays `pending_manual`.
+With automatic creation disabled, Cole can use the authenticated internal endpoint described in [`docs/AVA_PHONE_SETUP_RUNBOOK.md`](docs/AVA_PHONE_SETUP_RUNBOOK.md). The endpoint duplicates the template through ElevenLabs' supported agent-duplicate API, updates the customer's prompt and greeting, and saves the returned agent ID. Missing credentials result in a pending status. Submit-time automatic creation accepts a paid or trialing Executive Receptionist Checkout Session identified through `/api/checkout` plan metadata or the configured Executive Receptionist-specific Payment Link ID. Phone status stays `pending_manual`.
 
 `POST /api/webhooks/elevenlabs` verifies `ElevenLabs-Signature` with `ELEVENLABS_WEBHOOK_SECRET`, maps `agent_id` to the onboarding row, and writes `ava_call_leads`. Lead email uses `AVA_FROM_EMAIL` (default `onboarding@resend.dev`) and the business staff email, falling back to `AVA_LEAD_NOTIFICATION_EMAIL`. SMS uses the staff phone, falling back to `AVA_LEAD_SMS_TO`.
 
@@ -74,7 +75,7 @@ Implemented in code:
 - postcard campaigns with unique recipient QR pages, page-open tracking, estimate capture, and an owner inbox
 - RLS owner policies for authenticated application data
 - server-side AI Business Audit endpoint with fallback mode
-- private Ava onboarding persistence and status tracking
+- private Executive Receptionist onboarding persistence and status tracking
 - feature-flagged ElevenLabs customer-agent duplication and prompt configuration
 
 Still requires credentials/integration work before claiming live:
@@ -82,13 +83,13 @@ Still requires credentials/integration work before claiming live:
 - generated property imagery end-to-end in production (MVP routes exist; needs Maps/OpenAI keys, Storage bucket, migration apply, and human review before mail)
 - live supplier inventory/pricing
 - Stripe checkout/subscriptions in production until `STRIPE_SECRET_KEY` is set (sessions are implemented; webhook route exists but needs `STRIPE_WEBHOOK_SECRET` + Dashboard endpoint)
-- Ava phone-number purchase/assignment, line forwarding, and customer-facing SMS (internal Twilio lead-alert SMS is available when Twilio env is set)
-- Ava calendar writes and automated launch approval
+- Executive Receptionist phone-number purchase/assignment, line forwarding, and customer-facing SMS (internal Twilio lead-alert SMS is available when Twilio env is set)
+- Executive Receptionist calendar writes and automated launch approval
 - postcard printing and fulfillment
 
 Never commit secrets to GitHub. Configure them in Vercel/Supabase secret management.
 
-## YardProof postcard imagery (MVP code present — not live without keys)
+## YardMailer postcard imagery (MVP code present — not live without keys)
 
 Migrations:
 

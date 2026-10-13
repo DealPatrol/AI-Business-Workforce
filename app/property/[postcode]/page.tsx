@@ -14,7 +14,7 @@ function normalizePostcode(value: string) {
 export default async function PropertyPage({ params }: PropertyPageProps) {
   const { postcode: requestedPostcode } = await params;
   const postcode = normalizePostcode(requestedPostcode);
-  const estimateSubject = encodeURIComponent(`YardProof demo estimate request — ${postcode}`);
+  const estimateSubject = encodeURIComponent(`YardMailer demo estimate request — ${postcode}`);
 
   return (
     <main className="property-landing">
@@ -23,7 +23,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
           <ArrowLeft /> Postcard preview
         </Link>
         <Link className="property-brand" href="/">
-          YardProof
+          YardMailer
         </Link>
         <span>DEMO HOMEOWNER PAGE</span>
       </nav>

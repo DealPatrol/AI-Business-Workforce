@@ -8,10 +8,10 @@ export function AvaFooter({ homeHref = '/ava' }: { homeHref?: string }) {
         <span>
           <Sparkles size={17} />
         </span>{' '}
-        Ava
+        Executive Receptionist
       </Link>
       <p>Part of Front Porch Growth. Operated by DealPatrol.</p>
-      <nav className="footer-links" aria-label="Ava">
+      <nav className="footer-links" aria-label="Executive Receptionist">
         <Link href="/">Front Porch Growth</Link>
         <Link href="/pricing">Pricing</Link>
         <Link href="/terms">Terms</Link>

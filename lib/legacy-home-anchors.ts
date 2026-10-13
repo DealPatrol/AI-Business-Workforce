@@ -1,4 +1,4 @@
-/** Section ids from the YardProof homepage before it moved to /postcards. */
+/** Section ids from the YardMailer homepage before it moved to /postcards. */
 export const LEGACY_HOME_ANCHORS = ['how', 'demo10', 'package'] as const;
 
 export type LegacyHomeAnchor = (typeof LEGACY_HOME_ANCHORS)[number];

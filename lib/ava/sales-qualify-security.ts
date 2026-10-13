@@ -40,7 +40,7 @@ export type SalesConversationVerification =
   | { ok: false; status: number; error: string };
 
 /**
- * Prove conversationId exists at ElevenLabs, is finished, and belongs to the Sales Ava agent.
+ * Prove conversationId exists at ElevenLabs, is finished, and belongs to the Executive Receptionist agent.
  */
 export async function verifySalesConversation(
   conversationId: string,
@@ -86,7 +86,7 @@ export async function verifySalesConversation(
       return {
         ok: false,
         status: 403,
-        error: 'Conversation does not belong to the Sales Ava agent.',
+        error: 'Conversation does not belong to the Executive Receptionist agent.',
       };
     }
 

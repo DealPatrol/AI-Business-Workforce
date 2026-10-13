@@ -39,8 +39,8 @@ export async function getAvaSignedUrl(
         configured: false,
         mode: isSales ? 'sales' : 'demo',
         next: isSales
-          ? 'Create a separate Sales Ava ElevenLabs agent and add ELEVENLABS_SALES_AGENT_ID to Vercel.'
-          : 'Create an ElevenLabs Agent for Ava and add ELEVENLABS_AGENT_ID to Vercel.',
+          ? 'Create a separate Executive Receptionist ElevenLabs agent and add ELEVENLABS_SALES_AGENT_ID to Vercel.'
+          : 'Create an ElevenLabs Agent for Executive Receptionist and add ELEVENLABS_AGENT_ID to Vercel.',
       },
     };
   }

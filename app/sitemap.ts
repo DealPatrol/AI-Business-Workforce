@@ -11,6 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: absoluteSiteUrl('/pricing'), lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: absoluteSiteUrl('/terms'), lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
     { url: absoluteSiteUrl('/ava'), lastModified: now, changeFrequency: 'weekly', priority: 0.95 },
+    { url: absoluteSiteUrl('/receptionist'), lastModified: now, changeFrequency: 'weekly', priority: 0.96 },
     { url: absoluteSiteUrl('/hvac'), lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
     { url: absoluteSiteUrl('/privacy'), lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
     { url: absoluteSiteUrl('/receptionist-demo'), lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
