@@ -16,7 +16,7 @@ const EMAIL = 'buyer@shop.example';
 const NOW = 1_700_000_000;
 
 describe('ElevenLabs post-call agent gate', () => {
-  it('ignores demo and Sales Ava agents with no provisioned customer', () => {
+  it('ignores demo and Sales Front Porch Dispatch agents with no provisioned customer', () => {
     for (const agentId of ['agent_public_website_demo', 'agent_sales_ava', '']) {
       const decision = decidePostCallGate({
         agentId,
@@ -46,7 +46,7 @@ describe('ElevenLabs post-call agent gate', () => {
     }
   });
 
-  it('processes only the matching agent for an active or trialing Ava customer', () => {
+  it('processes only the matching agent for an active or trialing Front Porch Dispatch customer', () => {
     for (const subscriptionStatus of ['active', 'trialing']) {
       const effects = planPostCallEffects(
         decidePostCallGate({
@@ -167,7 +167,7 @@ describe('onboarding notification destination lock', () => {
     );
   });
 
-  it('issues a change link only for an active or trialing Ava checkout with an email', () => {
+  it('issues a change link only for an active or trialing Front Porch Dispatch checkout with an email', () => {
     assert.equal(
       canIssueDestinationEdit({
         outcome: 'ok',

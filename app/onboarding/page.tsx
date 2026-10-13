@@ -8,7 +8,7 @@ type OnboardingPageProps = {
 };
 
 export default async function OnboardingPage({ searchParams }: OnboardingPageProps) {
-  // Preserve Checkout context for sessions created before the Ava-specific URL was introduced.
+  // Preserve Checkout context for sessions created before the Front Porch Dispatch-specific URL was introduced.
   const params = await searchParams;
   const destinationParams = new URLSearchParams();
   const sessionId = Array.isArray(params.session_id) ? params.session_id[0] : params.session_id;

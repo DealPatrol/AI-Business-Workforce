@@ -67,8 +67,8 @@ async function avaCheckoutUrl(
 ) {
   const secret = process.env.STRIPE_SECRET_KEY;
   if (!secret) {
-    console.error('STRIPE_SECRET_KEY is not set; Ava checkout cannot start.');
-    return { error: 'Ava checkout is not connected yet.', status: 503 as const };
+    console.error('STRIPE_SECRET_KEY is not set; Front Porch Dispatch checkout cannot start.');
+    return { error: 'Front Porch Dispatch checkout is not connected yet.', status: 503 as const };
   }
 
   const params = buildAvaCheckoutParams({
@@ -80,13 +80,13 @@ async function avaCheckoutUrl(
   });
   const result = await createStripeCheckoutSession(secret, params);
   if ('error' in result) {
-    console.error('Stripe Ava checkout error', result.error);
-    return { error: result.error || 'Could not start Ava checkout.', status: 500 as const };
+    console.error('Stripe Front Porch Dispatch checkout error', result.error);
+    return { error: result.error || 'Could not start Front Porch Dispatch checkout.', status: 500 as const };
   }
   try {
     await track('checkout-started', { plan: planKey, product: 'ava' }, { headers: req.headers });
   } catch (error) {
-    console.error('Ava checkout-started analytics failed', error);
+    console.error('Front Porch Dispatch checkout-started analytics failed', error);
   }
   return { url: result.url };
 }
@@ -111,18 +111,18 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    if (!isAvaPlanKey(planKey)) return NextResponse.redirect(new URL('/ava#pricing', req.url));
+    if (!isAvaPlanKey(planKey)) return NextResponse.redirect(new URL('/dispatch#pricing', req.url));
     const result = await avaCheckoutUrl(
       req,
       planKey,
       req.nextUrl.searchParams.get('qualificationId') || '',
       req.nextUrl.searchParams.get('prefillToken') || req.nextUrl.searchParams.get('token') || '',
     );
-    if ('error' in result) return NextResponse.redirect(new URL('/ava?checkout=unavailable#pricing', req.url));
+    if ('error' in result) return NextResponse.redirect(new URL('/dispatch?checkout=unavailable#pricing', req.url));
     return NextResponse.redirect(result.url, 303);
   } catch (error) {
     console.error(error);
-    return NextResponse.redirect(new URL('/ava?checkout=unavailable#pricing', req.url));
+    return NextResponse.redirect(new URL('/dispatch?checkout=unavailable#pricing', req.url));
   }
 }
 
@@ -140,7 +140,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ url: result.url });
     }
 
-    if (!isAvaPlanKey(planKey)) return NextResponse.json({ error: 'Invalid Ava plan.' }, { status: 400 });
+    if (!isAvaPlanKey(planKey)) return NextResponse.json({ error: 'Invalid Front Porch Dispatch plan.' }, { status: 400 });
     const result = await avaCheckoutUrl(
       req,
       planKey,

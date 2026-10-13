@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
   const requestedVoice = (req.nextUrl.searchParams.get('voice') || DEFAULT_AVA_VOICE).toLowerCase();
 
   if (mode === 'demo' && !isAvaVoiceKey(requestedVoice)) {
-    return NextResponse.json({ error: 'Unknown Ava voice option.' }, { status: 400 });
+    return NextResponse.json({ error: 'Unknown Front Porch Dispatch voice option.' }, { status: 400 });
   }
 
   const result = await getAvaSignedUrl(

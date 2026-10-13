@@ -28,11 +28,11 @@ export type AvaProvisioningResult = {
 };
 
 function customerAgentName(businessName: string) {
-  return `Ava — ${businessName}`.slice(0, 100);
+  return `Front Porch Dispatch — ${businessName}`.slice(0, 100);
 }
 
 export function buildAvaAgentPrompt(details: AvaOnboardingDetails) {
-  return `You are Ava, the phone receptionist for ${details.businessName}.
+  return `You are Front Porch Dispatch, the phone receptionist for ${details.businessName}.
 
 Your job is to answer callers in a friendly voice, collect the caller's name, callback number, and what they need, and tell them the business will follow up. Do not offer appointment times or say a visit has been arranged. Never invent availability, prices, services, policies, or emergency guidance.
 
@@ -59,7 +59,7 @@ For every lead, collect the caller's name, callback number, requested service, s
 }
 
 function firstMessage(businessName: string) {
-  return `Thank you for calling ${businessName}. This is Ava. How can I help you today?`;
+  return `Thank you for calling ${businessName}. This is Front Porch Dispatch. How can I help you today?`;
 }
 
 async function elevenLabsRequest(path: string, init: RequestInit) {

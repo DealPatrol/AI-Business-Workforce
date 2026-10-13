@@ -36,14 +36,14 @@ function legacyHostRedirect(request: NextRequest) {
 function standaloneAvaResponse(request: NextRequest) {
   if (!isAvaStandaloneHost(requestHost(request))) return null;
   const { pathname } = request.nextUrl;
-  if (pathname === '/ava' || pathname === '/ava/') {
+  if (pathname === '/ava' || pathname === '/ava/' || pathname === '/dispatch' || pathname === '/dispatch/') {
     const url = request.nextUrl.clone();
     url.pathname = '/';
     return NextResponse.redirect(url, 308);
   }
   if (pathname === '/') {
     const url = request.nextUrl.clone();
-    url.pathname = '/ava';
+    url.pathname = '/dispatch';
     return NextResponse.rewrite(url);
   }
   return null;

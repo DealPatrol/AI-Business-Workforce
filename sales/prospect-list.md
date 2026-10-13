@@ -62,9 +62,9 @@ Track progress in [/sales](/sales).
 | Signal | How to detect |
 |--------|---------------|
 | Demo opened | Auto-tracked via `/api/sales/track` |
-| Called Ava | Auto-tracked on demo page |
+| Called Front Porch Dispatch | Auto-tracked on demo page |
 | Replied | Manual update in sales tracker |
-| Pilot clicked | Auto-tracked on "Try Ava for 14 days" |
+| Pilot clicked | Auto-tracked on "Try Front Porch Dispatch for 14 days" |
 | Conversation | Manual update in sales tracker |
 | Pilot proposed | Manual update or pilot click |
 

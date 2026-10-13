@@ -15,9 +15,11 @@ const nextConfig: NextConfig = {
       })),
       ...AVA_LEGACY_REDIRECTS.map(([source, destination]) => ({
         source: `/ava/${source}`,
-        destination: `${base}/ava/${destination}`,
+        destination: `${base}/dispatch/${destination}`,
         permanent: true,
       })),
+      { source: '/ava', destination: '/dispatch', permanent: true },
+      { source: '/ava/:slug', destination: '/dispatch/:slug', permanent: true },
     ];
   },
 };

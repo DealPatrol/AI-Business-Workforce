@@ -1,14 +1,14 @@
 /**
- * Ava self-serve receptionist pricing.
+ * Front Porch Dispatch self-serve receptionist pricing.
  *
  * Distinct from Muse / FirstMinute managed blueprint ($1,250/mo + $2,000 setup).
- * Ava ships as software-led coverage with human launch help — not a full managed agency desk.
+ * Front Porch Dispatch ships as software-led coverage with human launch help — not a full managed agency desk.
  */
 export const AVA_PLANS = {
   starter: {
     key: 'starter',
     label: 'Starter',
-    productName: 'Ava Receptionist – Starter',
+    productName: 'Front Porch Dispatch – Starter',
     monthlyCents: 7900,
     monthlyLabel: '$79',
     minutes: 300,
@@ -16,7 +16,7 @@ export const AVA_PLANS = {
     overageLabel: '$0.28/min after included usage',
     description: 'For smaller shops that need affordable after-hours and overflow coverage.',
     features: [
-      'Ava AI receptionist',
+      'Front Porch Dispatch answers and texts you the lead',
       '24/7 answering',
       'Lead qualification + summaries',
       'Lead texts to your phone',
@@ -27,7 +27,7 @@ export const AVA_PLANS = {
   growth: {
     key: 'growth',
     label: 'Growth',
-    productName: 'Ava Receptionist – Growth',
+    productName: 'Front Porch Dispatch – Growth',
     monthlyCents: 14900,
     monthlyLabel: '$149',
     minutes: 800,
@@ -46,7 +46,7 @@ export const AVA_PLANS = {
   pro: {
     key: 'pro',
     label: 'Pro',
-    productName: 'Ava Receptionist – Pro',
+    productName: 'Front Porch Dispatch – Pro',
     monthlyCents: 29900,
     monthlyLabel: '$299',
     minutes: 1800,

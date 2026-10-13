@@ -33,7 +33,7 @@ function buildEmailFallback(form: HTMLFormElement) {
 export default function FoundingRequestForm({ checkoutState: checkoutFromServer = '' }: { checkoutState?: string }) {
   const searchParams = useSearchParams();
   const initialInterest =
-    searchParams.get('interest') === 'ava' ? 'Ava AI Receptionist' : 'Visual Canvasser campaign';
+    searchParams.get('interest') === 'ava' ? 'Front Porch Dispatch AI Receptionist' : 'Visual Canvasser campaign';
   const initialIndustry = searchParams.get('industry') || 'Landscaping / Lawn Care';
   const initialServiceArea = searchParams.get('serviceArea') || '';
   const initialGoal = searchParams.get('goal') || '';
@@ -188,8 +188,8 @@ export default function FoundingRequestForm({ checkoutState: checkoutFromServer 
               What are you interested in?
               <select name="interest" defaultValue={initialInterest} required>
                 <option>Visual Canvasser campaign</option>
-                <option>Ava AI Receptionist</option>
-                <option>Both Visual Canvasser and Ava</option>
+                <option>Front Porch Dispatch AI Receptionist</option>
+                <option>Both Visual Canvasser and Front Porch Dispatch</option>
                 <option>Another managed AI workflow</option>
               </select>
             </label>

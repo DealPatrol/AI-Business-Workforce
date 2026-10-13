@@ -10,7 +10,7 @@ import { getSiteUrl } from '@/lib/site-url';
 
 const title = 'Front Porch Growth';
 const description =
-  'Front Porch Growth is the home for YardProof postcards, the Ava AI receptionist, Lead Finder, and invoicing for home-service businesses.';
+  'Front Porch Growth is the home for YardProof postcards, the Front Porch Dispatch AI receptionist, Lead Finder, and invoicing for home-service businesses.';
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),

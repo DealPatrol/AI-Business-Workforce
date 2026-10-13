@@ -38,7 +38,7 @@ async function markSent(sessionId: string) {
     processed_at: new Date().toISOString(),
   });
   if (error) {
-    console.error('Ava destination change-link cooldown was not saved', error.message);
+    console.error('Front Porch Dispatch destination change-link cooldown was not saved', error.message);
   }
 }
 
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
       .eq('stripe_session_id', sessionId)
       .maybeSingle();
     if (onboardingError) {
-      throw new Error(`Unable to load Ava onboarding: ${onboardingError.message}`);
+      throw new Error(`Unable to load Front Porch Dispatch onboarding: ${onboardingError.message}`);
     }
     if (!onboarding) {
       return NextResponse.json(
@@ -94,7 +94,7 @@ export async function POST(request: NextRequest) {
         {
           error: missingEmail
             ? 'Stripe does not have an email on this checkout. Contact Cole to change where leads go.'
-            : 'This checkout is not an active or trialing Ava subscription, so the lead phone and email stay locked.',
+            : 'This checkout is not an active or trialing Front Porch Dispatch subscription, so the lead phone and email stay locked.',
         },
         { status: missingEmail ? 422 : 403 },
       );
@@ -122,8 +122,8 @@ export async function POST(request: NextRequest) {
 
     await sendResendEmail({
       to: auth.identity.email,
-      subject: `Change where Ava sends leads${business ? ` — ${business}` : ''}`,
-      html: `<div style="font-family:Arial,sans-serif;max-width:640px;margin:auto;color:#17211b"><h1>Change where Ava sends leads</h1><p>Someone requested a link to update the phone number or email that receives Ava leads${business ? ` for ${escapeHtml(business)}` : ''}. If this was you, open the link and submit the form. It expires in 30 minutes.</p><p><a href="${escapeHtml(link)}">Update lead phone and email</a></p><p>If you did not request this, ignore this email. The current destinations stay in place.</p></div>`,
+      subject: `Change where Front Porch Dispatch sends leads${business ? ` — ${business}` : ''}`,
+      html: `<div style="font-family:Arial,sans-serif;max-width:640px;margin:auto;color:#17211b"><h1>Change where Front Porch Dispatch sends leads</h1><p>Someone requested a link to update the phone number or email that receives Front Porch Dispatch leads${business ? ` for ${escapeHtml(business)}` : ''}. If this was you, open the link and submit the form. It expires in 30 minutes.</p><p><a href="${escapeHtml(link)}">Update lead phone and email</a></p><p>If you did not request this, ignore this email. The current destinations stay in place.</p></div>`,
     });
     await markSent(sessionId);
 
@@ -133,7 +133,7 @@ export async function POST(request: NextRequest) {
         'We sent a 30-minute change link to the email on your Stripe checkout. It does not go to the address typed into this form.',
     });
   } catch (error) {
-    console.error('Ava destination change link failed', error);
+    console.error('Front Porch Dispatch destination change link failed', error);
     const message = error instanceof Error ? error.message : '';
     if (message.includes('RESEND_API_KEY')) {
       return NextResponse.json({ error: 'Email is not configured yet.' }, { status: 503 });

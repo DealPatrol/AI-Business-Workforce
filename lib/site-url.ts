@@ -47,9 +47,9 @@ export function absoluteSiteUrl(path: string) {
 }
 
 /**
- * Ava-at-root mode. Off unless AVA_STANDALONE_HOST names a host that is
+ * Dispatch-at-root mode. Off unless AVA_STANDALONE_HOST names a host that is
  * neither the public site nor the legacy Vercel host. Leave it unset:
- * YardProof stays at / and Ava stays at /ava.
+ * YardProof stays at / and Front Porch Dispatch stays at /dispatch.
  */
 export function isAvaStandaloneHost(hostHeader: string | null | undefined) {
   const configured = hostnameOf(process.env.AVA_STANDALONE_HOST);

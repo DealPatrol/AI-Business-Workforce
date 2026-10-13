@@ -4,7 +4,7 @@ import styles from './suite.module.css';
 
 const NAV = [
   { href: '/postcards', label: 'Postcards' },
-  { href: '/ava', label: 'Ava' },
+  { href: '/dispatch', label: 'Front Porch Dispatch' },
   { href: '/dashboard/prospector', label: 'Lead Finder' },
   { href: '/pricing', label: 'Pricing' },
 ];

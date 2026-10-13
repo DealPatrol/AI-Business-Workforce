@@ -69,7 +69,7 @@ export default function AvaPilotPage() {
           </div>
           <div className="outcome-step">
             <Sparkles size={18} />
-            <span>Ava answers, qualifies, captures details</span>
+            <span>Front Porch Dispatch answers, qualifies, captures details</span>
           </div>
           <div className="outcome-step highlight">
             <BellRing size={18} />
@@ -84,7 +84,7 @@ export default function AvaPilotPage() {
           <h2>Built for phone-first HVAC and plumbing businesses.</h2>
           <p>
             Target: local owner-operators with 3–20 employees who lose calls while technicians are
-            working. No call center. No long contracts. Just a paid pilot to prove Ava pays for
+            working. No call center. No long contracts. Just a paid pilot to prove Front Porch Dispatch pays for
             herself.
           </p>
         </div>
@@ -92,7 +92,7 @@ export default function AvaPilotPage() {
           <article>
             <Check size={18} />
             <h3>Answers missed & after-hours calls</h3>
-            <p>When your team is on a job, Ava picks up and sounds like part of your business.</p>
+            <p>When your team is on a job, Front Porch Dispatch picks up and sounds like part of your business.</p>
           </article>
           <article>
             <Check size={18} />
@@ -117,7 +117,7 @@ export default function AvaPilotPage() {
               Plans from $79/month
             </h3>
             <p>
-              {AVA_PILOT_OFFER.usageLimit}. {AVA_PILOT_OFFER.cancelPolicy}. We configure Ava for
+              {AVA_PILOT_OFFER.usageLimit}. {AVA_PILOT_OFFER.cancelPolicy}. We configure Front Porch Dispatch for
               your business, test it with you, and refine call flows during the pilot.
             </p>
           </div>
@@ -132,8 +132,8 @@ export default function AvaPilotPage() {
           <span className="pilot-kicker">PERSONALIZED DEMOS · WEEK 1</span>
           <h2>Five businesses. Five custom demo pages.</h2>
           <p>
-            Each demo includes the prospect&apos;s branding, three tasks Ava performs for their
-            business, a sample lead summary, and a &ldquo;Call Ava&rdquo; button.
+            Each demo includes the prospect&apos;s branding, three tasks Front Porch Dispatch performs for their
+            business, a sample lead summary, and a &ldquo;Call Front Porch Dispatch&rdquo; button.
           </p>
         </div>
         <div className="demo-grid">
@@ -169,7 +169,7 @@ export default function AvaPilotPage() {
           <span className="pilot-kicker">76-SECOND SALES VIDEO</span>
           <h2>Show the call-to-lead outcome — not the AI.</h2>
           <p>
-            Missed call → Ava answers a real AC emergency → lead summary → 14-day pilot →
+            Missed call → Front Porch Dispatch answers a real AC emergency → lead summary → 14-day pilot →
             personalized demo link.
           </p>
           <video
@@ -221,7 +221,7 @@ export default function AvaPilotPage() {
       <section className="pilot-final">
         <Clock3 size={20} />
         <h2>Your next emergency call may come while you&apos;re under a house.</h2>
-        <p>Let Ava answer before they call someone else.</p>
+        <p>Let Front Porch Dispatch answer before they call someone else.</p>
         <a className="pilot-btn light" href={AVA_PILOT_PAYMENT_LINK}>
           {AVA_PILOT_OFFER.ctaPrimary}
         </a>

@@ -76,14 +76,14 @@ function messageFor(outcome: AvaCheckoutOutcome, subscriptionStatus: string) {
     case 'unpaid':
       return 'Stripe does not report this Checkout Session as paid or trialing.';
     case 'not_ava':
-      return 'This session is not identified as Ava checkout; use Cole’s manual trigger after review.';
+      return 'This session is not identified as Front Porch Dispatch checkout; use Cole’s manual trigger after review.';
     case 'ok':
       return subscriptionStatus === 'trialing'
-        ? 'Stripe confirmed a trialing Ava Checkout Session.'
-        : 'Stripe confirmed a paid Ava Checkout Session.';
+        ? 'Stripe confirmed a trialing Front Porch Dispatch Checkout Session.'
+        : 'Stripe confirmed a paid Front Porch Dispatch Checkout Session.';
     default: {
       const unexpected: never = outcome;
-      throw new Error(`Unexpected Ava checkout outcome: ${unexpected}`);
+      throw new Error(`Unexpected Front Porch Dispatch checkout outcome: ${unexpected}`);
     }
   }
 }

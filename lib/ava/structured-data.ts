@@ -21,7 +21,7 @@ export function avaOfferNodes(pageUrl: string) {
 export function avaOrganization() {
   return {
     '@type': 'Organization',
-    name: 'Ava by Workforce AI',
+    name: 'Front Porch Growth',
     url: absoluteSiteUrl('/'),
   };
 }
@@ -42,7 +42,7 @@ export function avaProductNode(input: { name: string; description: string; url: 
     '@type': 'Product',
     name: input.name,
     description: input.description,
-    brand: { '@type': 'Brand', name: 'Ava' },
+    brand: { '@type': 'Brand', name: 'Front Porch Dispatch' },
     url: input.url,
     offers: avaOfferNodes(input.url),
   };
@@ -51,7 +51,7 @@ export function avaProductNode(input: { name: string; description: string; url: 
 export function avaSoftwareNode(input: { description: string; url: string }) {
   return {
     '@type': 'SoftwareApplication',
-    name: 'Ava AI Receptionist',
+    name: 'Front Porch Dispatch',
     applicationCategory: 'BusinessApplication',
     operatingSystem: 'Web',
     url: input.url,

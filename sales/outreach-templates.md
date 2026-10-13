@@ -30,7 +30,7 @@ https://[your-domain]/demo/acexperts
 ## Follow-up (48 hours, no reply)
 
 ```
-Hi [First Name] — quick bump on the Ava demo I built for [Company Name]. Takes 30 seconds: tap "Call Ava" and pretend you're a customer with an emergency. No signup needed.
+Hi [First Name] — quick bump on the Front Porch Dispatch demo I built for [Company Name]. Takes 30 seconds: tap "Call Front Porch Dispatch" and pretend you're a customer with an emergency. No signup needed.
 
 [demo link]
 ```
@@ -40,15 +40,15 @@ Hi [First Name] — quick bump on the Ava demo I built for [Company Name]. Takes
 ## Follow-up (they opened demo but didn't call)
 
 ```
-Hi [First Name] — saw you checked out the demo. The "Call Ava" button lets you hear exactly how a missed after-hours call would go for [Company Name]. Worth 30 seconds if you're losing calls on jobs.
+Hi [First Name] — saw you checked out the demo. The "Call Front Porch Dispatch" button lets you hear exactly how a missed after-hours call would go for [Company Name]. Worth 30 seconds if you're losing calls on jobs.
 ```
 
 ---
 
-## Follow-up (they called Ava, no reply)
+## Follow-up (they called Front Porch Dispatch, no reply)
 
 ```
-Hi [First Name] — glad you tried the demo. If you want to run a 14-day pilot on your actual number: Ava plans start at $79/month, 300 minutes included, cancel anytime. Happy to walk through it on a 10-minute call.
+Hi [First Name] — glad you tried the demo. If you want to run a 14-day pilot on your actual number: Front Porch Dispatch plans start at $79/month, 300 minutes included, cancel anytime. Happy to walk through it on a 10-minute call.
 ```
 
 ---

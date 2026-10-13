@@ -9,7 +9,7 @@ export const AVA_PHONE_RUNBOOK_URL =
 export function avaFromAddress() {
   const raw = process.env.AVA_FROM_EMAIL?.trim() || DEFAULT_FROM_EMAIL;
   if (raw.includes('<') && raw.includes('>')) return raw;
-  return `Ava <${raw}>`;
+  return `Front Porch Dispatch <${raw}>`;
 }
 
 export function avaOwnerEmail() {

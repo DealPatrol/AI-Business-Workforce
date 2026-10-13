@@ -7,7 +7,7 @@ import styles from '@/components/suite/suite.module.css';
 
 const title = 'Pricing | Front Porch Growth';
 const description =
-  'YardProof postcard founding offer is $99/month. Ava receptionist plans are $79, $149, and $299 a month after a free 7-day trial. Invoicing is a waitlist.';
+  'YardProof postcard founding offer is $99/month. Front Porch Dispatch receptionist plans are $79, $149, and $299 a month after a free 7-day trial. Invoicing is a waitlist.';
 
 export const metadata: Metadata = {
   title: { absolute: title },
@@ -30,9 +30,9 @@ export const metadata: Metadata = {
 const rows = [
   ['YardProof postcards', 'Founding offer', '$99/month'],
   ['Demo Blast 10', 'Up to 10 postcard concepts', '$49'],
-  ['Ava Starter', '300 voice minutes, 7-day trial, $0 setup', '$79/month'],
-  ['Ava Growth', '800 voice minutes, 7-day trial, $0 setup', '$149/month'],
-  ['Ava Pro', '1,800 voice minutes, 7-day trial, $0 setup', '$299/month'],
+  ['Front Porch Dispatch Starter', '300 voice minutes, 7-day trial, $0 setup', '$79/month'],
+  ['Front Porch Dispatch Growth', '800 voice minutes, 7-day trial, $0 setup', '$149/month'],
+  ['Front Porch Dispatch Pro', '1,800 voice minutes, 7-day trial, $0 setup', '$299/month'],
   ['Lead Finder', 'Signed-in Maps search and approved drafts', 'No separate public price'],
   ['Invoicing', 'Coming soon', 'Waitlist'],
 ] as const;
@@ -44,7 +44,7 @@ export default function PricingPage() {
         <span className={styles.eyebrow}>PRICING</span>
         <h1>Published prices, one page.</h1>
         <p>
-          The postcard founding offer is $99/month. Ava’s Starter, Growth, and Pro plans are $79, $149, and $299 a month. Those are different products.
+          The postcard founding offer is $99/month. Front Porch Dispatch’s Starter, Growth, and Pro plans are $79, $149, and $299 a month. Those are different products.
         </p>
         <table className={styles.table}>
           <thead>
@@ -69,7 +69,7 @@ export default function PricingPage() {
             {FOUNDING_CTA}
           </TrackedCheckoutLink>
           <TrackedCheckoutLink className={styles.button} href="/api/checkout?plan=starter" plan="starter">
-            Start Ava trial
+            Start Front Porch Dispatch trial
           </TrackedCheckoutLink>
           <Link className={styles.button} href="/#invoicing">
             Join the invoicing list

@@ -55,7 +55,7 @@ export async function GET(req: NextRequest) {
       summary:
         data.analysis?.transcript_summary ||
         data.analysis?.call_summary_title ||
-        'Completed Ava conversation',
+        'Completed Front Porch Dispatch conversation',
       transcript,
       collected,
       lead: {

@@ -94,7 +94,7 @@ export function buildAvaCheckoutParams(input: AvaCheckoutInput) {
   ];
   params.set('mode', 'subscription');
   params.set('success_url', `${input.origin}/onboarding/ava?${successParts.join('&')}`);
-  params.set('cancel_url', `${input.origin}/ava#pricing`);
+  params.set('cancel_url', `${input.origin}/dispatch#pricing`);
   params.set('billing_address_collection', 'auto');
   params.set('allow_promotion_codes', 'true');
   // Stripe Checkout trial: 7 days before first charge when using price_data or Dashboard prices without their own trial.

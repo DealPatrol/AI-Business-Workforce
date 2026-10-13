@@ -29,7 +29,7 @@ function GuideExtra({ guide }: { guide: AvaGuide }) {
           </div>
           <div className="comparison-grid">
             {(guide.columns || []).map((column) => (
-              <article key={column.title} className={column.title === 'Ava' ? 'ava-choice' : undefined}>
+              <article key={column.title} className={column.title === 'Front Porch Dispatch' ? 'ava-choice' : undefined}>
                 <small>{column.title}</small>
                 <h3>{column.title}</h3>
                 <p>{column.body}</p>
@@ -57,7 +57,7 @@ function GuideExtra({ guide }: { guide: AvaGuide }) {
 }
 
 export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: string }) {
-  const pageUrl = absoluteSiteUrl(`/ava/${guide.slug}`);
+  const pageUrl = absoluteSiteUrl(`/dispatch/${guide.slug}`);
   const demoHref = `${homeHref}#hear-demo`;
   const liveHref = `${homeHref}#talk-to-ava`;
   const graph = jsonLdGraph([
@@ -84,12 +84,12 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
           <span>
             <Sparkles size={17} />
           </span>{' '}
-          Ava
+          Front Porch Dispatch
         </Link>
         <div>
           <Link href="#pricing">Pricing</Link>
           <Link href={liveHref}>Try the demo</Link>
-          <Link href="/ava/missed-call-cost-calculator">Calculator</Link>
+          <Link href="/dispatch/missed-call-cost-calculator">Calculator</Link>
         </div>
         <TrackedCheckoutLink className="nav-cta" href="/api/checkout?plan=starter" plan="starter">
           Start free trial
@@ -142,7 +142,7 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
               <span>0{index + 1}</span>
               <PhoneCall />
               <h3>{item}</h3>
-              <p>Ava asks what you approved, then texts you. She does not invent a price.</p>
+              <p>Front Porch Dispatch asks what you approved, then texts you. It does not invent a price.</p>
             </article>
           ))}
         </div>
@@ -173,7 +173,7 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
             <h3>{guide.roiTitle}</h3>
             <p>{guide.roiBody}</p>
             <p>
-              <Link href="/ava/missed-call-cost-calculator">Open the missed-call calculator</Link>
+              <Link href="/dispatch/missed-call-cost-calculator">Open the missed-call calculator</Link>
             </p>
           </article>
         </div>
@@ -231,7 +231,7 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
                 <span>{related.navLabel}</span>
                 <h3>{related.title}</h3>
                 <p>{related.blurb}</p>
-                <Link href={`/ava/${slug}`}>
+                <Link href={`/dispatch/${slug}`}>
                   Read it <ArrowRight size={16} />
                 </Link>
               </article>

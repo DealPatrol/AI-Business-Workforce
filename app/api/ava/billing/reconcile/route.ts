@@ -89,7 +89,7 @@ export async function GET(req: NextRequest) {
           business: row.business_name,
           ok: true,
           skipped: true,
-          reason: 'Checkout session is not an Ava subscription.',
+          reason: 'Checkout session is not an Front Porch Dispatch subscription.',
         });
         continue;
       }
@@ -128,7 +128,7 @@ export async function GET(req: NextRequest) {
         p.set('subscription', subscriptionId);
         p.set('amount', String(amount));
         p.set('currency', 'usd');
-        p.set('description', `Ava overage: ${overageMinutes} minute${overageMinutes === 1 ? '' : 's'} beyond ${included} included minutes`);
+        p.set('description', `Front Porch Dispatch overage: ${overageMinutes} minute${overageMinutes === 1 ? '' : 's'} beyond ${included} included minutes`);
         p.set('metadata[ava_usage_key]', usageKey);
         p.set('metadata[overage_minutes]', String(overageMinutes));
         p.set('metadata[included_minutes]', String(included));
