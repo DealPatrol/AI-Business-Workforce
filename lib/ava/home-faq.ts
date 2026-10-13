@@ -1,7 +1,7 @@
 export const AVA_HOME_FAQS = [
   {
     q: 'How much does Ava cost?',
-    a: 'Three monthly plans after a free 7-day trial and a $0 setup fee: Starter $79 with 300 minutes, Growth $149 with 800 minutes, and Pro $299 with 1,800 minutes. Extra minutes bill at the plan rate: $0.28, $0.24, or $0.20.',
+    a: 'Three monthly plans after a free 7-day trial and a $0 setup fee: Starter $79 with 165 minutes, Growth $149 with 320 minutes, and Pro $299 with 650 minutes. Extra minutes bill at $0.40 a minute on every plan.',
   },
   {
     q: 'Can I hear Ava before I pay?',

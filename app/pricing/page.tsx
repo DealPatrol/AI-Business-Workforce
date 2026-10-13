@@ -30,9 +30,9 @@ export const metadata: Metadata = {
 const rows = [
   ['YardProof postcards', 'Founding offer', '$99/month'],
   ['Demo Blast 10', 'Up to 10 postcard concepts', '$49'],
-  ['Ava Starter', '300 voice minutes, 7-day trial, $0 setup', '$79/month'],
-  ['Ava Growth', '800 voice minutes, 7-day trial, $0 setup', '$149/month'],
-  ['Ava Pro', '1,800 voice minutes, 7-day trial, $0 setup', '$299/month'],
+  ['Ava Starter', '165 voice minutes, 7-day trial, $0 setup', '$79/month'],
+  ['Ava Growth', '320 voice minutes, 7-day trial, $0 setup', '$149/month'],
+  ['Ava Pro', '650 voice minutes, 7-day trial, $0 setup', '$299/month'],
   ['Lead Finder', 'Signed-in Maps search and approved drafts', 'No separate public price'],
   ['Invoicing', 'Coming soon', 'Waitlist'],
 ] as const;

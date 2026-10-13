@@ -32,9 +32,11 @@ Muse / FirstMinute blueprint targets a **managed** front desk: **$2,000 implemen
 
 | Plan | Price | Included minutes | Overage |
 |---|---|---|---|
-| Starter | **$79/mo** | 300 | $0.28/min |
-| Growth | **$149/mo** | 800 | $0.24/min |
-| Pro | **$299/mo** | 1,800 | $0.20/min |
+| Starter | **$79/mo** | 165 | $0.40/min |
+| Growth | **$149/mo** | 320 | $0.40/min |
+| Pro | **$299/mo** | 650 | $0.40/min |
+
+Minutes updated Oct 2026 (prices unchanged): sized for ~70% worst-case gross margin with every included minute used, on the current LLM gemini-3.5-flash (~$0.115/min all-in incl. ElevenLabs $0.08/min + LLM $0.0263/min + telephony). See pricing-recommendations. If Ava moves to a flash-lite LLM after a quality test, minutes can rise (200 / 375 / 800).
 
 - **$0 setup** on self-serve checkout.
 - **Optional assisted launch $299** one-time (manual Cole/ops — messaging only; not an automated Stripe SKU yet).

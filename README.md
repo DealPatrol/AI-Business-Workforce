@@ -26,7 +26,7 @@ AI-powered business automation platform focused on measurable outcomes for servi
 
 One offer: Ava answers missed and after-hours calls, handles common questions, captures job details, and sends the owner a qualified lead summary.
 
-- Ava plans from **$79/month** · 300 voice minutes on Starter · cancel anytime after trial
+- Ava plans from **$79/month** · 165 voice minutes on Starter · cancel anytime after trial
 - YardProof founding plan: **$99/month**
 - Personalized demos: `/demo/acexperts`, `/demo/family-comfort-hvac`, `/demo/after-hours-hvacr`, `/demo/underwood-hvac`, `/demo/posey-family-plumbing`
 - Offer page: `/ava` · sales video: `/video` (`/ava-hvac-pilot.mp4`) · tracker: `/sales`

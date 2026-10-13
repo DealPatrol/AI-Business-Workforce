@@ -2,7 +2,7 @@
 
 Do these in order before a landscaper (or any home-service shop) pays for Ava. Nothing here is done by the app deploy itself. Do not commit secrets.
 
-Prices already in the product: Starter $79/mo (300 minutes), Growth $149/mo (800 minutes), Pro $299/mo (1,800 minutes). Each checkout is a 7-day Stripe trial with $0 setup. The YardProof founding postcard offer stays $99/mo and is a different product.
+Prices already in the product: Starter $79/mo (165 minutes), Growth $149/mo (320 minutes), Pro $299/mo (650 minutes). Each checkout is a 7-day Stripe trial with $0 setup. The YardProof founding postcard offer stays $99/mo and is a different product.
 
 ## 1. Apply the database migration
 

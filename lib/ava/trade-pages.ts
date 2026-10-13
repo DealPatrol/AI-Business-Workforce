@@ -879,7 +879,7 @@ export const AVA_GUIDES: AvaGuide[] = [
       'A text you can act on',
     ],
     roiTitle: 'Put the prices next to each other without a fake percentage',
-    roiBody: `Ava’s prices are on this site: $79, $149, and $299 a month after a 7-day trial, $0 setup, with 300, 800, or 1,800 included minutes. Overage is $0.28, $0.24, or $0.20 a minute. A human answering service will give you its own quote. A W-2 receptionist at the May 2024 median is about $3,103 a month in wages alone. ${exampleSentence({ missedPerWeek: 6, oneIn: 4, jobValue: 300, jobLabel: 'callback you would have made' })} Use the calculator so the missed-call side is yours.`,
+    roiBody: `Ava’s prices are on this site: $79, $149, and $299 a month after a 7-day trial, $0 setup, with 165, 320, or 650 included minutes. Overage is $0.40 a minute on every plan. A human answering service will give you its own quote. A W-2 receptionist at the May 2024 median is about $3,103 a month in wages alone. ${exampleSentence({ missedPerWeek: 6, oneIn: 4, jobValue: 300, jobLabel: 'callback you would have made' })} Use the calculator so the missed-call side is yours.`,
     columns: [
       {
         title: 'Voicemail',

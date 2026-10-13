@@ -29,7 +29,7 @@ Set `NEXT_PUBLIC_SITE_URL` to `https://frontporchgrowth.com` (no trailing slash)
 Add `STRIPE_SECRET_KEY` as a server-only Vercel environment variable. `/api/checkout` creates Stripe Checkout Sessions in subscription mode:
 
 - Founding (`/api/checkout?offer=founding`): $99/month subscription only. Product name from code is `YardProof Founding Plan`. Buttons use this route. If `STRIPE_SECRET_KEY` is missing, the route does not charge anything and sends the visitor to `/founding?checkout=error`.
-- Ava (`/api/checkout?plan=starter|growth|pro`): $79 / $149 / $299 per month with a 7-day Checkout trial and $0 setup. Included minutes are 300 / 800 / 1,800. Product names from code are `Ava Receptionist – Starter`, `Ava Receptionist – Growth`, and `Ava Receptionist – Pro`. Successful sessions return to `/onboarding/ava?session_id={CHECKOUT_SESSION_ID}`. Without the secret key these buttons return to `/ava?checkout=unavailable#pricing`.
+- Ava (`/api/checkout?plan=starter|growth|pro`): $79 / $149 / $299 per month with a 7-day Checkout trial and $0 setup. Included minutes are 165 / 320 / 650. Product names from code are `Ava Receptionist – Starter`, `Ava Receptionist – Growth`, and `Ava Receptionist – Pro`. Successful sessions return to `/onboarding/ava?session_id={CHECKOUT_SESSION_ID}`. Without the secret key these buttons return to `/ava?checkout=unavailable#pricing`.
 
 Optional price IDs override inline `price_data`. If you use a price ID, set the Dashboard product name to the same string above — code only sets the name when it sends `price_data`. Recreate Dashboard prices when amounts change.
 

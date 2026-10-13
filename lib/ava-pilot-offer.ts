@@ -5,7 +5,7 @@ export const AVA_PILOT_OFFER = {
   subheadline:
     'Ava answers missed and after-hours calls, handles common questions, captures job details, and sends the owner a qualified lead summary.',
   pilotDays: 14,
-  usageLimit: '300 voice minutes / month during pilot',
+  usageLimit: '165 voice minutes / month during pilot',
   cancelPolicy: 'Cancel anytime — no long-term contract',
   ctaPrimary: 'Try Ava for 14 days',
   ctaCall: 'Call Ava',
