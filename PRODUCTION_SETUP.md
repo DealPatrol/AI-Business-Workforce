@@ -95,27 +95,16 @@ Migrations:
 - `supabase/migrations/20260924120000_postcard_recipient_imagery.sql` — per-recipient Current/After/review + campaign geo parity
 - `supabase/migrations/20260924130000_streetview_printable_current.sql` — allows `current_image_source=street_view`
 
-**Product rules (Cole 2026-09-24 — supersede prior internal-only locks):**
+**Product rules (Cole 2026-10-13, supersede 2026-09-24):**
 
-1. **Google Street View Static** = printable **Current** (before) on the postcard and `/q/[token]`.
-2. **After-render** uses that Street View Current as AI input → **After** (modest AL lawn refresh).
-3. **Crew/owner photos** (`POST /api/imagery/crew-photo`) remain **optional alternate** Current sources, not required.
-4. **Human review** (`POST /api/imagery/review`) remains required before mail-ready.
-5. `POST /api/imagery/streetview-preview` downloads Static pixels into Storage (`IMAGERY_STORAGE_BUCKET`, default `yardproof-imagery`) because Maps Static URLs are ephemeral, then sets `current_image_source=street_view`.
-6. Satellite preview is operator fallback only when Street View metadata is unavailable — not printable Current by default.
+1. Postcards use only the client's own BEFORE and AFTER job photos (`POST /api/imagery/crew-photo`, `slot=before|after`, `rightsConfirmed=true`).
+2. Google Street View / Static Maps imagery is removed (`/api/imagery/streetview-preview` and `lib/google/streetview.ts` deleted; `safe-fetch` allows Supabase Storage only). AI after-render returns 410.
+3. Human review (`POST /api/imagery/review`) is still required before mail-ready.
+4. Targeting: `/postcards/campaign-builder` + `POST /api/targeting/search` (Regrid via `REGRID_API_TOKEN`, sample data when absent; optional Shovels permit exclusion via `SHOVELS_API_KEY`).
+5. Mail: `POST /api/mail/lob-test` sends through Lob TEST mode only (`LOB_API_KEY` must start with `test_`).
+6. Pricing shown: $99/mo + $1.49 per 4x6 / $1.79 per 6x9, print and postage included.
 
-**Still required before claiming imagery is live:**
-
-1. Apply both additive migrations in Supabase (especially `…130000…` so `street_view` passes the check constraint).
-2. Create private Storage bucket `yardproof-imagery` (or the configured name).
-3. Add server-only Vercel env: `GOOGLE_MAPS_API_KEY` (Geocoding + Street View Static + Maps Static, restricted), optional `GOOGLE_MAPS_URL_SIGNING_SECRET`, confirm `OPENAI_API_KEY` Images access / `OPENAI_IMAGE_MODEL`, optional `IMAGERY_PROVIDER`, `AFTER_PROMPT_VERSION`, `IMAGERY_STORAGE_BUCKET`, `IMAGERY_DAILY_CAP`.
-4. Do **not** invent or paste secrets into git. Cole configures Vercel/GCP.
-
-**Imagery security notes:**
-
-- `GOOGLE_MAPS_API_KEY` is server-only. Never create a `NEXT_PUBLIC_GOOGLE_MAPS_*` var. API responses never include `maps.googleapis.com` URLs (they embed the key); Street View and satellite preview bytes are downloaded server-side and served via short-lived Storage signed URLs.
-- Server-side image fetches go through `lib/imagery/safe-fetch.ts`: https only, host must be the `NEXT_PUBLIC_SUPABASE_URL` host under `/storage/v1/object/`, or `maps.googleapis.com` under `/maps/api/streetview|staticmap`. No redirects, 20 MB cap.
-- After-render uses `gpt-image-1` image **edit** with the Current as input. gpt-image models always return base64 and reject `response_format` (400), so it is only sent for legacy `dall-e-*` overrides.
+**Still required before going live:** apply `20261013120000_photo_rights_confirmation.sql`, private bucket `yardproof-imagery`, set `REGRID_API_TOKEN`, optional `SHOVELS_API_KEY`, and swap `LOB_API_KEY` to live only after code removes the test-only guard.
 
 **Hanceville demo QR 404 (`/q/f4db2ae44db4886b70d6b6060751cc70b95b`) — diagnosed 2026-09-24:**
 

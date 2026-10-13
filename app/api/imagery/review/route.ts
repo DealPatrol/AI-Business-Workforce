@@ -14,7 +14,7 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 const ALLOWED = new Set(['approved', 'changes_requested', 'rejected', 'pending_review']);
-const ACCEPTED_CURRENT = new Set(['street_view', 'crew_photo', 'owner_upload']);
+const ACCEPTED_CURRENT = new Set(['crew_photo', 'owner_upload']);
 const MISSING_COLUMN_CODES = new Set(['42703', 'PGRST204']);
 
 /**
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(
           {
             error:
-              'Cannot approve without Current (street_view / crew_photo / owner_upload) and After imagery.',
+              'Cannot approve without your own BEFORE and AFTER job photos.',
           },
           { status: 400 },
         );
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(
           {
             error:
-              'Cannot approve: Current must be street_view, crew_photo, or owner_upload.',
+              'Cannot approve: BEFORE photo must be a client upload (crew_photo or owner_upload).',
           },
           { status: 400 },
         );

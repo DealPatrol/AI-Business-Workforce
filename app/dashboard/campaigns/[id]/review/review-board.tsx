@@ -1,4 +1,5 @@
 'use client';
+import JobPhotoUpload from '@/components/yardproof/job-photo-upload';
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -9,7 +10,6 @@ import {
   ChevronDown,
   LoaderCircle,
   MailWarning,
-  RefreshCw,
   Save,
   Shuffle,
 } from 'lucide-react';
@@ -203,28 +203,6 @@ export default function ReviewBoard({ campaign, initialRecipients }: Props) {
     }
   };
 
-  const regenerate = async (recipient: ReviewRecipient) => {
-    const recipientBusy = `${recipient.id}:regenerate`;
-    setBusy(recipientBusy);
-    setMessage(null);
-    try {
-      const result = await postJson('/api/imagery/after-render', {
-        recipientId: recipient.id,
-        catalogSkus: selections[recipient.id],
-      });
-      updateRecipient(recipient.id, {
-        afterImageUrl: result.afterImageUrl ?? recipient.afterImageUrl,
-        reviewStatus: 'pending_review',
-      });
-      setMessage('A new After concept is ready for review.');
-      router.refresh();
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Regeneration failed.');
-    } finally {
-      setBusy(null);
-    }
-  };
-
   const approveAll = async () => {
     setBusy('campaign:approve');
     setMessage(null);
@@ -395,6 +373,13 @@ export default function ReviewBoard({ campaign, initialRecipients }: Props) {
                   />
                 </label>
 
+                <JobPhotoUpload
+                  recipientId={recipient.id}
+                  onUploaded={(slot, url) =>
+                    updateRecipient(recipient.id, slot === 'before' ? { currentImageUrl: url } : { afterImageUrl: url })
+                  }
+                />
+
                 <div className={styles.cardActions}>
                   <button
                     type="button"
@@ -412,15 +397,7 @@ export default function ReviewBoard({ campaign, initialRecipients }: Props) {
                   >
                     Request changes
                   </button>
-                  <button
-                    className={styles.secondary}
-                    type="button"
-                    onClick={() => regenerate(recipient)}
-                    disabled={busy !== null || !recipient.currentImageUrl}
-                  >
-                    {busy === `${recipient.id}:regenerate` ? <LoaderCircle className={styles.spin} /> : <RefreshCw />}
-                    Regenerate After
-                  </button>
+
                 </div>
               </div>
             </article>
@@ -429,7 +406,7 @@ export default function ReviewBoard({ campaign, initialRecipients }: Props) {
       </div>
 
       {recipients.length === 0 && (
-        <div className={styles.empty}>No cards yet. Add up to 10 recipients, then fetch or upload Current imagery.</div>
+        <div className={styles.empty}>No cards yet. Add up to 10 recipients, then upload your own before and after job photos.</div>
       )}
     </section>
   );

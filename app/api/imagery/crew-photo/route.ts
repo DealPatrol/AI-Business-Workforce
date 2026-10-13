@@ -12,8 +12,10 @@ const ALLOWED_SOURCES = new Set(['crew_photo', 'owner_upload']);
 const MAX_BYTES = 8 * 1024 * 1024;
 
 /**
- * Upload optional alternate printable Current (crew_photo | owner_upload).
- * Preferred product path is Street View via POST /api/imagery/streetview-preview.
+ * Upload the client's own job photo for a postcard: slot=before (Current) or
+ * slot=after (finished job). This is the ONLY printable imagery source.
+ * Requires rightsConfirmed=true: the client confirms they own the photos and
+ * have the homeowner's OK to show the property.
  */
 export async function POST(request: NextRequest) {
   const auth = await requireCampaignOwner();
@@ -28,7 +30,22 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error:
-            'source must be crew_photo or owner_upload. For Street View Current use POST /api/imagery/streetview-preview.',
+            'source must be crew_photo or owner_upload.',
+        },
+        { status: 400 },
+      );
+    }
+
+    const slot = String(form.get('slot') ?? 'before').trim();
+    if (slot !== 'before' && slot !== 'after') {
+      return NextResponse.json({ error: 'slot must be before or after.' }, { status: 400 });
+    }
+    const rights = String(form.get('rightsConfirmed') ?? '').trim().toLowerCase();
+    if (rights !== 'true' && rights !== 'on' && rights !== '1') {
+      return NextResponse.json(
+        {
+          error:
+            'Confirm you own these photos and have the homeowner\'s OK to show the property (rightsConfirmed=true).',
         },
         { status: 400 },
       );
@@ -55,7 +72,7 @@ export async function POST(request: NextRequest) {
 
     const ext =
       mime.includes('png') ? 'png' : mime.includes('webp') ? 'webp' : 'jpg';
-    const path = `${owned.recipient.id}/current-${Date.now()}.${ext}`;
+    const path = `${owned.recipient.id}/${slot === 'before' ? 'current' : 'after'}-${Date.now()}.${ext}`;
     const bytes = Buffer.from(await file.arrayBuffer());
     const bucket = imageryBucket();
 
@@ -87,17 +104,25 @@ export async function POST(request: NextRequest) {
 
     const { error: updateError } = await auth.ctx.admin
       .from('campaign_recipients')
-      .update({
-        current_image_url: signed.signedUrl,
-        current_image_source: source,
-        current_image_usage: 'print_source',
-        imagery_status: 'ready',
-        imagery_error: null,
-        // New current invalidates prior after until re-rendered + re-reviewed
-        after_image_url: null,
-        review_status: 'pending',
-        postcard_approved_at: null,
-      })
+      .update(
+        slot === 'before'
+          ? {
+              current_image_url: signed.signedUrl,
+              current_image_source: source,
+              current_image_usage: 'print_source',
+              imagery_status: 'ready',
+              imagery_error: null,
+              review_status: 'pending',
+              postcard_approved_at: null,
+            }
+          : {
+              after_image_url: signed.signedUrl,
+              imagery_status: 'ready',
+              imagery_error: null,
+              review_status: 'pending',
+              postcard_approved_at: null,
+            },
+      )
       .eq('id', owned.recipient.id);
 
     if (updateError) {
@@ -108,9 +133,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Best-effort audit of the rights confirmation (column added by migration
+    // 20261013120000_photo_rights_confirmation.sql; ignored if not applied yet).
+    const { error: rightsError } = await auth.ctx.admin
+      .from('campaign_recipients')
+      .update({ photo_rights_confirmed_at: new Date().toISOString() })
+      .eq('id', owned.recipient.id);
+    if (rightsError) console.warn('photo_rights_confirmed_at not recorded', rightsError.message);
+
     return NextResponse.json({
       ok: true,
-      currentImageUrl: signed.signedUrl,
+      slot,
+      imageUrl: signed.signedUrl,
       currentImageSource: source,
       currentImageUsage: 'print_source',
       storagePath: path,

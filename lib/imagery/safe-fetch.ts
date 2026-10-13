@@ -1,16 +1,16 @@
 /**
  * Server-only image fetch with a strict host allowlist (SSRF guard).
  *
- * Only two upstreams are ever fetched by the imagery pipeline:
- *   1. Our Supabase project's Storage API  (https://<ref>.supabase.co/storage/v1/object/...)
- *   2. Google Street View / Static Maps    (https://maps.googleapis.com/maps/api/streetview|staticmap)
+ * Only one upstream is ever fetched by the imagery pipeline: our Supabase
+ * project's Storage API (https://<ref>.supabase.co/storage/v1/object/...).
+ * Google Street View / Static Maps imagery is intentionally NOT allowed:
+ * Google Maps Platform terms bar caching it, printing it on mailers, or
+ * machine-interpreting it. Postcards use the client's own job photos.
  *
  * Anything else (other hosts, http:, IP literals, credentials in URL, redirects
  * to a different host) is rejected before a request is made.
  */
 
-const GOOGLE_MAPS_HOST = 'maps.googleapis.com';
-const GOOGLE_ALLOWED_PATHS = ['/maps/api/streetview', '/maps/api/staticmap'];
 const SUPABASE_STORAGE_PREFIX = '/storage/v1/object/';
 
 /** Hard cap on downloaded bytes (gpt-image-1 edit input limit is 50 MB; SV is ~100 KB). */
@@ -33,7 +33,7 @@ function supabaseStorageHost(): string | null {
   }
 }
 
-export type AllowedImageSource = 'supabase_storage' | 'google_maps';
+export type AllowedImageSource = 'supabase_storage';
 
 /** Returns which allowlisted upstream a URL belongs to, or throws. */
 export function assertAllowedImageUrl(rawUrl: string): { url: URL; source: AllowedImageSource } {
@@ -61,14 +61,6 @@ export function assertAllowedImageUrl(rawUrl: string): { url: URL; source: Allow
     return { url, source: 'supabase_storage' };
   }
 
-  if (
-    host === GOOGLE_MAPS_HOST &&
-    GOOGLE_ALLOWED_PATHS.some((p) => url.pathname === p || url.pathname.startsWith(`${p}/`))
-  ) {
-    return { url, source: 'google_maps' };
-  }
-
-  // Never echo the full URL (Google URLs carry the Maps key).
   throw new ImageFetchBlockedError(`Image host "${host}" is not on the imagery allowlist.`);
 }
 

@@ -18,7 +18,7 @@ const CONTACT_EMAIL = 'colecollins763@gmail.com';
 
 const title = 'YardProof Postcards | Front Porch Growth';
 const description =
-  'Launch a managed property-concept postcard campaign with QR estimate pages for landscaping and home-service businesses. The founding offer is $99/month.';
+  'Mail before/after postcards built from your own job photos to the right homes near your finished jobs. $99/month plus $1.49 per 4x6 or $1.79 per 6x9 card, print and postage included.';
 
 export const metadata: Metadata = {
   title: { absolute: title },
@@ -42,20 +42,20 @@ const steps = [
   {
     icon: MapPin,
     number: '01',
-    title: 'Pick the streets',
-    detail: 'Tell Cole the neighborhoods and landscaping jobs you want more of.',
+    title: 'Pick the homes',
+    detail: 'Draw a radius around a job you just finished, or pick a ZIP. Filter by home age, lot size, owner-occupied, and recent sales.',
   },
   {
     icon: Palette,
     number: '02',
-    title: 'Build the concepts',
-    detail: 'Cole prepares clearly labeled yard project ideas by hand for you to review.',
+    title: 'Add your photos',
+    detail: 'Upload a before and an after shot from the real job. You confirm you own them and the homeowner is fine with it.',
   },
   {
     icon: Mail,
     number: '03',
     title: 'Approve the postcard',
-    detail: 'You approve the concept, message, audience, and costs before anything mails.',
+    detail: 'See the home count and the all-in total. Nothing prints until you say go.',
   },
   {
     icon: QrCode,
@@ -66,10 +66,10 @@ const steps = [
 ];
 
 const packageItems = [
-  'Target campaign setup',
-  'Up to 25 property concepts*',
-  'Personalized postcard creative',
-  'Unique QR project-page structure',
+  'Campaign builder with property-record filters',
+  'Before/after postcards from your own job photos',
+  'Print and postage included: $1.49 per 4x6, $1.79 per 6x9',
+  'A unique QR code on every card',
   'QR scan tracking and estimate-request inbox',
   'Campaign review before launch',
 ];
@@ -91,6 +91,7 @@ export default function HomePage() {
           <a href="#how">How it works</a>
           <a href="#demo10">Demo Blast 10</a>
           <a href="#package">What you get</a>
+          <Link href="/postcards/campaign-builder">Campaign builder</Link>
           <Link href="/visual-canvasser">See examples</Link>
         </div>
         <a className={styles.navCta} href={foundingCheckoutHref('/postcards#package')}>
@@ -100,15 +101,15 @@ export default function HomePage() {
 
       <section className={styles.hero}>
         <div className={styles.heroCopy}>
-          <span className={styles.eyebrow}>PROPERTY-BASED POSTCARD CAMPAIGNS FOR HOME SERVICES</span>
-          <h1>Show homeowners the yard project you could build for them.</h1>
+          <span className={styles.eyebrow}>NEIGHBOR POSTCARDS FOR HOME-SERVICE CREWS</span>
+          <h1>Your best job is the ad. Mail it to the houses next door.</h1>
           <p className={styles.lede}>
-            A managed, done-with-you service: we help you choose the streets, prepare yard
-            concepts, and send a postcard with a QR page where the homeowner can request an
-            estimate.
+            Finish a job, snap a before and an after, and send a postcard to the homes around it
+            that fit your work: older houses, bigger lots, owners who live there, or people who
+            just moved in. Each card has a QR code that leads to an estimate request.
           </p>
           <div className={styles.priceLine}>
-            <strong>$99/month</strong>
+            <strong>$99/month</strong> + $1.49 per 4×6 or $1.79 per 6×9 card, print and postage included
           </div>
           <div className={styles.heroActions}>
             <a className={styles.primaryButton} href={foundingCheckoutHref('/postcards#package')}>
@@ -119,7 +120,7 @@ export default function HomePage() {
             </a>
           </div>
           <p className={styles.heroNote}>
-            The postcard campaign is our core service. You approve the concept, audience and costs before anything mails.
+            You approve the photos, the list of homes, and the total before anything mails.
           </p>
         </div>
 
@@ -127,17 +128,17 @@ export default function HomePage() {
           <div className={styles.postcardImage}>
             <Image
               src="/postcard-yard.png"
-              alt="Clearly labeled landscaping concept example"
+              alt="Example postcard layout"
               fill
               priority
               sizes="(max-width: 800px) 100vw, 46vw"
             />
-            <span>DEMO YARD CONCEPT</span>
+            <span>SAMPLE LAYOUT · YOUR PHOTOS GO HERE</span>
           </div>
           <div className={styles.postcardCopy}>
             <small>EXAMPLE POSTCARD</small>
-            <h2>A fresh idea for your front yard.</h2>
-            <p>See the project concept and request a no-pressure estimate.</p>
+            <h2>We just finished a yard on your street.</h2>
+            <p>Here&rsquo;s the before and after. Scan to ask for a free estimate.</p>
             <div className={styles.qrExample}>
               <QrCode size={58} />
               <span>
@@ -167,14 +168,14 @@ export default function HomePage() {
           <h2>See 10 homes before you scale.</h2>
           <p>
             Choose your trade and provide up to 10 addresses—or ask Cole to help choose the area.
-            Each card pairs authorized Current imagery when available with a clearly labeled After concept.
+            Each card shows your own before and after photos from a real job.
           </p>
         </div>
         <div>
           <strong>$49</strong>
           <ul>
-            <li><Check /> Up to 10 before/after concepts</li>
-            <li><Check /> Per-card approve, swap, regenerate, or request changes</li>
+            <li><Check /> Up to 10 before/after cards from your photos</li>
+            <li><Check /> Approve or request changes on each card</li>
             <li><Check /> QR estimate-page structure</li>
             <li><Check /> Manual mailing only after your approval</li>
           </ul>
@@ -187,7 +188,7 @@ export default function HomePage() {
       <section className={styles.section} id="how">
         <div className={styles.sectionHeading}>
           <span>HOW IT WORKS</span>
-          <h2>From a few streets to estimate requests.</h2>
+          <h2>From one finished job to the next ten estimates.</h2>
           <p>A focused first campaign, set up with you instead of another app to figure out.</p>
         </div>
         <div className={styles.steps}>
@@ -214,7 +215,7 @@ export default function HomePage() {
                 fill
                 sizes="(max-width: 800px) 100vw, 52vw"
               />
-              <span>ILLUSTRATIVE CONCEPT — NOT A LIVE ADDRESS LOOKUP</span>
+              <span>SAMPLE IMAGE · REAL CARDS USE YOUR JOB PHOTOS</span>
             </div>
           </div>
           <div className={styles.takeoff}>
@@ -238,8 +239,8 @@ export default function HomePage() {
                 <b>Demo scope</b>
               </div>
             </div>
-            <Link href="/property-demo">
-              Explore the labeled project demo <ArrowRight size={16} />
+            <Link href="/postcards/campaign-builder">
+              Try the campaign builder <ArrowRight size={16} />
             </Link>
           </div>
         </div>
@@ -256,12 +257,13 @@ export default function HomePage() {
           <div className={styles.honesty}>
             <b>Honest launch boundary</b>
             <p>
-              <b>Live today:</b> unique QR pages, scan tracking, and your estimate-request inbox.
+              <b>Live today:</b> unique QR pages, scan tracking, your estimate-request inbox, and
+              uploads for your own before/after photos.
               <br />
-              <b>Done by hand with you (not automated yet):</b> choosing properties, property
-              photos, &ldquo;after&rdquo; concept images, and printing/mailing. We will not claim
-              automatic property lookup, AI renders, lead finding, or automatic mailing until
-              those connections are tested.
+              <b>Being switched on now:</b> live property-record lookups and automated print and
+              mail. Until then the campaign builder shows sample homes, and Cole confirms every
+              mailing with you by hand. We never print Google Street View or map images, and
+              we never put AI-made pictures on your cards.
             </p>
           </div>
         </div>
@@ -271,7 +273,7 @@ export default function HomePage() {
             <strong>$99</strong>
             <span>/month</span>
           </div>
-          <p>$99/month for the initial managed campaign</p>
+          <p>$99/month, plus $1.49 per 4×6 or $1.79 per 6×9 card. Print and postage included.</p>
           <ul>
             {packageItems.map((item) => (
               <li key={item}>
@@ -283,8 +285,8 @@ export default function HomePage() {
             {FOUNDING_CTA} <ArrowRight size={18} />
           </a>
           <small className={styles.disclosure}>
-            *Final mailed quantity and printing, postage, or property-data costs are confirmed
-            before launch. No unapproved pass-through costs.
+            You see the number of homes and the total before anything mails. No hidden postage
+            or data fees.
           </small>
         </div>
       </section>
