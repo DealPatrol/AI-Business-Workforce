@@ -35,6 +35,29 @@ export default function CampaignBuilder() {
   const [result, setResult] = useState<{ source: string; permitSource: string; count: number; scanned: number; parcels: Parcel[] } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [biz, setBiz] = useState({ businessName: '', businessPhone: '', name: '' });
+  const [saveMsg, setSaveMsg] = useState<React.ReactNode>(null);
+
+  const save = async () => {
+    if (!result) return;
+    setSaveMsg('Saving…');
+    try {
+      const res = await fetch('/api/campaigns/from-targeting', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...biz, size, source: result.source, filters: { mode, ...form }, parcels: result.parcels }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.status === 401) {
+        setSaveMsg(<span>Sign in to save. <a href="/login?next=/postcards/campaign-builder">Sign in</a></span>);
+        return;
+      }
+      if (!res.ok) throw new Error(data.error || 'Save failed');
+      window.location.href = `/dashboard/campaigns/${data.campaignId}/review`;
+    } catch (e) {
+      setSaveMsg(e instanceof Error ? e.message : 'Save failed');
+    }
+  };
 
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm((f) => ({ ...f, [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.value }));
@@ -111,6 +134,15 @@ export default function CampaignBuilder() {
             {result.count} homes match · estimated mailing ${mailCost.toFixed(2)} + ${PRICE.monthly}/mo
           </h3>
           <small>Print and postage included. Nothing mails until you approve the list, photos, and total.</small>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: 12, background: '#fff', border: '1px solid #e3e3e3', borderRadius: 12, padding: 16 }}>
+            <label style={field}>Business name<input style={input} value={biz.businessName} onChange={(e) => setBiz({ ...biz, businessName: e.target.value })} /></label>
+            <label style={field}>Business phone<input style={input} value={biz.businessPhone} onChange={(e) => setBiz({ ...biz, businessPhone: e.target.value })} /></label>
+            <label style={field}>Campaign name<input style={input} value={biz.name} onChange={(e) => setBiz({ ...biz, name: e.target.value })} placeholder="Oak Hollow neighbors" /></label>
+            <button type="button" onClick={save} disabled={!biz.businessName || result.count === 0} style={{ alignSelf: 'end', padding: '10px 16px', borderRadius: 8, background: '#1f5130', color: '#fff', border: 0, fontWeight: 700 }}>
+              Save campaign &amp; create {Math.min(result.count, 200)} cards
+            </button>
+            {saveMsg && <small style={{ gridColumn: '1/-1' }}>{saveMsg}</small>}
+          </div>
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
               <thead>

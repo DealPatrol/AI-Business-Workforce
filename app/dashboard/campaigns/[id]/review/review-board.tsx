@@ -1,5 +1,6 @@
 'use client';
 import JobPhotoUpload from '@/components/yardproof/job-photo-upload';
+import LobTestSend from '@/components/yardproof/lob-test-send';
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -404,6 +405,8 @@ export default function ReviewBoard({ campaign, initialRecipients }: Props) {
           );
         })}
       </div>
+
+      <LobTestSend campaignId={campaign.id} />
 
       {recipients.length === 0 && (
         <div className={styles.empty}>No cards yet. Add up to 10 recipients, then upload your own before and after job photos.</div>

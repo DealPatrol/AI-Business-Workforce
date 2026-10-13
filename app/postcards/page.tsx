@@ -92,7 +92,7 @@ export default function HomePage() {
           <a href="#demo10">Demo Blast 10</a>
           <a href="#package">What you get</a>
           <Link href="/postcards/campaign-builder">Campaign builder</Link>
-          <Link href="/visual-canvasser">See examples</Link>
+          
         </div>
         <a className={styles.navCta} href={foundingCheckoutHref('/postcards#package')}>
           {FOUNDING_CTA}
