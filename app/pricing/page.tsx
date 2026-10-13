@@ -34,6 +34,9 @@ const rows = [
   ['Executive Receptionist Growth', '800 voice minutes, 7-day trial, $0 setup', '$168/month'],
   ['Executive Receptionist Pro', '1,800 voice minutes, 7-day trial, $0 setup', '$324/month'],
   ['Lead Finder', 'Signed-in Maps search and approved drafts', 'No separate public price'],
+  ['Lead Scout', 'Public listing search. Does not contact anyone.', 'No separate public price'],
+  ['Writing agents', 'Drafts on the page. Nothing is sent.', 'No separate public price'],
+  ['ReputationFlow', 'Separate site. Free starter, or Professional', '$20/month on their pricing page'],
   ['Invoicing', 'Coming soon', 'Waitlist'],
 ] as const;
 
@@ -44,7 +47,7 @@ export default function PricingPage() {
         <span className={styles.eyebrow}>PRICING</span>
         <h1>Published prices, one page.</h1>
         <p>
-          The postcard founding offer is $389 setup + $129/month. Executive Receptionist’s Starter, Growth, and Pro plans are $77, $168, and $324 a month. Those are different products.
+          The postcard founding offer is $389 setup + $129/month. Executive Receptionist’s Starter, Growth, and Pro plans are $77, $168, and $324 a month. Those are different products. ReputationFlow’s $20 price is on tryreputationflow.com, not a new charge here.
         </p>
         <table className={styles.table}>
           <thead>

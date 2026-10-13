@@ -15,7 +15,7 @@ const description =
 const HOME_FAQS = [
   {
     q: 'What can I buy on this site today?',
-    a: 'Two products have a checkout. YardMailer postcards are a managed campaign at $389 setup + $129/month, and Demo Blast 10 is $64 for up to 10 concepts. Executive Receptionist is a separate AI receptionist: Starter $77, Growth $168, and Pro $324 a month after a free 7-day trial, with a $0 setup fee. Lead Finder is a signed-in workspace with no separate public price. Invoicing is a waitlist and is not for sale.',
+    a: 'Two products have a checkout. YardMailer postcards are a managed campaign at $389 setup + $129/month, and Demo Blast 10 is $64 for up to 10 concepts. Executive Receptionist is a separate AI receptionist: Starter $77, Growth $168, and Pro $324 a month after a free 7-day trial, with a $0 setup fee. ReputationFlow is a separate site with a free starter and Professional at $20/month. Lead Scout and the writing agents have no separate public price. Lead Finder is a signed-in workspace. Invoicing is a waitlist and is not for sale.',
   },
   {
     q: 'How is Executive Receptionist different from the postcard campaign?',
@@ -115,6 +115,7 @@ export default function SuiteHomePage() {
             <Link href="/receptionist">Executive Receptionist from $77/month</Link>
             <Link href="/postcards">Postcards founding offer $389 setup + $129/month</Link>
             <Link href="/pricing">All prices</Link>
+            <Link href="/compare">Compare published prices</Link>
           </div>
         </div>
         <aside className={styles.chooser} aria-label="Which tool to start with">
@@ -179,6 +180,52 @@ export default function SuiteHomePage() {
         </article>
 
         <article className={styles.card}>
+          <span className={styles.kicker}>REVIEWS</span>
+          <h2>
+            <Link href="/reputation">ReputationFlow</Link>
+          </h2>
+          <p>Request a review and draft the reply. The free Google review QR lives on ReputationFlow. The public review links stay the same no matter the rating.</p>
+          <p className={styles.price}>Free, or $20/month</p>
+          <p className={styles.quiet}>Professional price is published on tryreputationflow.com.</p>
+          <div className={styles.cardActions}>
+            <a className={styles.button} href="https://tryreputationflow.com/tools/qr-code">
+              Free review QR
+            </a>
+            <Link className={styles.textLink} href="/reputation">
+              How reviews work
+            </Link>
+          </div>
+        </article>
+
+        <article className={styles.card}>
+          <span className={styles.kicker}>LEAD SCOUT</span>
+          <h2>
+            <Link href="/lead-scout">Lead Scout</Link>
+          </h2>
+          <p>Search public listings by trade and city. The page shows the results. It does not email or text them.</p>
+          <p className={styles.price}>No separate price</p>
+          <div className={styles.cardActions}>
+            <Link className={styles.button} href="/lead-scout">
+              Search a city
+            </Link>
+          </div>
+        </article>
+
+        <article className={styles.card}>
+          <span className={styles.kicker}>WRITING AGENTS</span>
+          <h2>
+            <Link href="/agents">Six drafts</Link>
+          </h2>
+          <p>Estimate, review reply, job ad, follow-up text, service-area page, and invoice reminder. You copy the draft. Nothing is sent.</p>
+          <p className={styles.price}>Included on the site</p>
+          <div className={styles.cardActions}>
+            <Link className={styles.button} href="/agents">
+              Open the agents
+            </Link>
+          </div>
+        </article>
+
+        <article className={styles.card}>
           <span className={styles.kicker}>LEAD FINDER</span>
           <h2>
             <Link href="/dashboard/prospector">Lead Finder</Link>
@@ -199,6 +246,27 @@ export default function SuiteHomePage() {
           <p>Estimates and invoices for the jobs the other tools bring in. Join the list and we save it. This form does not send email.</p>
           <InvoicingWaitlistForm />
         </article>
+      </section>
+
+      <section className={styles.section} id="tour">
+        <span className={styles.eyebrow}>PRODUCT TOUR</span>
+        <h2>A short look at the suite.</h2>
+        <p>The video is the pages on this site, with captions. It is not a customer testimonial.</p>
+        <video
+          controls
+          playsInline
+          preload="metadata"
+          style={{ width: '100%', borderRadius: 16, background: '#10281c' }}
+          aria-label="Front Porch Growth product tour"
+        >
+          <source src="/suite-tour.mp4" type="video/mp4" />
+        </video>
+        <p className={styles.quiet}>
+          Trades: <Link href="/trades/plumbers">plumbers</Link>, <Link href="/trades/hvac">HVAC</Link>,{' '}
+          <Link href="/trades/roofers">roofers</Link>, <Link href="/trades/lawn-care">lawn care</Link>,{' '}
+          <Link href="/trades/cleaners">cleaners</Link>. After-hours ad page:{' '}
+          <Link href="/receptionist/missed-calls">missed calls</Link>.
+        </p>
       </section>
 
       <section className={styles.faq} id="faq">

@@ -30,7 +30,7 @@ export default async function PostcardTradePage({ params }: { params: Promise<{ 
     { q: `How are these postcards different from regular ${t.trade} mailers?`, a: `Each card shows a concept of ${t.concept} for that specific home, so the homeowner sees the result instead of a generic coupon.` },
     { q: 'Do you mail anything without my approval?', a: 'No. You approve, swap, or regenerate every card before anything is mailed.' },
     { q: 'How do homeowners respond?', a: 'A QR code on each card opens an estimate request page for your business.' },
-    { q: 'How much does it cost?', a: 'The founding customer package is $99/month for the initial managed campaign. See the pricing page for details.' },
+    { q: 'How much does it cost?', a: 'The founding customer package is $389 setup plus $129/month for the initial managed campaign. See the pricing page for details.' },
   ];
   const jsonLd = [
     { '@context': 'https://schema.org', '@type': 'Service', name: `Marketing postcards for ${t.plural}`, serviceType: 'Direct mail marketing', provider: { '@type': 'Organization', name: 'Front Porch Growth', url: absoluteSiteUrl('/') }, areaServed: 'US', url: absoluteSiteUrl(`/postcards/${t.slug}`) },
@@ -56,7 +56,7 @@ export default async function PostcardTradePage({ params }: { params: Promise<{ 
         <li>You approve, swap, or regenerate each card.</li>
         <li>Cards mail only after your approval; homeowners scan the QR to request an estimate.</li>
       </ol>
-      <p><Link href="/postcards"><strong>See postcard examples →</strong></Link> · <Link href="/pricing">Pricing</Link> · <Link href="/ava">Need someone to answer the calls? Meet Ava</Link></p>
+      <p><Link href="/postcards"><strong>See postcard examples →</strong></Link> · <Link href="/pricing">Pricing</Link> · <Link href="/receptionist">Need someone to answer the calls? Meet Executive Receptionist</Link></p>
       <h2>FAQ</h2>
       {faqs.map((f) => (<div key={f.q}><h3 style={{ fontSize: 18, marginBottom: 4 }}>{f.q}</h3><p style={{ marginTop: 0 }}>{f.a}</p></div>))}
       <h2>Other trades</h2>

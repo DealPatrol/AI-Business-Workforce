@@ -12,7 +12,7 @@ export const AVA_PILOT_OFFER = {
 } as const;
 
 export const AVA_PILOT_PAYMENT_LINK =
-  process.env.NEXT_PUBLIC_AVA_PILOT_PAYMENT_LINK || '/ava#pricing';
+  process.env.NEXT_PUBLIC_AVA_PILOT_PAYMENT_LINK || '/receptionist#pricing';
 
 export const SALES_WEEK_TARGETS = {
   prospectsContacted: 100,

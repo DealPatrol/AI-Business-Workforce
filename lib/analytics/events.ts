@@ -1,4 +1,4 @@
-import { adsSendTo, readGa4Id, readGoogleAdsCheckoutLabel, readGoogleAdsDemoLabel, readGoogleAdsOnboardingLabel, readMetaPixelId } from '@/lib/analytics/config';
+import { adsSendTo, readGa4Id, readGoogleAdsCheckoutLabel, readGoogleAdsDemoLabel, readGoogleAdsOnboardingLabel } from '@/lib/analytics/config';
 import { metaPhoneDigits, normalizeEmail, toE164 } from '@/lib/analytics/contact';
 import { readAttribution, readBrowserIds } from '@/lib/analytics/attribution';
 
@@ -12,7 +12,7 @@ declare global {
   }
 }
 
-export type TrackedEventName = 'Lead' | 'InitiateCheckout' | 'DemoStarted' | 'ViewContent';
+export type TrackedEventName = 'Lead' | 'StartTrial' | 'InitiateCheckout' | 'DemoStarted' | 'ViewContent';
 
 function newEventId() {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
@@ -32,13 +32,17 @@ function googleConversion(label: string, eventId: string) {
   gtagEvent('conversion', { send_to: sendTo, transaction_id: eventId });
 }
 
+function metaPixelEnabled() {
+  return typeof document !== 'undefined' && document.documentElement.dataset.metaPixel === 'on';
+}
+
 function metaTrack(command: 'track' | 'trackCustom', name: string, eventId: string, params?: Record<string, string>) {
-  if (typeof window === 'undefined' || typeof window.fbq !== 'function' || !readMetaPixelId()) return;
+  if (!metaPixelEnabled() || typeof window === 'undefined' || typeof window.fbq !== 'function') return;
   window.fbq(command, name, params || {}, { eventID: eventId });
 }
 
 function postServerEvent(eventName: TrackedEventName, eventId: string, extra?: { email?: string; phone?: string }) {
-  if (typeof window === 'undefined' || !readMetaPixelId()) return;
+  if (typeof window === 'undefined' || !metaPixelEnabled()) return;
   const { fbp, fbc } = readBrowserIds();
   const body = JSON.stringify({
     eventName,
@@ -74,6 +78,19 @@ export function trackDemoStarted() {
   return eventId;
 }
 
+/** Browser pixel and Conversions API share one event_id per event name. */
+export function trackTrialSignup(plan?: string) {
+  const params = plan ? { content_name: plan } : undefined;
+  const startTrialId = newEventId();
+  const leadId = newEventId();
+  metaTrack('track', 'StartTrial', startTrialId, params);
+  postServerEvent('StartTrial', startTrialId);
+  metaTrack('track', 'Lead', leadId, params);
+  postServerEvent('Lead', leadId);
+  trackCheckoutStarted(plan);
+  return { startTrialId, leadId };
+}
+
 export function trackCheckoutStarted(plan?: string) {
   const eventId = newEventId();
   googleConversion(readGoogleAdsCheckoutLabel(), eventId);
@@ -96,13 +113,13 @@ export function trackOnboardingSubmitted(input: { eventId: string; email?: strin
   googleConversion(readGoogleAdsOnboardingLabel(), eventId);
   if (readGa4Id()) gtagEvent('generate_lead', { transaction_id: eventId });
 
-  const pixelId = readMetaPixelId();
-  if (typeof window !== 'undefined' && typeof window.fbq === 'function' && pixelId) {
+  if (metaPixelEnabled() && typeof window !== 'undefined' && typeof window.fbq === 'function') {
     const userData: Record<string, string> = {};
     if (email) userData.em = email;
     const digits = metaPhoneDigits(phone);
     if (digits) userData.ph = digits;
-    if (Object.keys(userData).length > 0) window.fbq('init', pixelId, userData);
+    const pixelId = document.documentElement.dataset.metaPixelId || '';
+    if (pixelId && Object.keys(userData).length > 0) window.fbq('init', pixelId, userData);
     window.fbq('track', 'Lead', {}, { eventID: eventId });
   }
   return eventId;

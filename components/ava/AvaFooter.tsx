@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Sparkles } from 'lucide-react';
 
-export function AvaFooter({ homeHref = '/ava' }: { homeHref?: string }) {
+export function AvaFooter({ homeHref = '/receptionist' }: { homeHref?: string }) {
   return (
     <footer className="sales-footer">
       <Link className="ava-brand" href={homeHref}>

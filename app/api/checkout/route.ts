@@ -112,18 +112,18 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    if (!isAvaPlanKey(planKey)) return NextResponse.redirect(new URL('/ava#pricing', req.url));
+    if (!isAvaPlanKey(planKey)) return NextResponse.redirect(new URL('/receptionist#pricing', req.url));
     const result = await avaCheckoutUrl(
       req,
       planKey,
       req.nextUrl.searchParams.get('qualificationId') || '',
       req.nextUrl.searchParams.get('prefillToken') || req.nextUrl.searchParams.get('token') || '',
     );
-    if ('error' in result) return NextResponse.redirect(new URL('/ava?checkout=unavailable#pricing', req.url));
+    if ('error' in result) return NextResponse.redirect(new URL('/receptionist?checkout=unavailable#pricing', req.url));
     return NextResponse.redirect(result.url, 303);
   } catch (error) {
     console.error(error);
-    return NextResponse.redirect(new URL('/ava?checkout=unavailable#pricing', req.url));
+    return NextResponse.redirect(new URL('/receptionist?checkout=unavailable#pricing', req.url));
   }
 }
 

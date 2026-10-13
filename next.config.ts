@@ -18,6 +18,9 @@ const nextConfig: NextConfig = {
         destination: `${base}/ava/${destination}`,
         permanent: true,
       })),
+      { source: '/dispatch/missed-calls', destination: '/receptionist/missed-calls', permanent: true },
+      { source: '/dispatch', destination: '/receptionist', permanent: true },
+      { source: '/dispatch/:slug', destination: '/ava/:slug', permanent: true },
     ];
   },
 };
