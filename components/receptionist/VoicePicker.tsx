@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { DEFAULT_EXECUTIVE_VOICE, EXECUTIVE_VOICES, type ExecutiveVoiceSlug } from '@/lib/executive-receptionist';
+import { ExclusiveAudio } from './ExclusiveAudio';
 import styles from '@/app/receptionist/receptionist.module.css';
 
 export function VoicePicker() {
@@ -18,9 +19,7 @@ export function VoicePicker() {
               {voice.isDefault ? <small>Default</small> : null}
             </button>
             <p>{voice.detail}</p>
-            <audio controls preload="none" src={`/voices/${voice.slug}.mp3`}>
-              {voice.name}
-            </audio>
+            <ExclusiveAudio src={`/voices/${voice.slug}.mp3`}>{voice.name}</ExclusiveAudio>
           </li>
         );
       })}
