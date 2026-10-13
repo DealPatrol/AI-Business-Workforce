@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import Link from 'next/link';
 import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
+import { ExclusiveAudio } from '@/components/receptionist/ExclusiveAudio';
 import { VoicePicker } from '@/components/receptionist/VoicePicker';
 import { AVA_PLANS, type AvaPlanKey } from '@/lib/ava/pricing';
 import { EXAMPLE_NOTES, EXECUTIVE_FAQS, EXECUTIVE_INDUSTRIES } from '@/lib/executive-receptionist';
@@ -106,9 +107,7 @@ export default function ReceptionistPage() {
                 <h3>{industry.name}</h3>
                 <p>{industry.sample}</p>
               </div>
-              <audio controls preload="none" src={`/voices/samples/${industry.slug}.mp3`}>
-                {industry.name} sample
-              </audio>
+              <ExclusiveAudio src={`/voices/samples/${industry.slug}.mp3`}>{industry.name} sample</ExclusiveAudio>
             </li>
           ))}
         </ul>
