@@ -29,7 +29,7 @@ export default function PrivacyPage() {
   return (
     <main className={styles.page}>
       <nav className={styles.nav}>
-        <Link href="/receptionist">Executive Receptionist</Link>
+        <Link href="/ava">Executive Receptionist</Link>
         <b>Executive Receptionist by Workforce AI</b>
       </nav>
       <article className={styles.article}>
@@ -56,7 +56,7 @@ export default function PrivacyPage() {
 
         <h2>Calls and leads</h2>
         <p>
-          When Executive Receptionist answers a call, it collects the caller&apos;s name, phone number, and what they
+          When Executive Receptionist answers a call, she collects the caller&apos;s name, phone number, and what they
           need, along with a summary of the call. That lead is texted to the business owner. We keep
           those details so the owner can call the person back and so we can operate the service.
         </p>
@@ -89,7 +89,7 @@ export default function PrivacyPage() {
           DealPatrol, 12476 County Road 747, Hanceville, AL 35077
         </p>
         <p>
-          <Link href="/receptionist">Back to Executive Receptionist</Link>
+          <Link href="/ava">Back to Executive Receptionist</Link>
         </p>
       </article>
     </main>

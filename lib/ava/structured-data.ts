@@ -21,7 +21,7 @@ export function avaOfferNodes(pageUrl: string) {
 export function avaOrganization() {
   return {
     '@type': 'Organization',
-    name: 'Front Porch Growth',
+    name: 'Executive Receptionist by Workforce AI',
     url: absoluteSiteUrl('/'),
   };
 }

@@ -5,6 +5,7 @@ import {
   getSiteUrl,
   hostnameOf,
   isAvaStandaloneHost,
+  isExecutiveReceptionistHost,
   isLegacyHostPagePath,
 } from '@/lib/site-url';
 
@@ -36,29 +37,39 @@ function legacyHostRedirect(request: NextRequest) {
 function standaloneAvaResponse(request: NextRequest) {
   if (!isAvaStandaloneHost(requestHost(request))) return null;
   const { pathname } = request.nextUrl;
-  if (
-    pathname === '/ava' ||
-    pathname === '/ava/' ||
-    pathname === '/dispatch' ||
-    pathname === '/dispatch/' ||
-    pathname === '/receptionist' ||
-    pathname === '/receptionist/'
-  ) {
+  if (pathname === '/ava' || pathname === '/ava/') {
     const url = request.nextUrl.clone();
     url.pathname = '/';
     return NextResponse.redirect(url, 308);
   }
   if (pathname === '/') {
     const url = request.nextUrl.clone();
-    url.pathname = '/receptionist';
+    url.pathname = '/ava';
     return NextResponse.rewrite(url);
   }
   return null;
 }
 
+/**
+ * executivereceptionist.com serves the landing at /receptionist for the root
+ * path only. Every other path (onboarding, checkout success/cancel, login, etc.)
+ * passes through so post-checkout flows are not replaced by the marketing page.
+ */
+function executiveReceptionistRewrite(request: NextRequest) {
+  if (!isExecutiveReceptionistHost(requestHost(request))) return null;
+  const { pathname } = request.nextUrl;
+  if (pathname !== '/') return null;
+  const url = request.nextUrl.clone();
+  url.pathname = '/receptionist';
+  return NextResponse.rewrite(url);
+}
+
 export async function middleware(request: NextRequest) {
   const redirected = legacyHostRedirect(request);
   if (redirected) return redirected;
+
+  const executive = executiveReceptionistRewrite(request);
+  if (executive) return executive;
 
   const standalone = standaloneAvaResponse(request);
   if (standalone) return standalone;

@@ -23,7 +23,7 @@ export type PostCallGateDecision =
   | { process: false; reason: 'ignored_agent' };
 
 /**
- * Workspace post-call webhooks include the public demo and Sales Executive Receptionist.
+ * Workspace post-call webhooks include the public demo and Executive Receptionist.
  * Only a provisioned onboarding whose agent id matches, tied to an Executive Receptionist
  * customer on an active or trialing subscription, may create a lead.
  */

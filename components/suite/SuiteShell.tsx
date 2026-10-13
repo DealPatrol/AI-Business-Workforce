@@ -3,12 +3,13 @@ import type { ReactNode } from 'react';
 import styles from './suite.module.css';
 
 const NAV = [
-  { href: '/receptionist', label: 'Executive Receptionist' },
   { href: '/postcards', label: 'Postcards' },
+  { href: '/receptionist', label: 'Executive Receptionist' },
   { href: '/reputation', label: 'Reviews' },
   { href: '/lead-scout', label: 'Leads' },
   { href: '/agents', label: 'Agents' },
   { href: '/compare', label: 'Compare' },
+  { href: '/dashboard/prospector', label: 'Lead Finder' },
   { href: '/pricing', label: 'Pricing' },
 ];
 

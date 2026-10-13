@@ -252,7 +252,7 @@ function isMissingColumn(message: string) {
 export async function savePostCallLead(lead: ExtractedCallLead) {
   const target = await resolvePostCallTarget(lead.agentId);
   const effects = planPostCallEffects(target.decision);
-  // Demo agents, Sales Executive Receptionist, and any other unknown agent_id stop here.
+  // Demo agents, Executive Receptionist, and any other unknown agent_id stop here.
   // effects.sendSms is false, so Twilio is not called and no credit is spent.
   if (!effects.saveLead || !target.onboarding) {
     return { skipped: true as const, reason: 'ignored_agent' as const };

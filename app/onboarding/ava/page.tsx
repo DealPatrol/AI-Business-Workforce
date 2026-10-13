@@ -150,7 +150,7 @@ function AvaOnboardingForm() {
         const data = await res.json();
         if (!res.ok || !data.qualification) {
           if (!cancelled) {
-            setPrefillNote('Could not load Sales Executive Receptionist answers — fill the form manually.');
+            setPrefillNote('Could not load Executive Receptionist answers — fill the form manually.');
             setPrefillReady(true);
           }
           return;
@@ -170,13 +170,13 @@ function AvaOnboardingForm() {
         });
         setPrefillNote(
           data.access === 'full'
-            ? 'Prefilling from your Sales Executive Receptionist conversation.'
+            ? 'Prefilling from your Executive Receptionist conversation.'
             : 'Prefilling business answers. Re-enter staff contact if blank (token expired or missing).',
         );
         setPrefillReady(true);
       } catch {
         if (!cancelled) {
-          setPrefillNote('Could not load Sales Executive Receptionist answers — fill the form manually.');
+          setPrefillNote('Could not load Executive Receptionist answers — fill the form manually.');
           setPrefillReady(true);
         }
       }
@@ -301,7 +301,7 @@ function AvaOnboardingForm() {
   return (
     <main className={styles.page}>
       <nav className={styles.nav}>
-        <Link href="/receptionist">
+        <Link href="/ava">
           <ArrowLeft /> Executive Receptionist
         </Link>
         <b>
@@ -313,7 +313,7 @@ function AvaOnboardingForm() {
       <div className={styles.content}>
         <header className={styles.intro}>
           <span className={styles.eyebrow}>
-            {searchParams.get('session_id') ? 'AVA SETUP' : 'CHECKOUT STARTS THE TRIAL'}
+            {searchParams.get('session_id') ? 'Executive Receptionist SETUP' : 'CHECKOUT STARTS THE TRIAL'}
           </span>
           <h1>
             {searchParams.get('session_id')
@@ -354,11 +354,11 @@ function AvaOnboardingForm() {
         <section className={styles.sample}>
           <div className={styles.sampleHeader}>
             <div>
-              <span className={styles.eyebrow}>HEAR AVA ON A CALL</span>
+              <span className={styles.eyebrow}>HEAR Executive Receptionist ON A CALL</span>
               <h2>Hear Executive Receptionist on a call</h2>
               <p>Sample landscaping receptionist call · about 54 seconds</p>
             </div>
-            <Link href="/receptionist#talk-to-ava">Or talk to Sales Executive Receptionist</Link>
+            <Link href="/ava#talk-to-ava">Or talk to Executive Receptionist</Link>
           </div>
           <video
             className={styles.sampleVideo}
@@ -380,10 +380,10 @@ function AvaOnboardingForm() {
               {provisionNote ||
                 'If automatic setup is on, Executive Receptionist’s agent is created from this form. The phone number stays pending until Cole attaches it and you pass one live test call.'}
             </p>
-            <Link href="/receptionist">Return to Executive Receptionist</Link>
+            <Link href="/ava">Return to Executive Receptionist</Link>
           </section>
         ) : !prefillReady ? (
-            <p className={styles.notice}><Loader2 className={styles.spin} /> Loading your Sales Executive Receptionist answers…</p>
+            <p className={styles.notice}><Loader2 className={styles.spin} /> Loading your Executive Receptionist answers…</p>
           ) : (
           <>
           {!sessionId ? (
@@ -614,7 +614,7 @@ function OnboardingFallback() {
           <span className={styles.eyebrow}>CHECKOUT STARTS THE TRIAL</span>
           <h1>Start the trial in Stripe, then send setup notes.</h1>
           <p>
-            The 7-day trial is created at checkout. Starter is $79 a month after that, with $0 setup.
+            The 7-day trial is created at checkout. Starter is $77 a month after that, with $0 setup.
             The setup form loads on this page next.
           </p>
           <a className={styles.checkout} href="/api/checkout?plan=starter">

@@ -47,9 +47,9 @@ export function absoluteSiteUrl(path: string) {
 }
 
 /**
- * Executive Receptionist at the site root. Off unless AVA_STANDALONE_HOST names a host that is
+ * Executive Receptionist-at-root mode. Off unless AVA_STANDALONE_HOST names a host that is
  * neither the public site nor the legacy Vercel host. Leave it unset:
- * YardProof stays at / and Executive Receptionist stays at /receptionist.
+ * YardMailer stays at / and Executive Receptionist stays at /ava.
  */
 export function isAvaStandaloneHost(hostHeader: string | null | undefined) {
   const configured = hostnameOf(process.env.AVA_STANDALONE_HOST);
@@ -59,6 +59,16 @@ export function isAvaStandaloneHost(hostHeader: string | null | undefined) {
   if (host === hostnameOf(getSiteUrl())) return false;
   if (host === LEGACY_VERCEL_HOST) return false;
   return true;
+}
+
+const EXECUTIVE_RECEPTIONIST_HOSTS = new Set([
+  'executivereceptionist.com',
+  'www.executivereceptionist.com',
+]);
+
+/** Dedicated marketing host for the Executive Receptionist landing page. */
+export function isExecutiveReceptionistHost(hostHeader: string | null | undefined) {
+  return EXECUTIVE_RECEPTIONIST_HOSTS.has(hostnameOf(hostHeader));
 }
 
 /** Page paths that should leave the legacy Vercel host. Never /api, /_next, or files. */

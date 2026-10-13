@@ -12,7 +12,7 @@ const description =
 const FAQS = [
   {
     q: 'Is Front Porch Growth a replacement for ServiceTitan, Jobber, or Housecall Pro?',
-    a: 'No. Those products publish scheduling, invoicing, and dispatch boards. Executive Receptionist answers calls and texts the lead. YardProof sends postcards you approve. ReputationFlow requests reviews. None of that is a field-service system.',
+    a: 'No. Those products publish scheduling, invoicing, and dispatch boards. Executive Receptionist answers calls and texts the lead. YardMailer sends postcards you approve. ReputationFlow requests reviews. None of that is a field-service system.',
   },
   {
     q: 'Where do the competitor prices come from?',

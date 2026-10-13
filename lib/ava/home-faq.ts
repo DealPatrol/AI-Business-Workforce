@@ -1,7 +1,7 @@
 export const AVA_HOME_FAQS = [
   {
     q: 'How much does Executive Receptionist cost?',
-    a: 'Three monthly plans after a free 7-day trial and a $0 setup fee: Starter $79 with 300 minutes, Growth $149 with 800 minutes, and Pro $299 with 1,800 minutes. Extra minutes bill at the plan rate: $0.28, $0.24, or $0.20.',
+    a: 'Three monthly plans after a free 7-day trial and a $0 setup fee: Starter $77 with 300 minutes, Growth $168 with 800 minutes, and Pro $324 with 1,800 minutes. Extra minutes bill at the plan rate: $0.36, $0.31, or $0.26.',
   },
   {
     q: 'Can I hear Executive Receptionist before I pay?',
@@ -13,7 +13,7 @@ export const AVA_HOME_FAQS = [
   },
   {
     q: 'What does Executive Receptionist do on a call?',
-    a: 'It answers, asks for the caller’s name, number, and what they need, and texts that lead to the phone you set. Urgent handling follows rules you write. It is an AI receptionist, and the greeting says so.',
+    a: 'She answers, asks for the caller’s name, number, and what they need, and texts that lead to the phone you set. Urgent handling follows rules you write. She is an AI receptionist, and the greeting says so.',
   },
   {
     q: 'Which businesses is this for?',

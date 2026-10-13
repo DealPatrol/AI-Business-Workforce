@@ -16,9 +16,9 @@ import styles from './home.module.css';
 
 const CONTACT_EMAIL = 'colecollins763@gmail.com';
 
-const title = 'YardProof Postcards | Front Porch Growth';
+const title = 'YardMailer Postcards | Front Porch Growth';
 const description =
-  'Launch a managed property-concept postcard campaign with QR estimate pages for landscaping and home-service businesses. The founding offer is $99/month.';
+  'Launch a managed property-concept postcard campaign with QR estimate pages for landscaping and home-service businesses. The founding offer is $389 setup + $129/month.';
 
 export const metadata: Metadata = {
   title: { absolute: title },
@@ -84,7 +84,7 @@ export default function HomePage() {
           <span>
             <Sparkles size={17} />
           </span>
-          YardProof
+          YardMailer
         </Link>
         <div className={styles.navLinks}>
           <Link href="/">Front Porch Growth</Link>
@@ -108,14 +108,14 @@ export default function HomePage() {
             estimate.
           </p>
           <div className={styles.priceLine}>
-            <strong>$99/month</strong>
+            <strong>$389 setup + $129/month</strong>
           </div>
           <div className={styles.heroActions}>
             <a className={styles.primaryButton} href={foundingCheckoutHref('/postcards#package')}>
               {FOUNDING_CTA} <ArrowRight size={18} />
             </a>
             <a className={styles.secondaryButton} href="#demo10">
-              See the $49 Demo Blast 10
+              See the $64 Demo Blast 10
             </a>
           </div>
           <p className={styles.heroNote}>
@@ -171,7 +171,7 @@ export default function HomePage() {
           </p>
         </div>
         <div>
-          <strong>$49</strong>
+          <strong>$64</strong>
           <ul>
             <li><Check /> Up to 10 before/after concepts</li>
             <li><Check /> Per-card approve, swap, regenerate, or request changes</li>
@@ -268,10 +268,10 @@ export default function HomePage() {
         <div className={styles.offerCard}>
           <small>FOUNDING LAUNCH</small>
           <div className={styles.offerPrice}>
-            <strong>$99</strong>
-            <span>/month</span>
+            <strong>$389</strong>
+            <span>setup</span>
           </div>
-          <p>$99/month for the initial managed campaign</p>
+          <p>$389 setup + $129/month for the initial managed campaign</p>
           <ul>
             {packageItems.map((item) => (
               <li key={item}>
@@ -295,7 +295,7 @@ export default function HomePage() {
           <h2>Ask Cole if this fits your service area.</h2>
           <p>No sales maze. Email the person who will help set up the campaign.</p>
         </div>
-        <a href={`mailto:${CONTACT_EMAIL}?subject=Question%20about%20the%20YardProof%20postcard%20campaign`}>
+        <a href={`mailto:${CONTACT_EMAIL}?subject=Question%20about%20the%20YardMailer%20postcard%20campaign`}>
           <Mail size={18} /> Email Cole
         </a>
       </section>
@@ -308,7 +308,7 @@ export default function HomePage() {
             Executive Receptionist is a separate AI receptionist add-on for businesses that want 24/7 call coverage. The postcard campaign remains the main service.
           </p>
         </div>
-        <Link href="/receptionist">
+        <Link href="/ava">
           See Executive Receptionist add-on <ArrowRight size={16} />
         </Link>
       </section>
@@ -318,7 +318,7 @@ export default function HomePage() {
           <span>
             <Sparkles size={17} />
           </span>
-          YardProof
+          YardMailer
         </Link>
         <p>
           Cole · <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>

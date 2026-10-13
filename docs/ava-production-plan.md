@@ -15,12 +15,12 @@ Goal: ship Executive Receptionist (AI receptionist) as a production-ready, payme
 
 ## What shipped in this pass
 
-- `/receptionist` repositioned around recovered missed/after-hours calls → qualified lead handoff (Muse “sell recovered revenue” framing without agency pricing).
+- `/ava` repositioned around recovered missed/after-hours calls → qualified lead handoff (Muse “sell recovered revenue” framing without agency pricing).
 - Clear automated vs human scope; no fake testimonials or invented revenue claims.
-- Centralized Executive Receptionist pricing in `lib/ava/pricing.ts` wired through checkout, layout JSON-LD, industry pages, onboarding, Sales Executive Receptionist, demos.
+- Centralized Executive Receptionist pricing in `lib/ava/pricing.ts` wired through checkout, layout JSON-LD, industry pages, onboarding, Executive Receptionist, demos.
 - Stripe Checkout subscriptions now send `subscription_data[trial_period_days]=7`.
 - `POST /api/webhooks/stripe` verifies signatures, upserts Executive Receptionist customers, emails the onboarding link, and syncs subscription status.
-- `POST /api/webhooks/elevenlabs` verifies the post-call HMAC signature and saves leads only for provisioned Executive Receptionist customers on an active or trialing subscription. Demo and Sales Executive Receptionist calls are acknowledged and ignored, with no Twilio SMS.
+- `POST /api/webhooks/elevenlabs` verifies the post-call HMAC signature and saves leads only for provisioned Executive Receptionist customers on an active or trialing subscription. Demo and Executive Receptionist calls are acknowledged and ignored, with no Twilio SMS.
 - Southern voice picker + preferred-voice onboarding note.
 - Onboarding row update on Stripe session reuse.
 
@@ -32,21 +32,21 @@ Muse / FirstMinute blueprint targets a **managed** front desk: **$2,000 implemen
 
 | Plan | Price | Included minutes | Overage |
 |---|---|---|---|
-| Starter | **$79/mo** | 300 | $0.28/min |
-| Growth | **$149/mo** | 800 | $0.24/min |
-| Pro | **$299/mo** | 1,800 | $0.20/min |
+| Starter | **$77/mo** | 300 | $0.36/min |
+| Growth | **$168/mo** | 800 | $0.31/min |
+| Pro | **$324/mo** | 1,800 | $0.26/min |
 
 - **$0 setup** on self-serve checkout.
-- **Optional assisted launch $299** one-time (manual Cole/ops — messaging only; not an automated Stripe SKU yet).
+- **Optional assisted launch $389** one-time (manual Cole/ops — messaging only; not an automated Stripe SKU yet).
 - **Free 7-day trial** via Stripe Checkout trial days.
 
-Rationale: previous $59 entry underpriced a 24/7 voice product relative to answering services; Muse $1,250 is the wrong comparison set for software-led Executive Receptionist. $79–$299 keeps a contractor-friendly break-even (a handful of recovered jobs) while funding minutes + support margin. Revisit a true managed tier only after phone provisioning and calendar booking are live.
+Rationale: previous $59 entry underpriced a 24/7 voice product relative to answering services; Muse $1,250 is the wrong comparison set for software-led Executive Receptionist. $77–$324 keeps a contractor-friendly break-even (a handful of recovered jobs) while funding minutes + support margin. Revisit a true managed tier only after phone provisioning and calendar booking are live.
 
 ## Payments / go-live blockers (manual)
 
 Repo can create Checkout Sessions and verify paid sessions for provisioning when secrets exist. **User must still:**
 
-1. Set Vercel Production secrets: `STRIPE_SECRET_KEY`, optional `STRIPE_AVA_*_PRICE_ID` (recreate Dashboard prices for $79/$149/$299), `STRIPE_WEBHOOK_SECRET`, `ELEVENLABS_WEBHOOK_SECRET`, `AVA_FROM_EMAIL`.
+1. Set Vercel Production secrets: `STRIPE_SECRET_KEY`, optional `STRIPE_AVA_*_PRICE_ID` (recreate Dashboard prices for $77/$168/$324), `STRIPE_WEBHOOK_SECRET`, `ELEVENLABS_WEBHOOK_SECRET`, `AVA_FROM_EMAIL`.
 2. Stripe Dashboard → Webhooks → endpoint `https://<domain>/api/webhooks/stripe` for `checkout.session.completed`, `customer.subscription.updated`, and `customer.subscription.deleted`.
 2b. ElevenLabs post-call webhook → `https://<domain>/api/webhooks/elevenlabs`. See `docs/AVA_GO_LIVE_CHECKLIST.md`.
 3. Confirm Stripe business name/branding (Dashboard → Settings) so Checkout does not show a generic “Billing” label.
@@ -60,6 +60,6 @@ Repo can create Checkout Sessions and verify paid sessions for provisioning when
 
 1. Merge production PR → Vercel production deploy.
 2. Complete Stripe + ElevenLabs + Supabase secrets checklist above.
-3. Run one test Checkout (Starter) through `/receptionist` → onboarding → Cole notification.
+3. Run one test Checkout (Starter) through `/ava` → onboarding → Cole notification.
 4. Close superseded OPEN #31 after this PR lands (or mark duplicate).
 5. Keep postcard PR #34 on its own track.

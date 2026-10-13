@@ -7,8 +7,10 @@ import {
 const STRIPE_API = 'https://api.stripe.com/v1';
 export const STRIPE_API_VERSION = '2026-07-29.dahlia';
 
-export const FOUNDING_PRODUCT_NAME = 'YardProof Founding Plan';
-export const FOUNDING_MONTHLY_CENTS = 9900;
+export const FOUNDING_PRODUCT_NAME = 'YardMailer Founding Plan';
+export const FOUNDING_SETUP_NAME = 'YardMailer Founding Setup';
+export const FOUNDING_SETUP_CENTS = 38900;
+export const FOUNDING_MONTHLY_CENTS = 12900;
 
 export { AVA_PLANS, type AvaPlanKey, isAvaPlanKey };
 
@@ -31,6 +33,7 @@ export function readStripePriceId(value: string | undefined) {
 type FoundingCheckoutInput = {
   origin: string;
   monthlyPriceId?: string;
+  setupPriceId?: string;
 };
 
 type AvaCheckoutInput = {
@@ -40,6 +43,22 @@ type AvaCheckoutInput = {
   qualificationId?: string;
   prefillToken?: string;
 };
+
+function appendOneTimePrice(
+  params: URLSearchParams,
+  index: number,
+  input: { priceId?: string; unitAmount: number; productName: string; description: string },
+) {
+  params.set(`line_items[${index}][quantity]`, '1');
+  if (input.priceId) {
+    params.set(`line_items[${index}][price]`, input.priceId);
+    return;
+  }
+  params.set(`line_items[${index}][price_data][currency]`, 'usd');
+  params.set(`line_items[${index}][price_data][unit_amount]`, String(input.unitAmount));
+  params.set(`line_items[${index}][price_data][product_data][name]`, input.productName);
+  params.set(`line_items[${index}][price_data][product_data][description]`, input.description);
+}
 
 function appendRecurringPrice(
   params: URLSearchParams,
@@ -68,17 +87,25 @@ export function buildFoundingCheckoutParams(input: FoundingCheckoutInput) {
   params.set('cancel_url', `${input.origin}/`);
   params.set('billing_address_collection', 'auto');
   params.set('allow_promotion_codes', 'true');
-  appendRecurringPrice(params, 0, {
+  appendOneTimePrice(params, 0, {
+    priceId: input.setupPriceId,
+    unitAmount: FOUNDING_SETUP_CENTS,
+    productName: FOUNDING_SETUP_NAME,
+    description: '$389 one-time setup for the managed founding campaign.',
+  });
+  appendRecurringPrice(params, 1, {
     priceId: input.monthlyPriceId,
     unitAmount: FOUNDING_MONTHLY_CENTS,
     productName: FOUNDING_PRODUCT_NAME,
-    description: '$99/month for the managed founding campaign.',
+    description: '$129/month after the $389 founding setup.',
   });
   params.set('metadata[product]', 'yardproof');
   params.set('metadata[offer]', 'founding');
+  params.set('metadata[setup_cents]', String(FOUNDING_SETUP_CENTS));
   params.set('metadata[monthly_cents]', String(FOUNDING_MONTHLY_CENTS));
   params.set('subscription_data[metadata][product]', 'yardproof');
   params.set('subscription_data[metadata][offer]', 'founding');
+  params.set('subscription_data[metadata][setup_cents]', String(FOUNDING_SETUP_CENTS));
   params.set('subscription_data[metadata][monthly_cents]', String(FOUNDING_MONTHLY_CENTS));
   return params;
 }

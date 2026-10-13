@@ -7,7 +7,7 @@ import styles from '@/components/suite/suite.module.css';
 
 const title = 'Pricing | Front Porch Growth';
 const description =
-  'YardProof postcard founding offer is $99/month. Executive Receptionist receptionist plans are $79, $149, and $299 a month after a free 7-day trial. Invoicing is a waitlist.';
+  'YardMailer postcard founding offer is $389 setup + $129/month. Executive Receptionist plans are $77, $168, and $324 a month after a free 7-day trial. Invoicing is a waitlist.';
 
 export const metadata: Metadata = {
   title: { absolute: title },
@@ -28,11 +28,11 @@ export const metadata: Metadata = {
 };
 
 const rows = [
-  ['YardProof postcards', 'Founding offer', '$99/month'],
-  ['Demo Blast 10', 'Up to 10 postcard concepts', '$49'],
-  ['Executive Receptionist Starter', '300 voice minutes, 7-day trial, $0 setup', '$79/month'],
-  ['Executive Receptionist Growth', '800 voice minutes, 7-day trial, $0 setup', '$149/month'],
-  ['Executive Receptionist Pro', '1,800 voice minutes, 7-day trial, $0 setup', '$299/month'],
+  ['YardMailer postcards', 'Founding offer', '$389 setup + $129/month'],
+  ['Demo Blast 10', 'Up to 10 postcard concepts', '$64'],
+  ['Executive Receptionist Starter', '300 voice minutes, 7-day trial, $0 setup', '$77/month'],
+  ['Executive Receptionist Growth', '800 voice minutes, 7-day trial, $0 setup', '$168/month'],
+  ['Executive Receptionist Pro', '1,800 voice minutes, 7-day trial, $0 setup', '$324/month'],
   ['Lead Finder', 'Signed-in Maps search and approved drafts', 'No separate public price'],
   ['Lead Scout', 'Public listing search. Does not contact anyone.', 'No separate public price'],
   ['Writing agents', 'Drafts on the page. Nothing is sent.', 'No separate public price'],
@@ -47,7 +47,7 @@ export default function PricingPage() {
         <span className={styles.eyebrow}>PRICING</span>
         <h1>Published prices, one page.</h1>
         <p>
-          The postcard founding offer is $99/month. Executive Receptionist’s Starter, Growth, and Pro plans are $79, $149, and $299 a month. ReputationFlow’s $20 price is on tryreputationflow.com, not a new charge here.
+          The postcard founding offer is $389 setup + $129/month. Executive Receptionist’s Starter, Growth, and Pro plans are $77, $168, and $324 a month. Those are different products. ReputationFlow’s $20 price is on tryreputationflow.com, not a new charge here.
         </p>
         <table className={styles.table}>
           <thead>

@@ -16,7 +16,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const page = getAvaGuide(slug);
   if (!page) return {};
-  const url = absoluteSiteUrl(`/receptionist/${slug}`);
+  const url = absoluteSiteUrl(`/ava/${slug}`);
   return {
     title: { absolute: page.metaTitle },
     description: page.description,
@@ -40,5 +40,5 @@ export default async function IndustryPage({ params }: { params: Promise<{ slug:
   const { slug } = await params;
   const page = getAvaGuide(slug);
   if (!page) notFound();
-  return <AvaGuidePage guide={page} homeHref="/receptionist" />;
+  return <AvaGuidePage guide={page} homeHref="/ava" />;
 }

@@ -19,7 +19,7 @@ const SCENES = [
     visual:
       'Split screen: customer dialing on phone → Executive Receptionist answers with business name → conversation transcript rolling.',
     audio:
-      'Executive Receptionist answers immediately. It handles the common questions — service area, urgency, what\'s going wrong — and captures the details your team needs to call back qualified.',
+      'Executive Receptionist answers immediately. She handles the common questions — service area, urgency, what\'s going wrong — and captures the details your team needs to call back qualified.',
     note: 'Use a real emergency scenario: AC out, burst pipe, no heat. Do NOT explain AI or ElevenLabs.',
   },
   {
@@ -34,8 +34,8 @@ const SCENES = [
   {
     time: '0:55–1:05',
     title: '14-day pilot offer',
-    visual: 'Simple pricing card: Executive Receptionist plans from $79/month, 300 minutes, cancel anytime.',
-    audio: `Executive Receptionist plans start at $79 a month. ${AVA_PILOT_OFFER.usageLimit}. Cancel anytime.`,
+    visual: 'Simple pricing card: Executive Receptionist plans from $77/month, 300 minutes, cancel anytime.',
+    audio: `Executive Receptionist plans start at $77 a month. ${AVA_PILOT_OFFER.usageLimit}. Cancel anytime.`,
     note: 'Keep pricing on screen for 3 seconds max. Outcome first, price second.',
   },
   {

@@ -16,8 +16,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: absoluteSiteUrl('/lead-scout'), lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
     { url: absoluteSiteUrl('/agents'), lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
     { url: absoluteSiteUrl('/terms'), lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
-    { url: absoluteSiteUrl('/receptionist'), lastModified: now, changeFrequency: 'weekly', priority: 0.95 },
+    { url: absoluteSiteUrl('/ava'), lastModified: now, changeFrequency: 'weekly', priority: 0.95 },
+    { url: absoluteSiteUrl('/receptionist'), lastModified: now, changeFrequency: 'weekly', priority: 0.96 },
     { url: absoluteSiteUrl('/receptionist/missed-calls'), lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
+    { url: absoluteSiteUrl('/hvac'), lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
     { url: absoluteSiteUrl('/privacy'), lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
     { url: absoluteSiteUrl('/receptionist-demo'), lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
     ...POSTCARD_TRADES.map((t) => ({
@@ -27,7 +29,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     })),
     ...avaGuideSlugs().map((slug) => ({
-      url: absoluteSiteUrl(`/receptionist/${slug}`),
+      url: absoluteSiteUrl(`/ava/${slug}`),
       lastModified: now,
       changeFrequency: 'weekly' as const,
       priority: 0.88,

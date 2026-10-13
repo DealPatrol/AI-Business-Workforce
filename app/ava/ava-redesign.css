@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════
-   AVA — "The front desk that never sleeps"
+   Executive Receptionist — "The front desk that never sleeps"
    An editorial, print-inspired sales page. Warm paper, ink, and one hot
    signal-orange. Fraunces for display, Plex Mono for the call-log data.
    Everything is scoped under .ava-redesign so legacy sales styles can't leak.
@@ -164,13 +164,11 @@
   color: var(--ink);
   display: flex;
   align-items: baseline;
-  flex-wrap: wrap;
   gap: 10px;
-  min-width: 0;
 }
 .ava-redesign .wordmark-ava {
   font-family: var(--ava-display), Georgia, serif;
-  font-size: clamp(16px, 1.8vw, 26px);
+  font-size: 30px;
   font-weight: 700;
   letter-spacing: -0.02em;
 }

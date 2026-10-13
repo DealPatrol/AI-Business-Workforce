@@ -89,5 +89,5 @@ export function formatAvaLeadSmsBody(lead: {
 
 export function formatSalesQualifySmsBody(businessName: string): string {
   const name = String(businessName || 'Unknown business').trim() || 'Unknown business';
-  return `Sales Executive Receptionist qualify — ${name}`.slice(0, 320);
+  return `Executive Receptionist qualify — ${name}`.slice(0, 320);
 }

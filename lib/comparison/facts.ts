@@ -19,7 +19,7 @@ export const COMPARISON_FACTS: ComparisonFact[] = [
     name: 'Front Porch Growth',
     category: 'This site',
     publishedPrice:
-      'Executive Receptionist is $79, $149, or $299 a month after a 7-day trial and a $0 setup fee. YardProof postcards are a $99/month founding offer. Demo Blast 10 is $49. ReputationFlow, a separate site Cole operates, publishes a free starter and Professional at $20/month.',
+      'Executive Receptionist is $77, $168, or $324 a month after a 7-day trial and a $0 setup fee. YardMailer postcards are a $389 setup plus $129/month founding offer. Demo Blast 10 is $64. ReputationFlow, a separate site Cole operates, publishes a free starter and Professional at $20/month.',
     terms: 'Executive Receptionist trial and prices are the Stripe plans on this site. ReputationFlow says Professional is billed monthly and can be canceled in the Stripe customer portal, with no setup fee.',
     whatTheyPublish:
       'Executive Receptionist answers forwarded calls and texts the lead. It does not book a calendar. Postcards mail only after you approve the concept, audience, and costs. Lead Scout searches public listings and does not contact them. The writing agents draft text on the page and do not send it.',
@@ -91,7 +91,7 @@ export const COMPARISON_FACTS: ComparisonFact[] = [
     terms:
       'The same page says the service is month-to-month, with no long-term contract, and that new clients get a 30-day money-back guarantee. Add-on prices, such as appointment booking at $1.50, are listed separately.',
     whatTheyPublish:
-      'People answer the calls. Executive Receptionist is software on the Starter plan at $79/month after the trial, with 300 included minutes, and it texts you instead of transferring to a live receptionist.',
+      'People answer the calls. Executive Receptionist is software on the Starter plan at $77/month after the trial, with 300 included minutes, and it texts you instead of transferring to a live receptionist.',
     sourceLabel: 'smith.ai/pricing/receptionists',
     sourceUrl: 'https://smith.ai/pricing/receptionists',
   },

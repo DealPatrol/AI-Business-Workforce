@@ -5,7 +5,7 @@ import type { Metadata } from 'next';
 
 const title = 'Try the Executive Receptionist AI Receptionist Demo';
 const description =
-  'Hear a prerecorded Executive Receptionist call or talk to it in the browser, then start a free 7-day Stripe trial. Plans are $79, $149, and $299 a month.';
+  'Hear a prerecorded Executive Receptionist call or talk to her in the browser, then start a free 7-day Stripe trial. Plans are $77, $168, and $324 a month.';
 
 export const metadata: Metadata = {
   title,

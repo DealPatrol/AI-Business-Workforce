@@ -48,7 +48,7 @@ Hi [First Name] — saw you checked out the demo. The "Call Executive Receptioni
 ## Follow-up (they called Executive Receptionist, no reply)
 
 ```
-Hi [First Name] — glad you tried the demo. If you want to run a 14-day pilot on your actual number: Executive Receptionist plans start at $79/month, 300 minutes included, cancel anytime. Happy to walk through it on a 10-minute call.
+Hi [First Name] — glad you tried the demo. If you want to run a 14-day pilot on your actual number: Executive Receptionist plans start at $77/month, 300 minutes included, cancel anytime. Happy to walk through it on a 10-minute call.
 ```
 
 ---

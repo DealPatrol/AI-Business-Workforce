@@ -11,7 +11,7 @@ const CONTACT_EMAIL = 'colecollins763@gmail.com';
 function buildEmailFallback(form: HTMLFormElement) {
   const data = new FormData(form);
   const subject = encodeURIComponent(
-    `YardProof founding request — ${String(data.get('business') || 'New business')}`,
+    `YardMailer founding request — ${String(data.get('business') || 'New business')}`,
   );
   const body = encodeURIComponent(
     [
@@ -87,7 +87,7 @@ export default function FoundingRequestForm({ checkoutState: checkoutFromServer 
           <ArrowLeft /> Back
         </Link>
         <b>
-          <Sparkles /> YardProof
+          <Sparkles /> YardMailer
         </b>
       </nav>
       <section>
@@ -101,7 +101,7 @@ export default function FoundingRequestForm({ checkoutState: checkoutFromServer 
           </p>
           <div>
             <p>
-              <Check /> $99/month for the managed campaign
+              <Check /> $389 setup + $129/month for the managed campaign
             </p>
             <p>
               <Check /> Materials, margin, and campaign setup tailored to your business
@@ -109,7 +109,7 @@ export default function FoundingRequestForm({ checkoutState: checkoutFromServer 
           </div>
           {checkoutState === 'success' && (
             <p className="notice">
-              Stripe checkout finished for the YardProof Founding Plan at $99/month. Send your
+              Stripe checkout finished for the YardMailer Founding Plan at $389 setup + $129/month. Send your
               business details below so Cole can start the campaign.
             </p>
           )}
@@ -123,7 +123,7 @@ export default function FoundingRequestForm({ checkoutState: checkoutFromServer 
           </a>
           <small>
             Want to confirm fit first?{' '}
-            <a href={`mailto:${CONTACT_EMAIL}?subject=YardProof%20founding%20request`}>
+            <a href={`mailto:${CONTACT_EMAIL}?subject=YardMailer%20founding%20request`}>
               {CONTACT_EMAIL}
             </a>
           </small>

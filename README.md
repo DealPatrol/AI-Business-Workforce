@@ -1,8 +1,8 @@
 # Front Porch Growth
 
-The public homepage is the Front Porch Growth suite at `/`: YardProof postcards, Executive Receptionist, Lead Finder, and an invoicing waitlist. Cole bought executivereceptionist.com. That domain is not attached to this deployment, and the app does not depend on it. The live product stays at frontporchgrowth.com/receptionist until the domain is connected. The previous YardProof homepage is `/postcards`. Old anchors `/#how`, `/#demo10`, and `/#package` 308-redirect to `/postcards`. Apply `supabase/migrations/008_invoicing_waitlist.sql` before the invoicing form can save.
+The public homepage is the Front Porch Growth suite at `/`: YardMailer postcards, Executive Receptionist, Lead Finder, and an invoicing waitlist. The previous YardMailer homepage is `/postcards`. Old anchors `/#how`, `/#demo10`, and `/#package` 308-redirect to `/postcards`. Apply `supabase/migrations/008_invoicing_waitlist.sql` before the invoicing form can save.
 
-# YardProof
+# YardMailer
 
 AI-powered business automation platform focused on measurable outcomes for service businesses.
 
@@ -26,10 +26,10 @@ AI-powered business automation platform focused on measurable outcomes for servi
 
 One offer: Executive Receptionist answers missed and after-hours calls, handles common questions, captures job details, and sends the owner a qualified lead summary.
 
-- Executive Receptionist plans from **$79/month** · 300 voice minutes on Starter · cancel anytime after trial
-- YardProof founding plan: **$99/month**
+- Executive Receptionist plans from **$77/month** · 300 voice minutes on Starter · cancel anytime after trial
+- YardMailer founding plan: **$389 setup + $129/month**
 - Personalized demos: `/demo/acexperts`, `/demo/family-comfort-hvac`, `/demo/after-hours-hvacr`, `/demo/underwood-hvac`, `/demo/posey-family-plumbing`
-- Offer page: `/receptionist` · sales video: `/video` (`/ava-hvac-pilot.mp4`) · tracker: `/sales`
+- Offer page: `/ava` · sales video: `/video` (`/ava-hvac-pilot.mp4`) · tracker: `/sales`
 - Prospect list and outreach copy: `sales/prospect-list.md`, `sales/outreach-templates.md`
 - Supabase events: `sales_prospect_events` + `sales_prospect_status` via `/api/sales/events`. Apply migrations `003` and `004`.
 

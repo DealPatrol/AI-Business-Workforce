@@ -31,9 +31,9 @@ async function notifySalesQualificationEmail(row: AvaSalesQualificationRow) {
     return { sent: false, error: 'Email notification environment variables are not configured.' };
   }
 
-  const subject = `Sales Executive Receptionist qualification — ${row.business_name}`;
+  const subject = `Executive Receptionist qualification — ${row.business_name}`;
   const html = `<div style="font-family:Arial,sans-serif;max-width:720px;margin:auto;color:#17211b">
-    <h1 style="font-size:22px">New Sales Executive Receptionist qualification</h1>
+    <h1 style="font-size:22px">New Executive Receptionist qualification</h1>
     <p>A prospect finished the qualify conversation. Prefill onboarding with <code>qualificationId=${escapeHtml(row.id)}</code> plus a short-lived <code>prefillToken</code> for staff contact.</p>
     <table style="border-collapse:collapse;width:100%">
       <tr><td><b>Business</b></td><td>${escapeHtml(row.business_name)} (${escapeHtml(row.business_type)})</td></tr>

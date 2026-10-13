@@ -89,14 +89,14 @@ function SalesAvaQualifyContent() {
       const res = await fetch('/api/ava/elevenlabs?mode=sales', { cache: 'no-store' });
       const data = await res.json();
       if (!res.ok || !data.signedUrl) {
-        throw new Error(data?.error || data?.next || 'Sales Executive Receptionist is not configured yet.');
+        throw new Error(data?.error || data?.next || 'Executive Receptionist is not configured yet.');
       }
       signedUrl.current = data.signedUrl;
       preparedConversationId.current = data.conversationId || null;
       setCallState('ready');
     } catch (e: unknown) {
       const err = e as { message?: string };
-      setError(err?.message || 'Sales Executive Receptionist is not ready yet.');
+      setError(err?.message || 'Executive Receptionist is not ready yet.');
       setCallState('idle');
     }
   }
@@ -146,7 +146,7 @@ function SalesAvaQualifyContent() {
         setMicBlocked(true);
         setError('Microphone access was blocked, so the live voice demo can\u2019t start here.');
       } else {
-        setError(err?.message || 'Unable to start Sales Executive Receptionist.');
+        setError(err?.message || 'Unable to start Executive Receptionist.');
       }
       setCallState('ready');
     }
@@ -161,7 +161,7 @@ function SalesAvaQualifyContent() {
       });
       if (r.status === 202) continue;
       const d = await r.json();
-      if (!r.ok) throw new Error(d.error || 'Could not process the Sales Executive Receptionist conversation.');
+      if (!r.ok) throw new Error(d.error || 'Could not process the Executive Receptionist conversation.');
 
       const collected = (d.collected || {}) as Record<string, unknown>;
       const q = (d.qualification || {}) as Record<string, string | null>;
@@ -212,7 +212,7 @@ function SalesAvaQualifyContent() {
           q.planInterest ||
           pickCollected(collected, 'planInterest', 'plan_interest', 'plan') ||
           null,
-        summary: d.summary || 'Sales Executive Receptionist qualification conversation completed.',
+        summary: d.summary || 'Executive Receptionist qualification conversation completed.',
       };
 
       const save = await fetch('/api/ava/sales/qualify', {
@@ -281,10 +281,10 @@ function SalesAvaQualifyContent() {
   return (
     <section id="talk-to-ava" className="demo-shell">
       <div className="demo-copy">
-        <span className="kicker">TALK TO AVA · SALES QUALIFY</span>
-        <h2>Talk to Executive Receptionist — it&apos;ll set up your receptionist</h2>
+        <span className="kicker">TALK TO Executive Receptionist · SALES QUALIFY</span>
+        <h2>Talk to Executive Receptionist — she&apos;ll set up your receptionist</h2>
         <p>
-          Call Executive Receptionist like your customers will. It&apos;ll ask the setup questions, then you can start a
+          Call Executive Receptionist like your customers will. She&apos;ll ask the setup questions, then you can start a
           plan or continue to onboarding with answers prefilled.
         </p>
         <ul>
@@ -302,14 +302,14 @@ function SalesAvaQualifyContent() {
           </li>
         </ul>
         <p className="demo-note">
-          <ShieldCheck /> Executive Receptionist is AI. It&apos;ll disclose that to your callers too. No dial-in number —
+          <ShieldCheck /> Executive Receptionist is AI. She&apos;ll disclose that to your callers too. No dial-in number —
           browser mic only.
         </p>
       </div>
 
       <div className="live-card">
         <div className="ai-disclosure">
-          <Sparkles /> Sales Executive Receptionist · qualify your shop
+          <Sparkles /> Executive Receptionist · qualify your shop
         </div>
         <div className="ava-head">
           <div className="avatar">
@@ -402,7 +402,7 @@ function SalesAvaQualifyContent() {
                   </>
                 ) : (
                   <>
-                    <PhoneCall /> Talk to Executive Receptionist — it&apos;ll set up your receptionist
+                    <PhoneCall /> Talk to Executive Receptionist — she&apos;ll set up your receptionist
                   </>
                 )}
               </button>

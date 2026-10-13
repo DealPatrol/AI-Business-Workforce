@@ -57,7 +57,7 @@ function GuideExtra({ guide }: { guide: AvaGuide }) {
 }
 
 export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: string }) {
-  const pageUrl = absoluteSiteUrl(`/receptionist/${guide.slug}`);
+  const pageUrl = absoluteSiteUrl(`/ava/${guide.slug}`);
   const demoHref = `${homeHref}#hear-demo`;
   const liveHref = `${homeHref}#talk-to-ava`;
   const graph = jsonLdGraph([
@@ -89,7 +89,7 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
         <div>
           <Link href="#pricing">Pricing</Link>
           <Link href={liveHref}>Try the demo</Link>
-          <Link href="/receptionist/missed-call-cost-calculator">Calculator</Link>
+          <Link href="/ava/missed-call-cost-calculator">Calculator</Link>
         </div>
         <TrackedCheckoutLink className="nav-cta" href="/api/checkout?plan=starter" plan="starter">
           Start free trial
@@ -101,7 +101,7 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
           <span className="kicker">{guide.eyebrow}</span>
           <h1>{guide.h1}</h1>
           <p>{guide.lede}</p>
-          <p className="trial-line">Free 7-day trial, then $79, $149, or $299 a month. $0 setup.</p>
+          <p className="trial-line">Free 7-day trial, then $77, $168, or $324 a month. $0 setup.</p>
           <div className="hero-actions">
             <Link className="sales-btn" href={demoHref}>
               <PhoneCall size={18} /> Hear a demo call
@@ -142,7 +142,7 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
               <span>0{index + 1}</span>
               <PhoneCall />
               <h3>{item}</h3>
-              <p>Executive Receptionist asks what you approved, then texts you. It does not invent a price.</p>
+              <p>Executive Receptionist asks what you approved, then texts you. She does not invent a price.</p>
             </article>
           ))}
         </div>
@@ -173,7 +173,7 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
             <h3>{guide.roiTitle}</h3>
             <p>{guide.roiBody}</p>
             <p>
-              <Link href="/receptionist/missed-call-cost-calculator">Open the missed-call calculator</Link>
+              <Link href="/ava/missed-call-cost-calculator">Open the missed-call calculator</Link>
             </p>
           </article>
         </div>
@@ -231,7 +231,7 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
                 <span>{related.navLabel}</span>
                 <h3>{related.title}</h3>
                 <p>{related.blurb}</p>
-                <Link href={`/receptionist/${slug}`}>
+                <Link href={`/ava/${slug}`}>
                   Read it <ArrowRight size={16} />
                 </Link>
               </article>
@@ -245,7 +245,7 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
         <h2>Try the demo, then start the trial in Stripe.</h2>
         <p>
           The sample call is a landscaping estimate. The live demo is in the browser. Checkout opens
-          Stripe for the plan you pick. Starter is $79 a month after the trial.
+          Stripe for the plan you pick. Starter is $77 a month after the trial.
         </p>
         <div>
           <Link className="sales-btn light" href={liveHref}>

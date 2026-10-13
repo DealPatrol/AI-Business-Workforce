@@ -47,6 +47,7 @@ async function foundingCheckoutUrl(req: NextRequest) {
   const params = buildFoundingCheckoutParams({
     origin: req.nextUrl.origin,
     monthlyPriceId: readStripePriceId(process.env.STRIPE_FOUNDING_MONTHLY_PRICE_ID),
+    setupPriceId: readStripePriceId(process.env.STRIPE_FOUNDING_SETUP_PRICE_ID),
   });
   const cancelPath = safeCancelPath(req.nextUrl.searchParams.get('cancel'));
   params.set('cancel_url', `${req.nextUrl.origin}${cancelPath}`);

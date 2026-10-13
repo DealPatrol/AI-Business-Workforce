@@ -1,15 +1,16 @@
 # Front Porch Growth
 
-> Property-based postcard campaigns for home service businesses (each card shows the homeowner a concept for their own home, with a QR estimate link) and Executive Receptionist, an AI receptionist that answers calls for small businesses. Run by Cole Collins. executivereceptionist.com is not attached yet; the live product is on this site.
+> Property-based postcard campaigns for home service businesses (each card shows the homeowner a concept for their own home, with a QR estimate link) and Executive Receptionist, an AI receptionist that answers calls for small businesses. Run by Cole Collins.
 
 ## Products
 - [Postcard campaigns](https://frontporchgrowth.com/postcards)
 - [Executive Receptionist](https://frontporchgrowth.com/receptionist)
+- [Executive Receptionist guides](https://frontporchgrowth.com/ava)
 - [Receptionist demo](https://frontporchgrowth.com/receptionist-demo)
 - [Pricing](https://frontporchgrowth.com/pricing)
 
 ## Guides
-- [AI receptionist vs answering service](https://frontporchgrowth.com/receptionist/ai-receptionist-vs-answering-service)
-- [Missed call cost calculator](https://frontporchgrowth.com/receptionist/missed-call-cost-calculator)
+- [AI receptionist vs answering service](https://frontporchgrowth.com/ava/ai-receptionist-vs-answering-service)
+- [Missed call cost calculator](https://frontporchgrowth.com/ava/missed-call-cost-calculator)
 - [Postcards for landscapers](https://frontporchgrowth.com/postcards/landscaping)
 - [Postcards for roofers](https://frontporchgrowth.com/postcards/roofing)

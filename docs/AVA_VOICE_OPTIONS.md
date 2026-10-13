@@ -23,7 +23,7 @@ The signed-URL endpoint accepts `voice=southern-man`, `voice=southern-woman`, or
 
 ## Boundaries that must stay separate
 
-- `ELEVENLABS_SALES_AGENT_ID` continues to power Sales Executive Receptionist on `/receptionist`. The demo voice picker does not select or modify the Sales Executive Receptionist agent.
+- `ELEVENLABS_SALES_AGENT_ID` continues to power Executive Receptionist on `/ava`. The demo voice picker does not select or modify the Executive Receptionist agent.
 - `ELEVENLABS_AGENT_ID` remains the source duplicated by customer provisioning in `lib/ava/provisioning.ts`. The three voice-specific demo IDs do **not** change that source.
 - The optional onboarding preference is included in Cole's setup notification for manual configuration. It does not silently change the provisioning duplicate source or patch a duplicated agent's TTS settings.
 - These are browser demo voices only. This feature does not create a public dial-in number or change phone-number assignment.

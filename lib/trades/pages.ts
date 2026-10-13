@@ -36,7 +36,7 @@ export const TRADE_PAGES: TradePage[] = [
       },
       {
         q: 'Which plan answers after hours?',
-        a: 'Starter is $79 a month after the 7-day trial and includes 300 minutes. That is the same price as the pricing page.',
+        a: 'Starter is $77 a month after the 7-day trial and includes 300 minutes. That is the same price as the pricing page.',
       },
     ],
   },
@@ -98,12 +98,12 @@ export const TRADE_PAGES: TradePage[] = [
     dispatch: 'Executive Receptionist can ask for the address, a rough lot size if they know it, and whether they want a route or a single visit. It does not price the lawn from a room count it cannot see.',
     dispatchSlug: 'ai-answering-service-for-lawn-care',
     reviews: 'A finished cleanup is a reasonable time for a review request. Use the free QR on the door hanger you already leave, or ReputationFlow’s email request if you are on the $20 plan.',
-    leads: 'YardProof postcards are the mail product: you approve the concept, the list, and the postage before anything is sent. There is no published customer revenue figure for those cards on this site.',
+    leads: 'YardMailer postcards are the mail product: you approve the concept, the list, and the postage before anything is sent. There is no published customer revenue figure for those cards on this site.',
     writing: 'The job ad writer can draft a crew-hiring post from the pay and the city you type. It will not add benefits you did not mention.',
     faqs: [
       {
         q: 'Do the postcards claim a dollar return?',
-        a: 'No. The founding offer is $99 a month for the managed campaign. This site does not publish a revenue case study for the cards.',
+        a: 'No. The founding offer is $389 setup plus $129 a month for the managed campaign. This site does not publish a revenue case study for the cards.',
       },
     ],
   },

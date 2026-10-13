@@ -15,13 +15,12 @@ const nextConfig: NextConfig = {
       })),
       ...AVA_LEGACY_REDIRECTS.map(([source, destination]) => ({
         source: `/ava/${source}`,
-        destination: `${base}/receptionist/${destination}`,
+        destination: `${base}/ava/${destination}`,
         permanent: true,
       })),
-      { source: '/ava', destination: '/receptionist', permanent: true },
-      { source: '/ava/:slug', destination: '/receptionist/:slug', permanent: true },
+      { source: '/dispatch/missed-calls', destination: '/receptionist/missed-calls', permanent: true },
       { source: '/dispatch', destination: '/receptionist', permanent: true },
-      { source: '/dispatch/:slug', destination: '/receptionist/:slug', permanent: true },
+      { source: '/dispatch/:slug', destination: '/ava/:slug', permanent: true },
     ];
   },
 };

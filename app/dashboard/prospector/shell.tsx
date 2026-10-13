@@ -16,7 +16,7 @@ export default function ProspectorShell({
       <aside className={styles.sidebar}>
         <Link href="/" className={styles.brand}>
           <span><Leaf size={16} /></span>
-          YardProof
+          YardMailer
         </Link>
         <nav>
           <Link href="/dashboard">Overview</Link>

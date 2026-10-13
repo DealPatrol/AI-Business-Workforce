@@ -53,7 +53,7 @@ export default async function TradePage({ params }: { params: Promise<{ slug: st
         <h2>Executive Receptionist</h2>
         <p>{page.dispatch}</p>
         <p>
-          <Link href={`/receptionist/${page.dispatchSlug}`}>Read the {page.name.toLowerCase()} answering guide</Link>
+          <Link href={`/ava/${page.dispatchSlug}`}>Read the {page.name.toLowerCase()} answering guide</Link>
         </p>
         <h2>Reviews</h2>
         <p>{page.reviews}</p>
