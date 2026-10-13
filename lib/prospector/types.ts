@@ -96,7 +96,7 @@ export type ProspectorSend = {
 export type ProspectorConfig = {
   maps: boolean;
   openai: boolean;
-  resend: boolean;
+  coldEmail: boolean;
   unsubscribe: boolean;
 };
 

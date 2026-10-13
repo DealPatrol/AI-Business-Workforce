@@ -16,13 +16,13 @@ type Detail = {
 export default function DraftDrawer({
   leadId,
   senderName,
-  resendReady,
+  sendReady,
   onClose,
   onLead,
 }: {
   leadId: string;
   senderName: string;
-  resendReady: boolean;
+  sendReady: boolean;
   onClose: () => void;
   onLead: (lead: ProspectorLead) => void;
 }) {
@@ -226,13 +226,13 @@ export default function DraftDrawer({
                   <button
                     className={styles.primary}
                     type="button"
-                    disabled={Boolean(busy) || !draft.approvedAt || dirty[draft.id] || !resendReady || lead.emails.length === 0}
+                    disabled={Boolean(busy) || !draft.approvedAt || dirty[draft.id] || !sendReady || lead.emails.length === 0}
                     onClick={() => sendDraft(draft)}
                   >
                     Send
                   </button>
                 </div>
-                {!resendReady && <p className={styles.quiet}>RESEND_API_KEY is not set, so this draft can be copied or exported but not sent.</p>}
+                {!sendReady && <p className={styles.quiet}>Cold email is off, or the unsubscribe secret is missing, so this draft can be copied or exported but not sent.</p>}
               </form>
             ))}
             {detail && detail.sends.length > 0 && (

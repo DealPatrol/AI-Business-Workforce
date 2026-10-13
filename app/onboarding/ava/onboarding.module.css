@@ -220,6 +220,36 @@
   border-color: #2e8b57;
 }
 
+.paywall {
+  background: #fff;
+  border: 1px solid #d7e3d8;
+  border-radius: 16px;
+  padding: 22px;
+  margin-bottom: 18px;
+}
+
+.paywall h2 {
+  margin: 0 0 8px;
+  font-size: 26px;
+}
+
+.paywall p {
+  margin: 0 0 14px;
+  color: #4d5b52;
+  line-height: 1.5;
+}
+
+.checkout {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #205c39;
+  color: #fff;
+  border-radius: 9px;
+  padding: 14px 18px;
+  font-weight: 850;
+}
+
 .form button {
   width: 100%;
   border: 0;

@@ -18,7 +18,11 @@ Add `OPENAI_API_KEY` to Vercel as a server-only environment variable. `OPENAI_AU
 
 ## Customer-request email
 
-Add `RESEND_API_KEY` as a server-only Vercel environment variable. The public founding form and Ava paid-pilot onboarding form send requests directly to `colecollins763@gmail.com`. If email delivery is unavailable, each form explicitly opens the visitor's email client with their answers preserved instead of displaying a false success state.
+Add `RESEND_API_KEY` as a server-only Vercel environment variable. Resend is for transactional mail only: founding requests, Ava checkout, and lead alerts. Lead Finder prospect mail does not use it. `COLD_EMAIL_ENABLED` defaults off, and the SMTP/Instantly transport is a stub, so prospect sends do not leave the app.
+
+The public founding form and Ava paid-pilot onboarding form send requests directly to `colecollins763@gmail.com`. If email delivery is unavailable, each form explicitly opens the visitor's email client with their answers preserved instead of displaying a false success state.
+
+Set `NEXT_PUBLIC_SITE_URL` to `https://frontporchgrowth.com` (no trailing slash). Metadata, canonicals, the sitemap, robots, and Open Graph use that value, and fall back to the same URL when it is unset.
 
 ## Checkout
 

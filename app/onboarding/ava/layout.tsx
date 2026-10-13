@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { absoluteSiteUrl } from '@/lib/site-url';
 
 const title = 'Ava setup | Ava by Workforce AI';
 const description =
@@ -8,12 +9,14 @@ const description =
 export const metadata: Metadata = {
   title: { absolute: title },
   description,
+  alternates: { canonical: '/onboarding/ava' },
+  robots: { index: false, follow: false },
   openGraph: {
     title,
     description,
     siteName: 'Ava by Workforce AI',
     type: 'website',
-    url: 'https://ai-business-workforce.vercel.app/onboarding/ava',
+    url: absoluteSiteUrl('/onboarding/ava'),
   },
   twitter: {
     card: 'summary_large_image',

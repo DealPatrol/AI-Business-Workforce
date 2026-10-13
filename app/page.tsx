@@ -1,308 +1,208 @@
-import Image from 'next/image';
+import type { Metadata } from 'next';
 import Link from 'next/link';
-import {
-  ArrowRight,
-  Check,
-  Mail,
-  MapPin,
-  Palette,
-  QrCode,
-  ShieldCheck,
-  Sparkles,
-} from 'lucide-react';
-import { FOUNDING_CTA, foundingCheckoutHref, getDemo10Payment } from '@/lib/payments';
-import styles from './home.module.css';
+import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
+import { InvoicingWaitlistForm } from '@/components/suite/InvoicingWaitlistForm';
+import { SuiteShell } from '@/components/suite/SuiteShell';
+import styles from '@/components/suite/suite.module.css';
+import { faqNode } from '@/lib/ava/structured-data';
+import { FOUNDING_CTA, foundingCheckoutHref } from '@/lib/payments';
+import { absoluteSiteUrl } from '@/lib/site-url';
 
-const CONTACT_EMAIL = 'colecollins763@gmail.com';
+const title = 'Front Porch Growth | Postcards and an AI receptionist for home services';
+const description =
+  'YardProof postcards are $99/month. Ava, the AI receptionist, has a free 7-day trial, then $79, $149, or $299 a month. For home-service businesses.';
 
-const steps = [
+const HOME_FAQS = [
   {
-    icon: MapPin,
-    number: '01',
-    title: 'Pick the streets',
-    detail: 'Tell Cole the neighborhoods and landscaping jobs you want more of.',
+    q: 'What can I buy on this site today?',
+    a: 'Two products have a checkout. YardProof postcards are a managed campaign at $99/month, and Demo Blast 10 is $49 for up to 10 concepts. Ava is a separate AI receptionist: Starter $79, Growth $149, and Pro $299 a month after a free 7-day trial, with a $0 setup fee. Lead Finder is a signed-in workspace with no separate public price. Invoicing is a waitlist and is not for sale.',
   },
   {
-    icon: Palette,
-    number: '02',
-    title: 'Build the concepts',
-    detail: 'Cole prepares clearly labeled yard project ideas by hand for you to review.',
+    q: 'How is Ava different from the postcard campaign?',
+    a: 'Postcards are mail. You approve the concept, the audience, and the costs before anything is sent, and each card has a QR page where a homeowner can request an estimate. Ava answers phone calls, asks for the caller’s name, number, and what they need, and texts you that lead. They are separate products. You can buy one without the other.',
   },
   {
-    icon: Mail,
-    number: '03',
-    title: 'Approve the postcard',
-    detail: 'You approve the concept, message, audience, and costs before anything mails.',
+    q: 'How do I start?',
+    a: 'For postcards, use the $99/month founding checkout or email Cole at colecollins763@gmail.com. For Ava, choose a plan and Stripe starts the 7-day trial. After checkout you finish a setup form. A person attaches the phone number. The browser demo is not your business line.',
   },
   {
-    icon: QrCode,
-    number: '04',
-    title: 'Turn scans into estimates',
-    detail: 'Each QR page gives the homeowner a direct way to request an estimate.',
+    q: 'Does the invoicing form email me?',
+    a: 'No. The form saves the email, and any name or business you add, on a private list. Joining does not start a subscription and does not send you email.',
   },
-];
+] as const;
 
-const packageItems = [
-  'Target campaign setup',
-  'Up to 25 property concepts*',
-  'Personalized postcard creative',
-  'Unique QR project-page structure',
-  'QR scan tracking and estimate-request inbox',
-  'Campaign review before launch',
-];
+export const metadata: Metadata = {
+  title: { absolute: title },
+  description,
+  alternates: { canonical: '/' },
+  openGraph: {
+    title,
+    description,
+    url: '/',
+    siteName: 'Front Porch Growth',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title,
+    description,
+  },
+};
 
-export default function HomePage() {
-  const demo10 = getDemo10Payment();
+const orgJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${absoluteSiteUrl('/')}#org`,
+      name: 'Front Porch Growth',
+      url: absoluteSiteUrl('/'),
+      logo: absoluteSiteUrl('/brand-logo.png'),
+      description: 'Tools that bring home-service businesses more jobs.',
+      email: 'hello@frontporchgrowth.com',
+      makesOffer: [
+        {
+          '@type': 'Offer',
+          name: 'YardProof postcard founding offer',
+          url: absoluteSiteUrl('/postcards'),
+          price: '99',
+          priceCurrency: 'USD',
+          description: '$99 per month for the founding postcard campaign.',
+        },
+        {
+          '@type': 'Offer',
+          name: 'Ava AI receptionist, plans from $79/month after a 7-day trial',
+          url: absoluteSiteUrl('/ava'),
+        },
+      ],
+    },
+    { '@type': 'WebSite', name: 'Front Porch Growth', url: absoluteSiteUrl('/'), publisher: { '@id': `${absoluteSiteUrl('/')}#org` } },
+    faqNode([...HOME_FAQS]),
+  ],
+};
 
+export default function SuiteHomePage() {
   return (
-    <main className={styles.page}>
-      <nav className={styles.nav}>
-        <Link className={styles.brand} href="/">
-          <span>
-            <Sparkles size={17} />
-          </span>
-          YardProof
-        </Link>
-        <div className={styles.navLinks}>
-          <a href="#how">How it works</a>
-          <a href="#demo10">Demo Blast 10</a>
-          <a href="#package">What you get</a>
-          <Link href="/visual-canvasser">See examples</Link>
-        </div>
-        <a className={styles.navCta} href={foundingCheckoutHref('/#package')}>
-          {FOUNDING_CTA}
-        </a>
-      </nav>
-
-      <section className={styles.hero}>
-        <div className={styles.heroCopy}>
-          <span className={styles.eyebrow}>PROPERTY-BASED POSTCARD CAMPAIGNS FOR HOME SERVICES</span>
-          <h1>Show homeowners the yard project you could build for them.</h1>
+    <SuiteShell>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd).replace(/</g, '\\u003c') }} />
+      <section className={styles.hero} id="start">
+        <div>
+          <span className={styles.eyebrow}>HOME-SERVICE TOOLS</span>
+          <h1>Tools that bring home-service businesses more jobs.</h1>
           <p className={styles.lede}>
-            A managed, done-with-you service: we help you choose the streets, prepare yard
-            concepts, and send a postcard with a QR page where the homeowner can request an
-            estimate.
+            Postcards that show the job, an AI receptionist that answers the call, a lead finder you approve before anything sends, and invoicing when it is ready.
           </p>
-          <div className={styles.priceLine}>
-            <strong>$99/month</strong>
-          </div>
           <div className={styles.heroActions}>
-            <a className={styles.primaryButton} href={foundingCheckoutHref('/#package')}>
-              {FOUNDING_CTA} <ArrowRight size={18} />
-            </a>
-            <a className={styles.secondaryButton} href="#demo10">
-              See the $49 Demo Blast 10
-            </a>
+            <TrackedCheckoutLink className={styles.button} href="/api/checkout?plan=starter" plan="starter">
+              Start Ava’s free trial
+            </TrackedCheckoutLink>
+            <TrackedCheckoutLink className={styles.buttonSecondary} href={foundingCheckoutHref('/#start')} plan="founding">
+              {FOUNDING_CTA}
+            </TrackedCheckoutLink>
           </div>
-          <p className={styles.heroNote}>
-            The postcard campaign is our core service. You approve the concept, audience and costs before anything mails.
+          <p className={styles.fine}>
+            Ava is a 7-day trial, then $79, $149, or $299 a month. The postcard founding offer is $99/month. You approve the concept, audience, and mailing costs before anything mails.
           </p>
-        </div>
-
-        <div className={styles.postcard} aria-label="Labeled example postcard">
-          <div className={styles.postcardImage}>
-            <Image
-              src="/postcard-yard.png"
-              alt="Clearly labeled landscaping concept example"
-              fill
-              priority
-              sizes="(max-width: 800px) 100vw, 46vw"
-            />
-            <span>DEMO YARD CONCEPT</span>
-          </div>
-          <div className={styles.postcardCopy}>
-            <small>EXAMPLE POSTCARD</small>
-            <h2>A fresh idea for your front yard.</h2>
-            <p>See the project concept and request a no-pressure estimate.</p>
-            <div className={styles.qrExample}>
-              <QrCode size={58} />
-              <span>
-                <b>Scan to view</b>
-                <small>QR opens the estimate page</small>
-              </span>
-            </div>
+          <div className={styles.priceRow}>
+            <Link href="/ava">Ava from $79/month</Link>
+            <Link href="/postcards">Postcards founding offer $99/month</Link>
+            <Link href="/pricing">All prices</Link>
           </div>
         </div>
-      </section>
-
-      <section className={styles.trustBar}>
-        <span>
-          <ShieldCheck /> You approve before mailing
-        </span>
-        <span>
-          <Check /> No surprise pass-through costs
-        </span>
-        <span>
-          <Check /> Built for landscaping and home services
-        </span>
-      </section>
-
-      <section className={styles.demoOffer} id="demo10">
-        <div>
-          <span>LOW-RISK STARTER</span>
-          <h2>See 10 homes before you scale.</h2>
-          <p>
-            Choose your trade and provide up to 10 addresses—or ask Cole to help choose the area.
-            Each card pairs authorized Current imagery when available with a clearly labeled After concept.
-          </p>
-        </div>
-        <div>
-          <strong>$49</strong>
-          <ul>
-            <li><Check /> Up to 10 before/after concepts</li>
-            <li><Check /> Per-card approve, swap, regenerate, or request changes</li>
-            <li><Check /> QR estimate-page structure</li>
-            <li><Check /> Manual mailing only after your approval</li>
-          </ul>
-          <a className={styles.primaryButton} href={demo10.href}>
-            {demo10.label} <ArrowRight size={18} />
-          </a>
-        </div>
-      </section>
-
-      <section className={styles.section} id="how">
-        <div className={styles.sectionHeading}>
-          <span>HOW IT WORKS</span>
-          <h2>From a few streets to estimate requests.</h2>
-          <p>A focused first campaign, set up with you instead of another app to figure out.</p>
-        </div>
-        <div className={styles.steps}>
-          {steps.map(({ icon: Icon, number, title, detail }) => (
-            <article key={number}>
-              <div>
-                <Icon size={21} />
-                <span>{number}</span>
-              </div>
-              <h3>{title}</h3>
-              <p>{detail}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className={styles.exampleSection}>
-        <div className={styles.exampleGrid}>
-          <div className={styles.exampleVisual}>
-            <div className={styles.exampleImage}>
-              <Image
-                src="/postcard-yard.png"
-                alt="Demo landscaping concept used to explain the campaign"
-                fill
-                sizes="(max-width: 800px) 100vw, 52vw"
-              />
-              <span>ILLUSTRATIVE CONCEPT — NOT A LIVE ADDRESS LOOKUP</span>
-            </div>
-          </div>
-          <div className={styles.takeoff}>
-            <span>DEMO TAKEOFF EXAMPLE</span>
-            <h2>Sell a project, not just a pretty picture.</h2>
-            <p>
-              A campaign concept can be paired with an estimated scope so your outreach stays
-              grounded in work you actually want to sell.
-            </p>
-            <div className={styles.takeoffLines}>
-              <div>
-                <span>Compact evergreen shrubs</span>
-                <b>7</b>
-              </div>
-              <div>
-                <span>Flowering hydrangeas</span>
-                <b>4</b>
-              </div>
-              <div>
-                <span>Fresh mulch and edging</span>
-                <b>Demo scope</b>
-              </div>
-            </div>
-            <Link href="/property-demo">
-              Explore the labeled project demo <ArrowRight size={16} />
+        <aside className={styles.chooser} aria-label="Which tool to start with">
+          <h2>Two products you can start today.</h2>
+          <div className={styles.choice}>
+            <span className={styles.kicker}>CALLS</span>
+            <h3>Ava answers the phone.</h3>
+            <p>Missed and after-hours calls. She takes the name, number, and job, then texts you.</p>
+            <Link className={styles.textLink} href="/ava">
+              See how Ava works
             </Link>
           </div>
-        </div>
-      </section>
-
-      <section className={styles.packageSection} id="package">
-        <div className={styles.packageCopy}>
-          <span>FOUNDING CUSTOMER PACKAGE</span>
-          <h2>Your first campaign, built with Cole.</h2>
-          <p>
-            We are onboarding a small number of north-Alabama landscapers and home-service
-            businesses while the full workflow is being automated.
-          </p>
-          <div className={styles.honesty}>
-            <b>Honest launch boundary</b>
-            <p>
-              <b>Live today:</b> unique QR pages, scan tracking, and your estimate-request inbox.
-              <br />
-              <b>Done by hand with you (not automated yet):</b> choosing properties, property
-              photos, &ldquo;after&rdquo; concept images, and printing/mailing. We will not claim
-              automatic property lookup, AI renders, lead finding, or automatic mailing until
-              those connections are tested.
-            </p>
+          <div className={styles.choice}>
+            <span className={styles.kicker}>MAIL</span>
+            <h3>YardProof sends the postcard.</h3>
+            <p>A managed campaign. Each card has a QR page where the homeowner can request an estimate.</p>
+            <Link className={styles.textLink} href="/postcards">
+              See postcard campaigns
+            </Link>
           </div>
-        </div>
-        <div className={styles.offerCard}>
-          <small>FOUNDING LAUNCH</small>
-          <div className={styles.offerPrice}>
-            <strong>$99</strong>
-            <span>/month</span>
-          </div>
-          <p>$99/month for the initial managed campaign</p>
-          <ul>
-            {packageItems.map((item) => (
-              <li key={item}>
-                <Check size={16} /> {item}
-              </li>
-            ))}
-          </ul>
-          <a className={styles.primaryButton} href={foundingCheckoutHref('/#package')}>
-            {FOUNDING_CTA} <ArrowRight size={18} />
-          </a>
-          <small className={styles.disclosure}>
-            *Final mailed quantity and printing, postage, or property-data costs are confirmed
-            before launch. No unapproved pass-through costs.
-          </small>
-        </div>
-      </section>
-
-      <section className={styles.questions}>
-        <div>
-          <span>WANT TO TALK FIRST?</span>
-          <h2>Ask Cole if this fits your service area.</h2>
-          <p>No sales maze. Email the person who will help set up the campaign.</p>
-        </div>
-        <a href={`mailto:${CONTACT_EMAIL}?subject=Question%20about%20the%20YardProof%20postcard%20campaign`}>
-          <Mail size={18} /> Email Cole
-        </a>
-      </section>
-
-      <section className={styles.avaSection}>
-        <div>
-          <small>OPTIONAL ADD-ON</small>
-          <h2>Want someone answering the leads your campaign creates?</h2>
-          <p>
-            Ava is a separate AI receptionist add-on for businesses that want 24/7 call coverage. The postcard campaign remains the main service.
+          <p className={styles.quiet}>
+            Lead Finder stays inside the signed-in workspace. Invoicing is a waitlist, not a product you can buy yet.
           </p>
-        </div>
-        <Link href="/ava">
-          See Ava add-on <ArrowRight size={16} />
-        </Link>
+        </aside>
       </section>
 
-      <footer className={styles.footer}>
-        <Link className={styles.brand} href="/">
-          <span>
-            <Sparkles size={17} />
-          </span>
-          YardProof
-        </Link>
-        <p>
-          Cole · <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
-        </p>
-        <a className={styles.footerPay} href={foundingCheckoutHref('/#package')}>
-          {FOUNDING_CTA}
-        </a>
-      </footer>
-    </main>
+      <section className={styles.grid}>
+        <article className={styles.card}>
+          <span className={styles.kicker}>POSTCARDS</span>
+          <h2>
+            <Link href="/postcards">YardProof</Link>
+          </h2>
+          <p>Managed postcard campaigns with a QR page where the homeowner can request an estimate. You approve the concept, audience, and costs before anything mails.</p>
+          <p className={styles.price}>$99/month</p>
+          <p className={styles.quiet}>Founding offer for the first managed campaign.</p>
+          <div className={styles.cardActions}>
+            <TrackedCheckoutLink className={styles.button} href={foundingCheckoutHref('/#start')} plan="founding">
+              {FOUNDING_CTA}
+            </TrackedCheckoutLink>
+            <Link className={styles.textLink} href="/postcards">
+              See the campaign
+            </Link>
+          </div>
+        </article>
+
+        <article className={styles.card}>
+          <span className={styles.kicker}>AI RECEPTIONIST</span>
+          <h2>
+            <Link href="/ava">Ava</Link>
+          </h2>
+          <p>Ava answers missed and after-hours calls, qualifies the lead, and texts you. Starter, Growth, and Pro stay on their own prices.</p>
+          <p className={styles.price}>$79 / $149 / $299 a month</p>
+          <p className={styles.quiet}>Free 7-day trial. $0 setup.</p>
+          <div className={styles.cardActions}>
+            <TrackedCheckoutLink className={styles.button} href="/api/checkout?plan=starter" plan="starter">
+              Start free 7-day trial
+            </TrackedCheckoutLink>
+            <Link className={styles.textLink} href="/ava">
+              See Ava
+            </Link>
+          </div>
+        </article>
+
+        <article className={styles.card}>
+          <span className={styles.kicker}>LEAD FINDER</span>
+          <h2>
+            <Link href="/dashboard/prospector">Lead Finder</Link>
+          </h2>
+          <p>Turn a website into buyer types, search Google Maps, and draft outreach. Every send stays approved, capped, and off until cold email is explicitly enabled.</p>
+          <p className={styles.price}>Operator workspace</p>
+          <p className={styles.quiet}>Sign in with the same account as the campaign inbox.</p>
+          <div className={styles.cardActions}>
+            <Link className={styles.button} href="/dashboard/prospector">
+              Sign in to Lead Finder
+            </Link>
+          </div>
+        </article>
+
+        <article className={styles.card} id="invoicing">
+          <span className={styles.soon}>COMING SOON</span>
+          <h2>Invoicing</h2>
+          <p>Estimates and invoices for the jobs the other tools bring in. Join the list and we save it. This form does not send email.</p>
+          <InvoicingWaitlistForm />
+        </article>
+      </section>
+
+      <section className={styles.faq} id="faq">
+        <span className={styles.eyebrow}>BEFORE YOU PAY</span>
+        <h2>Which tool, and what it costs.</h2>
+        {HOME_FAQS.map((faq) => (
+          <details key={faq.q}>
+            <summary>{faq.q}</summary>
+            <p>{faq.a}</p>
+          </details>
+        ))}
+      </section>
+    </SuiteShell>
   );
 }

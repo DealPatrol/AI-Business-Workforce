@@ -1,3 +1,4 @@
+import { track } from '@vercel/analytics/server';
 import { NextRequest, NextResponse } from 'next/server';
 import {
   type AvaPlanKey,
@@ -81,6 +82,11 @@ async function avaCheckoutUrl(
   if ('error' in result) {
     console.error('Stripe Ava checkout error', result.error);
     return { error: result.error || 'Could not start Ava checkout.', status: 500 as const };
+  }
+  try {
+    await track('checkout-started', { plan: planKey, product: 'ava' }, { headers: req.headers });
+  } catch (error) {
+    console.error('Ava checkout-started analytics failed', error);
   }
   return { url: result.url };
 }

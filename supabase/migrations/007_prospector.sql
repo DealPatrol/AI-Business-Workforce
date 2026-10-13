@@ -83,7 +83,7 @@ create table if not exists public.prospector_sends (
   from_email text not null,
   subject text not null,
   body text not null default '',
-  provider text not null default 'resend',
+  provider text not null default 'stub',
   provider_message_id text,
   status text not null check (status in ('sent', 'failed', 'suppressed')),
   error text,

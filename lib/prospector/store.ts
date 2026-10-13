@@ -377,6 +377,7 @@ export async function insertSend(
     fromEmail: string;
     subject: string;
     body: string;
+    provider?: string | null;
     providerMessageId?: string | null;
     status: 'sent' | 'failed' | 'suppressed';
     error?: string | null;
@@ -393,7 +394,7 @@ export async function insertSend(
       from_email: row.fromEmail,
       subject: row.subject,
       body: row.body,
-      provider: 'resend',
+      provider: row.provider || 'stub',
       provider_message_id: row.providerMessageId ?? null,
       status: row.status,
       error: row.error ?? null,
