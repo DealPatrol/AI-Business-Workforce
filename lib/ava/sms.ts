@@ -16,7 +16,7 @@ export function isAvaLeadSmsConfigured(): boolean {
 }
 
 /**
- * Optional Twilio SMS for Ava lead / Sales qualify alerts.
+ * Optional Twilio SMS for Executive Receptionist lead / Sales qualify alerts.
  * No-ops cleanly when TWILIO_* / AVA_LEAD_SMS_TO are missing — email remains primary.
  * Uses Twilio REST via fetch (Basic auth); no SDK dependency.
  */
@@ -58,12 +58,12 @@ export async function sendAvaLeadSms(opts: {
     };
     if (!response.ok) {
       const error = result?.message || `Twilio returned ${response.status}`;
-      console.error('Ava lead SMS failed', error);
+      console.error('Executive Receptionist lead SMS failed', error);
       return { sent: false, error };
     }
     return { sent: true, sid: result?.sid };
   } catch (error) {
-    console.error('Ava lead SMS failed', error);
+    console.error('Executive Receptionist lead SMS failed', error);
     return {
       sent: false,
       error: error instanceof Error ? error.message : 'SMS send failed',
@@ -78,7 +78,7 @@ export function formatAvaLeadSmsBody(lead: {
   business_name?: string | null;
 }): string {
   const parts = [
-    'New Ava lead',
+    'New Executive Receptionist lead',
     lead.caller_name,
     lead.service_job_type,
     lead.caller_phone,
@@ -89,5 +89,5 @@ export function formatAvaLeadSmsBody(lead: {
 
 export function formatSalesQualifySmsBody(businessName: string): string {
   const name = String(businessName || 'Unknown business').trim() || 'Unknown business';
-  return `Sales Ava qualify — ${name}`.slice(0, 320);
+  return `Executive Receptionist qualify — ${name}`.slice(0, 320);
 }

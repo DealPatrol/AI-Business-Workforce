@@ -3,12 +3,12 @@ export const AVA_PILOT_OFFER = {
   niche: 'Local HVAC & plumbing businesses',
   headline: 'Stop losing jobs when nobody can answer the phone.',
   subheadline:
-    'Ava answers missed and after-hours calls, handles common questions, captures job details, and sends the owner a qualified lead summary.',
+    'Executive Receptionist answers missed and after-hours calls, handles common questions, captures job details, and sends the owner a qualified lead summary.',
   pilotDays: 14,
   usageLimit: '300 voice minutes / month during pilot',
   cancelPolicy: 'Cancel anytime — no long-term contract',
-  ctaPrimary: 'Try Ava for 14 days',
-  ctaCall: 'Call Ava',
+  ctaPrimary: 'Try Executive Receptionist for 14 days',
+  ctaCall: 'Call Executive Receptionist',
 } as const;
 
 export const AVA_PILOT_PAYMENT_LINK =

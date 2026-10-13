@@ -47,6 +47,7 @@ async function foundingCheckoutUrl(req: NextRequest) {
   const params = buildFoundingCheckoutParams({
     origin: req.nextUrl.origin,
     monthlyPriceId: readStripePriceId(process.env.STRIPE_FOUNDING_MONTHLY_PRICE_ID),
+    setupPriceId: readStripePriceId(process.env.STRIPE_FOUNDING_SETUP_PRICE_ID),
   });
   const cancelPath = safeCancelPath(req.nextUrl.searchParams.get('cancel'));
   params.set('cancel_url', `${req.nextUrl.origin}${cancelPath}`);
@@ -67,8 +68,8 @@ async function avaCheckoutUrl(
 ) {
   const secret = process.env.STRIPE_SECRET_KEY;
   if (!secret) {
-    console.error('STRIPE_SECRET_KEY is not set; Ava checkout cannot start.');
-    return { error: 'Ava checkout is not connected yet.', status: 503 as const };
+    console.error('STRIPE_SECRET_KEY is not set; Executive Receptionist checkout cannot start.');
+    return { error: 'Executive Receptionist checkout is not connected yet.', status: 503 as const };
   }
 
   const params = buildAvaCheckoutParams({
@@ -80,13 +81,13 @@ async function avaCheckoutUrl(
   });
   const result = await createStripeCheckoutSession(secret, params);
   if ('error' in result) {
-    console.error('Stripe Ava checkout error', result.error);
-    return { error: result.error || 'Could not start Ava checkout.', status: 500 as const };
+    console.error('Stripe Executive Receptionist checkout error', result.error);
+    return { error: result.error || 'Could not start Executive Receptionist checkout.', status: 500 as const };
   }
   try {
     await track('checkout-started', { plan: planKey, product: 'ava' }, { headers: req.headers });
   } catch (error) {
-    console.error('Ava checkout-started analytics failed', error);
+    console.error('Executive Receptionist checkout-started analytics failed', error);
   }
   return { url: result.url };
 }
@@ -140,7 +141,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ url: result.url });
     }
 
-    if (!isAvaPlanKey(planKey)) return NextResponse.json({ error: 'Invalid Ava plan.' }, { status: 400 });
+    if (!isAvaPlanKey(planKey)) return NextResponse.json({ error: 'Invalid Executive Receptionist plan.' }, { status: 400 });
     const result = await avaCheckoutUrl(
       req,
       planKey,

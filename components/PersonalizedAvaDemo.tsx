@@ -82,7 +82,7 @@ function PersonalizedDemoContent({ prospect }: { prospect: Prospect }) {
       setCallState((s) => (s === 'processing' ? s : 'ready'));
     },
     onError: (message: unknown) => {
-      setError(typeof message === 'string' ? message : 'Ava could not continue the call.');
+      setError(typeof message === 'string' ? message : 'Executive Receptionist could not continue the call.');
       setCallState((s) => (s === 'processing' ? s : 'ready'));
     },
   });
@@ -96,7 +96,7 @@ function PersonalizedDemoContent({ prospect }: { prospect: Prospect }) {
       const res = await fetch(`/api/ava/elevenlabs?${params}`, { cache: 'no-store' });
       const data = await res.json();
       if (!res.ok || !data.signedUrl) {
-        throw new Error(data?.error || data?.next || 'Could not prepare Ava.');
+        throw new Error(data?.error || data?.next || 'Could not prepare Executive Receptionist.');
       }
       if (requestId !== prepareRequestId.current || voice !== selectedVoiceRef.current) return;
       signedUrl.current = data.signedUrl;
@@ -143,7 +143,7 @@ function PersonalizedDemoContent({ prospect }: { prospect: Prospect }) {
     try {
       if (!signedUrl.current) {
         await prepareSession();
-        if (!signedUrl.current) throw new Error('Ava is still preparing. Try once more.');
+        if (!signedUrl.current) throw new Error('Executive Receptionist is still preparing. Try once more.');
       }
       await navigator.mediaDevices.getUserMedia({ audio: true });
       conversationId.current = preparedConversationId.current;
@@ -165,7 +165,7 @@ function PersonalizedDemoContent({ prospect }: { prospect: Prospect }) {
         setCallState('ready');
         return;
       }
-      setError(err?.message || 'Unable to start Ava.');
+      setError(err?.message || 'Unable to start Executive Receptionist.');
       setCallState('ready');
     }
   }
@@ -212,7 +212,7 @@ function PersonalizedDemoContent({ prospect }: { prospect: Prospect }) {
       });
       if (r.status === 202) continue;
       const d = await r.json();
-      if (!r.ok) throw new Error(d.error || 'Could not process Ava conversation.');
+      if (!r.ok) throw new Error(d.error || 'Could not process Executive Receptionist conversation.');
       const save = await fetch('/api/ava/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -292,12 +292,12 @@ function PersonalizedDemoContent({ prospect }: { prospect: Prospect }) {
             job?
           </h1>
           <p>
-            Ava answers for {prospect.companyName}, handles common {prospect.industry.toLowerCase()}{' '}
+            Executive Receptionist answers for {prospect.companyName}, handles common {prospect.industry.toLowerCase()}{' '}
             questions, captures the job details, and sends a qualified lead summary — so you never
             lose an emergency call to voicemail.
           </p>
           <div className="demo-tasks">
-            <h2>Three things Ava handles for {prospect.companyName}</h2>
+            <h2>Three things Executive Receptionist handles for {prospect.companyName}</h2>
             <ul>
               {prospect.tasks.map((task) => (
                 <li key={task}>
@@ -316,7 +316,7 @@ function PersonalizedDemoContent({ prospect }: { prospect: Prospect }) {
               <i />
             </div>
             <div>
-              <h3>Ava</h3>
+              <h3>Executive Receptionist</h3>
               <p>
                 AI Receptionist for {prospect.companyName} ·{' '}
                 {active
@@ -335,7 +335,7 @@ function PersonalizedDemoContent({ prospect }: { prospect: Prospect }) {
           </div>
 
           <fieldset className="voice-picker" disabled={voicePickerDisabled}>
-            <legend>Choose Ava&apos;s voice</legend>
+            <legend>Choose Executive Receptionist&apos;s voice</legend>
             <div className="voice-options">
               {AVA_VOICE_OPTIONS.map((option) => (
                 <label
@@ -370,7 +370,7 @@ function PersonalizedDemoContent({ prospect }: { prospect: Prospect }) {
               {textStep <= textPrompts.length ? (
                 <form onSubmit={sendTextMessage}>
                   <input
-                    aria-label="Reply to Ava"
+                    aria-label="Reply to Executive Receptionist"
                     value={textInput}
                     onChange={(e) => setTextInput(e.target.value)}
                     placeholder="Type your reply…"
@@ -419,7 +419,7 @@ function PersonalizedDemoContent({ prospect }: { prospect: Prospect }) {
                 >
                   {callState === 'preparing' ? (
                     <>
-                      <Loader2 className="spin" /> Preparing Ava…
+                      <Loader2 className="spin" /> Preparing Executive Receptionist…
                     </>
                   ) : callState === 'connecting' ? (
                     <>
@@ -442,8 +442,8 @@ function PersonalizedDemoContent({ prospect }: { prospect: Prospect }) {
               <small>
                 {active
                   ? conversation.isSpeaking
-                    ? 'Ava is speaking…'
-                    : 'Ava is listening…'
+                    ? 'Executive Receptionist is speaking…'
+                    : 'Executive Receptionist is listening…'
                   : savedMessage || 'Try a real conversation — no account required.'}
               </small>
               {error && <p className="call-error">{error}</p>}
@@ -512,7 +512,7 @@ function PersonalizedDemoContent({ prospect }: { prospect: Prospect }) {
       <section className="demo-pilot">
         <div>
           <span className="demo-kicker">14-DAY PAID PILOT</span>
-          <h2>Try Ava for {prospect.companyName}</h2>
+          <h2>Try Executive Receptionist for {prospect.companyName}</h2>
           <p>
             Plans from {AVA_PLANS.starter.monthlyLabel}/month · {AVA_PILOT_OFFER.usageLimit} ·{' '}
             {AVA_PILOT_OFFER.cancelPolicy}

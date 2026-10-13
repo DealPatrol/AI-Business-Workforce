@@ -9,8 +9,8 @@ async function notifyLeadEmail(lead:any){
   const apiKey=process.env.RESEND_API_KEY;
   const to=avaOwnerEmail();
   if(!apiKey||!to) return { sent:false, error:'Email notification environment variables are not configured.' };
-  const subject=`New Ava lead${lead.caller_name?` — ${lead.caller_name}`:''}${lead.service_job_type?` — ${lead.service_job_type}`:''}`;
-  const html=`<div style="font-family:Arial,sans-serif;max-width:680px;margin:auto;color:#17211b"><h1 style="font-size:24px">New Ava lead</h1><p>Ava finished a call and captured the following lead.</p><table style="border-collapse:collapse;width:100%"><tr><td><b>Name</b></td><td>${escapeHtml(lead.caller_name)}</td></tr><tr><td><b>Phone</b></td><td>${escapeHtml(lead.caller_phone)}</td></tr><tr><td><b>Service / job</b></td><td>${escapeHtml(lead.service_job_type)}</td></tr><tr><td><b>Address</b></td><td>${escapeHtml(lead.property_address)}</td></tr><tr><td><b>Intent / urgency</b></td><td>${escapeHtml(lead.intent_urgency)}</td></tr><tr><td><b>Business</b></td><td>${escapeHtml(lead.business_name)} (${escapeHtml(lead.business_type)})</td></tr></table><h2 style="font-size:18px;margin-top:24px">Conversation summary</h2><p style="white-space:pre-wrap">${escapeHtml(lead.summary)}</p><p style="font-size:12px;color:#66736b">Conversation ID: ${escapeHtml(lead.conversation_id)}</p></div>`;
+  const subject=`New Executive Receptionist lead${lead.caller_name?` — ${lead.caller_name}`:''}${lead.service_job_type?` — ${lead.service_job_type}`:''}`;
+  const html=`<div style="font-family:Arial,sans-serif;max-width:680px;margin:auto;color:#17211b"><h1 style="font-size:24px">New Executive Receptionist lead</h1><p>Executive Receptionist finished a call and captured the following lead.</p><table style="border-collapse:collapse;width:100%"><tr><td><b>Name</b></td><td>${escapeHtml(lead.caller_name)}</td></tr><tr><td><b>Phone</b></td><td>${escapeHtml(lead.caller_phone)}</td></tr><tr><td><b>Service / job</b></td><td>${escapeHtml(lead.service_job_type)}</td></tr><tr><td><b>Address</b></td><td>${escapeHtml(lead.property_address)}</td></tr><tr><td><b>Intent / urgency</b></td><td>${escapeHtml(lead.intent_urgency)}</td></tr><tr><td><b>Business</b></td><td>${escapeHtml(lead.business_name)} (${escapeHtml(lead.business_type)})</td></tr></table><h2 style="font-size:18px;margin-top:24px">Conversation summary</h2><p style="white-space:pre-wrap">${escapeHtml(lead.summary)}</p><p style="font-size:12px;color:#66736b">Conversation ID: ${escapeHtml(lead.conversation_id)}</p></div>`;
   const response=await fetch('https://api.resend.com/emails',{method:'POST',headers:{Authorization:`Bearer ${apiKey}`,'Content-Type':'application/json'},body:JSON.stringify({from:avaFromAddress(),to:[to],subject,html})});
   const result=await response.json().catch(()=>({}));
   if(!response.ok) return { sent:false, error:result?.message||`Resend returned ${response.status}` };
@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
     };
     const { data, error } = await supabase.from('ava_call_leads').upsert(payload, { onConflict: 'conversation_id' }).select().single();
     if (error) {
-      console.error('Unable to save Ava lead', error);
+      console.error('Unable to save Executive Receptionist lead', error);
       return NextResponse.json({ error: 'Lead capture is not available right now.' }, { status: 503 });
     }
 
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
       try {
         sms=await sendAvaLeadSms({ body: formatAvaLeadSmsBody(data) });
       } catch (smsError) {
-        console.error('Ava lead SMS failed', smsError);
+        console.error('Executive Receptionist lead SMS failed', smsError);
         sms={ sent:false, error: smsError instanceof Error ? smsError.message : 'SMS send failed' };
       }
       notification={ ...email, sms };
@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
     }
     return NextResponse.json({ lead: data, notification });
   } catch (error) {
-    console.error('Unable to save Ava lead', error);
+    console.error('Unable to save Executive Receptionist lead', error);
     return NextResponse.json({ error: 'Lead capture is not available right now.' }, { status: 503 });
   }
 }

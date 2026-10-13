@@ -72,11 +72,11 @@ export const PROSPECTS: Prospect[] = [
       address: '1247 Bayview Dr, Daphne, AL 36526',
       urgency: 'Same-day — elderly parent in home, indoor temp 82°F',
       summary:
-        'Karen called at 6:15 PM while the team was finishing a repair in Fairhope. Ava confirmed the upstairs unit is running but not cooling, noted the elderly occupant, and captured a callback number. Landon can prioritize this as a same-day comfort emergency.',
+        'Karen called at 6:15 PM while the team was finishing a repair in Fairhope. Executive Receptionist confirmed the upstairs unit is running but not cooling, noted the elderly occupant, and captured a callback number. Landon can prioritize this as a same-day comfort emergency.',
       recommendedNextStep: 'Call Karen back within 30 minutes and schedule a diagnostic visit.',
     },
     personalizedDemo: true,
-    outreachAngle: 'Built a demo showing how Ava handles missed calls while you are on a Baldwin County job.',
+    outreachAngle: 'Built a demo showing how Executive Receptionist handles missed calls while you are on a Baldwin County job.',
     status: 'queued',
   },
   {
@@ -106,7 +106,7 @@ export const PROSPECTS: Prospect[] = [
       address: '892 Oak Ridge Rd, Birmingham, AL 35209',
       urgency: 'Tonight — family with small children, outdoor temp dropping',
       summary:
-        'Marcus reported the furnace clicking repeatedly without igniting. Ava confirmed everyone is safe, captured the address in Oak Ridge, and flagged this as an after-hours heating emergency for a two-person crew.',
+        'Marcus reported the furnace clicking repeatedly without igniting. Executive Receptionist confirmed everyone is safe, captured the address in Oak Ridge, and flagged this as an after-hours heating emergency for a two-person crew.',
       recommendedNextStep: 'Return the call and dispatch for an emergency furnace diagnostic.',
     },
     personalizedDemo: true,
@@ -140,7 +140,7 @@ export const PROSPECTS: Prospect[] = [
       address: '4101 Valleydale Rd, Hoover, AL 35242',
       urgency: 'Within 2 hours — home office, needs heat restored tonight',
       summary:
-        'Diane called at 8:40 PM reporting a frozen heat pump and no warm air. Ava documented the outdoor icing, confirmed she is working from home, and captured a direct callback number for John’s after-hours dispatch.',
+        'Diane called at 8:40 PM reporting a frozen heat pump and no warm air. Executive Receptionist documented the outdoor icing, confirmed she is working from home, and captured a direct callback number for John’s after-hours dispatch.',
       recommendedNextStep: 'Call Diane, confirm dispatch window, and provide a written estimate range.',
     },
     personalizedDemo: true,
@@ -174,11 +174,11 @@ export const PROSPECTS: Prospect[] = [
       address: '156 Lee Road 270, Phenix City, AL 36867',
       urgency: 'Tomorrow morning preferred — rental property, tenant complaint',
       summary:
-        'Robert manages a rental and reported the AC compressor tripping the breaker. Ava confirmed the tenant contacted him, captured the Lee Road address, and noted he wants upfront pricing before authorizing repair.',
+        'Robert manages a rental and reported the AC compressor tripping the breaker. Executive Receptionist confirmed the tenant contacted him, captured the Lee Road address, and noted he wants upfront pricing before authorizing repair.',
       recommendedNextStep: 'Call Robert with a diagnostic fee quote and schedule a morning visit.',
     },
     personalizedDemo: true,
-    outreachAngle: 'Built a quick demo so you can hear how Ava handles missed calls for Underwood HVAC.',
+    outreachAngle: 'Built a quick demo so you can hear how Executive Receptionist handles missed calls for Underwood HVAC.',
     status: 'queued',
   },
   {
@@ -208,7 +208,7 @@ export const PROSPECTS: Prospect[] = [
       address: '221 Main St, Washington, MO 63090',
       urgency: 'Immediate — water damage spreading to basement ceiling',
       summary:
-        'Linda called while Brian was on another job. Ava confirmed the main shutoff is closed, documented active leaking into the basement, and captured her direct line for an emergency callback.',
+        'Linda called while Brian was on another job. Executive Receptionist confirmed the main shutoff is closed, documented active leaking into the basement, and captured her direct line for an emergency callback.',
       recommendedNextStep: 'Call Linda immediately and route to the Main St job as top priority.',
     },
     personalizedDemo: true,
@@ -242,11 +242,11 @@ export const PROSPECTS: Prospect[] = [
       address: '1842 N Western Ave, Santa Maria, CA 93458',
       urgency: 'Same day — garage flooding, needs shutoff guidance',
       summary:
-        'James reported active leaking from the water heater base with the pilot out. Ava walked through safe shutoff steps, confirmed the leak location, and queued a same-day callback for Kevin’s crew.',
+        'James reported active leaking from the water heater base with the pilot out. Executive Receptionist walked through safe shutoff steps, confirmed the leak location, and queued a same-day callback for Kevin’s crew.',
       recommendedNextStep: 'Call James, confirm shutoff status, and schedule replacement assessment.',
     },
     personalizedDemo: false,
-    outreachAngle: 'No call center — demo shows how Ava covers nights and weekends for KCD.',
+    outreachAngle: 'No call center — demo shows how Executive Receptionist covers nights and weekends for KCD.',
     status: 'queued',
   },
   {
@@ -276,7 +276,7 @@ export const PROSPECTS: Prospect[] = [
       address: '742 Maple Ave, Joliet, IL 60435',
       urgency: 'Immediate — raw sewage in finished basement',
       summary:
-        'Patricia called at 11 PM with a basement sewer backup affecting a finished space. Ava flagged biohazard urgency, confirmed no one is using plumbing fixtures, and captured her callback number.',
+        'Patricia called at 11 PM with a basement sewer backup affecting a finished space. Executive Receptionist flagged biohazard urgency, confirmed no one is using plumbing fixtures, and captured her callback number.',
       recommendedNextStep: 'Emergency dispatch — sewer backup with active overflow.',
     },
     personalizedDemo: false,
@@ -310,7 +310,7 @@ export const PROSPECTS: Prospect[] = [
       address: '830 Walnut St area, Elyria, OH 44035',
       urgency: 'Today — only one bathroom in the house',
       summary:
-        'Tom reported multiple fixtures backing up simultaneously. Ava confirmed it affects the only bathroom, captured the Walnut St area address, and flagged this as a main line priority.',
+        'Tom reported multiple fixtures backing up simultaneously. Executive Receptionist confirmed it affects the only bathroom, captured the Walnut St area address, and flagged this as a main line priority.',
       recommendedNextStep: 'Call Tom and schedule main line jetting or camera inspection.',
     },
     personalizedDemo: false,
@@ -343,7 +343,7 @@ export const PROSPECTS: Prospect[] = [
       address: 'County Road 26 near Blountsville, AL',
       urgency: 'Same day — elderly homeowner, no backup cooling',
       summary:
-        'Betty called from a mobile home off CR-26 with total AC failure on a hot day. Ava noted elderly occupant, no backup cooling, and captured landmark directions for rural dispatch.',
+        'Betty called from a mobile home off CR-26 with total AC failure on a hot day. Executive Receptionist noted elderly occupant, no backup cooling, and captured landmark directions for rural dispatch.',
       recommendedNextStep: 'Priority same-day AC repair — elderly occupant, extreme heat.',
     },
     personalizedDemo: false,
@@ -376,7 +376,7 @@ export const PROSPECTS: Prospect[] = [
       address: '4520 Government Blvd, Mobile, AL 36693',
       urgency: 'Today — home daycare, 6 children present',
       summary:
-        'Steve runs a home daycare and reported the outdoor unit is completely silent. Ava flagged the childcare occupancy, confirmed breaker status, and captured a same-day callback request.',
+        'Steve runs a home daycare and reported the outdoor unit is completely silent. Executive Receptionist flagged the childcare occupancy, confirmed breaker status, and captured a same-day callback request.',
       recommendedNextStep: 'Same-day dispatch — commercial occupancy with children present.',
     },
     personalizedDemo: false,
@@ -409,7 +409,7 @@ export const PROSPECTS: Prospect[] = [
       address: '7823 Bailey Cove Rd SE, Huntsville, AL 35802',
       urgency: 'This week — guest arriving Friday',
       summary:
-        'Angela has a zoned system with only the upstairs failing. Ava documented the Trane system age (8 years), confirmed the rest of the house cools normally, and noted a Friday guest deadline.',
+        'Angela has a zoned system with only the upstairs failing. Executive Receptionist documented the Trane system age (8 years), confirmed the rest of the house cools normally, and noted a Friday guest deadline.',
       recommendedNextStep: 'Schedule zone damper or thermostat diagnostic before Friday.',
     },
     personalizedDemo: false,
@@ -442,7 +442,7 @@ export const PROSPECTS: Prospect[] = [
       address: '1205 6th Ave SW, Decatur, AL 35601',
       urgency: 'Tonight — possible main line break',
       summary:
-        'Greg reported sudden pressure loss and discolored water across all fixtures. Ava flagged a possible main line issue, confirmed he shut off the main valve, and captured emergency callback info.',
+        'Greg reported sudden pressure loss and discolored water across all fixtures. Executive Receptionist flagged a possible main line issue, confirmed he shut off the main valve, and captured emergency callback info.',
       recommendedNextStep: 'Emergency call — possible main line break with water discoloration.',
     },
     personalizedDemo: false,
@@ -475,7 +475,7 @@ export const PROSPECTS: Prospect[] = [
       address: '2840 County Road 47, Florence, AL 35633',
       urgency: 'This week — pump may burn out if not addressed',
       summary:
-        'Nancy described rapid well pump cycling on a rural property. Ava captured CR-47 directions, noted the pressure tank symptom pattern, and flagged pump burnout risk if delayed.',
+        'Nancy described rapid well pump cycling on a rural property. Executive Receptionist captured CR-47 directions, noted the pressure tank symptom pattern, and flagged pump burnout risk if delayed.',
       recommendedNextStep: 'Schedule pressure tank and pump inspection within 48 hours.',
     },
     personalizedDemo: false,
@@ -508,7 +508,7 @@ export const PROSPECTS: Prospect[] = [
       address: '1800 McFarland Blvd E, Tuscaloosa, AL 35404',
       urgency: 'Today — tenants threatening lease violations',
       summary:
-        'Property manager reported 3 of 4 units lost cooling simultaneously. Ava captured the McFarland Blvd address, tenant count, and lease violation threats for priority dispatch.',
+        'Property manager reported 3 of 4 units lost cooling simultaneously. Executive Receptionist captured the McFarland Blvd address, tenant count, and lease violation threats for priority dispatch.',
       recommendedNextStep: 'Same-day multi-unit diagnostic — possible compressor or electrical issue.',
     },
     personalizedDemo: false,
@@ -541,7 +541,7 @@ export const PROSPECTS: Prospect[] = [
       address: '3201 Independence Dr, Birmingham, AL 35209',
       urgency: 'Immediate — gas odor reported',
       summary:
-        'Mike reported a mild gas smell near the water heater. Ava confirmed he opened windows, avoided switches and flames, and flagged this as a gas safety emergency requiring immediate callback.',
+        'Mike reported a mild gas smell near the water heater. Executive Receptionist confirmed he opened windows, avoided switches and flames, and flagged this as a gas safety emergency requiring immediate callback.',
       recommendedNextStep: 'Emergency callback — gas odor near water heater. Advise to wait outside if smell intensifies.',
     },
     personalizedDemo: false,
@@ -574,7 +574,7 @@ export const PROSPECTS: Prospect[] = [
       address: '100 Commerce St, Montgomery, AL 36104',
       urgency: 'Within 4 hours — medical office waiting room affected',
       summary:
-        'Office manager reported RTU failure affecting suite 200 with rising temps. Ava captured the medical office context, current temperature, and requested RTU access details for rooftop dispatch.',
+        'Office manager reported RTU failure affecting suite 200 with rising temps. Executive Receptionist captured the medical office context, current temperature, and requested RTU access details for rooftop dispatch.',
       recommendedNextStep: 'Commercial emergency — medical office occupancy, dispatch within 4 hours.',
     },
     personalizedDemo: false,
@@ -607,7 +607,7 @@ export const PROSPECTS: Prospect[] = [
       address: '425 S College St, Auburn, AL 36830',
       urgency: 'Before 4 PM — guest check-in deadline',
       summary:
-        'Sarah manages a College St Airbnb with a toilet overflow and 4 PM guest arrival. Ava captured the access code, confirmed water shutoff status, and flagged the hard check-in deadline.',
+        'Sarah manages a College St Airbnb with a toilet overflow and 4 PM guest arrival. Executive Receptionist captured the access code, confirmed water shutoff status, and flagged the hard check-in deadline.',
       recommendedNextStep: 'Priority job — complete repair before 4 PM guest check-in.',
     },
     personalizedDemo: false,
@@ -640,7 +640,7 @@ export const PROSPECTS: Prospect[] = [
       address: 'Lookout Mountain Pkwy, Gadsden, AL 35904',
       urgency: 'This week — steep driveway, need 4WD access confirmation',
       summary:
-        'Frank reported aux heat running nonstop with a doubled electric bill. Ava noted the steep driveway access requirement and captured the Lookout Mountain address for 4WD-capable dispatch.',
+        'Frank reported aux heat running nonstop with a doubled electric bill. Executive Receptionist noted the steep driveway access requirement and captured the Lookout Mountain address for 4WD-capable dispatch.',
       recommendedNextStep: 'Schedule diagnostic with 4WD vehicle — possible aux heat lockout or defrost issue.',
     },
     personalizedDemo: false,
@@ -673,7 +673,7 @@ export const PROSPECTS: Prospect[] = [
       address: '7890 US-98, Spanish Fort, AL 36527',
       urgency: 'Immediate — active flooding during storm',
       summary:
-        'Carlos reported sump pump failure with active garage flooding during heavy rain. Ava confirmed he is safe, documented water depth, and flagged insurance documentation may be needed.',
+        'Carlos reported sump pump failure with active garage flooding during heavy rain. Executive Receptionist confirmed he is safe, documented water depth, and flagged insurance documentation may be needed.',
       recommendedNextStep: 'Emergency dispatch — active flooding, sump pump replacement likely.',
     },
     personalizedDemo: false,
@@ -706,7 +706,7 @@ export const PROSPECTS: Prospect[] = [
       address: 'CR-53 near Headland, AL 36345',
       urgency: 'Today — payroll processing deadline tomorrow',
       summary:
-        'Farm office manager reported total AC failure with computers at risk. Ava captured CR-53 directions, noted the payroll deadline, and flagged commercial ag property type.',
+        'Farm office manager reported total AC failure with computers at risk. Executive Receptionist captured CR-53 directions, noted the payroll deadline, and flagged commercial ag property type.',
       recommendedNextStep: 'Same-day dispatch — commercial ag office, equipment at risk.',
     },
     personalizedDemo: false,

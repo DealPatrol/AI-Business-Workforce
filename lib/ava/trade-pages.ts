@@ -52,14 +52,14 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Plumbers',
     blurb: 'Active leaks, drains, water heaters, and after-hours dispatch intake.',
     title: 'AI Answering Service for Plumbers',
-    metaTitle: 'AI Answering Service for Plumbers | Ava',
+    metaTitle: 'AI Answering Service for Plumbers | Executive Receptionist',
     description:
-      'Ava answers plumbing calls when the truck is on a job. She captures the leak, the address, and a callback number, then texts you the lead. Plans from $79 a month after a 7-day trial.',
+      'Executive Receptionist answers plumbing calls when the truck is on a job. She captures the leak, the address, and a callback number, then texts you the lead. Plans from $77 a month after a 7-day trial.',
     eyebrow: 'AI answering service for plumbers',
     h1: 'Answer the leak call while you are still under the sink.',
     audience: 'plumbing companies and owner-operators',
     lede:
-      'A homeowner with water on the floor does not wait on voicemail. Ava picks up, asks whether they can shut the water off, and texts you a lead you can dispatch or call back.',
+      'A homeowner with water on the floor does not wait on voicemail. Executive Receptionist picks up, asks whether they can shut the water off, and texts you a lead you can dispatch or call back.',
     pain:
       'Plumbing demand shows up as interruptions. The owner is soldering, the apprentice is driving, and the office line — if there is one — is the same cell phone in a pocket. The caller who reaches a person first usually gets the job.',
     calls: [
@@ -77,11 +77,11 @@ export const AVA_GUIDES: AvaGuide[] = [
       'How soon they need someone on site',
     ],
     roiTitle: 'What a missed plumbing call is worth — as an example you edit',
-    roiBody: `Emergency calls are the ones that will not leave a second voicemail. ${exampleSentence({ missedPerWeek: 6, oneIn: 4, jobValue: 425, jobLabel: 'plumbing job' })} A $79 Starter plan after the trial is the published price to compare against your own version of that example.`,
+    roiBody: `Emergency calls are the ones that will not leave a second voicemail. ${exampleSentence({ missedPerWeek: 6, oneIn: 4, jobValue: 425, jobLabel: 'plumbing job' })} A $77 Starter plan after the trial is the published price to compare against your own version of that example.`,
     faqs: [
       {
-        q: 'Can Ava tell an emergency from a faucet quote?',
-        a: 'You write the urgent rules. A typical plumbing setup asks whether water is still running and flags active flooding for the callback path you choose. Ava does not shut off water or dispatch a truck by herself.',
+        q: 'Can Executive Receptionist tell an emergency from a faucet quote?',
+        a: 'You write the urgent rules. A typical plumbing setup asks whether water is still running and flags active flooding for the callback path you choose. Executive Receptionist does not shut off water or dispatch a truck by herself.',
       },
       {
         q: 'Will she quote a price on the call?',
@@ -89,7 +89,7 @@ export const AVA_GUIDES: AvaGuide[] = [
       },
       {
         q: 'Can I keep my current plumbing number?',
-        a: 'Usually, by forwarding the calls you do not answer. The exact carrier steps are confirmed during setup. Ava does not replace your phone carrier.',
+        a: 'Usually, by forwarding the calls you do not answer. The exact carrier steps are confirmed during setup. Executive Receptionist does not replace your phone carrier.',
       },
     ],
     related: ['ai-answering-service-for-hvac', 'missed-call-cost-calculator', 'ai-answering-service-for-general-contractors'],
@@ -99,14 +99,14 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'HVAC',
     blurb: 'No-cool, no-heat, maintenance, and replacement estimate calls.',
     title: 'AI Answering Service for HVAC',
-    metaTitle: 'AI Answering Service for HVAC Companies | Ava',
+    metaTitle: 'AI Answering Service for HVAC Companies | Executive Receptionist',
     description:
-      'Ava answers HVAC calls during no-cool and no-heat spikes, captures the symptom and address, and texts the lead. Free 7-day trial, then plans from $79 a month.',
+      'Executive Receptionist answers HVAC calls during no-cool and no-heat spikes, captures the symptom and address, and texts the lead. Free 7-day trial, then plans from $77 a month.',
     eyebrow: 'AI answering service for HVAC',
     h1: 'Pick up the no-cool call while the tech is on another roof.',
     audience: 'HVAC contractors and heating and cooling teams',
     lede:
-      'Peak season is a pile of calls that all sound urgent. Ava asks whether the house has heat or cooling, what the system is doing, and when someone can be home — then texts you the lead.',
+      'Peak season is a pile of calls that all sound urgent. Executive Receptionist asks whether the house has heat or cooling, what the system is doing, and when someone can be home — then texts you the lead.',
     pain:
       'A two-truck shop does not have a dispatcher sitting still in July. The phone rings while someone is in a crawlspace. If that call rolls to voicemail, the homeowner is already looking at the next company in the map pack.',
     calls: [
@@ -127,12 +127,12 @@ export const AVA_GUIDES: AvaGuide[] = [
     roiBody: `Replacement leads and same-day repairs are not the same ticket. Use a number you recognize. ${exampleSentence({ missedPerWeek: 8, oneIn: 4, jobValue: 350, jobLabel: 'HVAC service call' })} If your real ticket is a system replacement, put that higher number in the calculator instead of treating $350 as typical.`,
     faqs: [
       {
-        q: 'Can Ava handle emergency HVAC wording?',
+        q: 'Can Executive Receptionist handle emergency HVAC wording?',
         a: 'She can flag the phrases you list, such as no heat with someone medically vulnerable in the home, and follow the escalation note you wrote. Life-safety situations still follow your human policy, including telling the caller to contact emergency services when that is your rule.',
       },
       {
-        q: 'Does Ava replace ServiceTitan or Housecall Pro?',
-        a: 'No. Ava is the call layer. Your field software stays where jobs are scheduled and invoiced.',
+        q: 'Does Executive Receptionist replace ServiceTitan or Housecall Pro?',
+        a: 'No. Executive Receptionist is the call layer. Your field software stays where jobs are scheduled and invoiced.',
       },
       {
         q: 'Can maintenance agreements and replacement leads use different questions?',
@@ -146,14 +146,14 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Roofers',
     blurb: 'Storm, leak, inspection, and replacement calls while crews are on roofs.',
     title: 'AI Answering Service for Roofers',
-    metaTitle: 'AI Answering Service for Roofers | Ava',
+    metaTitle: 'AI Answering Service for Roofers | Executive Receptionist',
     description:
-      'Ava captures roof leak and storm-damage calls while your crews are on site. She collects the address and what happened, then texts you. Plans from $79 a month after a 7-day trial.',
+      'Executive Receptionist captures roof leak and storm-damage calls while your crews are on site. She collects the address and what happened, then texts you. Plans from $77 a month after a 7-day trial.',
     eyebrow: 'AI answering service for roofers',
     h1: 'Catch the storm calls that hit while every ladder is already up.',
     audience: 'roofing contractors and storm-response crews',
     lede:
-      'After hail, the phone does not ring once. It rings while you are on someone else’s roof. Ava takes the address, asks whether water is coming in now, and texts you a list you can schedule instead of a voicemail box.',
+      'After hail, the phone does not ring once. It rings while you are on someone else’s roof. Executive Receptionist takes the address, asks whether water is coming in now, and texts you a list you can schedule instead of a voicemail box.',
     pain:
       'Roofing sales happen away from a desk. A leak caller and a “we might need a roof next year” caller leave the same kind of voicemail. Sorting them at 8 p.m. is how inspections slip to the company that answered at 2 p.m.',
     calls: [
@@ -174,12 +174,12 @@ export const AVA_GUIDES: AvaGuide[] = [
     roiBody: `One booked inspection is not a closed roof. Count it as a conversation you got to have. ${exampleSentence({ missedPerWeek: 10, oneIn: 5, jobValue: 500, jobLabel: 'roof inspection you would have run' })} Put your own average job in the calculator if you sell replacements. Do not treat the example as a revenue forecast.`,
     faqs: [
       {
-        q: 'Can Ava talk about insurance?',
+        q: 'Can Executive Receptionist talk about insurance?',
         a: 'She can ask whether the caller already filed a claim and when the storm was, if you want those facts. She should not interpret coverage or tell anyone what a carrier will pay.',
       },
       {
         q: 'What about a surge of fifty calls?',
-        a: 'Ava can take them one after another and text each lead. Your included minutes still apply. A storm week can use the plan’s overage rate, which is printed on the pricing section before you start.',
+        a: 'Executive Receptionist can take them one after another and text each lead. Your included minutes still apply. A storm week can use the plan’s overage rate, which is printed on the pricing section before you start.',
       },
       {
         q: 'Can urgent leaks be marked differently from estimate requests?',
@@ -193,14 +193,14 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Electricians',
     blurb: 'Outages, panel questions, and the calls that should be 911 instead.',
     title: 'AI Answering Service for Electricians',
-    metaTitle: 'AI Answering Service for Electricians | Ava',
+    metaTitle: 'AI Answering Service for Electricians | Executive Receptionist',
     description:
-      'Ava answers electrical calls, separates a dead outlet from a downed line, and texts you the lead. She does not give electrical advice. Plans from $79 a month after a 7-day trial.',
+      'Executive Receptionist answers electrical calls, separates a dead outlet from a downed line, and texts you the lead. She does not give electrical advice. Plans from $77 a month after a 7-day trial.',
     eyebrow: 'AI answering service for electricians',
     h1: 'Take the panel call without stepping off the ladder.',
     audience: 'electrical contractors',
     lede:
-      'Ava can ask which breakers tripped, whether the whole house is dark, and if anyone smells burning. Burning, sparks, or a line on the ground should follow the emergency instruction you write — often “call 911 and the utility,” not “wait for a callback.”',
+      'Executive Receptionist can ask which breakers tripped, whether the whole house is dark, and if anyone smells burning. Burning, sparks, or a line on the ground should follow the emergency instruction you write — often “call 911 and the utility,” not “wait for a callback.”',
     pain:
       'Electrical work is hard to pause, and the dangerous calls are mixed in with EV charger quotes and “this outlet died.” A voicemail does not ask the safety question. The next electrician who answers does.',
     calls: [
@@ -218,15 +218,15 @@ export const AVA_GUIDES: AvaGuide[] = [
       'Repair now or an estimate later',
     ],
     roiTitle: 'Use your own average ticket, not a national electrical average',
-    roiBody: `Service calls and panel replacements should not share one pretend average. ${exampleSentence({ missedPerWeek: 5, oneIn: 4, jobValue: 280, jobLabel: 'electrical service call' })} If you mostly sell panel upgrades, raise the job value. The point is to see the gap next to a $79 or $149 plan, with your numbers.`,
+    roiBody: `Service calls and panel replacements should not share one pretend average. ${exampleSentence({ missedPerWeek: 5, oneIn: 4, jobValue: 280, jobLabel: 'electrical service call' })} If you mostly sell panel upgrades, raise the job value. The point is to see the gap next to a $77 or $168 plan, with your numbers.`,
     faqs: [
       {
-        q: 'Will Ava tell people how to reset a breaker?',
+        q: 'Will Executive Receptionist tell people how to reset a breaker?',
         a: 'Only if you explicitly approve that sentence. By default she should collect the situation and avoid coaching someone through a panel.',
       },
       {
         q: 'What if the caller reports a downed line?',
-        a: 'Put that in urgent rules: tell them to stay away and contact emergency services and the utility. Ava is not a utility dispatcher.',
+        a: 'Put that in urgent rules: tell them to stay away and contact emergency services and the utility. Executive Receptionist is not a utility dispatcher.',
       },
       {
         q: 'Can she book the job on my calendar?',
@@ -240,16 +240,16 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Landscapers',
     blurb: 'Installs, cleanups, and design-build estimates while the crew is on site.',
     title: 'AI Answering Service for Landscapers',
-    metaTitle: 'AI Answering Service for Landscapers | Ava',
+    metaTitle: 'AI Answering Service for Landscapers | Executive Receptionist',
     description:
-      'Ava answers landscaping estimate calls, captures the property and the work requested, and texts you. Built for crews that cannot stop a job to take a lead. Plans from $79 a month.',
+      'Executive Receptionist answers landscaping estimate calls, captures the property and the work requested, and texts you. Built for crews that cannot stop a job to take a lead. Plans from $77 a month.',
     eyebrow: 'AI answering service for landscapers',
-    h1: 'Stay on the install. Let Ava take the next estimate call.',
+    h1: 'Stay on the install. Let Executive Receptionist take the next estimate call.',
     audience: 'landscaping companies',
     lede:
-      'Landscape leads are specific: new beds, a patio, drainage, a cleanup after a storm. Ava asks which of those they want, where the property is, and when they hope to start, then texts you enough to decide if it is your work.',
+      'Landscape leads are specific: new beds, a patio, drainage, a cleanup after a storm. Executive Receptionist asks which of those they want, where the property is, and when they hope to start, then texts you enough to decide if it is your work.',
     pain:
-      'The person who can price a project is usually the person running equipment. Returning a vague voicemail at dusk means a second call just to learn they wanted a sketch, not mowing. The sample call on the Ava homepage is a landscaping estimate so you can hear that pace.',
+      'The person who can price a project is usually the person running equipment. Returning a vague voicemail at dusk means a second call just to learn they wanted a sketch, not mowing. The sample call on the Executive Receptionist homepage is a landscaping estimate so you can hear that pace.',
     calls: [
       'New landscape and planting projects',
       'Hardscape, drainage, and grading questions',
@@ -269,15 +269,15 @@ export const AVA_GUIDES: AvaGuide[] = [
     faqs: [
       {
         q: 'Is this the same as the lawn care page?',
-        a: 'No. Lawn care is mostly recurring routes and same-week starts. This page is project work: installs, cleanups, and site visits. You can still use one Ava for both if you spell out the two question paths.',
+        a: 'No. Lawn care is mostly recurring routes and same-week starts. This page is project work: installs, cleanups, and site visits. You can still use one Executive Receptionist for both if you spell out the two question paths.',
       },
       {
-        q: 'Can Ava describe plants or promise a design?',
+        q: 'Can Executive Receptionist describe plants or promise a design?',
         a: 'She should not design the yard on the call. She captures the request so you can look at the property.',
       },
       {
         q: 'Where is the sample call?',
-        a: 'On the Ava homepage, labeled as a prerecorded landscaping estimate. It is an example, not a recording of a customer of yours.',
+        a: 'On the Executive Receptionist homepage, labeled as a prerecorded landscaping estimate. It is an example, not a recording of a customer of yours.',
       },
     ],
     related: ['ai-answering-service-for-lawn-care', 'ai-answering-service-for-fencing', 'ai-answering-service-for-tree-service'],
@@ -287,14 +287,14 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Lawn care',
     blurb: 'Weekly mowing, cleanups, and route leads while you are on a mower.',
     title: 'AI Answering Service for Lawn Care',
-    metaTitle: 'AI Answering Service for Lawn Care Companies | Ava',
+    metaTitle: 'AI Answering Service for Lawn Care Companies | Executive Receptionist',
     description:
-      'Ava answers lawn care calls about mowing, cleanups, and recurring service, then texts you the address and what they asked for. Plans from $79 a month after a 7-day trial.',
+      'Executive Receptionist answers lawn care calls about mowing, cleanups, and recurring service, then texts you the address and what they asked for. Plans from $77 a month after a 7-day trial.',
     eyebrow: 'AI answering service for lawn care',
     h1: 'Take the new-route call without killing the mower.',
     audience: 'lawn care and mowing companies',
     lede:
-      'Lawn leads are often simple and time-sensitive: they want someone this week. Ava asks for the address, lot size if they know it, and whether they want weekly service or a one-time cut.',
+      'Lawn leads are often simple and time-sensitive: they want someone this week. Executive Receptionist asks for the address, lot size if they know it, and whether they want weekly service or a one-time cut.',
     pain:
       'Route density matters. A missed call across town is not the same as a missed call on a street you already mow. Voicemail rarely includes the cross street. You call back and they have already booked the neighbor’s kid or the other lawn company.',
     calls: [
@@ -315,12 +315,12 @@ export const AVA_GUIDES: AvaGuide[] = [
     roiBody: `Recurring revenue is why the call matters, but the first month is the honest comparison. ${exampleSentence({ missedPerWeek: 7, oneIn: 3, jobValue: 160, jobLabel: 'first month of mowing' })} If you want to include a season of visits, multiply your own monthly price in the calculator. Do not assume every missed call was on your route.`,
     faqs: [
       {
-        q: 'Can Ava tell people the price of a cut?',
+        q: 'Can Executive Receptionist tell people the price of a cut?',
         a: 'Only with a sentence you approve, such as “mowing is quoted from the address.” Guessing a price from a vague description is a good way to create a bad job.',
       },
       {
         q: 'What about customers who already have an account?',
-        a: 'You can tell Ava to mark “existing customer” and text you the request instead of treating it as a new lead.',
+        a: 'You can tell Executive Receptionist to mark “existing customer” and text you the request instead of treating it as a new lead.',
       },
       {
         q: 'Does this include landscaping installs?',
@@ -334,14 +334,14 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Pest control',
     blurb: 'What they saw, where, and whether kids or pets are in the house.',
     title: 'AI Answering Service for Pest Control',
-    metaTitle: 'AI Answering Service for Pest Control | Ava',
+    metaTitle: 'AI Answering Service for Pest Control | Executive Receptionist',
     description:
-      'Ava answers pest control calls, asks what the caller saw and where, and texts you the lead. She does not recommend pesticides. Plans from $79 a month after a 7-day trial.',
+      'Executive Receptionist answers pest control calls, asks what the caller saw and where, and texts you the lead. She does not recommend pesticides. Plans from $77 a month after a 7-day trial.',
     eyebrow: 'AI answering service for pest control',
     h1: 'Get the “there are wasps in the wall” call while you are under another house.',
     audience: 'pest control companies',
     lede:
-      'People call pest control when something is in the kitchen or the eaves, and they want a person today. Ava asks what they saw, which room, and whether children or pets live there, then texts you. She does not name a chemical or promise an extermination.',
+      'People call pest control when something is in the kitchen or the eaves, and they want a person today. Executive Receptionist asks what they saw, which room, and whether children or pets live there, then texts you. She does not name a chemical or promise an extermination.',
     pain:
       'Technicians are in crawlspaces with poor reception. The office phone, if it exists, is often unanswered during routes. A wildlife or stinging-insect call that waits until evening has usually called a second company.',
     calls: [
@@ -362,12 +362,12 @@ export const AVA_GUIDES: AvaGuide[] = [
     roiBody: `Quarterly contracts and one-time wasp jobs should be entered separately. ${exampleSentence({ missedPerWeek: 6, oneIn: 3, jobValue: 189, jobLabel: 'pest visit' })} The $189 figure is an example input, not a published industry price.`,
     faqs: [
       {
-        q: 'Can Ava recommend a product?',
+        q: 'Can Executive Receptionist recommend a product?',
         a: 'No. She should not tell callers which pesticide to buy or how to apply one. Your technician does that on site, under your license.',
       },
       {
         q: 'What about wildlife trapping?',
-        a: 'If you do not offer it, give Ava the sentence you want, such as the name of a referral or “we don’t trap wildlife.”',
+        a: 'If you do not offer it, give Executive Receptionist the sentence you want, such as the name of a referral or “we don’t trap wildlife.”',
       },
       {
         q: 'Can she sell a quarterly plan on the call?',
@@ -381,14 +381,14 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Cleaning',
     blurb: 'Recurring house cleaning, move-outs, and the details a quote actually needs.',
     title: 'AI Answering Service for Cleaning Companies',
-    metaTitle: 'AI Answering Service for Cleaning Companies | Ava',
+    metaTitle: 'AI Answering Service for Cleaning Companies | Executive Receptionist',
     description:
-      'Ava answers cleaning-company calls, asks about the home and how often they want service, and texts you the lead. Plans from $79 a month after a 7-day trial.',
+      'Executive Receptionist answers cleaning-company calls, asks about the home and how often they want service, and texts you the lead. Plans from $77 a month after a 7-day trial.',
     eyebrow: 'AI answering service for cleaning companies',
     h1: 'Book the walkthrough conversation while your team is in someone else’s house.',
     audience: 'residential and commercial cleaning companies',
     lede:
-      'Cleaning quotes fall apart without basics: bedrooms and bathrooms, pets, and whether this is a recurring clean or a move-out. Ava asks those questions and texts you. She does not promise a price from a room count.',
+      'Cleaning quotes fall apart without basics: bedrooms and bathrooms, pets, and whether this is a recurring clean or a move-out. Executive Receptionist asks those questions and texts you. She does not promise a price from a room count.',
     pain:
       'Owners of small cleaning companies are often on the job. The call comes in during a deep clean, goes to voicemail, and the household books a company that answered. Move-out dates do not wait.',
     calls: [
@@ -406,11 +406,11 @@ export const AVA_GUIDES: AvaGuide[] = [
       'Pets and any access notes they volunteer',
     ],
     roiTitle: 'Recurring cleans compound; missed first calls do not',
-    roiBody: `Compare the first clean, not a fictional lifetime value. ${exampleSentence({ missedPerWeek: 5, oneIn: 3, jobValue: 180, jobLabel: 'first cleaning visit' })} If a client stays for months, that is upside on top of the example, not something Ava can claim.`,
+    roiBody: `Compare the first clean, not a fictional lifetime value. ${exampleSentence({ missedPerWeek: 5, oneIn: 3, jobValue: 180, jobLabel: 'first cleaning visit' })} If a client stays for months, that is upside on top of the example, not something Executive Receptionist can claim.`,
     faqs: [
       {
-        q: 'Can Ava say the team is background-checked or insured?',
-        a: 'Only if that sentence is true and you approve the exact wording. Ava should not invent credentials.',
+        q: 'Can Executive Receptionist say the team is background-checked or insured?',
+        a: 'Only if that sentence is true and you approve the exact wording. Executive Receptionist should not invent credentials.',
       },
       {
         q: 'Will she give a per-room price?',
@@ -418,7 +418,7 @@ export const AVA_GUIDES: AvaGuide[] = [
       },
       {
         q: 'What if I only want after-hours coverage?',
-        a: 'Forward the line to Ava when you do not answer, or only outside the hours you work. You do not have to send every call.',
+        a: 'Forward the line to Executive Receptionist when you do not answer, or only outside the hours you work. You do not have to send every call.',
       },
     ],
     related: ['ai-answering-service-for-painters', 'ai-receptionist-for-small-business', 'missed-call-cost-calculator'],
@@ -428,14 +428,14 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Painters',
     blurb: 'Interior rooms, exteriors, and the questions that keep a bid honest.',
     title: 'AI Answering Service for Painters',
-    metaTitle: 'AI Answering Service for Painters | Ava',
+    metaTitle: 'AI Answering Service for Painters | Executive Receptionist',
     description:
-      'Ava answers painting estimate calls, captures rooms or exterior details, and texts you the lead while you are on a job. Plans from $79 a month after a 7-day trial.',
+      'Executive Receptionist answers painting estimate calls, captures rooms or exterior details, and texts you the lead while you are on a job. Plans from $77 a month after a 7-day trial.',
     eyebrow: 'AI answering service for painters',
     h1: 'Take the estimate call without climbing down.',
     audience: 'painting contractors',
     lede:
-      'A painting lead without a scope is a callback that wastes the evening. Ava asks interior or exterior, about how many rooms or which sides of the house, and whether they are painting occupied rooms.',
+      'A painting lead without a scope is a callback that wastes the evening. Executive Receptionist asks interior or exterior, about how many rooms or which sides of the house, and whether they are painting occupied rooms.',
     pain:
       'Painters price by seeing the surface. The phone still has to be answered or the homeowner hires whoever can “come look Thursday.” Lead-safe work and repairs are easy to mishandle if an answering script starts promising methods.',
     calls: [
@@ -456,12 +456,12 @@ export const AVA_GUIDES: AvaGuide[] = [
     roiBody: `${exampleSentence({ missedPerWeek: 4, oneIn: 3, jobValue: 750, jobLabel: 'painting estimate visit you would have booked' })} The visit is the example, not a closed contract. Exterior whole-house work can be worth more; put that number in yourself.`,
     faqs: [
       {
-        q: 'Can Ava discuss lead paint?',
+        q: 'Can Executive Receptionist discuss lead paint?',
         a: 'She should not advise on lead abatement or tell someone to sand old paint. If the home might be pre-1978, your approved line can be that you will cover that on the visit.',
       },
       {
         q: 'Can she text photos requests?',
-        a: 'The lead text goes to you, not a photo thread with the homeowner, unless you handle that yourself after the call. Ava’s handoff is the summary to your phone.',
+        a: 'The lead text goes to you, not a photo thread with the homeowner, unless you handle that yourself after the call. Executive Receptionist’s handoff is the summary to your phone.',
       },
       {
         q: 'Do I need the Pro plan?',
@@ -475,14 +475,14 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'General contractors',
     blurb: 'Remodel and repair intake that does not pretend to be a bid.',
     title: 'AI Answering Service for General Contractors',
-    metaTitle: 'AI Answering Service for General Contractors | Ava',
+    metaTitle: 'AI Answering Service for General Contractors | Executive Receptionist',
     description:
-      'Ava answers general-contractor calls, captures the project and the address, and texts you. She does not produce a bid on the call. Plans from $79 a month after a 7-day trial.',
+      'Executive Receptionist answers general-contractor calls, captures the project and the address, and texts you. She does not produce a bid on the call. Plans from $77 a month after a 7-day trial.',
     eyebrow: 'AI answering service for general contractors',
     h1: 'Capture the remodel call while you are on a jobsite.',
     audience: 'general contractors and remodeling companies',
     lede:
-      'GC calls are messy on purpose: a bathroom, a deck, “a few things around the house.” Ava’s job is to learn which trade is involved, whether the home is occupied, and how to reach them — not to price the work.',
+      'GC calls are messy on purpose: a bathroom, a deck, “a few things around the house.” Executive Receptionist’s job is to learn which trade is involved, whether the home is occupied, and how to reach them — not to price the work.',
     pain:
       'You are the estimator and the superintendent. The phone rings during a walkthrough with another client. Those missed calls are often the next project, and they do not leave a clean scope on voicemail.',
     calls: [
@@ -497,13 +497,13 @@ export const AVA_GUIDES: AvaGuide[] = [
       'Project address',
       'What they want built or fixed, in their words',
       'Occupied home or vacant',
-      'Any timing or budget they volunteer — never a number Ava invents',
+      'Any timing or budget they volunteer — never a number Executive Receptionist invents',
     ],
     roiTitle: 'Do not divide a remodel by a fake close rate',
     roiBody: `A single won remodel dwarfs the subscription. The honest first step is the conversation you missed. ${exampleSentence({ missedPerWeek: 3, oneIn: 3, jobValue: 400, jobLabel: 'site visit you would have scheduled' })} Price the visit in the example. Put the project value in the calculator only if you want to see that larger, riskier number.`,
     faqs: [
       {
-        q: 'Will Ava sound like a project manager?',
+        q: 'Will Executive Receptionist sound like a project manager?',
         a: 'She sounds like the greeting and questions you approve. She should not discuss allowances, change orders, or contract terms.',
       },
       {
@@ -512,7 +512,7 @@ export const AVA_GUIDES: AvaGuide[] = [
       },
       {
         q: 'How is this different from a call center?',
-        a: 'A call center is a staffing service with its own price sheet. Ava is software on a published plan: $79, $149, or $299 a month after a 7-day trial, with included minutes listed on the plan.',
+        a: 'A call center is a staffing service with its own price sheet. Executive Receptionist is software on a published plan: $77, $168, or $324 a month after a 7-day trial, with included minutes listed on the plan.',
       },
     ],
     related: ['ai-receptionist-vs-answering-service', 'ai-answering-service-for-painters', 'ai-answering-service-for-roofers'],
@@ -522,14 +522,14 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Dentists',
     blurb: 'New-patient and scheduling calls, without pretending this is a HIPAA product.',
     title: 'AI Answering Service for Dentists',
-    metaTitle: 'AI Answering Service for Dentists | Ava',
+    metaTitle: 'AI Answering Service for Dentists | Executive Receptionist',
     description:
-      'Ava can answer dental front-desk overflow: new-patient calls, hours, and callback requests. She is not a HIPAA product. Confirm what she may say before you forward the line. Plans from $79 a month.',
+      'Executive Receptionist can answer dental front-desk overflow: new-patient calls, hours, and callback requests. She is not a HIPAA product. Confirm what she may say before you forward the line. Plans from $77 a month.',
     eyebrow: 'AI answering service for dental offices',
     h1: 'Cover the front desk when the chair is full and the phone is still ringing.',
     audience: 'dental practices and small clinics',
     lede:
-      'Ava can greet a caller, give the hours and address you approve, and take a name and number for a callback. She should not collect clinical details, insurance treatment histories, or anything you are not willing to have in a text message to the office phone.',
+      'Executive Receptionist can greet a caller, give the hours and address you approve, and take a name and number for a callback. She should not collect clinical details, insurance treatment histories, or anything you are not willing to have in a text message to the office phone.',
     pain:
       'A one-doctor office often has one person at the front. When they are walking a patient out, the new-patient call goes to the answering machine. That caller may still be in pain or may simply book the next office that picks up.',
     calls: [
@@ -550,8 +550,8 @@ export const AVA_GUIDES: AvaGuide[] = [
     roiBody: `We are not publishing a “value of a new dental patient.” Practices disagree, and a lot of those charts online are marketing. ${exampleSentence({ missedPerWeek: 4, oneIn: 4, jobValue: 200, jobLabel: 'new-patient visit you would have offered' })} Replace $200 with the figure you actually use.`,
     faqs: [
       {
-        q: 'Is Ava HIPAA compliant?',
-        a: 'No. Do not use Ava to collect health information, insurance member IDs, or clinical notes. If your compliance officer says the line must stay with trained staff, keep it there. This page is for offices that want a callback taken, not a chart started.',
+        q: 'Is Executive Receptionist HIPAA compliant?',
+        a: 'No. Do not use Executive Receptionist to collect health information, insurance member IDs, or clinical notes. If your compliance officer says the line must stay with trained staff, keep it there. This page is for offices that want a callback taken, not a chart started.',
       },
       {
         q: 'Can she book directly on the practice software?',
@@ -569,14 +569,14 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Law firms',
     blurb: 'Consult callbacks with a conflict check left to the firm.',
     title: 'AI Answering Service for Law Firms',
-    metaTitle: 'AI Answering Service for Law Firms | Ava',
+    metaTitle: 'AI Answering Service for Law Firms | Executive Receptionist',
     description:
-      'Ava can take a name and number for a law-firm callback and repeat the hours you approve. She does not give legal advice or run a conflict check. Plans from $79 a month after a 7-day trial.',
+      'Executive Receptionist can take a name and number for a law-firm callback and repeat the hours you approve. She does not give legal advice or run a conflict check. Plans from $77 a month after a 7-day trial.',
     eyebrow: 'AI answering service for law firms',
     h1: 'Take the consult call when everyone is in a hearing.',
     audience: 'small law firms and solo practices',
     lede:
-      'Ava can answer, say she is an AI receptionist, and collect a name, phone number, and the kind of matter in plain language. She should not assess a case, promise confidentiality beyond what your engagement process actually provides, or decide there is no conflict.',
+      'Executive Receptionist can answer, say she is an AI receptionist, and collect a name, phone number, and the kind of matter in plain language. She should not assess a case, promise confidentiality beyond what your engagement process actually provides, or decide there is no conflict.',
     pain:
       'Small firms miss calls during court, depositions, and client meetings. The person who called about a deadline may call the next firm on the search results. A careful intake still has to happen with a person. The missed call is the step before that.',
     calls: [
@@ -601,12 +601,12 @@ export const AVA_GUIDES: AvaGuide[] = [
         a: 'It should not. Your greeting needs to say that a callback is not representation and that she cannot give legal advice. Have the lawyer who owns the firm approve that sentence.',
       },
       {
-        q: 'Can Ava run conflicts?',
+        q: 'Can Executive Receptionist run conflicts?',
         a: 'No. She does not see your client list. Staff still screen conflicts before anyone is engaged.',
       },
       {
         q: 'Should criminal, family, or immigration callers talk to an AI?',
-        a: 'That is the firm’s decision. Many firms will want those calls transferred to a person or sent to a dedicated voicemail. You can refuse to let Ava take them.',
+        a: 'That is the firm’s decision. Many firms will want those calls transferred to a person or sent to a dedicated voicemail. You can refuse to let Executive Receptionist take them.',
       },
     ],
     related: ['ai-answering-service-for-dentists', 'ai-receptionist-for-small-business', 'ai-receptionist-vs-answering-service'],
@@ -616,14 +616,14 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Garage door',
     blurb: 'Stuck doors, broken springs, and opener quotes with a safety line.',
     title: 'AI Answering Service for Garage Door Companies',
-    metaTitle: 'AI Answering Service for Garage Door Companies | Ava',
+    metaTitle: 'AI Answering Service for Garage Door Companies | Executive Receptionist',
     description:
-      'Ava answers garage-door calls about stuck doors, springs, and new openers, then texts you the lead. She does not talk anyone through a spring repair. Plans from $79 a month.',
+      'Executive Receptionist answers garage-door calls about stuck doors, springs, and new openers, then texts you the lead. She does not talk anyone through a spring repair. Plans from $77 a month.',
     eyebrow: 'AI answering service for garage door companies',
     h1: 'Answer the stuck-door call while you are on another driveway.',
     audience: 'garage door repair and installation companies',
     lede:
-      'A car trapped in the garage is a today call. Ava asks whether the door is stuck open or closed, single or double, and whether a spring looks broken. She should tell callers not to touch a spring if that is your rule.',
+      'A car trapped in the garage is a today call. Executive Receptionist asks whether the door is stuck open or closed, single or double, and whether a spring looks broken. She should tell callers not to touch a spring if that is your rule.',
     pain:
       'Garage door companies live on same-day repair. The technician who is already under a door cannot take the next call. The homeowner calls the next ad. Springs are dangerous enough that a sloppy script is worse than voicemail.',
     calls: [
@@ -644,7 +644,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     roiBody: `${exampleSentence({ missedPerWeek: 6, oneIn: 3, jobValue: 320, jobLabel: 'garage-door service call' })} New door sales can be larger. Enter that separately if it is most of your book.`,
     faqs: [
       {
-        q: 'Can Ava walk someone through winding a spring?',
+        q: 'Can Executive Receptionist walk someone through winding a spring?',
         a: 'No. The approved line should be that springs are dangerous and a technician needs to see them.',
       },
       {
@@ -663,14 +663,14 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Tree service',
     blurb: 'Storm limbs and removal estimates, with downed lines sent to the utility.',
     title: 'AI Answering Service for Tree Service',
-    metaTitle: 'AI Answering Service for Tree Service Companies | Ava',
+    metaTitle: 'AI Answering Service for Tree Service Companies | Executive Receptionist',
     description:
-      'Ava answers tree-service calls about removals, limbs, and storm damage, and texts you the address. Downed power lines stay an emergency-services and utility call. Plans from $79 a month.',
+      'Executive Receptionist answers tree-service calls about removals, limbs, and storm damage, and texts you the address. Downed power lines stay an emergency-services and utility call. Plans from $77 a month.',
     eyebrow: 'AI answering service for tree service',
     h1: 'Take the storm-limb call while the chipper is already running.',
     audience: 'tree service and arborist companies',
     lede:
-      'Ava asks what happened to the tree, whether it is on a house or a car, and whether any wire is involved. If a line is down, your script should send them to emergency services and the utility — not put them in a callback queue.',
+      'Executive Receptionist asks what happened to the tree, whether it is on a house or a car, and whether any wire is involved. If a line is down, your script should send them to emergency services and the utility — not put them in a callback queue.',
     pain:
       'Tree crews are loud and away from the phone. After a storm the calls stack up, and the profitable removals go to whoever logs the address first. A voicemail that says “big tree, call me” is not a schedule.',
     calls: [
@@ -691,7 +691,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     roiBody: `${exampleSentence({ missedPerWeek: 5, oneIn: 4, jobValue: 650, jobLabel: 'tree job you would have looked at' })} Use your own number for a removal versus a trim. The example is only the arithmetic.`,
     faqs: [
       {
-        q: 'Will Ava claim to be an arborist?',
+        q: 'Will Executive Receptionist claim to be an arborist?',
         a: 'No. She answers the phone. Certifications and insurance wording have to be sentences you approve because they are true.',
       },
       {
@@ -710,14 +710,14 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Pool companies',
     blurb: 'Green pools, openings, and weekly service routes.',
     title: 'AI Answering Service for Pool Companies',
-    metaTitle: 'AI Answering Service for Pool Companies | Ava',
+    metaTitle: 'AI Answering Service for Pool Companies | Executive Receptionist',
     description:
-      'Ava answers pool-company calls about green water, openings, and weekly service, then texts you the lead. She does not prescribe chemicals. Plans from $79 a month after a 7-day trial.',
+      'Executive Receptionist answers pool-company calls about green water, openings, and weekly service, then texts you the lead. She does not prescribe chemicals. Plans from $77 a month after a 7-day trial.',
     eyebrow: 'AI answering service for pool companies',
     h1: 'Answer the green-pool call while you are in someone else’s equipment pit.',
     audience: 'pool service and repair companies',
     lede:
-      'Pool calls cluster when the weather turns. Ava asks weekly service or a one-time cleanup, roughly how the water looks, and whether equipment is making noise. Chemical dosing stays off the call.',
+      'Pool calls cluster when the weather turns. Executive Receptionist asks weekly service or a one-time cleanup, roughly how the water looks, and whether equipment is making noise. Chemical dosing stays off the call.',
     pain:
       'Route techs cannot stop at every ring. Opening season and the first hot week produce a burst of “our pool is green” calls. The company that logs the address gets the route add.',
     calls: [
@@ -738,7 +738,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     roiBody: `${exampleSentence({ missedPerWeek: 5, oneIn: 3, jobValue: 220, jobLabel: 'first pool visit' })} Weekly service after that is your retention, not a number we can promise.`,
     faqs: [
       {
-        q: 'Can Ava tell them how much chlorine to add?',
+        q: 'Can Executive Receptionist tell them how much chlorine to add?',
         a: 'No. She should not give chemical instructions.',
       },
       {
@@ -757,14 +757,14 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Fencing',
     blurb: 'Wood, vinyl, and gate estimates with the measurements left for the visit.',
     title: 'AI Answering Service for Fencing Companies',
-    metaTitle: 'AI Answering Service for Fencing Companies | Ava',
+    metaTitle: 'AI Answering Service for Fencing Companies | Executive Receptionist',
     description:
-      'Ava answers fencing estimate calls, asks material and roughly where the fence goes, and texts you the lead. She does not price linear feet she cannot see. Plans from $79 a month.',
+      'Executive Receptionist answers fencing estimate calls, asks material and roughly where the fence goes, and texts you the lead. She does not price linear feet she cannot see. Plans from $77 a month.',
     eyebrow: 'AI answering service for fencing companies',
     h1: 'Log the fence estimate while the crew is setting posts.',
     audience: 'fence contractors',
     lede:
-      'Fence leads want a price before they have a measurement. Ava’s useful job is to learn wood, vinyl, or chain link, whether they need a gate, and the address — then let you measure.',
+      'Fence leads want a price before they have a measurement. Executive Receptionist’s useful job is to learn wood, vinyl, or chain link, whether they need a gate, and the address — then let you measure.',
     pain:
       'Crews are in backyards with the phone in the truck. HOA callers and “can you match the neighbor” callers leave voicemails that all sound the same. The company that calls back the same day with a visit time usually wins the bid.',
     calls: [
@@ -785,7 +785,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     roiBody: `${exampleSentence({ missedPerWeek: 4, oneIn: 3, jobValue: 800, jobLabel: 'fence estimate you would have measured' })} Linear-foot prices vary by material and height. Keep the example at the visit unless you enter your own average job.`,
     faqs: [
       {
-        q: 'Can Ava quote per foot?',
+        q: 'Can Executive Receptionist quote per foot?',
         a: 'Only from a price list you explicitly approve, and even then most contractors would rather measure first. Default is no price.',
       },
       {
@@ -805,14 +805,14 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Small business',
     blurb: 'When the owner is the receptionist and the phone rings during the work.',
     title: 'AI Receptionist for Small Business',
-    metaTitle: 'AI Receptionist for Small Business | Ava',
+    metaTitle: 'AI Receptionist for Small Business | Executive Receptionist',
     description:
-      'Ava is an AI receptionist for small businesses that miss calls while the owner is doing the work. She takes a name, number, and reason, then texts you. Plans from $79 a month after a 7-day trial.',
+      'Executive Receptionist is an AI receptionist for small businesses that miss calls while the owner is doing the work. She takes a name, number, and reason, then texts you. Plans from $77 a month after a 7-day trial.',
     eyebrow: 'AI receptionist for small business',
     h1: 'A front desk for the shop where the owner still answers the phone.',
     audience: 'small businesses whose owner or a single employee answers the phone',
     lede:
-      'Ava is for the business that does not have a person sitting at a desk from 8 to 5. She answers, asks what the caller needs, and texts the owner. A full-time receptionist is a different purchase — the federal median pay for receptionists was $37,230 a year in May 2024, before taxes and benefits.',
+      'Executive Receptionist is for the business that does not have a person sitting at a desk from 8 to 5. She answers, asks what the caller needs, and texts the owner. A full-time receptionist is a different purchase — the federal median pay for receptionists was $37,230 a year in May 2024, before taxes and benefits.',
     pain:
       'Small shops lose calls in a boring way: they are with a customer, on a job, or closed. The caller does not know that. They know the phone rang and nobody talked to them. Hiring a person to cover nights and lunch is a payroll decision. Forwarding the missed calls to software is a smaller one, with a published monthly price.',
     calls: [
@@ -829,16 +829,16 @@ export const AVA_GUIDES: AvaGuide[] = [
       'How soon',
       'Anything else you put on a short list',
     ],
-    roiTitle: 'Compare Ava with a person, using a real wage figure',
-    roiBody: `The U.S. Bureau of Labor Statistics reported median pay for receptionists of $37,230 a year, $17.90 an hour, in May 2024. That is about $3,103 a month before employer taxes, benefits, recruiting, or coverage outside one shift. Ava Starter is $79 a month after the trial and does not do every task that person does — she answers and texts you the lead. ${exampleSentence({ missedPerWeek: 5, oneIn: 4, jobValue: 250, jobLabel: 'job or appointment you would have called back' })}`,
+    roiTitle: 'Compare Executive Receptionist with a person, using a real wage figure',
+    roiBody: `The U.S. Bureau of Labor Statistics reported median pay for receptionists of $37,230 a year, $17.90 an hour, in May 2024. That is about $3,103 a month before employer taxes, benefits, recruiting, or coverage outside one shift. Executive Receptionist Starter is $77 a month after the trial and does not do every task that person does — she answers and texts you the lead. ${exampleSentence({ missedPerWeek: 5, oneIn: 4, jobValue: 250, jobLabel: 'job or appointment you would have called back' })}`,
     faqs: [
       {
         q: 'Is an AI receptionist the same as an answering service?',
-        a: 'Buyers use both phrases. A traditional answering service is people in a call center. Ava is software with a voice, on a plan you can read before you talk to sales. The comparison page spells out the differences.',
+        a: 'Buyers use both phrases. A traditional answering service is people in a call center. Executive Receptionist is software with a voice, on a plan you can read before you talk to sales. The comparison page spells out the differences.',
       },
       {
         q: 'What does setup cost?',
-        a: '$0 on the published plans. The 7-day trial is created in Stripe Checkout. After that, Starter is $79, Growth is $149, and Pro is $299 a month.',
+        a: '$0 on the published plans. The 7-day trial is created in Stripe Checkout. After that, Starter is $77, Growth is $168, and Pro is $324 a month.',
       },
       {
         q: 'Can any small business use it?',
@@ -852,18 +852,18 @@ export const AVA_GUIDES: AvaGuide[] = [
     slug: 'ai-receptionist-vs-answering-service',
     kind: 'comparison',
     navLabel: 'Vs answering service',
-    blurb: 'Voicemail, a human answering service, and Ava — what each one actually does.',
+    blurb: 'Voicemail, a human answering service, and Executive Receptionist — what each one actually does.',
     title: 'AI Receptionist vs Answering Service',
-    metaTitle: 'AI Receptionist vs Answering Service | Ava',
+    metaTitle: 'AI Receptionist vs Answering Service | Executive Receptionist',
     description:
-      'Compare voicemail, a human answering service, and Ava. Ava is a published software plan from $79 a month that answers, qualifies, and texts you the lead. No invented savings percentage.',
+      'Compare voicemail, a human answering service, and Executive Receptionist. Executive Receptionist is a published software plan from $77 a month that answers, qualifies, and texts you the lead. No invented savings percentage.',
     eyebrow: 'AI receptionist vs answering service',
     h1: 'Voicemail, a call center, or software that texts you the lead.',
     audience: 'owners comparing an answering service with an AI receptionist',
     lede:
-      '“Answering service” usually means people who pick up and take a message. “AI receptionist” means software that holds the conversation you scripted. Ava is the second one. The useful comparison is what happens to the caller and what you pay, not a slogan about replacing staff.',
+      '“Answering service” usually means people who pick up and take a message. “AI receptionist” means software that holds the conversation you scripted. Executive Receptionist is the second one. The useful comparison is what happens to the caller and what you pay, not a slogan about replacing staff.',
     pain:
-      'Human answering services often price after a sales call, by the minute or by the seat. Voicemail is cheap and loses the callers who will not leave a message. A receptionist on payroll is a different product entirely: the median pay was $37,230 a year in May 2024, and that person does work Ava does not do.',
+      'Human answering services often price after a sales call, by the minute or by the seat. Voicemail is cheap and loses the callers who will not leave a message. A receptionist on payroll is a different product entirely: the median pay was $37,230 a year in May 2024, and that person does work Executive Receptionist does not do.',
     calls: [
       'Calls you do not want to miss',
       'After-hours coverage',
@@ -879,7 +879,7 @@ export const AVA_GUIDES: AvaGuide[] = [
       'A text you can act on',
     ],
     roiTitle: 'Put the prices next to each other without a fake percentage',
-    roiBody: `Ava’s prices are on this site: $79, $149, and $299 a month after a 7-day trial, $0 setup, with 300, 800, or 1,800 included minutes. Overage is $0.28, $0.24, or $0.20 a minute. A human answering service will give you its own quote. A W-2 receptionist at the May 2024 median is about $3,103 a month in wages alone. ${exampleSentence({ missedPerWeek: 6, oneIn: 4, jobValue: 300, jobLabel: 'callback you would have made' })} Use the calculator so the missed-call side is yours.`,
+    roiBody: `Executive Receptionist’s prices are on this site: $77, $168, and $324 a month after a 7-day trial, $0 setup, with 300, 800, or 1,800 included minutes. Overage is $0.36, $0.31, or $0.26 a minute. A human answering service will give you its own quote. A W-2 receptionist at the May 2024 median is about $3,103 a month in wages alone. ${exampleSentence({ missedPerWeek: 6, oneIn: 4, jobValue: 300, jobLabel: 'callback you would have made' })} Use the calculator so the missed-call side is yours.`,
     columns: [
       {
         title: 'Voicemail',
@@ -890,17 +890,17 @@ export const AVA_GUIDES: AvaGuide[] = [
         body: 'A person follows a script and sends a message. Quality depends on the agent and the script. Pricing is usually a quote, not a page like this one. They can be a fit if you want a human on every call and will pay for that.',
       },
       {
-        title: 'Ava',
+        title: 'Executive Receptionist',
         body: 'Software answers in the voice and questions you approve, then texts you. You can hear a sample and try a live browser demo before checkout. She will get calls wrong sometimes. You review the texts and edit the rules. She is not a licensed dispatcher, lawyer, or clinician.',
       },
     ],
     faqs: [
       {
-        q: 'Is Ava cheaper than an answering service?',
-        a: 'Ava’s price is published. Theirs may not be, until you ask. Compare the quote they send with $79, $149, or $299 a month and the included minutes. Do not trust a chart that says “save 80%” without showing both invoices.',
+        q: 'Is Executive Receptionist cheaper than an answering service?',
+        a: 'Executive Receptionist’s price is published. Theirs may not be, until you ask. Compare the quote they send with $77, $168, or $324 a month and the included minutes. Do not trust a chart that says “save 80%” without showing both invoices.',
       },
       {
-        q: 'Can Ava transfer to a person?',
+        q: 'Can Executive Receptionist transfer to a person?',
         a: 'You can write escalation rules for urgent calls. Live phone provisioning is still finished with Cole after checkout. The product does not buy your phone number automatically.',
       },
       {
@@ -917,14 +917,14 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Missed-call calculator',
     blurb: 'Your calls, your assumed close rate, your job value. The math is shown.',
     title: 'Missed Call Cost Calculator',
-    metaTitle: 'Missed Call Cost Calculator for Contractors | Ava',
+    metaTitle: 'Missed Call Cost Calculator for Contractors | Executive Receptionist',
     description:
-      'Estimate what missed calls might be worth using your own numbers. The calculator shows the formula. It is not a study and not a promise. Ava plans start at $79 a month after a 7-day trial.',
+      'Estimate what missed calls might be worth using your own numbers. The calculator shows the formula. It is not a study and not a promise. Executive Receptionist plans start at $77 a month after a 7-day trial.',
     eyebrow: 'Missed call cost calculator',
     h1: 'What missed calls cost is the arithmetic you put in.',
     audience: 'owners who want a missed-call figure without a fake industry average',
     lede:
-      'This page multiplies three numbers you control: how many calls you miss in a week, how many of those you believe you would have booked, and what that job is worth. The result is an example monthly figure. It is not Ava’s prediction.',
+      'This page multiplies three numbers you control: how many calls you miss in a week, how many of those you believe you would have booked, and what that job is worth. The result is an example monthly figure. It is not Executive Receptionist’s prediction.',
     pain:
       'Most “missed call statistics” on vendor sites are unsourced or about a different industry. We are not repeating them. If you do not know your missed-call count, check the phone’s recent calls for a normal week and type what you see. If you do not know the booking rate, the default “1 in 4” is a knob, not a finding.',
     calls: [
@@ -939,23 +939,23 @@ export const AVA_GUIDES: AvaGuide[] = [
       'Decide the booking assumption yourself',
       'Use a job value you have actually charged',
       'Read the formula under the result',
-      'Compare it with $79, $149, or $299 a month',
+      'Compare it with $77, $168, or $324 a month',
     ],
     roiTitle: 'How the formula works',
     roiBody:
-      'Monthly example = missed calls per week × (1 ÷ “1 in N”) × job value × 52 ÷ 12. The 52 ÷ 12 step turns a week into a month. It assumes every week looks like the week you typed. It ignores seasonality, capacity, and the calls you would have turned down. Ava Starter is $79 a month after the 7-day trial. The calculator does not subtract that for you, so you can see both numbers.',
+      'Monthly example = missed calls per week × (1 ÷ “1 in N”) × job value × 52 ÷ 12. The 52 ÷ 12 step turns a week into a month. It assumes every week looks like the week you typed. It ignores seasonality, capacity, and the calls you would have turned down. Executive Receptionist Starter is $77 a month after the 7-day trial. The calculator does not subtract that for you, so you can see both numbers.',
     faqs: [
       {
         q: 'Why is there no official missed-call percentage?',
         a: 'Because we do not have a defensible one for plumbers, roofers, or dentists. A percentage from an answering-service ad is not a source. Your call log is.',
       },
       {
-        q: 'Does a bigger result mean Ava will make that money?',
+        q: 'Does a bigger result mean Executive Receptionist will make that money?',
         a: 'No. It means that is what your assumptions are worth if they are true. Some of those callers would have been price shopping, tire kickers, or outside your area.',
       },
       {
         q: 'What should I do with the number?',
-        a: 'If it is large next to $79 a month, hear the sample call and start a trial. If it is tiny, you may not need this. The calculator is allowed to talk you out of it.',
+        a: 'If it is large next to $77 a month, hear the sample call and start a trial. If it is tiny, you may not need this. The calculator is allowed to talk you out of it.',
       },
     ],
     related: ['ai-receptionist-vs-answering-service', 'missed-call-answering-home-services', 'ai-answering-service-for-plumbers'],
@@ -964,16 +964,16 @@ export const AVA_GUIDES: AvaGuide[] = [
     slug: 'missed-call-answering-home-services',
     kind: 'guide',
     navLabel: 'Missed calls',
-    blurb: 'Overflow and after-hours coverage without sending every call to Ava.',
+    blurb: 'Overflow and after-hours coverage without sending every call to Executive Receptionist.',
     title: 'Missed-Call Answering for Home Services',
-    metaTitle: 'Missed Call Answering for Home Services | Ava',
+    metaTitle: 'Missed Call Answering for Home Services | Executive Receptionist',
     description:
-      'Use Ava on the calls you do not answer: after hours, overflow, and weekends. She texts you the lead. You can keep answering the calls you pick up. Plans from $79 a month.',
+      'Use Executive Receptionist on the calls you do not answer: after hours, overflow, and weekends. She texts you the lead. You can keep answering the calls you pick up. Plans from $77 a month.',
     eyebrow: 'Missed-call answering for home services',
-    h1: 'You do not have to give Ava every call. Give her the ones you miss.',
+    h1: 'You do not have to give Executive Receptionist every call. Give her the ones you miss.',
     audience: 'home-service businesses that already answer some of the time',
     lede:
-      'Call forwarding can send Ava only the rings you do not pick up. You keep talking to the customers you answer. She talks to the rest, including the 7 p.m. call from someone who searched “near me” and is ready to hire a person tonight.',
+      'Call forwarding can send Executive Receptionist only the rings you do not pick up. You keep talking to the customers you answer. She talks to the rest, including the 7 p.m. call from someone who searched “near me” and is ready to hire a person tonight.',
     pain:
       'Home-service leads are local and impatient. Google and Purchased’s May 2016 smartphone diary found that 76% of people who searched for something nearby visited a business within a day. That study is about nearby search in general, not your close rate. It is still a reason the unanswered call matters: the person was already trying to choose someone close.',
     calls: [
@@ -994,12 +994,12 @@ export const AVA_GUIDES: AvaGuide[] = [
     roiBody: `Do not put your entire call volume into the calculator. ${exampleSentence({ missedPerWeek: 8, oneIn: 4, jobValue: 275, jobLabel: 'home-service job' })} Eight misses is an example week, not a benchmark.`,
     faqs: [
       {
-        q: 'Can I answer the phone myself and still use Ava?',
+        q: 'Can I answer the phone myself and still use Executive Receptionist?',
         a: 'Yes. That is the usual setup: forward on no-answer, or forward the schedule you are closed.',
       },
       {
         q: 'What does the caller hear?',
-        a: 'Your greeting, including that Ava is an AI receptionist. You approve the words during setup.',
+        a: 'Your greeting, including that Executive Receptionist is an AI receptionist. You approve the words during setup.',
       },
       {
         q: 'Where do the leads go?',
@@ -1014,13 +1014,13 @@ export const AVA_GUIDES: AvaGuide[] = [
 const guideBySlug = new Map(AVA_GUIDES.map((guide) => [guide.slug, guide]));
 
 if (AVA_GUIDES.length !== 20 || guideBySlug.size !== 20) {
-  throw new Error(`Expected 20 unique Ava guides, found ${AVA_GUIDES.length} rows and ${guideBySlug.size} slugs.`);
+  throw new Error(`Expected 20 unique Executive Receptionist guides, found ${AVA_GUIDES.length} rows and ${guideBySlug.size} slugs.`);
 }
 
 for (const guide of AVA_GUIDES) {
   for (const slug of guide.related) {
     if (!guideBySlug.has(slug) || slug === guide.slug) {
-      throw new Error(`Ava guide ${guide.slug} points at a missing related page: ${slug}`);
+      throw new Error(`Executive Receptionist guide ${guide.slug} points at a missing related page: ${slug}`);
     }
   }
 }

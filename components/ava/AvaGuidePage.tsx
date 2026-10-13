@@ -29,7 +29,7 @@ function GuideExtra({ guide }: { guide: AvaGuide }) {
           </div>
           <div className="comparison-grid">
             {(guide.columns || []).map((column) => (
-              <article key={column.title} className={column.title === 'Ava' ? 'ava-choice' : undefined}>
+              <article key={column.title} className={column.title === 'Executive Receptionist' ? 'ava-choice' : undefined}>
                 <small>{column.title}</small>
                 <h3>{column.title}</h3>
                 <p>{column.body}</p>
@@ -84,7 +84,7 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
           <span>
             <Sparkles size={17} />
           </span>{' '}
-          Ava
+          Executive Receptionist
         </Link>
         <div>
           <Link href="#pricing">Pricing</Link>
@@ -101,7 +101,7 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
           <span className="kicker">{guide.eyebrow}</span>
           <h1>{guide.h1}</h1>
           <p>{guide.lede}</p>
-          <p className="trial-line">Free 7-day trial, then $79, $149, or $299 a month. $0 setup.</p>
+          <p className="trial-line">Free 7-day trial, then $77, $168, or $324 a month. $0 setup.</p>
           <div className="hero-actions">
             <Link className="sales-btn" href={demoHref}>
               <PhoneCall size={18} /> Hear a demo call
@@ -142,7 +142,7 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
               <span>0{index + 1}</span>
               <PhoneCall />
               <h3>{item}</h3>
-              <p>Ava asks what you approved, then texts you. She does not invent a price.</p>
+              <p>Executive Receptionist asks what you approved, then texts you. She does not invent a price.</p>
             </article>
           ))}
         </div>
@@ -245,7 +245,7 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
         <h2>Try the demo, then start the trial in Stripe.</h2>
         <p>
           The sample call is a landscaping estimate. The live demo is in the browser. Checkout opens
-          Stripe for the plan you pick. Starter is $79 a month after the trial.
+          Stripe for the plan you pick. Starter is $77 a month after the trial.
         </p>
         <div>
           <Link className="sales-btn light" href={liveHref}>

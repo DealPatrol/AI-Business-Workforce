@@ -151,7 +151,7 @@ export default function SalesTrackerPage() {
     <main className="sales-tracker">
       <nav>
         <Link href="/ava-pilot">
-          <ArrowLeft size={16} /> Ava pilot
+          <ArrowLeft size={16} /> Executive Receptionist pilot
         </Link>
         <b>
           <Sparkles size={16} /> Sales week tracker
@@ -165,7 +165,7 @@ export default function SalesTrackerPage() {
         <span>WEEK 1 · HVAC & PLUMBING OUTREACH</span>
         <h1>Sales signal dashboard</h1>
         <p>
-          Track demo opens, Ava calls, replies, and pilot clicks. Send 5 personalized messages per
+          Track demo opens, Executive Receptionist calls, replies, and pilot clicks. Send 5 personalized messages per
           day. Change targeting if nobody engages.
         </p>
         {!available && (
@@ -178,7 +178,7 @@ export default function SalesTrackerPage() {
           </p>
         )}
         {available && (
-          <p className="ok">Supabase events connected — demo opens, Ava calls, and status changes persist.</p>
+          <p className="ok">Supabase events connected — demo opens, Executive Receptionist calls, and status changes persist.</p>
         )}
       </header>
 
@@ -215,7 +215,7 @@ export default function SalesTrackerPage() {
         <article className="live">
           <small>LIVE SIGNALS</small>
           <strong>{eventCounts.calls}</strong>
-          <span>called Ava</span>
+          <span>called Executive Receptionist</span>
         </article>
         <article className="live">
           <small>LIVE SIGNALS</small>

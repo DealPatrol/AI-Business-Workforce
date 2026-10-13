@@ -31,9 +31,9 @@ async function notifySalesQualificationEmail(row: AvaSalesQualificationRow) {
     return { sent: false, error: 'Email notification environment variables are not configured.' };
   }
 
-  const subject = `Sales Ava qualification — ${row.business_name}`;
+  const subject = `Executive Receptionist qualification — ${row.business_name}`;
   const html = `<div style="font-family:Arial,sans-serif;max-width:720px;margin:auto;color:#17211b">
-    <h1 style="font-size:22px">New Sales Ava qualification</h1>
+    <h1 style="font-size:22px">New Executive Receptionist qualification</h1>
     <p>A prospect finished the qualify conversation. Prefill onboarding with <code>qualificationId=${escapeHtml(row.id)}</code> plus a short-lived <code>prefillToken</code> for staff contact.</p>
     <table style="border-collapse:collapse;width:100%">
       <tr><td><b>Business</b></td><td>${escapeHtml(row.business_name)} (${escapeHtml(row.business_type)})</td></tr>
@@ -55,7 +55,7 @@ async function notifySalesQualificationEmail(row: AvaSalesQualificationRow) {
     method: 'POST',
     headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      from: 'Ava <onboarding@resend.dev>',
+      from: 'Executive Receptionist <onboarding@resend.dev>',
       to: [to],
       subject,
       html,
@@ -232,7 +232,7 @@ export async function POST(req: NextRequest) {
           body: formatSalesQualifySmsBody(data.business_name),
         });
       } catch (smsError) {
-        console.error('Ava lead SMS failed', smsError);
+        console.error('Executive Receptionist lead SMS failed', smsError);
         sms = {
           sent: false,
           error: smsError instanceof Error ? smsError.message : 'SMS send failed',

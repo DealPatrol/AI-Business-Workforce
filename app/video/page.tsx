@@ -15,11 +15,11 @@ const SCENES = [
   },
   {
     time: '0:08–0:35',
-    title: 'Ava answers a realistic call',
+    title: 'Executive Receptionist answers a realistic call',
     visual:
-      'Split screen: customer dialing on phone → Ava answers with business name → conversation transcript rolling.',
+      'Split screen: customer dialing on phone → Executive Receptionist answers with business name → conversation transcript rolling.',
     audio:
-      'Ava answers immediately. She handles the common questions — service area, urgency, what\'s going wrong — and captures the details your team needs to call back qualified.',
+      'Executive Receptionist answers immediately. She handles the common questions — service area, urgency, what\'s going wrong — and captures the details your team needs to call back qualified.',
     note: 'Use a real emergency scenario: AC out, burst pipe, no heat. Do NOT explain AI or ElevenLabs.',
   },
   {
@@ -34,17 +34,17 @@ const SCENES = [
   {
     time: '0:55–1:05',
     title: '14-day pilot offer',
-    visual: 'Simple pricing card: Ava plans from $79/month, 300 minutes, cancel anytime.',
-    audio: `Ava plans start at $79 a month. ${AVA_PILOT_OFFER.usageLimit}. Cancel anytime.`,
+    visual: 'Simple pricing card: Executive Receptionist plans from $77/month, 300 minutes, cancel anytime.',
+    audio: `Executive Receptionist plans start at $77 a month. ${AVA_PILOT_OFFER.usageLimit}. Cancel anytime.`,
     note: 'Keep pricing on screen for 3 seconds max. Outcome first, price second.',
   },
   {
     time: '1:05–1:20',
     title: 'Personalized demo link',
     visual:
-      'Browser opens a personalized demo page with prospect branding. "Call Ava" button highlighted. URL visible.',
+      'Browser opens a personalized demo page with prospect branding. "Call Executive Receptionist" button highlighted. URL visible.',
     audio:
-      'I built a demo using your business so you can hear exactly how Ava would handle your missed calls. Tap the link — call Ava yourself.',
+      'I built a demo using your business so you can hear exactly how Executive Receptionist would handle your missed calls. Tap the link — call Executive Receptionist yourself.',
     note: 'End on the demo URL. This is the CTA, not a generic homepage.',
   },
 ];
@@ -56,7 +56,7 @@ export default function SalesVideoPage() {
     <main className="sales-video">
       <nav>
         <Link className="video-brand" href="/ava-pilot">
-          <Sparkles size={16} /> Ava pilot
+          <Sparkles size={16} /> Executive Receptionist pilot
         </Link>
         <span>60–90 second sales video</span>
       </nav>
@@ -65,7 +65,7 @@ export default function SalesVideoPage() {
         <span>VIDEO SCRIPT & STORYBOARD</span>
         <h1>Show the call-to-lead outcome — not the AI.</h1>
         <p>
-          Total runtime: 60–90 seconds. Structure: problem → Ava answers → lead summary → pilot
+          Total runtime: 60–90 seconds. Structure: problem → Executive Receptionist answers → lead summary → pilot
           offer → personalized demo link.
         </p>
       </header>
@@ -81,7 +81,7 @@ export default function SalesVideoPage() {
           Your browser cannot play this video.
         </video>
         <p>
-          76 seconds. Missed call → Ava answers → lead summary → 14-day pilot → demo link. Send this
+          76 seconds. Missed call → Executive Receptionist answers → lead summary → 14-day pilot → demo link. Send this
           with the personalized demo.
         </p>
         <a className="download" href="/ava-hvac-pilot.mp4" download>
@@ -94,7 +94,7 @@ export default function SalesVideoPage() {
         <h2>How this video is structured</h2>
         <p>
           Outcome first: a realistic after-hours AC call, then the lead summary an owner would
-          receive. Pricing is short. It ends on Call Ava and the demo URL.
+          receive. Pricing is short. It ends on Call Executive Receptionist and the demo URL.
         </p>
         <div className="video-flow">
           <span>
@@ -102,7 +102,7 @@ export default function SalesVideoPage() {
           </span>
           <ArrowRight size={14} />
           <span>
-            <Sparkles size={16} /> Ava answers
+            <Sparkles size={16} /> Executive Receptionist answers
           </span>
           <ArrowRight size={14} />
           <span>
@@ -153,11 +153,11 @@ export default function SalesVideoPage() {
         <h2>Recording checklist</h2>
         <ul>
           <li>Film on a real job site — technician cannot answer phone</li>
-          <li>Record one complete Ava call with a realistic emergency scenario</li>
+          <li>Record one complete Executive Receptionist call with a realistic emergency scenario</li>
           <li>Screen-record the lead summary appearing after the call</li>
           <li>Do not mention ElevenLabs, AI models, or technical architecture</li>
           <li>Keep total runtime under 90 seconds</li>
-          <li>End frame: personalized demo URL with &ldquo;Call Ava&rdquo; button visible</li>
+          <li>End frame: personalized demo URL with &ldquo;Call Executive Receptionist&rdquo; button visible</li>
         </ul>
       </section>
     </main>

@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (fields.preferredVoice && !isAvaVoiceKey(fields.preferredVoice)) {
-      return NextResponse.json({ error: 'Choose a valid Ava voice option.' }, { status: 400 });
+      return NextResponse.json({ error: 'Choose a valid Executive Receptionist voice option.' }, { status: 400 });
     }
 
     const replyTo = parsedStaff.email || (EMAIL_PATTERN.test(fields.staffEmail) ? fields.staffEmail : '');
@@ -191,7 +191,7 @@ export async function POST(request: NextRequest) {
         persistenceError instanceof Error
           ? persistenceError.message
           : 'Onboarding persistence is unavailable.';
-      console.error('Ava onboarding persistence/provisioning error', persistenceError);
+      console.error('Executive Receptionist onboarding persistence/provisioning error', persistenceError);
     }
 
     const rows: Array<[string, string]> = [
@@ -209,7 +209,7 @@ export async function POST(request: NextRequest) {
       ['Lead handoff notes', fields.calendarPreference],
       ['Urgent-call rules', fields.urgentCallRules],
       [
-        'Preferred Ava voice',
+        'Preferred Executive Receptionist voice',
         AVA_VOICE_OPTIONS.find((option) => option.key === fields.preferredVoice)?.label ||
           'No preference',
       ],
@@ -256,14 +256,14 @@ export async function POST(request: NextRequest) {
         from: avaFromAddress(),
         to: [avaOwnerEmail()],
         ...(replyTo ? { reply_to: replyTo } : {}),
-        subject: `Ava paid pilot setup — ${fields.businessName}`,
-        html: `<div style="font-family:Arial,sans-serif;max-width:760px;margin:auto;color:#17211b"><h1>New Ava setup</h1><p>The phone number stays <b>pending_manual</b>. Attach one using <a href="${AVA_PHONE_RUNBOOK_URL}">${AVA_PHONE_RUNBOOK_PATH}</a>, then run one live test call before launch.</p><table style="border-collapse:collapse;width:100%">${htmlRows}</table></div>`,
+        subject: `Executive Receptionist paid pilot setup — ${fields.businessName}`,
+        html: `<div style="font-family:Arial,sans-serif;max-width:760px;margin:auto;color:#17211b"><h1>New Executive Receptionist setup</h1><p>The phone number stays <b>pending_manual</b>. Attach one using <a href="${AVA_PHONE_RUNBOOK_URL}">${AVA_PHONE_RUNBOOK_PATH}</a>, then run one live test call before launch.</p><table style="border-collapse:collapse;width:100%">${htmlRows}</table></div>`,
       }),
     });
     const result = await response.json().catch(() => ({}));
 
     if (!response.ok) {
-      console.error('Ava onboarding email error', result);
+      console.error('Executive Receptionist onboarding email error', result);
       return NextResponse.json(
         {
           error: 'Online delivery is temporarily unavailable.',
@@ -298,7 +298,7 @@ export async function POST(request: NextRequest) {
       ...(persistenceWarning ? { warning: persistenceWarning } : {}),
     });
   } catch (error) {
-    console.error('Ava onboarding error', error);
+    console.error('Executive Receptionist onboarding error', error);
     return NextResponse.json(
       {
         error: 'Could not send your setup details.',

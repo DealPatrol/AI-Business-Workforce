@@ -44,7 +44,7 @@ export default async function Postcard({ searchParams }: PostcardProps) {
         <Link href={`/property-demo?zip=${zip}`}>
           <ArrowLeft /> Back to design
         </Link>
-        <b>YardProof Personalized Outreach</b>
+        <b>YardMailer Personalized Outreach</b>
         <a href={foundingCheckoutHref('/property-demo/postcard')}>{FOUNDING_CTA}</a>
       </header>
       <div className="postwrap">
