@@ -123,3 +123,13 @@ export const EXAMPLE_NOTES = [
     quote: 'Lunchtime inquiries no longer sit in a full mailbox. The callback list is a text, not a stack of slips.',
   },
 ] as const;
+
+export const SAMPLE_CALLS = [
+  { file: 'dental', label: 'HVAC: no heat, after hours', description: 'A homeowner calls after hours with no heat. The receptionist takes the address, the problem, and a callback number.' },
+  { file: 'law', label: 'Plumbing: active leak, Saturday', description: 'A caller reports an active leak on a Saturday and leaves the details for the on-call plumber.' },
+  { file: 'med-spa', label: 'Roofing: storm leak, owner on a roof', description: 'After a storm, a caller reports a leaking roof while the owner is up on another job.' },
+  { file: 'cpa', label: 'Electrical: breaker tripping, lunch break', description: 'A caller with a breaker that keeps tripping reaches the line during the crew’s lunch break.' },
+  { file: 'financial', label: 'Garage door: stuck, Sunday', description: 'A caller with a garage door stuck shut on a Sunday leaves a name, number, and address.' },
+  { file: 'real-estate', label: 'Lawn care: estimate, crew on a job', description: 'A homeowner asks for a lawn care estimate while the crew is out on a job.' },
+  { file: 'chiropractic', label: 'Water heater: no hot water, before hours', description: 'A caller with no hot water phones before the shop opens and gets a callback scheduled.' },
+] as const;
