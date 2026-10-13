@@ -3,6 +3,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { formatAvaLeadSmsBody, sendAvaLeadSms, type AvaLeadSmsResult } from '@/lib/ava/sms';
 import { avaOwnerEmail, escapeHtml, sendResendEmail } from '@/lib/ava/mail';
 import { decidePostCallGate, planPostCallEffects } from '@/lib/ava/post-call-gate';
+import { loadClientSettings, maybeSendCallerTextBack } from '@/lib/ava/client-settings';
 
 type TranscriptTurn = {
   role: string;
@@ -20,6 +21,7 @@ export type ExtractedCallLead = {
   address: string;
   urgency: string;
   transcript: TranscriptTurn[];
+  durationSecs: number | null;
 };
 
 type OnboardingMatch = {
@@ -134,6 +136,10 @@ export function extractPostCallLead(event: unknown): ExtractedCallLead | null {
     address: pickCollected(collected, 'property_address', 'address').slice(0, 500),
     urgency: pickCollected(collected, 'intent_urgency', 'urgency', 'intent').slice(0, 200),
     transcript,
+    durationSecs:
+      typeof metadata.call_duration_secs === 'number' && Number.isFinite(metadata.call_duration_secs)
+        ? Math.round(metadata.call_duration_secs)
+        : null,
   };
 }
 
@@ -308,6 +314,10 @@ export async function savePostCallLead(lead: ExtractedCallLead) {
       .single();
   }
 
+  if (!saved.error && lead.durationSecs !== null) {
+    await supabase.from('ava_call_leads').update({ call_duration_secs: lead.durationSecs }).eq('conversation_id', lead.conversationId);
+  }
+
   if (saved.error || !saved.data) {
     throw new Error(saved.error?.message || 'Unable to save Ava call lead.');
   }
@@ -320,17 +330,29 @@ export async function savePostCallLead(lead: ExtractedCallLead) {
   const subject = `New Ava lead${lead.callerName ? ` — ${lead.callerName}` : ''}${lead.need ? ` — ${lead.need}` : ''}`;
   const html = `<div style="font-family:Arial,sans-serif;max-width:680px;margin:auto;color:#17211b"><h1 style="font-size:22px">New Ava lead</h1><p>Ava finished a call for ${escapeHtml(match?.business_name || 'your business')}.</p><table style="border-collapse:collapse;width:100%"><tr><td><b>Caller</b></td><td>${escapeHtml(lead.callerName || 'Not provided')}</td></tr><tr><td><b>Phone</b></td><td>${escapeHtml(lead.callerPhone || 'Not provided')}</td></tr><tr><td><b>Need</b></td><td>${escapeHtml(lead.need || 'Not provided')}</td></tr><tr><td><b>Address</b></td><td>${escapeHtml(lead.address || 'Not provided')}</td></tr><tr><td><b>Urgency</b></td><td>${escapeHtml(lead.urgency || 'Not provided')}</td></tr></table><h2 style="font-size:18px">Summary</h2><p style="white-space:pre-wrap">${escapeHtml(lead.summary)}</p></div>`;
 
+  const settings = await loadClientSettings(match.id);
+  const transcriptHtml = lead.transcript
+    .filter((turn) => turn.message)
+    .map((turn) => `<p style="margin:4px 0"><b>${turn.role === 'agent' ? 'Ava' : 'Caller'}:</b> ${escapeHtml(turn.message)}</p>`)
+    .join('')
+    .slice(0, 20000);
+  const dashboardLink = `${(process.env.NEXT_PUBLIC_APP_URL || 'https://frontporchgrowth.com').replace(/\/$/, '')}/dashboard/ava`;
+  const fullHtml = `${html.replace(/<\/div>$/, '')}<p><a href="${dashboardLink}">Open your call log, recordings, and transcripts</a></p><h2 style="font-size:18px">Transcript</h2>${transcriptHtml || '<p>No transcript.</p>'}</div>`;
+
   let sms: AvaLeadSmsResult = {
     sent: false,
     skipped: true,
   };
-  if (effects.sendEmail) {
+  if (effects.sendEmail && settings.email_summaries !== false) {
     await sendResendEmail({
       to: destinations.email,
       subject,
-      html,
+      html: fullHtml,
     });
   }
+
+  // Caller-initiated follow-up only (TCPA: the caller dialed the business).
+  const textBack = await maybeSendCallerTextBack({ leadId: row.id, lead, settings, businessName: match.business_name });
 
   if (effects.sendSms) {
     sms = await sendAvaLeadSms({
@@ -356,5 +378,5 @@ export async function savePostCallLead(lead: ExtractedCallLead) {
     console.error('Ava lead email sent, but notified_at was not saved', notifyError.message);
   }
 
-  return { skipped: false as const, duplicate: false, leadId: row.id, sms };
+  return { skipped: false as const, duplicate: false, leadId: row.id, sms, textBack };
 }

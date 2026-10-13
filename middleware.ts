@@ -49,7 +49,40 @@ function standaloneAvaResponse(request: NextRequest) {
   return null;
 }
 
+const REPUTATIONFLOW_HOSTS = new Set(
+  ['reputationflow.com', 'www.reputationflow.com', ...(process.env.REPUTATIONFLOW_HOST || '').split(',')]
+    .map((host) => host.trim().toLowerCase())
+    .filter(Boolean),
+);
+
+/** reputationflow.com (once attached to this project) serves the /reputationflow section at its root. */
+function reputationFlowHostResponse(request: NextRequest) {
+  if (!REPUTATIONFLOW_HOSTS.has(hostnameOf(requestHost(request)) || '')) return null;
+  const { pathname } = request.nextUrl;
+  const shared = ['/r/', '/login', '/dashboard', '/privacy', '/terms'];
+  if (pathname.startsWith('/reputationflow') || shared.some((prefix) => pathname.startsWith(prefix))) return null;
+  const url = request.nextUrl.clone();
+  url.pathname = pathname === '/' ? '/reputationflow' : `/reputationflow${pathname}`;
+  return NextResponse.rewrite(url);
+}
+
+function withReferralCookie(request: NextRequest, response: NextResponse) {
+  const ref = (request.nextUrl.searchParams.get('ref') || '').trim().toUpperCase();
+  if (/^[A-Z0-9]{4,16}$/.test(ref)) {
+    response.cookies.set('fpg_ref', ref, { maxAge: 60 * 60 * 24 * 60, path: '/', sameSite: 'lax' });
+  }
+  return response;
+}
+
 export async function middleware(request: NextRequest) {
+  const response = await routeRequest(request);
+  return withReferralCookie(request, response);
+}
+
+async function routeRequest(request: NextRequest) {
+  const rf = reputationFlowHostResponse(request);
+  if (rf) return rf;
+
   const redirected = legacyHostRedirect(request);
   if (redirected) return redirected;
 

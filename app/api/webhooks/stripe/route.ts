@@ -1,3 +1,4 @@
+import { recordReferralEvent } from '@/lib/referrals';
 import { NextRequest, NextResponse } from 'next/server';
 import { createHmac, timingSafeEqual } from 'crypto';
 import { AVA_PLANS, isAvaPlanKey } from '@/lib/ava/pricing';
@@ -245,6 +246,12 @@ export async function POST(req: NextRequest) {
     switch (type) {
       case 'checkout.session.completed':
         await handleCheckoutCompleted(object);
+        {
+          const meta = (object.metadata || {}) as Record<string, string>;
+          if (meta.referral_code) {
+            await recordReferralEvent(meta.referral_code, 'subscribed', { stripe_session_id: String(object.id || ''), product: meta.product });
+          }
+        }
         break;
       case 'customer.subscription.updated':
         await handleSubscriptionChange(object, false);

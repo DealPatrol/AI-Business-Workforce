@@ -130,6 +130,10 @@ export default function SuiteHomePage() {
           <p className={styles.quiet}>
             Lead Finder stays inside the signed-in workspace. Invoicing is a waitlist, not a product you can buy yet.
           </p>
+          <p className={styles.quiet}>
+            Need more Google reviews? <Link href="/reputationflow">ReputationFlow</Link> sends a review request after each job (free in early access), and the{' '}
+            <Link href="/reputationflow/score">free review score</Link> compares you to local competitors. Know a shop that misses calls? <Link href="/referrals">Refer them</Link>.
+          </p>
         </aside>
       </section>
 

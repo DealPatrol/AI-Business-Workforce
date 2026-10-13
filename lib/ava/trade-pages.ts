@@ -230,7 +230,7 @@ export const AVA_GUIDES: AvaGuide[] = [
       },
       {
         q: 'Can she book the job on my calendar?',
-        a: 'Not in this product. She texts the lead. You call back and schedule in whatever system you already use.',
+        a: 'She does not write to your calendar directly. She texts you the lead, and if you add a booking link (a free Google Calendar appointment page, Calendly, or your Jobber request form) in your dashboard, callers who leave a lead get that link by text so they can pick a time.',
       },
     ],
     related: ['ai-answering-service-for-hvac', 'ai-answering-service-for-garage-door', 'ai-receptionist-vs-answering-service'],
@@ -901,7 +901,7 @@ export const AVA_GUIDES: AvaGuide[] = [
       },
       {
         q: 'Can Ava transfer to a person?',
-        a: 'You can write escalation rules for urgent calls. Live phone provisioning is still finished with Cole after checkout. The product does not buy your phone number automatically.',
+        a: 'Yes. In your dashboard you turn on live transfer, enter your cell, and write when Ava should hand the call over (for example, an active leak or a caller who asks for a person). Phone setup is still finished with Cole after checkout; the product does not buy your phone number automatically.',
       },
       {
         q: 'Which one should a contractor start with?',

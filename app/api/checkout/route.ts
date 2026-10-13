@@ -1,4 +1,5 @@
 import { track } from '@vercel/analytics/server';
+import { REFERRAL_COOKIE, recordReferralEvent, sanitizeReferralCode } from '@/lib/referrals';
 import { NextRequest, NextResponse } from 'next/server';
 import {
   type AvaPlanKey,
@@ -51,6 +52,11 @@ async function foundingCheckoutUrl(req: NextRequest) {
   const cancelPath = safeCancelPath(req.nextUrl.searchParams.get('cancel'));
   params.set('cancel_url', `${req.nextUrl.origin}${cancelPath}`);
 
+  const referral = sanitizeReferralCode(req.cookies.get(REFERRAL_COOKIE)?.value);
+  if (referral) {
+    params.set('metadata[referral_code]', referral);
+    await recordReferralEvent(referral, 'checkout_started', { product: params.get('metadata[product]') || undefined });
+  }
   const result = await createStripeCheckoutSession(secret, params);
   if ('error' in result) {
     console.error('Stripe founding checkout error', result.error);
@@ -78,6 +84,11 @@ async function avaCheckoutUrl(
     qualificationId: sanitizeQualificationId(qualificationId),
     prefillToken: sanitizePrefillToken(prefillToken),
   });
+  const referral = sanitizeReferralCode(req.cookies.get(REFERRAL_COOKIE)?.value);
+  if (referral) {
+    params.set('metadata[referral_code]', referral);
+    await recordReferralEvent(referral, 'checkout_started', { product: params.get('metadata[product]') || undefined });
+  }
   const result = await createStripeCheckoutSession(secret, params);
   if ('error' in result) {
     console.error('Stripe Ava checkout error', result.error);

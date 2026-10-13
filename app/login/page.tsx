@@ -8,6 +8,9 @@ type LoginPageProps = {
 };
 
 const ALLOWED_RETURN_PATHS = new Set([
+  '/dashboard/ava',
+  '/dashboard/reviews',
+  '/referrals',
   '/dashboard',
   '/dashboard/campaigns',
   '/dashboard/prospector',
@@ -26,8 +29,8 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           Workforce<b>AI</b>
         </Link>
         <span className={styles.eyebrow}>CONTRACTOR ACCESS</span>
-        <h1>Campaign inbox</h1>
-        <p>Sign in with the Supabase user assigned to your campaigns.</p>
+        <h1>Sign in</h1>
+        <p>Ava clients, ReputationFlow users, and campaign contractors sign in here. No password? Use the email link.</p>
         <LoginForm returnTo={returnTo} />
       </section>
     </main>

@@ -31,6 +31,19 @@ export default function LoginForm({ returnTo }: { returnTo: string }) {
     router.refresh();
   }
 
+  const [linkStatus, setLinkStatus] = useState('');
+  async function sendLink(event: React.MouseEvent<HTMLButtonElement>) {
+    const form = event.currentTarget.form;
+    const email = String(new FormData(form!).get('email') ?? '').trim();
+    if (!email) return setLinkStatus('Enter your email first.');
+    const supabase = createClient();
+    const { error: linkError } = await supabase.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(returnTo)}` },
+    });
+    setLinkStatus(linkError ? linkError.message : 'Check your email for a sign-in link.');
+  }
+
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
       <label>
@@ -39,12 +52,14 @@ export default function LoginForm({ returnTo }: { returnTo: string }) {
       </label>
       <label>
         Password
-        <input name="password" type="password" autoComplete="current-password" required />
+        <input name="password" type="password" autoComplete="current-password" />
       </label>
       {error && <p className={styles.error} role="alert">{error}</p>}
       <button type="submit" disabled={submitting}>
         {submitting ? 'Signing in…' : 'Sign in'}
       </button>
+      <button type="button" onClick={sendLink}>Email me a sign-in link instead</button>
+      {linkStatus && <p role="status">{linkStatus}</p>}
     </form>
   );
 }

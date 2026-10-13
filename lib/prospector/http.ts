@@ -30,5 +30,14 @@ export async function requireUser() {
   if (error || !data.user) {
     return { supabase, user: null, response: jsonError('Sign in required.', 401) };
   }
+  // Client self-serve sign-in (Ava / ReputationFlow dashboards) must not open the
+  // operator Lead Finder, which spends Google Places quota.
+  const allowed = (process.env.PROSPECTOR_ALLOWED_EMAILS || 'colecollins763@gmail.com')
+    .split(',')
+    .map((item) => item.trim().toLowerCase())
+    .filter(Boolean);
+  if (!allowed.includes((data.user.email || '').toLowerCase())) {
+    return { supabase, user: null, response: jsonError('Lead Finder is limited to the operator account.', 403) };
+  }
   return { supabase, user: data.user, response: null };
 }

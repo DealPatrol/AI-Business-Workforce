@@ -1,10 +1,40 @@
-'use client';
 import Link from 'next/link';
-import { Bot, CheckCircle2, Clock3, DollarSign, Home, Inbox, Play, Plus, ShieldCheck, Target, Users } from 'lucide-react';
+import { redirect } from 'next/navigation';
+import { createAdminClient } from '@/lib/supabase/admin';
+import { currentUserEmail, onboardingsForEmail, OPERATOR_EMAIL } from '@/lib/ava/client-access';
+import { businessesFor } from '@/lib/reputation/store';
 
-const agents = [
-  {name:'Neighborhood Canvasser',status:'Ready',detail:'Property prospecting → concept → postcard',icon:Home},
-  {name:'Lead Follow-Up',status:'Ready',detail:'New lead → qualify → follow-up → book',icon:Target},
-  {name:'AI Receptionist',status:'Setup needed',detail:'Calls, FAQs, qualification and routing',icon:Bot},
-];
-export default function Dashboard(){return <main className="dash"><aside><Link className="brand" href="/"><span className="logo" style={{color:'#fff'}}>✦</span> YardProof</Link><nav><Link className="on" href="/dashboard">Overview</Link><Link href="/dashboard/agents">AI Employees</Link><Link href="/audit">Business Audit</Link><Link href="/property-demo">Property Studio</Link><Link href="/dashboard/campaigns">QR Lead Inbox</Link><Link href="/dashboard/prospector">Lead Finder</Link><Link href="/dashboard/settings">Pricing Settings</Link></nav><small>V2 PRODUCT PREVIEW</small></aside><section className="dashmain"><header><div><small>CONTROL CENTER</small><h1>Good afternoon.</h1><p>Here’s what your AI workforce is working on.</p></div><Link className="button" href="/dashboard/agents"><Plus size={17}/> Add AI Employee</Link></header><div className="kpis"><div><Target/><span><small>ACTIVE LEADS</small><b>18</b></span></div><div><Users/><span><small>CONVERSATIONS</small><b>7</b></span></div><div><Clock3/><span><small>NEEDS APPROVAL</small><b>3</b></span></div><div><DollarSign/><span><small>DEMO PIPELINE</small><b>$4,850</b></span></div></div><div className="dashgrid"><section className="panel"><div className="panelhead"><div><small>AI EMPLOYEES</small><h2>Your workforce</h2></div><Link href="/dashboard/agents">View all →</Link></div>{agents.map(a=>{const I=a.icon;return <div className="agentrow" key={a.name}><span className="agenticon"><I/></span><span><b>{a.name}</b><small>{a.detail}</small></span><em className={a.status==='Ready'?'ready':'setup'}>{a.status}</em><button aria-label={'Run '+a.name}><Play/></button></div>})}</section><section className="panel"><div className="panelhead"><div><small>APPROVAL CENTER</small><h2>Waiting on you</h2></div><ShieldCheck/></div><div className="approval"><Inbox/><span><b>12 personalized postcards</b><small>Review concepts and estimated campaign spend before sending.</small></span><button>Review</button></div><div className="approval"><Target/><span><b>3 outreach messages</b><small>AI drafted follow-ups for high-intent leads.</small></span><button>Review</button></div><div className="approval"><CheckCircle2/><span><b>Pricing guardrails</b><small>Confirm your margin and minimum-job settings.</small></span><Link href="/dashboard/settings">Set up</Link></div></section></div><section className="panel activity"><div className="panelhead"><div><small>RECENT ACTIVITY</small><h2>Outcome log</h2></div></div><p><b>Neighborhood Canvasser</b> created 3 Clean & Simple demo concepts <span>12 min ago</span></p><p><b>Lead Follow-Up</b> moved “Demo Homeowner” to Estimate Requested <span>38 min ago</span></p><p><b>System</b> held postcard campaign for owner approval <span>1 hr ago</span></p></section><p className="demofoot">Sample data is clearly shown until live integrations are connected.</p></section></main>}
+export const dynamic = 'force-dynamic';
+export const metadata = { title: 'Dashboard | Front Porch Growth', robots: { index: false } };
+
+async function safeCount(run: () => Promise<number>) {
+  try { return await run(); } catch { return null; }
+}
+
+/** Real numbers only. Anything we cannot count shows "—". */
+export default async function Dashboard() {
+  const email = await currentUserEmail();
+  if (!email) redirect('/login?next=/dashboard/ava');
+  const accounts = await onboardingsForEmail(email).catch(() => []);
+  const businesses = await businessesFor(email).catch(() => []);
+  const admin = createAdminClient();
+  const ids = accounts.map((row) => row.id);
+  const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
+  const calls = await safeCount(async () => (ids.length ? (await admin.from('ava_call_leads').select('id', { count: 'exact', head: true }).in('onboarding_id', ids).gte('created_at', monthStart)).count ?? 0 : 0));
+  const reviewAsks = await safeCount(async () => (businesses.length ? (await admin.from('rf_requests').select('id', { count: 'exact', head: true }).in('business_id', businesses.map((b) => b.id)).gte('created_at', monthStart)).count ?? 0 : 0));
+  const tile: React.CSSProperties = { border: '1px solid #d9e2dc', borderRadius: 12, padding: 18, background: '#fff', color: '#17211b', textDecoration: 'none' };
+  return (
+    <main style={{ maxWidth: 960, margin: '0 auto', padding: 24, fontFamily: 'system-ui', color: '#17211b' }}>
+      <small>FRONT PORCH GROWTH</small>
+      <h1>Your dashboard</h1>
+      <p>Signed in as {email}</p>
+      <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))', gap: 14 }}>
+        <Link href="/dashboard/ava" style={tile}><small>AVA CALLS THIS MONTH</small><h2>{calls ?? '—'}</h2><p>Summaries, recordings, transcripts, text-back, transfer, booking link.</p></Link>
+        <Link href="/dashboard/reviews" style={tile}><small>REVIEW REQUESTS THIS MONTH</small><h2>{reviewAsks ?? '—'}</h2><p>ReputationFlow: send asks, private notes, reply drafts.</p></Link>
+        <Link href="/dashboard/campaigns" style={tile}><small>POSTCARDS</small><h2>QR inbox</h2><p>Estimate requests from your campaign QR pages.</p></Link>
+        <Link href="/referrals" style={tile}><small>REFERRALS</small><h2>Your link</h2><p>Track shops you send our way.</p></Link>
+        {email === OPERATOR_EMAIL && <Link href="/dashboard/prospector" style={tile}><small>OPERATOR</small><h2>Lead Finder</h2><p>Maps search and approved drafts.</p></Link>}
+      </section>
+    </main>
+  );
+}
