@@ -70,6 +70,8 @@ describe('postcard checkout session', () => {
     assert.equal(params.get('metadata[product]'), 'yardmailer');
     assert.equal(params.get('metadata[size]'), '6x9');
     assert.equal(params.get('metadata[quantity]'), '250');
+    assert.equal(params.get('metadata[setup_charged]'), 'true');
+    assert.equal(params.get('metadata[setup_cents]'), '12700');
     assert.equal(params.get('payment_intent_data[metadata][product]'), 'yardmailer');
     assert.equal(params.get('cancel_url'), 'https://frontporchgrowth.com/postcards#packages');
   });
@@ -92,6 +94,29 @@ describe('postcard checkout session', () => {
     assert.equal(params.get('metadata[product]'), 'yardmailer');
     assert.equal(params.get('metadata[size]'), '4x6');
     assert.equal(params.get('metadata[quantity]'), '100');
+  });
+
+  it('omits the setup line item after the customer has already paid it', () => {
+    const params = buildPostcardCheckoutParams({
+      origin: 'https://frontporchgrowth.com',
+      cancelPath: '/postcards#packages',
+      size: '4x6',
+      quantity: 100,
+      includeSetup: false,
+      customerId: 'cus_returning',
+      customerEmail: 'owner@example.com',
+    });
+    const body = params.toString();
+    assert.equal(body.includes('12700'), false);
+    assert.equal(params.get('line_items[0][quantity]'), '100');
+    assert.equal(params.get('line_items[0][price_data][unit_amount]'), '354');
+    assert.equal(params.get('line_items[1][quantity]'), null);
+    assert.equal(params.get('metadata[setup_charged]'), 'false');
+    assert.equal(params.get('metadata[setup_cents]'), '0');
+    assert.equal(params.get('customer'), 'cus_returning');
+    assert.equal(params.get('customer_email'), null);
+    assert.equal(postcardOrderCents('4x6', 100, { includeSetup: false }).totalCents, 35400);
+    assert.equal(postcardOrderCents('6x9', 250, { includeSetup: false }).totalCents, 123750);
   });
 
   it('treats legacy yardproof sessions the same as yardmailer', () => {

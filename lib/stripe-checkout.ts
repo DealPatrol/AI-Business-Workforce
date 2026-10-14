@@ -44,8 +44,11 @@ type PostcardCheckoutInput = {
   cancelPath: string;
   size: PostcardSize;
   quantity: number;
+  includeSetup?: boolean;
   setupPriceId?: string;
   cardPriceId?: string;
+  customerId?: string;
+  customerEmail?: string;
 };
 
 type AvaCheckoutInput = {
@@ -91,6 +94,7 @@ function appendRecurringPrice(
 
 export function buildPostcardCheckoutParams(input: PostcardCheckoutInput) {
   const card = POSTCARD_SIZES[input.size];
+  const includeSetup = input.includeSetup !== false;
   const params = new URLSearchParams();
   params.set('mode', 'payment');
   params.set(
@@ -100,28 +104,41 @@ export function buildPostcardCheckoutParams(input: PostcardCheckoutInput) {
   params.set('cancel_url', `${input.origin}${input.cancelPath}`);
   params.set('billing_address_collection', 'auto');
   params.set('allow_promotion_codes', 'true');
-  appendOneTimePrice(params, 0, {
-    priceId: input.setupPriceId,
-    quantity: 1,
-    unitAmount: POSTCARD_SETUP_CENTS,
-    productName: POSTCARD_SETUP_NAME,
-    description: '$127 one-time setup, charged once per customer.',
-  });
-  appendOneTimePrice(params, 1, {
+  let line = 0;
+  if (includeSetup) {
+    appendOneTimePrice(params, line, {
+      priceId: input.setupPriceId,
+      quantity: 1,
+      unitAmount: POSTCARD_SETUP_CENTS,
+      productName: POSTCARD_SETUP_NAME,
+      description: '$127 one-time setup, charged once per customer.',
+    });
+    line += 1;
+  }
+  appendOneTimePrice(params, line, {
     priceId: input.cardPriceId,
     quantity: input.quantity,
     unitAmount: card.unitCents,
     productName: card.productName,
     description: `${card.unitLabel} per ${card.label} card. Postage, printing, and mailing included.`,
   });
+  const setupCents = includeSetup ? POSTCARD_SETUP_CENTS : 0;
   params.set('metadata[product]', POSTCARD_CHECKOUT_PRODUCT);
   params.set('metadata[size]', input.size);
   params.set('metadata[quantity]', String(input.quantity));
-  params.set('metadata[setup_cents]', String(POSTCARD_SETUP_CENTS));
+  params.set('metadata[setup_charged]', includeSetup ? 'true' : 'false');
+  params.set('metadata[setup_cents]', String(setupCents));
   params.set('metadata[unit_cents]', String(card.unitCents));
   params.set('payment_intent_data[metadata][product]', POSTCARD_CHECKOUT_PRODUCT);
   params.set('payment_intent_data[metadata][size]', input.size);
   params.set('payment_intent_data[metadata][quantity]', String(input.quantity));
+  params.set('payment_intent_data[metadata][setup_charged]', includeSetup ? 'true' : 'false');
+  if (input.customerId) {
+    params.set('customer', input.customerId);
+  } else {
+    params.set('customer_creation', 'always');
+    if (input.customerEmail) params.set('customer_email', input.customerEmail);
+  }
   return params;
 }
 

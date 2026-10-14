@@ -56,14 +56,19 @@ export function formatPostcardMoney(cents: number): string {
   return `${negative ? '-' : ''}$${body}`;
 }
 
-export function postcardOrderCents(size: PostcardSize, quantity: number) {
+export function postcardOrderCents(
+  size: PostcardSize,
+  quantity: number,
+  options?: { includeSetup?: boolean },
+) {
   const unitCents = POSTCARD_SIZES[size].unitCents;
   const cardsCents = unitCents * quantity;
+  const setupCents = options?.includeSetup === false ? 0 : POSTCARD_SETUP_CENTS;
   return {
-    setupCents: POSTCARD_SETUP_CENTS,
+    setupCents,
     unitCents,
     cardsCents,
-    totalCents: POSTCARD_SETUP_CENTS + cardsCents,
+    totalCents: setupCents + cardsCents,
   };
 }
 
@@ -86,6 +91,7 @@ export function postcardCheckoutHref(input: {
   size: PostcardSize;
   quantity: number;
   cancelPath?: string;
+  email?: string;
 }) {
   const params = new URLSearchParams();
   params.set('offer', 'postcard');
@@ -94,6 +100,7 @@ export function postcardCheckoutHref(input: {
   if (input.cancelPath && input.cancelPath !== '/') {
     params.set('cancel', input.cancelPath);
   }
+  if (input.email) params.set('email', input.email);
   return `/api/checkout?${params.toString()}`;
 }
 

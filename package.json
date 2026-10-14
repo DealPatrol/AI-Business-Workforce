@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "node --experimental-strip-types --experimental-loader ./scripts/ava-security-test-loader.mjs --test lib/ava/ava-security.test.ts lib/prospector/email-extract.test.ts lib/prospector/suppression.test.ts lib/prospector/places.test.ts lib/prospector/transport.test.ts lib/prospector/safe-fetch.test.ts lib/rate-limit.test.ts lib/agents/catalog.test.ts lib/lead-scout/input.test.ts lib/comparison/facts.test.ts lib/analytics/meta-capi.test.ts lib/postcards/pricing.test.ts",
+    "test": "node --experimental-strip-types --experimental-loader ./scripts/ava-security-test-loader.mjs --test lib/ava/ava-security.test.ts lib/prospector/email-extract.test.ts lib/prospector/suppression.test.ts lib/prospector/places.test.ts lib/prospector/transport.test.ts lib/prospector/safe-fetch.test.ts lib/rate-limit.test.ts lib/agents/catalog.test.ts lib/lead-scout/input.test.ts lib/comparison/facts.test.ts lib/analytics/meta-capi.test.ts lib/postcards/pricing.test.ts lib/postcards/setup-fee.test.ts",
     "test:ava-security": "node --experimental-strip-types --experimental-loader ./scripts/ava-security-test-loader.mjs --test lib/ava/ava-security.test.ts"
   },
   "dependencies": {

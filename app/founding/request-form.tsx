@@ -96,8 +96,8 @@ export default function FoundingRequestForm({ checkoutState: checkoutFromServer 
           <h1>Tell Cole where to send the cards.</h1>
           <p>
             {POSTCARD_FULFILLMENT_COPY} Postage, printing, and mailing are included in the per-card
-            price. The $127 setup fee is charged once per customer. You can pay from the package
-            page, or send this form first and Cole will reply.
+            price. The $127 setup fee is charged once. Later orders for that email leave it off.
+            You can pay from the package page, or send this form first and Cole will reply.
           </p>
           <div>
             <p>

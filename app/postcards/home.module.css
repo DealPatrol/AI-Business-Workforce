@@ -638,6 +638,23 @@
   font-size: 13px;
 }
 
+.setupNote {
+  margin: 8px 0 0;
+  color: #5f6b62;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.setupPaid {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #eaf2e9;
+  color: #173d28;
+  font-size: 14px;
+  font-weight: 750;
+}
+
 .liveTotal {
   margin: 18px 0 0;
   display: flex;
