@@ -103,7 +103,7 @@ export const TRADE_PAGES: TradePage[] = [
     faqs: [
       {
         q: 'Do the postcards claim a dollar return?',
-        a: 'No. The founding offer is $389 setup plus $129 a month for the managed campaign. This site does not publish a revenue case study for the cards.',
+        a: 'No. Postcards are a $127 setup, charged once per customer, plus $3.54 per 4×6 card or $4.95 per 6×9 card. This site does not publish a revenue case study for the cards.',
       },
     ],
   },

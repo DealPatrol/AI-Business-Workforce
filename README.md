@@ -27,7 +27,7 @@ AI-powered business automation platform focused on measurable outcomes for servi
 One offer: Executive Receptionist answers missed and after-hours calls, handles common questions, captures job details, and sends the owner a qualified lead summary.
 
 - Executive Receptionist plans from **$77/month** · 300 voice minutes on Starter · cancel anytime after trial
-- YardMailer founding plan: **$389 setup + $129/month**
+- YardMailer postcards: **$127 setup once, then $3.54 per 4×6 or $4.95 per 6×9**
 - Personalized demos: `/demo/acexperts`, `/demo/family-comfort-hvac`, `/demo/after-hours-hvacr`, `/demo/underwood-hvac`, `/demo/posey-family-plumbing`
 - Offer page: `/ava` · sales video: `/video` (`/ava-hvac-pilot.mp4`) · tracker: `/sales`
 - Prospect list and outreach copy: `sales/prospect-list.md`, `sales/outreach-templates.md`

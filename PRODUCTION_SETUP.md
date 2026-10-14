@@ -26,20 +26,21 @@ Set `NEXT_PUBLIC_SITE_URL` to `https://frontporchgrowth.com` (no trailing slash)
 
 ## Checkout
 
-Add `STRIPE_SECRET_KEY` as a server-only Vercel environment variable. `/api/checkout` creates Stripe Checkout Sessions in subscription mode:
+Add `STRIPE_SECRET_KEY` as a server-only Vercel environment variable. `/api/checkout` creates Stripe Checkout Sessions:
 
-- Founding (`/api/checkout?offer=founding`): $389 setup + $129/month subscription only. Product name from code is `YardMailer Founding Plan`. Buttons use this route. If `STRIPE_SECRET_KEY` is missing, the route does not charge anything and sends the visitor to `/founding?checkout=error`.
+- Postcards (`/api/checkout?offer=postcard&size=4x6|6x9&quantity=100`): one-time payment mode. Line items are a $127 setup fee (quantity 1) and a per-card price with the selected quantity. 4×6 is $3.54. 6×9 is $4.95. Product names from code are `YardMailer setup`, `YardMailer 4×6 postcard`, and `YardMailer 6×9 postcard`. Metadata is `product=yardmailer`, plus `size` and `quantity`. `offer=founding` still opens this checkout and does not start the old $129/month subscription. Quantity must be a whole number from 100 to 10,000. If size or quantity is missing, the visitor returns to `/postcards#packages`. If `STRIPE_SECRET_KEY` is missing, the route does not charge anything and sends the visitor to `/founding?checkout=error`. Successful sessions return to `/founding?checkout=success&session_id={CHECKOUT_SESSION_ID}`.
 - Executive Receptionist (`/api/checkout?plan=starter|growth|pro`): $77 / $168 / $324 per month with a 7-day Checkout trial and $0 setup. Included minutes are 300 / 800 / 1,800. Product names from code are `Executive Receptionist – Starter`, `Executive Receptionist – Growth`, and `Executive Receptionist – Pro`. Successful sessions return to `/onboarding/ava?session_id={CHECKOUT_SESSION_ID}`. Without the secret key these buttons return to `/ava?checkout=unavailable#pricing`.
 
-Optional price IDs override inline `price_data`. If you use a price ID, set the Dashboard product name to the same string above — code only sets the name when it sends `price_data`. Recreate Dashboard prices when amounts change.
+Optional price IDs override inline `price_data`. If you use a price ID, set the Dashboard product name to the same string above — code only sets the name when it sends `price_data`. Postcard price IDs must be one-time prices, not recurring. Recreate Dashboard prices when amounts change. The old founding price IDs are not read.
 
-- `STRIPE_FOUNDING_SETUP_PRICE_ID`
-- `STRIPE_FOUNDING_MONTHLY_PRICE_ID`
+- `STRIPE_POSTCARD_SETUP_PRICE_ID` — one-time $127.00
+- `STRIPE_POSTCARD_4X6_PRICE_ID` — one-time $3.54
+- `STRIPE_POSTCARD_6X9_PRICE_ID` — one-time $4.95
 - `STRIPE_AVA_STARTER_PRICE_ID`
 - `STRIPE_AVA_GROWTH_PRICE_ID`
 - `STRIPE_AVA_PRO_PRICE_ID`
 
-`POST /api/webhooks/stripe` verifies Stripe signatures with `STRIPE_WEBHOOK_SECRET`. For `checkout.session.completed` where `metadata.product=ava`, it upserts `ava_customers` (plan, included minutes, trialing/active status) and emails the buyer an onboarding link plus the owner at `AVA_LEAD_NOTIFICATION_EMAIL`. `customer.subscription.updated` and `customer.subscription.deleted` sync that status. Retries are idempotent. Apply `supabase/migrations/006_ava_go_live.sql` first. Founding sessions stay `metadata.product=yardproof` and are not stored as Executive Receptionist customers. The manual sequence is `docs/AVA_GO_LIVE_CHECKLIST.md`. The Checkout business name "Billing" is the Stripe account public business name (Dashboard → Settings → Business details / Branding), not a value in this repo.
+`POST /api/webhooks/stripe` verifies Stripe signatures with `STRIPE_WEBHOOK_SECRET`. For `checkout.session.completed` where `metadata.product=ava`, it upserts `ava_customers` (plan, included minutes, trialing/active status) and emails the buyer an onboarding link plus the owner at `AVA_LEAD_NOTIFICATION_EMAIL`. `customer.subscription.updated` and `customer.subscription.deleted` sync that status. Retries are idempotent. Apply `supabase/migrations/006_ava_go_live.sql` first. Postcard sessions use `metadata.product=yardmailer`. Older founding sessions used `metadata.product=yardproof`. Both are skipped and are not stored as Executive Receptionist customers. The manual sequence is `docs/AVA_GO_LIVE_CHECKLIST.md`. The Checkout business name "Billing" is the Stripe account public business name (Dashboard → Settings → Business details / Branding), not a value in this repo.
 
 The compatibility route `/onboarding` also sends customers to the Executive Receptionist setup form.
 

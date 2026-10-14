@@ -5,25 +5,25 @@ import { InvoicingWaitlistForm } from '@/components/suite/InvoicingWaitlistForm'
 import { SuiteShell } from '@/components/suite/SuiteShell';
 import styles from '@/components/suite/suite.module.css';
 import { faqNode } from '@/lib/ava/structured-data';
-import { FOUNDING_CTA, foundingCheckoutHref } from '@/lib/payments';
+import { POSTCARD_FULFILLMENT_COPY, POSTCARD_PRICE_SUMMARY, postcardPublicOffers } from '@/lib/postcards/pricing';
 import { absoluteSiteUrl } from '@/lib/site-url';
 
 const title = 'Front Porch Growth | Postcards and an AI receptionist for home services';
 const description =
-  'YardMailer postcards are $389 setup + $129/month. Executive Receptionist, the AI receptionist, has a free 7-day trial, then $77, $168, or $324 a month. For home-service businesses.';
+  'YardMailer postcards are a $127 one-time setup plus $3.54 or $4.95 per card. Executive Receptionist, the AI receptionist, has a free 7-day trial, then $77, $168, or $324 a month. For home-service businesses.';
 
 const HOME_FAQS = [
   {
     q: 'What can I buy on this site today?',
-    a: 'Two products have a checkout. YardMailer postcards are a managed campaign at $389 setup + $129/month, and Demo Blast 10 is $64 for up to 10 concepts. Executive Receptionist is a separate AI receptionist: Starter $77, Growth $168, and Pro $324 a month after a free 7-day trial, with a $0 setup fee. ReputationFlow is a separate site with a free starter and Professional at $20/month. Lead Scout and the writing agents have no separate public price. Lead Finder is a signed-in workspace. Invoicing is a waitlist and is not for sale.',
+    a: 'Two products have a checkout. YardMailer postcards are a $127 one-time setup, charged once per customer, plus $3.54 per 4×6 card or $4.95 per 6×9 card. Postage, printing, and mailing are included. Demo Blast 10 is $64 for up to 10 concepts. Executive Receptionist is a separate AI receptionist: Starter $77, Growth $168, and Pro $324 a month after a free 7-day trial, with a $0 setup fee. ReputationFlow is a separate site with a free starter and Professional at $20/month. Lead Scout and the writing agents have no separate public price. Lead Finder is a signed-in workspace. Invoicing is a waitlist and is not for sale.',
   },
   {
     q: 'How is Executive Receptionist different from the postcard campaign?',
-    a: 'Postcards are mail. You approve the concept, the audience, and the costs before anything is sent, and each card has a QR page where a homeowner can request an estimate. Executive Receptionist answers phone calls, asks for the caller’s name, number, and what they need, and texts you that lead. They are separate products. You can buy one without the other.',
+    a: `Postcards are mail. ${POSTCARD_FULFILLMENT_COPY} Each card has a QR page where a homeowner can request an estimate. Executive Receptionist answers phone calls, asks for the caller’s name, number, and what they need, and texts you that lead. They are separate products. You can buy one without the other.`,
   },
   {
     q: 'How do I start?',
-    a: 'For postcards, use the $389 setup + $129/month founding checkout or email Cole at colecollins763@gmail.com. For Executive Receptionist, choose a plan and Stripe starts the 7-day trial. After checkout you finish a setup form. A person attaches the phone number. The browser demo is not your business line.',
+    a: 'For postcards, choose a size and quantity on the postcards page. The charge is a one-time $127 setup plus the cards, or email Cole at colecollins763@gmail.com. For Executive Receptionist, choose a plan and Stripe starts the 7-day trial. After checkout you finish a setup form. A person attaches the phone number. The browser demo is not your business line.',
   },
   {
     q: 'Does the invoicing form email me?',
@@ -61,22 +61,7 @@ const orgJsonLd = {
       description: 'Tools that bring home-service businesses more jobs.',
       email: 'hello@frontporchgrowth.com',
       makesOffer: [
-        {
-          '@type': 'Offer',
-          name: 'YardMailer founding setup',
-          url: absoluteSiteUrl('/postcards'),
-          price: '389',
-          priceCurrency: 'USD',
-          description: '$389 one-time setup for the founding postcard campaign.',
-        },
-        {
-          '@type': 'Offer',
-          name: 'YardMailer founding plan',
-          url: absoluteSiteUrl('/postcards'),
-          price: '129',
-          priceCurrency: 'USD',
-          description: '$129 per month after the $389 founding setup.',
-        },
+        ...postcardPublicOffers(absoluteSiteUrl('/postcards')),
         {
           '@type': 'Offer',
           name: 'Executive Receptionist, plans from $77/month after a 7-day trial',
@@ -104,16 +89,16 @@ export default function SuiteHomePage() {
             <TrackedCheckoutLink className={styles.button} href="/api/checkout?plan=starter" plan="starter">
               Start Executive Receptionist’s free trial
             </TrackedCheckoutLink>
-            <TrackedCheckoutLink className={styles.buttonSecondary} href={foundingCheckoutHref('/#start')} plan="founding">
-              {FOUNDING_CTA}
-            </TrackedCheckoutLink>
+            <Link className={styles.buttonSecondary} href="/postcards#packages">
+              See postcard packages
+            </Link>
           </div>
           <p className={styles.fine}>
-            Executive Receptionist is a 7-day trial, then $77, $168, or $324 a month. The postcard founding offer is $389 setup + $129/month. You approve the concept, audience, and mailing costs before anything mails.
+            Executive Receptionist is a 7-day trial, then $77, $168, or $324 a month. {POSTCARD_PRICE_SUMMARY}
           </p>
           <div className={styles.priceRow}>
             <Link href="/receptionist">Executive Receptionist from $77/month</Link>
-            <Link href="/postcards">Postcards founding offer $389 setup + $129/month</Link>
+            <Link href="/postcards#packages">Postcards from $127 setup + per card</Link>
             <Link href="/pricing">All prices</Link>
             <Link href="/compare">Compare published prices</Link>
           </div>
@@ -131,7 +116,7 @@ export default function SuiteHomePage() {
           <div className={styles.choice}>
             <span className={styles.kicker}>MAIL</span>
             <h3>YardMailer sends the postcard.</h3>
-            <p>A managed campaign. Each card has a QR page where the homeowner can request an estimate.</p>
+            <p>{POSTCARD_FULFILLMENT_COPY} Each card has a QR page where the homeowner can request an estimate.</p>
             <Link className={styles.textLink} href="/postcards">
               See postcard campaigns
             </Link>
@@ -148,13 +133,13 @@ export default function SuiteHomePage() {
           <h2>
             <Link href="/postcards">YardMailer</Link>
           </h2>
-          <p>Managed postcard campaigns with a QR page where the homeowner can request an estimate. You approve the concept, audience, and costs before anything mails.</p>
-          <p className={styles.price}>$389 setup + $129/month</p>
-          <p className={styles.quiet}>Founding offer for the first managed campaign.</p>
+          <p>{POSTCARD_FULFILLMENT_COPY} Postage, printing, and mailing are included. The setup fee is charged once per customer.</p>
+          <p className={styles.price}>$127 setup + $3.54 or $4.95 per card</p>
+          <p className={styles.quiet}>100, 250, or 500 cards, or a custom quantity of at least 100.</p>
           <div className={styles.cardActions}>
-            <TrackedCheckoutLink className={styles.button} href={foundingCheckoutHref('/#start')} plan="founding">
-              {FOUNDING_CTA}
-            </TrackedCheckoutLink>
+            <Link className={styles.button} href="/postcards#packages">
+              See postcard packages
+            </Link>
             <Link className={styles.textLink} href="/postcards">
               See the campaign
             </Link>

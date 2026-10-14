@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { isPostcardCheckoutProduct } from '@/lib/stripe-checkout';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 const STRIPE_API = 'https://api.stripe.com/v1';
@@ -83,6 +84,16 @@ export async function GET(req: NextRequest) {
       const sessionRes = await stripeGet(`/checkout/sessions/${encodeURIComponent(row.stripe_session_id)}`, stripeSecret);
       if (!sessionRes.ok) throw new Error('Stripe session lookup failed');
       const session = sessionRes.data;
+      if (isPostcardCheckoutProduct(session.metadata?.product)) {
+        results.push({
+          onboardingId: row.id,
+          business: row.business_name,
+          ok: true,
+          skipped: true,
+          reason: 'Checkout session is a YardMailer postcard payment, not an Executive Receptionist subscription.',
+        });
+        continue;
+      }
       if (session.metadata?.product && session.metadata.product !== 'ava') {
         results.push({
           onboardingId: row.id,

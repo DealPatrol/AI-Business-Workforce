@@ -2,7 +2,12 @@ import { redirect } from 'next/navigation';
 import { isAvaPlanKey } from '@/lib/ava/pricing';
 
 type CheckoutPageProps = {
-  searchParams: Promise<{ plan?: string | string[]; offer?: string | string[] }>;
+  searchParams: Promise<{
+    plan?: string | string[];
+    offer?: string | string[];
+    size?: string | string[];
+    quantity?: string | string[];
+  }>;
 };
 
 function first(value: string | string[] | undefined) {
@@ -14,8 +19,20 @@ export default async function CheckoutPage({ searchParams }: CheckoutPageProps) 
   const plan = first(params.plan);
   const offer = first(params.offer);
 
-  if (offer === 'founding' || plan === 'founding') {
-    redirect('/api/checkout?offer=founding');
+  if (
+    offer === 'founding' ||
+    offer === 'postcard' ||
+    offer === 'yardmailer' ||
+    plan === 'founding' ||
+    plan === 'postcard' ||
+    plan === 'yardmailer'
+  ) {
+    const size = first(params.size);
+    const quantity = first(params.quantity);
+    if ((size === '4x6' || size === '6x9') && quantity) {
+      redirect(`/api/checkout?offer=postcard&size=${encodeURIComponent(size)}&quantity=${encodeURIComponent(quantity)}`);
+    }
+    redirect('/postcards#packages');
   }
 
   if (isAvaPlanKey(plan)) {
