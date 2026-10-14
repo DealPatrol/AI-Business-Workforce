@@ -5,7 +5,7 @@ import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink'
 import { ExclusiveAudio } from '@/components/receptionist/ExclusiveAudio';
 import { VoicePicker } from '@/components/receptionist/VoicePicker';
 import { AVA_PLANS, type AvaPlanKey } from '@/lib/ava/pricing';
-import { EXAMPLE_NOTES, EXECUTIVE_FAQS, EXECUTIVE_INDUSTRIES, SAMPLE_CALLS } from '@/lib/executive-receptionist';
+import { EXAMPLE_NOTES, EXECUTIVE_FAQS, EXECUTIVE_INDUSTRIES } from '@/lib/executive-receptionist';
 import { hostnameOf, isExecutiveReceptionistHost } from '@/lib/site-url';
 import styles from './receptionist.module.css';
 
@@ -88,8 +88,8 @@ export default function ReceptionistPage() {
       <section className={styles.band} id="voices">
         <div className={styles.sectionHead}>
           <p className={styles.kicker}>The voice</p>
-          <h2>Claire is the default. Five others are ready when you want a different room.</h2>
-          <p>Each player loads its recording from this site. Press play when the file is published.</p>
+          <h2>Madison is the default. Five others are ready when you want a different room.</h2>
+          <p>Each clip is the receptionist’s side of a sample call. The caller’s lines are pauses.</p>
         </div>
         <VoicePicker />
       </section>
@@ -97,17 +97,20 @@ export default function ReceptionistPage() {
       <section className={styles.band} id="samples">
         <div className={styles.sectionHead}>
           <p className={styles.kicker}>Sample calls</p>
-          <h2>Home-service calls answered when no one can pick up.</h2>
-          <p>Scripted overflow calls for home-service businesses, not recordings of real customers.</p>
+          <h2>One recorded example for each kind of office.</h2>
+          <p>
+            Madison’s side of a scripted call, in the default voice. These are not recordings of real clients.
+            The caller’s lines are pauses.
+          </p>
         </div>
         <ul className={styles.sampleList}>
-          {SAMPLE_CALLS.map((call) => (
-            <li key={call.file}>
+          {EXECUTIVE_INDUSTRIES.map((industry) => (
+            <li key={industry.slug}>
               <div>
-                <h3>{call.label}</h3>
-                <p>{call.description}</p>
+                <h3>{industry.name}</h3>
+                <p>{industry.sample}</p>
               </div>
-              <ExclusiveAudio src={`/voices/samples/${call.file}.mp3`}>{call.label}</ExclusiveAudio>
+              <ExclusiveAudio src={`/voices/samples/${industry.slug}.mp3`}>{industry.name}</ExclusiveAudio>
             </li>
           ))}
         </ul>

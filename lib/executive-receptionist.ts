@@ -1,88 +1,88 @@
 export const EXECUTIVE_VOICES = [
   {
-    slug: 'claire',
-    name: 'Claire',
-    detail: 'Default. Composed, clear, and unhurried.',
+    slug: 'madison',
+    name: 'Madison',
+    detail: 'Polished, warm American female.',
     isDefault: true,
   },
   {
-    slug: 'eleanor',
-    name: 'Eleanor',
-    detail: 'Warm and steady, suited to a private practice.',
+    slug: 'grace',
+    name: 'Grace',
+    detail: 'Mature and calm, for law and financial callers.',
+    isDefault: false,
+  },
+  {
+    slug: 'charlotte',
+    name: 'Charlotte',
+    detail: 'Crisp British.',
     isDefault: false,
   },
   {
     slug: 'james',
     name: 'James',
-    detail: 'Low, measured, and formal.',
+    detail: 'Smooth American male in his 40s.',
     isDefault: false,
   },
   {
-    slug: 'sofia',
-    name: 'Sofia',
-    detail: 'Bright and precise.',
+    slug: 'bella',
+    name: 'Bella',
+    detail: 'Bright and upbeat, for dental and med spa.',
     isDefault: false,
   },
   {
-    slug: 'margaret',
-    name: 'Margaret',
-    detail: 'Calm, senior, and unhurried.',
-    isDefault: false,
-  },
-  {
-    slug: 'david',
-    name: 'David',
-    detail: 'Even and professional.',
+    slug: 'ryan',
+    name: 'Ryan',
+    detail: 'Friendly, down-to-earth male.',
     isDefault: false,
   },
 ] as const;
 
 export type ExecutiveVoiceSlug = (typeof EXECUTIVE_VOICES)[number]['slug'];
 
-export const DEFAULT_EXECUTIVE_VOICE: ExecutiveVoiceSlug = 'claire';
+export const DEFAULT_EXECUTIVE_VOICE: ExecutiveVoiceSlug = 'madison';
 
 export const EXECUTIVE_INDUSTRIES = [
   {
     slug: 'dental',
     name: 'Dentists',
     line: 'New-patient calls, hours, and what to bring — taken while the front desk is with someone in the chair.',
-    sample: 'A caller at 6:40 p.m. asks whether the practice is accepting patients and which insurance names the office can repeat.',
+    sample: 'The receptionist asks about swelling or severe pain, offers two times, and confirms the visit.',
   },
   {
     slug: 'law',
     name: 'Law firms',
     line: 'A name, a number, and the kind of matter, in the words you approve. No advice and no conflict check.',
-    sample: 'An after-hours caller asks to speak with an attorney about a contract dispute and leaves a callback.',
+    sample: 'The receptionist asks whether the caller is safe and whether a police report was filed, then offers consultation times.',
   },
   {
     slug: 'med-spa',
     name: 'Med spas',
     line: 'Consult requests and treatment questions answered from the menu you write, not from a guess.',
-    sample: 'A caller asks about a consultation, your hours, and whether a particular treatment is offered.',
+    sample: 'The receptionist offers a complimentary consultation and two Saturday times.',
   },
   {
     slug: 'cpa',
     name: 'CPAs',
     line: 'Tax-season overflow: who is calling, what they need, and when someone at the firm should return it.',
-    sample: 'A client calls during filing season asking for a callback about an extension.',
+    sample: 'The receptionist schedules a notice review and asks the caller to have the letter ready.',
   },
   {
     slug: 'financial',
     name: 'Financial advisors',
     line: 'A polished greeting and a callback request. No recommendations and no account numbers.',
-    sample: 'A prospect asks to schedule a conversation about retirement and leaves a number.',
+    sample: 'The receptionist offers an introductory meeting, in person or by video.',
   },
   {
     slug: 'real-estate',
     name: 'Real estate',
     line: 'Showing requests and new inquiries captured while you are in a house with another client.',
-    sample: 'A buyer calls about a listing, asks the next open window, and leaves a number for the agent.',
+    sample: 'The receptionist confirms the listing is available and offers two showing times.',
   },
   {
     slug: 'chiropractic',
     name: 'Chiropractors',
     line: 'New-patient calls and schedule questions, without collecting a clinical history on the phone.',
-    sample: 'A new patient calls at lunch asking whether you are taking patients and what the first visit involves.',
+    sample: 'The receptionist asks about numbness and offers a new-patient visit the same day.',
   },
 ] as const;
 
@@ -101,7 +101,7 @@ export const EXECUTIVE_FAQS = [
   },
   {
     q: 'Can I choose the voice?',
-    a: 'Yes. Claire is the default. Five other voices are on this page. The audio files play from this site when they are published.',
+    a: 'Yes. Madison is the default. Grace, Charlotte, James, Bella, and Ryan are the other voices on this page. Each clip is the receptionist’s side of a sample call.',
   },
   {
     q: 'What does it cost?',
@@ -122,14 +122,4 @@ export const EXAMPLE_NOTES = [
     practice: 'Example advisory firm',
     quote: 'Lunchtime inquiries no longer sit in a full mailbox. The callback list is a text, not a stack of slips.',
   },
-] as const;
-
-export const SAMPLE_CALLS = [
-  { file: 'dental', label: 'HVAC: no heat, after hours', description: 'A homeowner calls after hours with no heat. The receptionist takes the address, the problem, and a callback number.' },
-  { file: 'law', label: 'Plumbing: active leak, Saturday', description: 'A caller reports an active leak on a Saturday and leaves the details for the on-call plumber.' },
-  { file: 'med-spa', label: 'Roofing: storm leak, owner on a roof', description: 'After a storm, a caller reports a leaking roof while the owner is up on another job.' },
-  { file: 'cpa', label: 'Electrical: breaker tripping, lunch break', description: 'A caller with a breaker that keeps tripping reaches the line during the crew’s lunch break.' },
-  { file: 'financial', label: 'Garage door: stuck, Sunday', description: 'A caller with a garage door stuck shut on a Sunday leaves a name, number, and address.' },
-  { file: 'real-estate', label: 'Lawn care: estimate, crew on a job', description: 'A homeowner asks for a lawn care estimate while the crew is out on a job.' },
-  { file: 'chiropractic', label: 'Water heater: no hot water, before hours', description: 'A caller with no hot water phones before the shop opens and gets a callback scheduled.' },
 ] as const;
