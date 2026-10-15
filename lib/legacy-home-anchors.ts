@@ -6,6 +6,7 @@ export type LegacyHomeAnchor = (typeof LEGACY_HOME_ANCHORS)[number];
 /**
  * Hash fragments never reach the server. On `/`, send the old anchor to
  * `/{id}`, which next.config permanently redirects (308) to `/postcards#{id}`.
+ * `/demo10` redirects to `/postcards` because that offer section is gone.
  */
 export function legacyHomeAnchorScript() {
   const allowed = JSON.stringify(LEGACY_HOME_ANCHORS);

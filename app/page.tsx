@@ -15,7 +15,7 @@ const description =
 const HOME_FAQS = [
   {
     q: 'What can I buy on this site today?',
-    a: 'Two products have a checkout. YardMailer postcards are a $127 one-time setup, charged once per customer, plus $3.54 per 4×6 card or $4.95 per 6×9 card. Postage, printing, and mailing are included. Demo Blast 10 is $64 for up to 10 concepts. Executive Receptionist is a separate AI receptionist: Starter $77, Growth $168, and Pro $324 a month after a free 7-day trial, with a $0 setup fee. ReputationFlow is a separate site with a free starter and Professional at $20/month. Lead Scout and the writing agents have no separate public price. Lead Finder is a signed-in workspace. Invoicing is a waitlist and is not for sale.',
+    a: 'Two products have a checkout. YardMailer postcards are a $127 one-time setup, charged once per customer, plus $3.54 per 4×6 card or $4.95 per 6×9 card. Postage, printing, and mailing are included. Executive Receptionist is a separate AI receptionist: Starter $77, Growth $168, and Pro $324 a month after a free 7-day trial, with a $0 setup fee. ReputationFlow is a separate site with a free starter and Professional at $20/month. Lead Scout and the writing agents have no separate public price. Lead Finder is a signed-in workspace. Invoicing is a waitlist and is not for sale.',
   },
   {
     q: 'How is Executive Receptionist different from the postcard campaign?',
