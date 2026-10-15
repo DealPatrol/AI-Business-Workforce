@@ -1,4 +1,5 @@
 import OpenAI from 'openai';
+import { applySenderIdentity, buildDraftInstructions, type DraftIdentity } from '@/lib/prospector/draft-copy';
 import { ProspectorSetupError } from '@/lib/prospector/errors';
 import { DRAFT_KINDS, type DraftKind, type ProspectorLead, type TargetProfile } from '@/lib/prospector/types';
 import { parseTargetProfiles } from '@/lib/prospector/targets';
@@ -55,7 +56,7 @@ ${input.pageText.slice(0, 12_000)}
   return { summary, targets };
 }
 
-export type DraftCopy = { kind: DraftKind; subject: string; body: string };
+export type DraftCopy = DraftIdentity;
 
 function clipSubject(value: unknown): string {
   return typeof value === 'string' ? value.replace(/[\r\n]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 180) : '';
@@ -73,37 +74,8 @@ export async function proposeDrafts(input: {
   senderName: string;
   bookingUrl: string;
 }): Promise<DraftCopy[]> {
-  const lead = input.lead;
-  const payload = await completeJson(`Write a short cold email sequence from the sender to one local business. Return JSON only:
-{"emails":[{"kind":"initial","subject":"...","body":"..."},{"kind":"followup_1","subject":"...","body":"..."},{"kind":"followup_2","subject":"...","body":"..."}]}
-
-Rules:
-- Plain text. No HTML.
-- Initial email under 120 words. Each follow-up under 80 words.
-- Use only the public facts below. Do not invent a relationship, a visit, a mutual contact, or a review quote.
-- Mention the lead's business name and city or category when that helps the email feel specific.
-- Describe the sender's offer without guaranteed results.
-- If a booking link is provided, put it on its own line in the initial email.
-- Do not include a physical mailing address or an unsubscribe line. The app adds those later.
-- Do not use deceptive subjects. The subject must match the body.
-- Sign off with the sender name when one is provided.
-- Follow-ups assume no reply. Do not pretend they replied.
-
-Sender name: ${input.senderName || 'the sender'}
-Sender website: ${input.sourceUrl}
-What they sell: ${input.offerSummary || 'not summarized'}
-Sender notes: ${input.notes || 'none'}
-Booking link: ${input.bookingUrl || 'none'}
-
-Lead:
-Name: ${lead.name}
-Category: ${lead.category || 'unknown'}
-Address: ${lead.address || 'unknown'}
-Phone: ${lead.phone || 'unknown'}
-Website: ${lead.website || 'none'}
-Rating: ${lead.rating ?? 'unknown'} (${lead.reviewCount ?? 0} reviews)
-Contact name: ${lead.contactName || 'unknown'}
-Public email: ${lead.emails[0] || 'unknown'}`);
+  const instructions = buildDraftInstructions(input);
+  const payload = await completeJson(instructions);
 
   const record = payload && typeof payload === 'object' ? (payload as Record<string, unknown>) : {};
   const rows = Array.isArray(record.emails) ? record.emails : [];
@@ -122,5 +94,9 @@ Public email: ${lead.emails[0] || 'unknown'}`);
   if (drafts.some((draft) => !draft)) {
     throw new Error('The model did not return a first email and two follow-ups. Try again.');
   }
-  return drafts.filter((draft): draft is DraftCopy => Boolean(draft));
+  return applySenderIdentity(
+    drafts.filter((draft): draft is DraftCopy => Boolean(draft)),
+    input.senderName,
+    input.bookingUrl,
+  );
 }

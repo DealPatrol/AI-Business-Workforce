@@ -1,6 +1,8 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { SENDER_NAME_REQUIRED } from '@/lib/prospector/draft-copy';
 import { draftKindLabel, leadStatusLabel, LEAD_STATUSES, type LeadStatus, type ProspectorDraft, type ProspectorLead, type ProspectorSend } from '@/lib/prospector/types';
 import { prospectorRequest } from './api';
 import styles from './prospector.module.css';
@@ -13,11 +15,13 @@ type Detail = {
 
 export default function DraftDrawer({
   leadId,
+  senderName,
   sendReady,
   onClose,
   onLead,
 }: {
   leadId: string;
+  senderName: string;
   sendReady: boolean;
   onClose: () => void;
   onLead: (lead: ProspectorLead) => void;
@@ -70,6 +74,10 @@ export default function DraftDrawer({
 
   async function generate() {
     if (!detail) return;
+    if (!senderName.trim()) {
+      setError(SENDER_NAME_REQUIRED);
+      return;
+    }
     await run('draft', async () => {
       const result = await prospectorRequest<{ drafts: ProspectorDraft[]; lead: ProspectorLead }>('/api/prospector/drafts', {
         leadId: detail.lead.id,
@@ -155,8 +163,13 @@ export default function DraftDrawer({
             ) : (
               <p className={styles.info}>No public email yet. This lead stays call-only until an address is found. The phone number is still useful.</p>
             )}
+            {!senderName.trim() && (
+              <p className={styles.alert} role="alert">
+                {SENDER_NAME_REQUIRED} <Link href="/dashboard/prospector/settings">Open settings</Link>
+              </p>
+            )}
             <div className={styles.formActions}>
-              <button className={styles.secondary} type="button" disabled={Boolean(busy) || lead.status === 'do_not_contact'} onClick={generate}>
+              <button className={styles.secondary} type="button" disabled={Boolean(busy) || lead.status === 'do_not_contact' || !senderName.trim()} onClick={generate}>
                 {busy === 'draft' ? 'Writing…' : 'Write first email and follow-ups'}
               </button>
             </div>
