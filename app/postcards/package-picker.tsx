@@ -16,7 +16,6 @@ import {
   postcardPackageRows,
   type PostcardSize,
 } from '@/lib/postcards/pricing';
-import { normalizePostcardEmail } from '@/lib/postcards/setup-fee';
 import styles from './home.module.css';
 
 const packageRows = postcardPackageRows();
@@ -26,40 +25,22 @@ export function PostcardPackagePicker() {
   const [quantity, setQuantity] = useState<number>(POSTCARD_MIN_QUANTITY);
   const [customText, setCustomText] = useState(String(POSTCARD_MIN_QUANTITY));
   const [usingCustom, setUsingCustom] = useState(false);
-  const [email, setEmail] = useState('');
   const [setupPaid, setSetupPaid] = useState(false);
-  const [checkingSetup, setCheckingSetup] = useState(false);
-
-  const normalizedEmail = normalizePostcardEmail(email);
 
   useEffect(() => {
     let active = true;
-    setSetupPaid(false);
-    if (!normalizedEmail) {
-      setCheckingSetup(false);
-      return () => {
-        active = false;
-      };
-    }
-    setCheckingSetup(true);
-    const timer = setTimeout(() => {
-      fetch(`/api/postcards/setup-status?email=${encodeURIComponent(normalizedEmail)}`)
-        .then((response) => response.json())
-        .then((data: { setupPaid?: boolean }) => {
-          if (active) setSetupPaid(Boolean(data.setupPaid));
-        })
-        .catch(() => {
-          if (active) setSetupPaid(false);
-        })
-        .finally(() => {
-          if (active) setCheckingSetup(false);
-        });
-    }, 350);
+    fetch('/api/postcards/setup-status')
+      .then(async (response) => {
+        const data = (await response.json().catch(() => ({}))) as { setupPaid?: boolean };
+        if (active && response.ok) setSetupPaid(Boolean(data.setupPaid));
+      })
+      .catch(() => {
+        if (active) setSetupPaid(false);
+      });
     return () => {
       active = false;
-      clearTimeout(timer);
     };
-  }, [normalizedEmail]);
+  }, []);
 
   const customQuantity = Number(customText);
   const customValid =
@@ -85,7 +66,7 @@ export function PostcardPackagePicker() {
 
       <table className={styles.packageTable}>
         <caption>
-          First-order totals include the {POSTCARD_SETUP_LABEL} setup fee. It is left off after that email has paid it.
+          First-order totals include the {POSTCARD_SETUP_LABEL} setup fee. It is left off for a signed-in account that already paid it.
         </caption>
         <thead>
           <tr>
@@ -170,27 +151,13 @@ export function PostcardPackagePicker() {
           </p>
         ) : null}
 
-        <label className={styles.customQty}>
-          Email
-          <input
-            type="email"
-            inputMode="email"
-            autoComplete="email"
-            value={email}
-            placeholder="Email from your first order"
-            onChange={(event) => setEmail(event.target.value)}
-          />
-        </label>
         <p className={styles.setupNote}>
-          Use the same email as your first postcard order. We charge the {POSTCARD_SETUP_LABEL} setup fee only once.
+          The {POSTCARD_SETUP_LABEL} setup fee is included unless you are signed in and a paid setup is already on your
+          account.
         </p>
         {setupPaid ? (
           <p className={styles.setupPaid} role="status">
             Setup already paid.
-          </p>
-        ) : checkingSetup ? (
-          <p className={styles.setupNote} role="status">
-            Checking this email…
           </p>
         ) : null}
 
@@ -211,7 +178,7 @@ export function PostcardPackagePicker() {
 
         <ul className={styles.orderIncludes}>
           <li>
-            <Check size={16} /> {setupPaid ? 'Setup already paid' : 'Setup fee is charged once per customer'}
+            <Check size={16} /> {setupPaid ? 'Setup already paid' : `${POSTCARD_SETUP_LABEL} setup included`}
           </li>
           <li>
             <Check size={16} /> AI designs the card
@@ -228,7 +195,6 @@ export function PostcardPackagePicker() {
               size,
               quantity: orderQuantity,
               cancelPath: '/postcards#packages',
-              email: normalizedEmail,
             })}
           >
             {POSTCARD_CTA}: {orderQuantity.toLocaleString('en-US')} {card.label} — {formatPostcardMoney(order.totalCents)}{' '}

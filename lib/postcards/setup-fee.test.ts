@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import {
+  decidePostcardSetupCharge,
   normalizePostcardEmail,
   paidPostcardOrderCountsAsSetup,
   postcardSetupWasCharged,
   sanitizeStripeCustomerId,
-  setupStatusFromStripeData,
 } from '@/lib/postcards/setup-fee';
 
 describe('postcard setup fee', () => {
@@ -33,9 +33,10 @@ describe('postcard setup fee', () => {
       true,
     );
     assert.equal(
-      postcardSetupWasCharged('yardmailer', { setup_charged: 'false', setup_cents: '0' }),
-      false,
+      postcardSetupWasCharged('yardproof', { setup_cents: '38900' }),
+      true,
     );
+    assert.equal(postcardSetupWasCharged('yardproof', { setup_charged: 'false' }), false);
   });
 
   it('does not treat an unpaid or card-only order as setup already paid', () => {
@@ -62,52 +63,60 @@ describe('postcard setup fee', () => {
     );
   });
 
-  it('counts a paid legacy yardproof setup and ignores a different email', () => {
-    const status = setupStatusFromStripeData({
-      email: 'owner@example.com',
-      customers: [
-        { id: 'cus_other', email: 'other@example.com' },
-        { id: 'cus_owner', email: 'Owner@Example.com' },
-      ],
-      sessionsByCustomer: {
-        cus_other: [
-          {
-            id: 'cs_other',
-            payment_status: 'paid',
-            metadata: { product: 'yardmailer', setup_charged: 'true', setup_cents: '12700' },
-          },
-        ],
-        cus_owner: [
-          {
-            id: 'cs_cards',
-            payment_status: 'paid',
-            metadata: { product: 'yardmailer', setup_charged: 'false', setup_cents: '0' },
-          },
-          {
-            id: 'cs_legacy',
-            payment_status: 'paid',
-            metadata: { product: 'yardproof', setup_cents: '38900' },
-          },
-        ],
-      },
+  it('does not waive setup for an anonymous buyer or an unconfirmed email', () => {
+    const paid = { customerId: 'cus_owner' };
+    assert.deepEqual(decidePostcardSetupCharge({ buyer: null, paidSetup: paid }), {
+      includeSetup: true,
+      customerId: '',
+      customerEmail: '',
     });
-    assert.deepEqual(status, { paid: true, customerId: 'cus_owner' });
+    assert.deepEqual(
+      decidePostcardSetupCharge({
+        buyer: { email: 'owner@example.com', emailConfirmedAt: null },
+        paidSetup: paid,
+      }),
+      { includeSetup: true, customerId: '', customerEmail: '' },
+    );
+    assert.deepEqual(
+      decidePostcardSetupCharge({
+        buyer: { email: 'owner@example.com', emailConfirmedAt: '   ' },
+        paidSetup: paid,
+      }),
+      { includeSetup: true, customerId: '', customerEmail: '' },
+    );
   });
 
-  it('returns the Stripe customer without waiving setup when no paid setup exists', () => {
-    const status = setupStatusFromStripeData({
-      email: 'owner@example.com',
-      customers: [{ id: 'cus_owner', email: 'owner@example.com' }],
-      sessionsByCustomer: {
-        cus_owner: [
-          {
-            id: 'cs_cards',
-            payment_status: 'paid',
-            metadata: { product: 'yardmailer', setup_charged: 'false' },
-          },
-        ],
-      },
-    });
-    assert.deepEqual(status, { paid: false, customerId: 'cus_owner' });
+  it('does not waive setup for a verified buyer until a paid setup row exists', () => {
+    assert.deepEqual(
+      decidePostcardSetupCharge({
+        buyer: { email: 'owner@example.com', emailConfirmedAt: '2026-10-01T00:00:00Z' },
+        paidSetup: null,
+      }),
+      { includeSetup: true, customerId: '', customerEmail: '' },
+    );
+  });
+
+  it('waives setup for a verified buyer with a webhook-written paid setup row', () => {
+    assert.deepEqual(
+      decidePostcardSetupCharge({
+        buyer: { email: ' Owner@Example.com ', emailConfirmedAt: '2026-10-01T00:00:00Z' },
+        paidSetup: { customerId: 'cus_owner' },
+      }),
+      { includeSetup: false, customerId: 'cus_owner', customerEmail: '' },
+    );
+    assert.deepEqual(
+      decidePostcardSetupCharge({
+        buyer: { email: 'owner@example.com', emailConfirmedAt: '2026-10-01T00:00:00Z' },
+        paidSetup: { customerId: '' },
+      }),
+      { includeSetup: false, customerId: '', customerEmail: 'owner@example.com' },
+    );
+    assert.deepEqual(
+      decidePostcardSetupCharge({
+        buyer: { email: 'owner@example.com', emailConfirmedAt: '2026-10-01T00:00:00Z' },
+        paidSetup: { customerId: 'ch_not_a_customer' },
+      }),
+      { includeSetup: false, customerId: '', customerEmail: 'owner@example.com' },
+    );
   });
 });

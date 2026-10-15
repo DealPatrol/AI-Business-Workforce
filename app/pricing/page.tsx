@@ -33,7 +33,7 @@ export const metadata: Metadata = {
 };
 
 const rows = [
-  ['YardMailer setup', 'Charged once per customer. Later orders for that email leave it off.', POSTCARD_SETUP_LABEL],
+  ['YardMailer setup', 'Charged once. Later orders leave it off when you are signed in and a paid setup is already on your account.', POSTCARD_SETUP_LABEL],
   ['YardMailer 4×6', 'Per card. Postage, printing, and mailing included.', POSTCARD_SIZES['4x6'].unitLabel],
   ['YardMailer 6×9', 'Per card. Postage, printing, and mailing included.', POSTCARD_SIZES['6x9'].unitLabel],
   ...postcardPackageRows().map((row) => [

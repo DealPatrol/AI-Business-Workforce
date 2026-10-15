@@ -130,7 +130,7 @@ export default function HomePage() {
             </a>
           </div>
           <p className={styles.heroNote}>
-            The $127 setup fee is charged once per customer. There is no monthly postcard plan.
+            The $127 setup fee is included unless you are signed in and a paid setup is already on your account. There is no monthly postcard plan.
           </p>
         </div>
 

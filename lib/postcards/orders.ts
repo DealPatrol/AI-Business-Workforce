@@ -1,5 +1,9 @@
 import { createAdminClient } from '@/lib/supabase/admin';
-import { isPostcardCheckoutProduct } from '@/lib/stripe-checkout';
+import {
+  isPostcardCheckoutProduct,
+  LEGACY_POSTCARD_CHECKOUT_PRODUCT,
+  POSTCARD_CHECKOUT_PRODUCT,
+} from '@/lib/stripe-checkout';
 import { normalizePostcardEmail, sanitizeStripeCustomerId } from '@/lib/postcards/setup-fee';
 
 export type PostcardOrderWrite = {
@@ -35,6 +39,7 @@ export async function readPostcardSetupRecord(email: string) {
     .eq('email', normalized)
     .eq('payment_status', 'paid')
     .eq('setup_charged', true)
+    .in('product', [POSTCARD_CHECKOUT_PRODUCT, LEGACY_POSTCARD_CHECKOUT_PRODUCT])
     .limit(1);
   if (error) throw new Error(`Unable to load postcard setup: ${error.message}`);
   const row = data?.[0] as { stripe_customer_id?: string | null } | undefined;

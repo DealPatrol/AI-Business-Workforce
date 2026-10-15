@@ -43,29 +43,30 @@ export function paidPostcardOrderCountsAsSetup(session: PostcardCheckoutSnapshot
   return postcardSetupWasCharged(product, session.metadata);
 }
 
-export type StripeCustomerSnapshot = {
-  id?: string;
-  email?: string | null;
+export type PostcardSetupDecision = {
+  includeSetup: boolean;
+  customerId: string;
+  customerEmail: string;
 };
 
-export function setupStatusFromStripeData(input: {
-  email: string;
-  customers: StripeCustomerSnapshot[];
-  sessionsByCustomer: Record<string, PostcardCheckoutSnapshot[]>;
-}) {
-  const email = normalizePostcardEmail(input.email);
-  if (!email) return { paid: false, customerId: '' };
-
-  let customerId = '';
-  for (const customer of input.customers) {
-    const id = sanitizeStripeCustomerId(customer.id);
-    if (!id) continue;
-    if (customer.email && normalizePostcardEmail(customer.email) !== email) continue;
-    if (!customerId) customerId = id;
-    const sessions = input.sessionsByCustomer[id] || [];
-    if (sessions.some(paidPostcardOrderCountsAsSetup)) {
-      return { paid: true, customerId: id };
-    }
+/**
+ * Waive the setup fee only for a signed-in buyer with a confirmed email and a
+ * paid setup row. A typed email is not an input and cannot skip the fee or
+ * select a Stripe customer.
+ */
+export function decidePostcardSetupCharge(input: {
+  buyer: { email?: string | null; emailConfirmedAt?: string | null } | null;
+  paidSetup: { customerId?: string | null } | null;
+}): PostcardSetupDecision {
+  const confirmedAt = String(input.buyer?.emailConfirmedAt || '').trim();
+  const email = confirmedAt ? normalizePostcardEmail(input.buyer?.email) : '';
+  if (!email || !input.paidSetup) {
+    return { includeSetup: true, customerId: '', customerEmail: '' };
   }
-  return { paid: false, customerId };
+  const customerId = sanitizeStripeCustomerId(input.paidSetup.customerId);
+  return {
+    includeSetup: false,
+    customerId,
+    customerEmail: customerId ? '' : email,
+  };
 }

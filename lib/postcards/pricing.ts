@@ -91,7 +91,6 @@ export function postcardCheckoutHref(input: {
   size: PostcardSize;
   quantity: number;
   cancelPath?: string;
-  email?: string;
 }) {
   const params = new URLSearchParams();
   params.set('offer', 'postcard');
@@ -100,7 +99,6 @@ export function postcardCheckoutHref(input: {
   if (input.cancelPath && input.cancelPath !== '/') {
     params.set('cancel', input.cancelPath);
   }
-  if (input.email) params.set('email', input.email);
   return `/api/checkout?${params.toString()}`;
 }
 

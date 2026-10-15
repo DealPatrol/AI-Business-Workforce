@@ -72,6 +72,8 @@ describe('postcard checkout session', () => {
     assert.equal(params.get('metadata[quantity]'), '250');
     assert.equal(params.get('metadata[setup_charged]'), 'true');
     assert.equal(params.get('metadata[setup_cents]'), '12700');
+    assert.equal(params.get('customer'), null);
+    assert.equal(params.get('customer_email'), null);
     assert.equal(params.get('payment_intent_data[metadata][product]'), 'yardmailer');
     assert.equal(params.get('cancel_url'), 'https://frontporchgrowth.com/postcards#packages');
   });

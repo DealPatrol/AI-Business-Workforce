@@ -5,8 +5,7 @@ import {
   parsePostcardQuantity,
   type PostcardSize,
 } from '@/lib/postcards/pricing';
-import { lookupPostcardSetup } from '@/lib/postcards/setup-lookup';
-import { normalizePostcardEmail, sanitizeStripeCustomerId } from '@/lib/postcards/setup-fee';
+import { postcardSetupForCheckout } from '@/lib/postcards/setup-session';
 import {
   type AvaPlanKey,
   buildAvaCheckoutParams,
@@ -65,27 +64,11 @@ function postcardSelection(size: unknown, quantity: unknown) {
   return { size: normalized, quantity: parsedQuantity };
 }
 
-async function postcardSetupForEmail(email: string) {
-  if (!email) return { includeSetup: true, customerId: '', customerEmail: '' };
-  try {
-    const setup = await lookupPostcardSetup(email);
-    return {
-      includeSetup: !setup.paid,
-      customerId: sanitizeStripeCustomerId(setup.customerId),
-      customerEmail: email,
-    };
-  } catch (error) {
-    console.error('Postcard setup lookup failed; charging the setup fee', error);
-    return { includeSetup: true, customerId: '', customerEmail: email };
-  }
-}
-
 async function postcardCheckoutUrl(
   req: NextRequest,
   size: PostcardSize,
   quantity: number,
   cancelPath: string,
-  email: string,
 ) {
   const secret = process.env.STRIPE_SECRET_KEY;
   if (!secret) {
@@ -93,7 +76,8 @@ async function postcardCheckoutUrl(
     return { error: 'Postcard checkout is not connected yet.' };
   }
 
-  const setup = await postcardSetupForEmail(email);
+  // A buyer-supplied email is ignored. Setup is waived only for the signed-in verified user.
+  const setup = await postcardSetupForCheckout();
   const params = buildPostcardCheckoutParams({
     origin: req.nextUrl.origin,
     cancelPath,
@@ -182,7 +166,6 @@ export async function GET(req: NextRequest) {
         selection.size,
         selection.quantity,
         safeCancelPath(req.nextUrl.searchParams.get('cancel')),
-        normalizePostcardEmail(req.nextUrl.searchParams.get('email')),
       );
       if ('error' in result) return NextResponse.redirect(new URL('/founding?checkout=error', req.url));
       return NextResponse.redirect(result.url, 303);
@@ -227,7 +210,6 @@ export async function POST(req: NextRequest) {
         selection.size,
         selection.quantity,
         safeCancelPath(typeof body?.cancel === 'string' ? body.cancel : ''),
-        normalizePostcardEmail(body?.email),
       );
       if ('error' in result) {
         return NextResponse.json({ error: result.error || 'Could not start postcard checkout.' }, { status: 500 });

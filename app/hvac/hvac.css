@@ -33,7 +33,7 @@
 .hvac-price small{font-size:1rem;font-weight:500}
 .hvac-setup{color:#666;margin:0 0 1rem}
 .hvac-plan li{display:flex;gap:.5rem;padding:.3rem 0}
-.hvac-minutes{color:#777;font-size:.88rem}
+.hvac-plan .hvac-btn{margin-top:1rem}
 .hvac-trial{margin-top:1.5rem;background:var(--hv-green);color:#fff;border-radius:16px;padding:1.6rem}
 .hvac-trial h3{margin:0 0 .5rem;font-size:1.4rem}
 .hvac-trial p{margin:.4rem 0}
