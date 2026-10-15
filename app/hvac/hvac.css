@@ -1,0 +1,46 @@
+.hvac-page{--hv-ink:#1f2a24;--hv-cream:#faf6ee;--hv-red:#b5432b;--hv-green:#2f5d46;--hv-line:#e4dccb;background:var(--hv-cream);color:var(--hv-ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh;line-height:1.55}
+.hvac-page a{color:inherit}
+.hvac-nav{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;padding:1rem 1.5rem;max-width:1100px;margin:0 auto}
+.hvac-nav div{display:flex;gap:1.1rem;align-items:center;flex-wrap:wrap}
+.hvac-nav a{text-decoration:none;font-weight:500}
+.hvac-brand{font-weight:800!important;font-size:1.1rem;color:var(--hv-green)!important}
+.hvac-nav-call{display:inline-flex;gap:.35rem;align-items:center;background:var(--hv-green);color:#fff!important;padding:.45rem .8rem;border-radius:999px}
+.hvac-hero,.hvac-stats,.hvac-how,.hvac-plans,.hvac-contact,.hvac-footer{max-width:1100px;margin:0 auto;padding:2.5rem 1.5rem}
+.hvac-eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:.8rem;font-weight:700;color:var(--hv-red);margin:0 0 .5rem}
+.hvac-hero h1{font-size:clamp(2.2rem,6vw,4rem);line-height:1.05;margin:0 0 1rem;font-family:Georgia,"Times New Roman",serif}
+.hvac-lede{font-size:1.2rem;max-width:680px;margin:0 0 1.5rem}
+.hvac-cta-row{display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:1rem}
+.hvac-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.85rem 1.3rem;border-radius:10px;font-weight:700;text-decoration:none;border:2px solid var(--hv-ink);cursor:pointer;font-size:1rem}
+.hvac-btn-primary{background:var(--hv-red);border-color:var(--hv-red);color:#fff!important}
+.hvac-btn-primary:hover{filter:brightness(1.08)}
+.hvac-btn-ghost{background:transparent}
+.hvac-btn:disabled{opacity:.6;cursor:wait}
+.hvac-small{font-size:.9rem;color:#555;max-width:640px}
+.hvac-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+.hvac-stats div{background:#fff;border:1px solid var(--hv-line);border-radius:14px;padding:1.4rem;display:flex;flex-direction:column;gap:.35rem}
+.hvac-stats strong{font-size:2.6rem;color:var(--hv-green);font-family:Georgia,serif;line-height:1}
+.hvac-stats a{font-size:.8rem;color:#777}
+.hvac-page h2{font-family:Georgia,serif;font-size:2rem;margin:0 0 1rem}
+.hvac-how ul,.hvac-plan ul{list-style:none;padding:0;margin:0}
+.hvac-how li{display:flex;gap:.6rem;align-items:flex-start;padding:.6rem 0;border-bottom:1px solid var(--hv-line)}
+.hvac-how li svg,.hvac-plan li svg{flex-shrink:0;margin-top:.25rem;color:var(--hv-green)}
+.hvac-plan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.2rem}
+.hvac-plan{background:#fff;border:1px solid var(--hv-line);border-radius:16px;padding:1.6rem;position:relative}
+.hvac-plan.featured{border:2px solid var(--hv-red);box-shadow:0 10px 30px rgba(181,67,43,.12)}
+.hvac-badge{position:absolute;top:-.8rem;left:1.4rem;background:var(--hv-red);color:#fff;font-size:.75rem;font-weight:700;padding:.2rem .6rem;border-radius:999px}
+.hvac-plan h3{margin:0 0 .4rem;font-size:1.25rem}
+.hvac-price{font-size:2.4rem;font-weight:800;margin:0}
+.hvac-price small{font-size:1rem;font-weight:500}
+.hvac-setup{color:#666;margin:0 0 1rem}
+.hvac-plan li{display:flex;gap:.5rem;padding:.3rem 0}
+.hvac-plan .hvac-btn{margin-top:1rem}
+.hvac-trial{margin-top:1.5rem;background:var(--hv-green);color:#fff;border-radius:16px;padding:1.6rem}
+.hvac-trial h3{margin:0 0 .5rem;font-size:1.4rem}
+.hvac-trial p{margin:.4rem 0}
+.hvac-contact{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;align-items:start}
+.hvac-form{background:#fff;border:1px solid var(--hv-line);border-radius:16px;padding:1.5rem;display:flex;flex-direction:column;gap:.8rem}
+.hvac-form label{display:flex;flex-direction:column;gap:.3rem;font-weight:600;font-size:.92rem}
+.hvac-form input,.hvac-form select,.hvac-form textarea{font:inherit;font-weight:400;padding:.6rem .7rem;border:1px solid #cfc6b3;border-radius:8px;background:#fff;color:var(--hv-ink)}
+.hvac-hp{position:absolute!important;left:-9999px!important;width:1px;height:1px;opacity:0}
+.hvac-error{color:var(--hv-red);margin:0}
+.hvac-footer{display:flex;gap:1.2rem;flex-wrap:wrap;color:#666;font-size:.9rem;border-top:1px solid var(--hv-line)}

@@ -1,10 +1,9 @@
-export const FOUNDING_CTA = 'Start for $99/month';
-
-/** Subscription Checkout Session for the $99/month YardProof founding plan. */
-export function foundingCheckoutHref(cancelPath?: string) {
-  if (!cancelPath || cancelPath === '/') return '/api/checkout?offer=founding';
-  return `/api/checkout?offer=founding&cancel=${encodeURIComponent(cancelPath)}`;
-}
+export {
+  POSTCARD_CTA,
+  POSTCARD_PACKAGES_HREF,
+  POSTCARD_PRICE_SUMMARY,
+  postcardCheckoutHref,
+} from '@/lib/postcards/pricing';
 
 const DEMO10_CONTACT_EMAIL = 'colecollins763@gmail.com';
 
@@ -22,7 +21,7 @@ export function getDemo10Payment(): Demo10Payment {
       if (url.protocol === 'https:') {
         return {
           href: url.toString(),
-          label: 'Buy Demo Blast 10 — $49',
+          label: 'Buy Demo Blast 10 — $64',
           configured: true,
         };
       }

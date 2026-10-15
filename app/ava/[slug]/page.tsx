@@ -25,7 +25,7 @@ export async function generateMetadata({
       title: page.metaTitle,
       description: page.description,
       url,
-      siteName: 'Ava',
+      siteName: 'Executive Receptionist',
       type: 'website',
     },
     twitter: {

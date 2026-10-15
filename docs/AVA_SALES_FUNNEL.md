@@ -1,13 +1,13 @@
-# Ava sales funnel (qualify-only)
+# Executive Receptionist sales funnel (qualify-only)
 
-**Slice:** Sales Ava qualify → persist → onboarding prefill.  
+**Slice:** Executive Receptionist qualify → persist → onboarding prefill.  
 **Out of scope:** Calendar booking APIs, customer-facing SMS/GHL, auto phone buy, public dial-in numbers.
 **Optional:** Internal lead-alert SMS via Twilio when `TWILIO_*` + `AVA_LEAD_SMS_TO` are set (additive to Resend; not live until configured).
 
 ## Flow
 
 1. Prospect lands on `/ava`.
-2. Clicks **Talk to Ava — she’ll set up your receptionist** (`#talk-to-ava`).
+2. Clicks **Talk to Executive Receptionist — she’ll set up your receptionist** (`#talk-to-ava`).
 3. Browser uses signed URL from `GET /api/ava/elevenlabs?mode=sales` (or `/api/ava/elevenlabs/sales`) with `ELEVENLABS_SALES_AGENT_ID`.
 4. After the call, the client saves answers via `POST /api/ava/sales/qualify` with a required `conversationId`.
    - Server verifies the conversation with ElevenLabs (exists, `status=done`, `agent_id` matches `ELEVENLABS_SALES_AGENT_ID`).
@@ -31,13 +31,13 @@
 |---|---|
 | `ELEVENLABS_API_KEY` | Shared ElevenLabs auth |
 | `ELEVENLABS_AGENT_ID` | Customer template / demo (unchanged) |
-| `ELEVENLABS_SALES_AGENT_ID` | **New** separate Sales Ava agent |
+| `ELEVENLABS_SALES_AGENT_ID` | **New** separate Executive Receptionist agent |
 | `NEXT_PUBLIC_SUPABASE_URL` / `SUPABASE_SECRET_KEY` | Persist qualifications |
 | `RESEND_API_KEY` / `AVA_LEAD_NOTIFICATION_EMAIL` | Email Cole on new qualification |
 | `TWILIO_ACCOUNT_SID` / `TWILIO_AUTH_TOKEN` / `TWILIO_FROM_NUMBER` / `AVA_LEAD_SMS_TO` | Optional Twilio SMS alert on qualify (no-op if unset) |
 | `NEXT_PUBLIC_AVA_SETUP_BOOKING_URL` | Optional setup-call link after qualify |
 | `AVA_QUALIFY_PREFILL_SECRET` | Optional dedicated HMAC secret for prefill tokens |
-| `STRIPE_SECRET_KEY` | Ava plan checkout ($79 / $149 / $299 per month). Product name: `Ava Receptionist – Starter` / `Growth` / `Pro`. |
+| `STRIPE_SECRET_KEY` | Executive Receptionist plan checkout ($77 / $168 / $324 per month). Product name: `Executive Receptionist – Starter` / `Growth` / `Pro`. |
 | `STRIPE_AVA_STARTER_PRICE_ID` / `STRIPE_AVA_GROWTH_PRICE_ID` / `STRIPE_AVA_PRO_PRICE_ID` | Optional Dashboard prices. Omit to use inline `price_data`. |
 
 ## ElevenLabs setup
@@ -53,8 +53,8 @@ Apply migration `supabase/migrations/005_ava_sales_qualifications.sql` (table `a
 
 ## Honesty
 
-- Pricing stays Starter **$79** / Growth **$149** / Pro **$299** per month.
-- Do not invent dial-in numbers or retarget Visual Canvasser payment links for Ava.
+- Pricing stays Starter **$77** / Growth **$168** / Pro **$324** per month.
+- Do not invent dial-in numbers or retarget Visual Canvasser payment links for Executive Receptionist.
 - Calendar writes are not live in this slice — optional booking URL only.
 - **Starter feature-list gap:** the `/ava` pricing card still lists “Appointment booking” on Starter for marketing continuity, but live calendar booking APIs are **not** wired in this qualify-only slice. Treat that line as aspirational / setup-call scope until calendar integration ships — do not imply Google Calendar / customer SMS / GHL is already connected.
 - Internal Twilio SMS lead alerts are available only when Twilio env is set; do not claim Google SMS or that customer SMS is live.

@@ -1,9 +1,15 @@
 import { track } from '@vercel/analytics/server';
 import { NextRequest, NextResponse } from 'next/server';
 import {
+  isPostcardSize,
+  parsePostcardQuantity,
+  type PostcardSize,
+} from '@/lib/postcards/pricing';
+import { postcardSetupForCheckout } from '@/lib/postcards/setup-session';
+import {
   type AvaPlanKey,
   buildAvaCheckoutParams,
-  buildFoundingCheckoutParams,
+  buildPostcardCheckoutParams,
   createStripeCheckoutSession,
   isAvaPlanKey,
   readStripePriceId,
@@ -37,24 +43,66 @@ function avaPriceId(planKey: AvaPlanKey) {
   }
 }
 
-async function foundingCheckoutUrl(req: NextRequest) {
+function postcardCardPriceId(size: PostcardSize) {
+  switch (size) {
+    case '4x6':
+      return readStripePriceId(process.env.STRIPE_POSTCARD_4X6_PRICE_ID);
+    case '6x9':
+      return readStripePriceId(process.env.STRIPE_POSTCARD_6X9_PRICE_ID);
+    default: {
+      const unreachable: never = size;
+      return unreachable;
+    }
+  }
+}
+
+function postcardSelection(size: unknown, quantity: unknown) {
+  const normalized = String(size || '').toLowerCase();
+  if (!isPostcardSize(normalized)) return null;
+  const parsedQuantity = parsePostcardQuantity(quantity);
+  if (parsedQuantity == null) return null;
+  return { size: normalized, quantity: parsedQuantity };
+}
+
+async function postcardCheckoutUrl(
+  req: NextRequest,
+  size: PostcardSize,
+  quantity: number,
+  cancelPath: string,
+) {
   const secret = process.env.STRIPE_SECRET_KEY;
   if (!secret) {
-    console.error('STRIPE_SECRET_KEY is not set; founding checkout cannot start.');
-    return { error: 'Founding checkout is not connected yet.' };
+    console.error('STRIPE_SECRET_KEY is not set; postcard checkout cannot start.');
+    return { error: 'Postcard checkout is not connected yet.' };
   }
 
-  const params = buildFoundingCheckoutParams({
+  // A buyer-supplied email is ignored. Setup is waived only for the signed-in verified user.
+  const setup = await postcardSetupForCheckout();
+  const params = buildPostcardCheckoutParams({
     origin: req.nextUrl.origin,
-    monthlyPriceId: readStripePriceId(process.env.STRIPE_FOUNDING_MONTHLY_PRICE_ID),
+    cancelPath,
+    size,
+    quantity,
+    includeSetup: setup.includeSetup,
+    setupPriceId: readStripePriceId(process.env.STRIPE_POSTCARD_SETUP_PRICE_ID),
+    cardPriceId: postcardCardPriceId(size),
+    customerId: setup.customerId,
+    customerEmail: setup.customerEmail,
   });
-  const cancelPath = safeCancelPath(req.nextUrl.searchParams.get('cancel'));
-  params.set('cancel_url', `${req.nextUrl.origin}${cancelPath}`);
 
   const result = await createStripeCheckoutSession(secret, params);
   if ('error' in result) {
-    console.error('Stripe founding checkout error', result.error);
+    console.error('Stripe postcard checkout error', result.error);
     return { error: result.error };
+  }
+  try {
+    await track(
+      'checkout-started',
+      { plan: 'postcard', product: 'yardmailer', size, quantity: String(quantity) },
+      { headers: req.headers },
+    );
+  } catch (error) {
+    console.error('Postcard checkout-started analytics failed', error);
   }
   return { url: result.url };
 }
@@ -67,8 +115,8 @@ async function avaCheckoutUrl(
 ) {
   const secret = process.env.STRIPE_SECRET_KEY;
   if (!secret) {
-    console.error('STRIPE_SECRET_KEY is not set; Ava checkout cannot start.');
-    return { error: 'Ava checkout is not connected yet.', status: 503 as const };
+    console.error('STRIPE_SECRET_KEY is not set; Executive Receptionist checkout cannot start.');
+    return { error: 'Executive Receptionist checkout is not connected yet.', status: 503 as const };
   }
 
   const params = buildAvaCheckoutParams({
@@ -80,28 +128,45 @@ async function avaCheckoutUrl(
   });
   const result = await createStripeCheckoutSession(secret, params);
   if ('error' in result) {
-    console.error('Stripe Ava checkout error', result.error);
-    return { error: result.error || 'Could not start Ava checkout.', status: 500 as const };
+    console.error('Stripe Executive Receptionist checkout error', result.error);
+    return { error: result.error || 'Could not start Executive Receptionist checkout.', status: 500 as const };
   }
   try {
     await track('checkout-started', { plan: planKey, product: 'ava' }, { headers: req.headers });
   } catch (error) {
-    console.error('Ava checkout-started analytics failed', error);
+    console.error('Executive Receptionist checkout-started analytics failed', error);
   }
   return { url: result.url };
 }
 
-function isFoundingRequest(offer: string, planKey: string) {
-  return offer === 'founding' || planKey === 'founding';
+function isPostcardRequest(offer: string, planKey: string) {
+  return (
+    offer === 'postcard' ||
+    offer === 'yardmailer' ||
+    offer === 'founding' ||
+    planKey === 'postcard' ||
+    planKey === 'yardmailer' ||
+    planKey === 'founding'
+  );
 }
 
 export async function GET(req: NextRequest) {
   const offer = String(req.nextUrl.searchParams.get('offer') || '').toLowerCase();
   const planKey = String(req.nextUrl.searchParams.get('plan') || '').toLowerCase();
 
-  if (isFoundingRequest(offer, planKey)) {
+  if (isPostcardRequest(offer, planKey)) {
+    const selection = postcardSelection(
+      req.nextUrl.searchParams.get('size'),
+      req.nextUrl.searchParams.get('quantity'),
+    );
+    if (!selection) return NextResponse.redirect(new URL('/postcards#packages', req.url));
     try {
-      const result = await foundingCheckoutUrl(req);
+      const result = await postcardCheckoutUrl(
+        req,
+        selection.size,
+        selection.quantity,
+        safeCancelPath(req.nextUrl.searchParams.get('cancel')),
+      );
       if ('error' in result) return NextResponse.redirect(new URL('/founding?checkout=error', req.url));
       return NextResponse.redirect(result.url, 303);
     } catch (error) {
@@ -111,18 +176,18 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    if (!isAvaPlanKey(planKey)) return NextResponse.redirect(new URL('/ava#pricing', req.url));
+    if (!isAvaPlanKey(planKey)) return NextResponse.redirect(new URL('/receptionist#pricing', req.url));
     const result = await avaCheckoutUrl(
       req,
       planKey,
       req.nextUrl.searchParams.get('qualificationId') || '',
       req.nextUrl.searchParams.get('prefillToken') || req.nextUrl.searchParams.get('token') || '',
     );
-    if ('error' in result) return NextResponse.redirect(new URL('/ava?checkout=unavailable#pricing', req.url));
+    if ('error' in result) return NextResponse.redirect(new URL('/receptionist?checkout=unavailable#pricing', req.url));
     return NextResponse.redirect(result.url, 303);
   } catch (error) {
     console.error(error);
-    return NextResponse.redirect(new URL('/ava?checkout=unavailable#pricing', req.url));
+    return NextResponse.redirect(new URL('/receptionist?checkout=unavailable#pricing', req.url));
   }
 }
 
@@ -132,15 +197,27 @@ export async function POST(req: NextRequest) {
     const offer = String(body?.offer || '').toLowerCase();
     const planKey = String(body?.plan || '').toLowerCase();
 
-    if (isFoundingRequest(offer, planKey)) {
-      const result = await foundingCheckoutUrl(req);
+    if (isPostcardRequest(offer, planKey)) {
+      const selection = postcardSelection(body?.size, body?.quantity);
+      if (!selection) {
+        return NextResponse.json(
+          { error: 'Choose a 4x6 or 6x9 postcard and a quantity of at least 100.' },
+          { status: 400 },
+        );
+      }
+      const result = await postcardCheckoutUrl(
+        req,
+        selection.size,
+        selection.quantity,
+        safeCancelPath(typeof body?.cancel === 'string' ? body.cancel : ''),
+      );
       if ('error' in result) {
-        return NextResponse.json({ error: result.error || 'Could not start founding checkout.' }, { status: 500 });
+        return NextResponse.json({ error: result.error || 'Could not start postcard checkout.' }, { status: 500 });
       }
       return NextResponse.json({ url: result.url });
     }
 
-    if (!isAvaPlanKey(planKey)) return NextResponse.json({ error: 'Invalid Ava plan.' }, { status: 400 });
+    if (!isAvaPlanKey(planKey)) return NextResponse.json({ error: 'Invalid Executive Receptionist plan.' }, { status: 400 });
     const result = await avaCheckoutUrl(
       req,
       planKey,

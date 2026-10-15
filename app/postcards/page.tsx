@@ -8,17 +8,23 @@ import {
   MapPin,
   Palette,
   QrCode,
-  ShieldCheck,
   Sparkles,
 } from 'lucide-react';
-import { FOUNDING_CTA, foundingCheckoutHref, getDemo10Payment } from '@/lib/payments';
+import { getDemo10Payment } from '@/lib/payments';
+import {
+  POSTCARD_CTA,
+  POSTCARD_FULFILLMENT_COPY,
+  POSTCARD_PRICE_SUMMARY,
+  postcardPublicOffers,
+} from '@/lib/postcards/pricing';
+import { absoluteSiteUrl } from '@/lib/site-url';
 import styles from './home.module.css';
+import { PostcardPackagePicker } from './package-picker';
 
 const CONTACT_EMAIL = 'colecollins763@gmail.com';
 
-const title = 'YardProof Postcards | Front Porch Growth';
-const description =
-  'Launch a managed property-concept postcard campaign with QR estimate pages for landscaping and home-service businesses. The founding offer is $99/month.';
+const title = 'YardMailer Postcards | Front Porch Growth';
+const description = `${POSTCARD_FULFILLMENT_COPY} ${POSTCARD_PRICE_SUMMARY}`;
 
 export const metadata: Metadata = {
   title: { absolute: title },
@@ -48,14 +54,14 @@ const steps = [
   {
     icon: Palette,
     number: '02',
-    title: 'Build the concepts',
-    detail: 'Cole prepares clearly labeled yard project ideas by hand for you to review.',
+    title: 'AI designs the card',
+    detail: 'AI designs a postcard for the home, with the project concept and a QR estimate page.',
   },
   {
     icon: Mail,
     number: '03',
-    title: 'Approve the postcard',
-    detail: 'You approve the concept, message, audience, and costs before anything mails.',
+    title: 'Printed and mailed',
+    detail: 'The card is printed and mailed directly to the homeowners. Postage, printing, and mailing are included.',
   },
   {
     icon: QrCode,
@@ -65,36 +71,41 @@ const steps = [
   },
 ];
 
-const packageItems = [
-  'Target campaign setup',
-  'Up to 25 property concepts*',
-  'Personalized postcard creative',
-  'Unique QR project-page structure',
-  'QR scan tracking and estimate-request inbox',
-  'Campaign review before launch',
-];
+const postcardJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: 'YardMailer postcards',
+  description: `${POSTCARD_FULFILLMENT_COPY} ${POSTCARD_PRICE_SUMMARY}`,
+  brand: { '@type': 'Brand', name: 'YardMailer' },
+  url: absoluteSiteUrl('/postcards'),
+  offers: postcardPublicOffers(absoluteSiteUrl('/postcards')),
+};
 
 export default function HomePage() {
   const demo10 = getDemo10Payment();
 
   return (
     <main className={styles.page}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(postcardJsonLd).replace(/</g, '\\u003c') }}
+      />
       <nav className={styles.nav}>
         <Link className={styles.brand} href="/postcards">
           <span>
             <Sparkles size={17} />
           </span>
-          YardProof
+          YardMailer
         </Link>
         <div className={styles.navLinks}>
           <Link href="/">Front Porch Growth</Link>
           <a href="#how">How it works</a>
           <a href="#demo10">Demo Blast 10</a>
-          <a href="#package">What you get</a>
+          <a href="#packages">Packages</a>
           <Link href="/visual-canvasser">See examples</Link>
         </div>
-        <a className={styles.navCta} href={foundingCheckoutHref('/postcards#package')}>
-          {FOUNDING_CTA}
+        <a className={styles.navCta} href="#packages">
+          {POSTCARD_CTA}
         </a>
       </nav>
 
@@ -103,23 +114,23 @@ export default function HomePage() {
           <span className={styles.eyebrow}>PROPERTY-BASED POSTCARD CAMPAIGNS FOR HOME SERVICES</span>
           <h1>Show homeowners the yard project you could build for them.</h1>
           <p className={styles.lede}>
-            A managed, done-with-you service: we help you choose the streets, prepare yard
-            concepts, and send a postcard with a QR page where the homeowner can request an
-            estimate.
+            {POSTCARD_FULFILLMENT_COPY} Each card includes postage, printing, and mailing, plus a
+            QR page where the homeowner can request an estimate.
           </p>
           <div className={styles.priceLine}>
-            <strong>$99/month</strong>
+            <strong>$127 setup</strong>
+            <span>once per customer, then $3.54 or $4.95 per card</span>
           </div>
           <div className={styles.heroActions}>
-            <a className={styles.primaryButton} href={foundingCheckoutHref('/postcards#package')}>
-              {FOUNDING_CTA} <ArrowRight size={18} />
+            <a className={styles.primaryButton} href="#packages">
+              See packages <ArrowRight size={18} />
             </a>
             <a className={styles.secondaryButton} href="#demo10">
-              See the $49 Demo Blast 10
+              See the $64 Demo Blast 10
             </a>
           </div>
           <p className={styles.heroNote}>
-            The postcard campaign is our core service. You approve the concept, audience and costs before anything mails.
+            The $127 setup fee is included unless you are signed in and a paid setup is already on your account. There is no monthly postcard plan.
           </p>
         </div>
 
@@ -151,13 +162,13 @@ export default function HomePage() {
 
       <section className={styles.trustBar}>
         <span>
-          <ShieldCheck /> You approve before mailing
+          <Sparkles /> AI designs the card
         </span>
         <span>
-          <Check /> No surprise pass-through costs
+          <Mail /> Printed and mailed to homeowners
         </span>
         <span>
-          <Check /> Built for landscaping and home services
+          <Check /> $127 setup, once per customer
         </span>
       </section>
 
@@ -171,7 +182,7 @@ export default function HomePage() {
           </p>
         </div>
         <div>
-          <strong>$49</strong>
+          <strong>$64</strong>
           <ul>
             <li><Check /> Up to 10 before/after concepts</li>
             <li><Check /> Per-card approve, swap, regenerate, or request changes</li>
@@ -247,46 +258,11 @@ export default function HomePage() {
 
       <section className={styles.packageSection} id="package">
         <div className={styles.packageCopy}>
-          <span>FOUNDING CUSTOMER PACKAGE</span>
-          <h2>Your first campaign, built with Cole.</h2>
-          <p>
-            We are onboarding a small number of north-Alabama landscapers and home-service
-            businesses while the full workflow is being automated.
-          </p>
-          <div className={styles.honesty}>
-            <b>Honest launch boundary</b>
-            <p>
-              <b>Live today:</b> unique QR pages, scan tracking, and your estimate-request inbox.
-              <br />
-              <b>Done by hand with you (not automated yet):</b> choosing properties, property
-              photos, &ldquo;after&rdquo; concept images, and printing/mailing. We will not claim
-              automatic property lookup, AI renders, lead finding, or automatic mailing until
-              those connections are tested.
-            </p>
-          </div>
+          <span>POSTCARD PACKAGES</span>
+          <h2>Pick a size and a quantity.</h2>
+          <p>{POSTCARD_FULFILLMENT_COPY}</p>
         </div>
-        <div className={styles.offerCard}>
-          <small>FOUNDING LAUNCH</small>
-          <div className={styles.offerPrice}>
-            <strong>$99</strong>
-            <span>/month</span>
-          </div>
-          <p>$99/month for the initial managed campaign</p>
-          <ul>
-            {packageItems.map((item) => (
-              <li key={item}>
-                <Check size={16} /> {item}
-              </li>
-            ))}
-          </ul>
-          <a className={styles.primaryButton} href={foundingCheckoutHref('/postcards#package')}>
-            {FOUNDING_CTA} <ArrowRight size={18} />
-          </a>
-          <small className={styles.disclosure}>
-            *Final mailed quantity and printing, postage, or property-data costs are confirmed
-            before launch. No unapproved pass-through costs.
-          </small>
-        </div>
+        <PostcardPackagePicker />
       </section>
 
       <section className={styles.questions}>
@@ -295,7 +271,7 @@ export default function HomePage() {
           <h2>Ask Cole if this fits your service area.</h2>
           <p>No sales maze. Email the person who will help set up the campaign.</p>
         </div>
-        <a href={`mailto:${CONTACT_EMAIL}?subject=Question%20about%20the%20YardProof%20postcard%20campaign`}>
+        <a href={`mailto:${CONTACT_EMAIL}?subject=Question%20about%20the%20YardMailer%20postcard%20campaign`}>
           <Mail size={18} /> Email Cole
         </a>
       </section>
@@ -305,11 +281,11 @@ export default function HomePage() {
           <small>OPTIONAL ADD-ON</small>
           <h2>Want someone answering the leads your campaign creates?</h2>
           <p>
-            Ava is a separate AI receptionist add-on for businesses that want 24/7 call coverage. The postcard campaign remains the main service.
+            Executive Receptionist is a separate AI receptionist add-on for businesses that want 24/7 call coverage. The postcard campaign remains the main service.
           </p>
         </div>
         <Link href="/ava">
-          See Ava add-on <ArrowRight size={16} />
+          See Executive Receptionist add-on <ArrowRight size={16} />
         </Link>
       </section>
 
@@ -318,7 +294,7 @@ export default function HomePage() {
           <span>
             <Sparkles size={17} />
           </span>
-          YardProof
+          YardMailer
         </Link>
         <p>
           Cole · <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
@@ -329,8 +305,8 @@ export default function HomePage() {
           <Link href="/terms">Terms</Link>
           <Link href="/privacy">Privacy</Link>
         </nav>
-        <a className={styles.footerPay} href={foundingCheckoutHref('/postcards#package')}>
-          {FOUNDING_CTA}
+        <a className={styles.footerPay} href="#packages">
+          {POSTCARD_CTA}
         </a>
       </footer>
     </main>

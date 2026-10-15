@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft, CheckCircle2, ExternalLink, Mail, QrCode } from 'lucide-react';
-import { FOUNDING_CTA, foundingCheckoutHref } from '@/lib/payments';
+import { POSTCARD_CTA, POSTCARD_PACKAGES_HREF } from '@/lib/postcards/pricing';
 
 type PostcardProps = {
   searchParams: Promise<{
@@ -44,8 +44,8 @@ export default async function Postcard({ searchParams }: PostcardProps) {
         <Link href={`/property-demo?zip=${zip}`}>
           <ArrowLeft /> Back to design
         </Link>
-        <b>YardProof Personalized Outreach</b>
-        <a href={foundingCheckoutHref('/property-demo/postcard')}>{FOUNDING_CTA}</a>
+        <b>YardMailer Personalized Outreach</b>
+        <a href={POSTCARD_PACKAGES_HREF}>{POSTCARD_CTA}</a>
       </header>
       <div className="postwrap">
         <div className="studiohead">
@@ -114,11 +114,8 @@ export default async function Postcard({ searchParams }: PostcardProps) {
               </div>
             </div>
             <p className="fine">
-              Demo postcard mock. In founding campaigns, the Current photo and After concept are
-              prepared and reviewed by hand; automatic property-photo lookup and AI after-images
-              are still being tested and are not part of the live service. A founding
-              campaign&apos;s business identity, approved imagery, QR destination, and mailing
-              details are prepared with the customer before launch.
+              Demo postcard mock. AI designs the card, then it&apos;s printed and mailed directly
+              to the homeowners. Postage, printing, and mailing are included in the per-card price.
             </p>
           </section>
           <aside className="sendpanel">
@@ -155,8 +152,8 @@ export default async function Postcard({ searchParams }: PostcardProps) {
             <Link className="button full" href={`/property/${zip}`}>
               Preview Homeowner Page <ExternalLink />
             </Link>
-            <a className="button full" href={foundingCheckoutHref('/property-demo/postcard')}>
-              {FOUNDING_CTA}
+            <a className="button full" href={POSTCARD_PACKAGES_HREF}>
+              {POSTCARD_CTA}
             </a>
             <Link href={`/property-demo?zip=${zip}`}>Keep exploring the demo</Link>
           </aside>

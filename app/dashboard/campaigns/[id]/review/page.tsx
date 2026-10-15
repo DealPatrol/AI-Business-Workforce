@@ -132,7 +132,7 @@ export default async function CampaignReviewPage({ params }: PageProps) {
     <main className={styles.page}>
       <header className={styles.header}>
         <Link className={styles.brand} href="/">
-          <span><Leaf size={17} /></span> YardProof
+          <span><Leaf size={17} /></span> YardMailer
         </Link>
         <Link href="/dashboard/campaigns"><ArrowLeft size={16} /> Campaign inbox</Link>
       </header>

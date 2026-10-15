@@ -68,7 +68,7 @@ function PropertyDemoContent() {
     <main className="studio">
       <header>
         <Link href="/">
-          <ArrowLeft /> YardProof
+          <ArrowLeft /> YardMailer
         </Link>
         <b>Property Transformation Studio</b>
         <Link href="/visual-canvasser">

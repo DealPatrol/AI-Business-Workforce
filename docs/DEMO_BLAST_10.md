@@ -1,6 +1,6 @@
 # Demo Blast 10 operator guide
 
-Demo Blast 10 is the $49, review-first version of YardProof: up to 10 before/after postcard concepts, one contractor review board, and manual print/mail fulfillment after approval.
+Demo Blast 10 is the $64, review-first version of YardMailer: up to 10 before/after postcard concepts, one contractor review board, and manual print/mail fulfillment after approval.
 
 ## One-time production setup
 

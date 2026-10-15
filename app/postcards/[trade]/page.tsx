@@ -30,7 +30,7 @@ export default async function PostcardTradePage({ params }: { params: Promise<{ 
     { q: `How are these postcards different from regular ${t.trade} mailers?`, a: `Each card shows a concept of ${t.concept} for that specific home, so the homeowner sees the result instead of a generic coupon.` },
     { q: 'Do you mail anything without my approval?', a: 'No. You approve, swap, or regenerate every card before anything is mailed.' },
     { q: 'How do homeowners respond?', a: 'A QR code on each card opens an estimate request page for your business.' },
-    { q: 'How much does it cost?', a: 'The founding customer package is $99/month for the initial managed campaign. See the pricing page for details.' },
+    { q: 'How much does it cost?', a: 'A $127 setup fee is charged once per customer, plus $3.54 per 4×6 card or $4.95 per 6×9 card. Postage, printing, and mailing are included. Packages are 100, 250, or 500 cards, and custom quantities start at 100. See the pricing page for the totals.' },
   ];
   const jsonLd = [
     { '@context': 'https://schema.org', '@type': 'Service', name: `Marketing postcards for ${t.plural}`, serviceType: 'Direct mail marketing', provider: { '@type': 'Organization', name: 'Front Porch Growth', url: absoluteSiteUrl('/') }, areaServed: 'US', url: absoluteSiteUrl(`/postcards/${t.slug}`) },
@@ -46,17 +46,17 @@ export default async function PostcardTradePage({ params }: { params: Promise<{ 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <p style={{ fontSize: 14 }}><Link href="/">Home</Link> / <Link href="/postcards">Postcards</Link></p>
       <h1 style={{ fontSize: 40, lineHeight: 1.15 }}>Marketing postcards for {t.plural}</h1>
-      <p style={{ fontSize: 19 }}>Show homeowners {t.concept} on their own house. Front Porch Growth builds property-based postcard campaigns for {t.plural}: every card is a before/after concept for that address, with a QR code to request your estimate.</p>
+      <p style={{ fontSize: 19 }}>Show homeowners {t.concept} on their own house. AI designs the card, then it&apos;s printed and mailed directly to the homeowners. Every card includes a QR code to request your estimate.</p>
       <h2>Where these cards work best</h2>
       <ul>{t.hooks.map((h) => <li key={h}>{h}</li>)}</ul>
       <h2>How a campaign works</h2>
       <ol>
         <li>Pick a few streets in your service area.</li>
-        <li>We prepare up to 10 before/after concepts so you can see them before you scale.</li>
-        <li>You approve, swap, or regenerate each card.</li>
-        <li>Cards mail only after your approval; homeowners scan the QR to request an estimate.</li>
+        <li>AI designs the card for each home.</li>
+        <li>The card is printed and mailed directly to the homeowners.</li>
+        <li>Homeowners scan the QR to request an estimate.</li>
       </ol>
-      <p><Link href="/postcards"><strong>See postcard examples →</strong></Link> · <Link href="/pricing">Pricing</Link> · <Link href="/ava">Need someone to answer the calls? Meet Ava</Link></p>
+      <p><Link href="/postcards"><strong>See postcard examples →</strong></Link> · <Link href="/pricing">Pricing</Link> · <Link href="/receptionist">Need someone to answer the calls? Meet Executive Receptionist</Link></p>
       <h2>FAQ</h2>
       {faqs.map((f) => (<div key={f.q}><h3 style={{ fontSize: 18, marginBottom: 4 }}>{f.q}</h3><p style={{ marginTop: 0 }}>{f.a}</p></div>))}
       <h2>Other trades</h2>

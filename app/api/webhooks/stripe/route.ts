@@ -15,7 +15,9 @@ import {
   escapeHtml,
   sendResendEmail,
 } from '@/lib/ava/mail';
-import { STRIPE_API_VERSION } from '@/lib/stripe-checkout';
+import { recordPostcardOrder } from '@/lib/postcards/orders';
+import { postcardSetupWasCharged } from '@/lib/postcards/setup-fee';
+import { isPostcardCheckoutProduct, STRIPE_API_VERSION } from '@/lib/stripe-checkout';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -104,15 +106,15 @@ async function notifyCheckout(customer: AvaCustomerRecord, sessionId: string) {
   const planKey = customer.plan && isAvaPlanKey(customer.plan) ? customer.plan : null;
   const plan = planKey ? AVA_PLANS[planKey] : null;
   const link = avaOnboardingUrl(sessionId, customer.plan || undefined);
-  const planLabel = plan?.label || customer.plan || 'Ava';
+  const planLabel = plan?.label || customer.plan || 'Executive Receptionist';
   const priceLabel = plan?.monthlyLabel || '';
   const minutes = customer.included_minutes ?? plan?.minutes;
 
   if (customer.email && !customer.buyer_onboarding_email_sent_at) {
     await sendResendEmail({
       to: customer.email,
-      subject: `Finish setting up Ava ${planLabel}`,
-      html: `<div style="font-family:Arial,sans-serif;max-width:640px;margin:auto;color:#17211b"><h1>Your Ava trial is started</h1><p>Thanks for starting Ava ${escapeHtml(planLabel)}${priceLabel ? ` (${escapeHtml(priceLabel)}/mo after the 7-day trial)` : ''}. Setup fee is $0.</p><p><a href="${escapeHtml(link)}">Finish setup</a> so we can build your receptionist from your hours, services, and call rules.</p><p>Cole attaches the phone number after you submit the form. Ava is not answering your business line until that number is connected and you pass a test call.</p></div>`,
+      subject: `Finish setting up Executive Receptionist ${planLabel}`,
+      html: `<div style="font-family:Arial,sans-serif;max-width:640px;margin:auto;color:#17211b"><h1>Your Executive Receptionist trial is started</h1><p>Thanks for starting Executive Receptionist ${escapeHtml(planLabel)}${priceLabel ? ` (${escapeHtml(priceLabel)}/mo after the 7-day trial)` : ''}. Setup fee is $0.</p><p><a href="${escapeHtml(link)}">Finish setup</a> so we can build your receptionist from your hours, services, and call rules.</p><p>Cole attaches the phone number after you submit the form. Executive Receptionist is not answering your business line until that number is connected and you pass a test call.</p></div>`,
     });
     await markAvaCustomerNotified(customer.id, 'buyer_onboarding_email_sent_at');
     customer.buyer_onboarding_email_sent_at = new Date().toISOString();
@@ -125,8 +127,8 @@ async function notifyCheckout(customer: AvaCustomerRecord, sessionId: string) {
     await sendResendEmail({
       to: avaOwnerEmail(),
       replyTo: customer.email || undefined,
-      subject: `New Ava checkout — ${planLabel}${customer.email ? ` — ${customer.email}` : ''}`,
-      html: `<div style="font-family:Arial,sans-serif;max-width:640px;margin:auto;color:#17211b"><h1>New Ava checkout</h1><table style="border-collapse:collapse;width:100%"><tr><td><b>Plan</b></td><td>${escapeHtml(planLabel)}</td></tr><tr><td><b>Status</b></td><td>${escapeHtml(customer.subscription_status)}</td></tr><tr><td><b>Included minutes</b></td><td>${escapeHtml(minutes == null ? 'Not on the session' : String(minutes))}</td></tr><tr><td><b>Buyer</b></td><td>${escapeHtml(customer.email || 'No email on the Checkout Session')}</td></tr><tr><td><b>Name</b></td><td>${escapeHtml(customer.name || 'Not provided')}</td></tr><tr><td><b>Session</b></td><td>${escapeHtml(sessionId)}</td></tr></table><p><a href="${escapeHtml(link)}">Onboarding link</a></p><p>Phone setup stays manual. Use <a href="https://github.com/DealPatrol/AI-Business-Workforce/blob/main/docs/AVA_PHONE_SETUP_RUNBOOK.md">docs/AVA_PHONE_SETUP_RUNBOOK.md</a> after they submit the form.</p></div>`,
+      subject: `New Executive Receptionist checkout — ${planLabel}${customer.email ? ` — ${customer.email}` : ''}`,
+      html: `<div style="font-family:Arial,sans-serif;max-width:640px;margin:auto;color:#17211b"><h1>New Executive Receptionist checkout</h1><table style="border-collapse:collapse;width:100%"><tr><td><b>Plan</b></td><td>${escapeHtml(planLabel)}</td></tr><tr><td><b>Status</b></td><td>${escapeHtml(customer.subscription_status)}</td></tr><tr><td><b>Included minutes</b></td><td>${escapeHtml(minutes == null ? 'Not on the session' : String(minutes))}</td></tr><tr><td><b>Buyer</b></td><td>${escapeHtml(customer.email || 'No email on the Checkout Session')}</td></tr><tr><td><b>Name</b></td><td>${escapeHtml(customer.name || 'Not provided')}</td></tr><tr><td><b>Session</b></td><td>${escapeHtml(sessionId)}</td></tr></table><p><a href="${escapeHtml(link)}">Onboarding link</a></p><p>Phone setup stays manual. Use <a href="https://github.com/DealPatrol/AI-Business-Workforce/blob/main/docs/AVA_PHONE_SETUP_RUNBOOK.md">docs/AVA_PHONE_SETUP_RUNBOOK.md</a> after they submit the form.</p></div>`,
     });
     await markAvaCustomerNotified(customer.id, 'owner_checkout_email_sent_at');
   }
@@ -134,6 +136,26 @@ async function notifyCheckout(customer: AvaCustomerRecord, sessionId: string) {
 
 async function handleCheckoutCompleted(object: Record<string, unknown>) {
   const metadata = asMetadata(object.metadata);
+  // Legacy founding sessions used product=yardproof. Current postcard payments use yardmailer.
+  // Neither is an Executive Receptionist subscription.
+  if (isPostcardCheckoutProduct(metadata.product)) {
+    try {
+      await recordPostcardOrder({
+        sessionId: asString(object.id),
+        customerId: stripeId(object.customer),
+        email: customerEmail(object),
+        product: metadata.product,
+        size: metadata.size || '',
+        quantity: readCount(metadata.quantity),
+        setupCents: readCount(metadata.setup_cents) ?? 0,
+        setupCharged: postcardSetupWasCharged(metadata.product, metadata),
+        paymentStatus: asString(object.payment_status),
+      });
+    } catch (error) {
+      console.error('Could not store postcard order', error);
+    }
+    return { skipped: true as const, product: metadata.product };
+  }
   if (metadata.product !== 'ava') {
     return { skipped: true as const };
   }
@@ -187,6 +209,9 @@ async function readSubscriptionStatus(subscriptionId: string, fallback: string) 
 
 async function handleSubscriptionChange(object: Record<string, unknown>, deleted: boolean) {
   const metadata = asMetadata(object.metadata);
+  if (isPostcardCheckoutProduct(metadata.product)) {
+    return { skipped: true as const, product: metadata.product };
+  }
   if (metadata.product && metadata.product !== 'ava') {
     return { skipped: true as const };
   }

@@ -18,9 +18,13 @@ export function readGa4Id() {
   return match(process.env.NEXT_PUBLIC_GA4_ID, GA4_ID);
 }
 
-/** Meta Pixel ID. Empty when unset or not numeric. */
+/**
+ * Meta Pixel ID from META_PIXEL_ID or NEXT_PUBLIC_META_PIXEL_ID.
+ * Empty when both are unset or not numeric. Safe to call from a Server Component.
+ * Client bundles do not receive META_PIXEL_ID; the browser tag is injected on the server.
+ */
 export function readMetaPixelId() {
-  return match(process.env.NEXT_PUBLIC_META_PIXEL_ID, META_PIXEL_ID);
+  return match(process.env.META_PIXEL_ID, META_PIXEL_ID) || match(process.env.NEXT_PUBLIC_META_PIXEL_ID, META_PIXEL_ID);
 }
 
 export function readGoogleAdsOnboardingLabel() {

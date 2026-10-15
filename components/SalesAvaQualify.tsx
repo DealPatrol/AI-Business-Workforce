@@ -77,7 +77,7 @@ function SalesAvaQualifyContent() {
       setCallState((s) => (s === 'processing' ? s : 'ready'));
     },
     onError: (message: unknown) => {
-      setError(typeof message === 'string' ? message : 'Ava could not continue the call.');
+      setError(typeof message === 'string' ? message : 'Executive Receptionist could not continue the call.');
       setCallState((s) => (s === 'processing' ? s : 'ready'));
     },
   });
@@ -89,14 +89,14 @@ function SalesAvaQualifyContent() {
       const res = await fetch('/api/ava/elevenlabs?mode=sales', { cache: 'no-store' });
       const data = await res.json();
       if (!res.ok || !data.signedUrl) {
-        throw new Error(data?.error || data?.next || 'Sales Ava is not configured yet.');
+        throw new Error(data?.error || data?.next || 'Executive Receptionist is not configured yet.');
       }
       signedUrl.current = data.signedUrl;
       preparedConversationId.current = data.conversationId || null;
       setCallState('ready');
     } catch (e: unknown) {
       const err = e as { message?: string };
-      setError(err?.message || 'Sales Ava is not ready yet.');
+      setError(err?.message || 'Executive Receptionist is not ready yet.');
       setCallState('idle');
     }
   }
@@ -118,7 +118,7 @@ function SalesAvaQualifyContent() {
     try {
       if (!signedUrl.current) {
         await prepareSession();
-        if (!signedUrl.current) throw new Error('Ava is still preparing. Try once more.');
+        if (!signedUrl.current) throw new Error('Executive Receptionist is still preparing. Try once more.');
       }
       if (!navigator.mediaDevices?.getUserMedia) {
         const unsupported = new Error(
@@ -146,7 +146,7 @@ function SalesAvaQualifyContent() {
         setMicBlocked(true);
         setError('Microphone access was blocked, so the live voice demo can\u2019t start here.');
       } else {
-        setError(err?.message || 'Unable to start Sales Ava.');
+        setError(err?.message || 'Unable to start Executive Receptionist.');
       }
       setCallState('ready');
     }
@@ -161,7 +161,7 @@ function SalesAvaQualifyContent() {
       });
       if (r.status === 202) continue;
       const d = await r.json();
-      if (!r.ok) throw new Error(d.error || 'Could not process the Sales Ava conversation.');
+      if (!r.ok) throw new Error(d.error || 'Could not process the Executive Receptionist conversation.');
 
       const collected = (d.collected || {}) as Record<string, unknown>;
       const q = (d.qualification || {}) as Record<string, string | null>;
@@ -212,7 +212,7 @@ function SalesAvaQualifyContent() {
           q.planInterest ||
           pickCollected(collected, 'planInterest', 'plan_interest', 'plan') ||
           null,
-        summary: d.summary || 'Sales Ava qualification conversation completed.',
+        summary: d.summary || 'Executive Receptionist qualification conversation completed.',
       };
 
       const save = await fetch('/api/ava/sales/qualify', {
@@ -281,10 +281,10 @@ function SalesAvaQualifyContent() {
   return (
     <section id="talk-to-ava" className="demo-shell">
       <div className="demo-copy">
-        <span className="kicker">TALK TO AVA · SALES QUALIFY</span>
-        <h2>Talk to Ava — she&apos;ll set up your receptionist</h2>
+        <span className="kicker">TALK TO Executive Receptionist · SALES QUALIFY</span>
+        <h2>Talk to Executive Receptionist — she&apos;ll set up your receptionist</h2>
         <p>
-          Call Ava like your customers will. She&apos;ll ask the setup questions, then you can start a
+          Call Executive Receptionist like your customers will. She&apos;ll ask the setup questions, then you can start a
           plan or continue to onboarding with answers prefilled.
         </p>
         <ul>
@@ -302,14 +302,14 @@ function SalesAvaQualifyContent() {
           </li>
         </ul>
         <p className="demo-note">
-          <ShieldCheck /> Ava is AI. She&apos;ll disclose that to your callers too. No dial-in number —
+          <ShieldCheck /> Executive Receptionist is AI. She&apos;ll disclose that to your callers too. No dial-in number —
           browser mic only.
         </p>
       </div>
 
       <div className="live-card">
         <div className="ai-disclosure">
-          <Sparkles /> Sales Ava · qualify your shop
+          <Sparkles /> Executive Receptionist · qualify your shop
         </div>
         <div className="ava-head">
           <div className="avatar">
@@ -317,7 +317,7 @@ function SalesAvaQualifyContent() {
             <i />
           </div>
           <div>
-            <h3>Ava</h3>
+            <h3>Executive Receptionist</h3>
             <p>
               Front Porch Growth ·{' '}
               {active
@@ -390,7 +390,7 @@ function SalesAvaQualifyContent() {
               >
                 {callState === 'preparing' ? (
                   <>
-                    <Loader2 className="spin" /> Preparing Ava…
+                    <Loader2 className="spin" /> Preparing Executive Receptionist…
                   </>
                 ) : callState === 'connecting' ? (
                   <>
@@ -402,7 +402,7 @@ function SalesAvaQualifyContent() {
                   </>
                 ) : (
                   <>
-                    <PhoneCall /> Talk to Ava — she&apos;ll set up your receptionist
+                    <PhoneCall /> Talk to Executive Receptionist — she&apos;ll set up your receptionist
                   </>
                 )}
               </button>
@@ -410,8 +410,8 @@ function SalesAvaQualifyContent() {
             <small>
               {active
                 ? conversation.isSpeaking
-                  ? 'Ava is speaking…'
-                  : 'Ava is listening…'
+                  ? 'Executive Receptionist is speaking…'
+                  : 'Executive Receptionist is listening…'
                 : avaPricingSummaryCopy()}
             </small>
             {error && !micBlocked && <p className="call-error">{error}</p>}
@@ -424,7 +424,7 @@ function SalesAvaQualifyContent() {
                   {error}
                 </p>
                 <p style={{ margin: 0, fontWeight: 600 }}>
-                  No microphone? Hear Ava handle a real customer call instead.
+                  No microphone? Hear Executive Receptionist handle a real customer call instead.
                 </p>
                 <video
                   controls

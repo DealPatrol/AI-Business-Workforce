@@ -5,6 +5,7 @@ import {
   getSiteUrl,
   hostnameOf,
   isAvaStandaloneHost,
+  isExecutiveReceptionistHost,
   isLegacyHostPagePath,
 } from '@/lib/site-url';
 
@@ -49,9 +50,26 @@ function standaloneAvaResponse(request: NextRequest) {
   return null;
 }
 
+/**
+ * executivereceptionist.com serves the landing at /receptionist for the root
+ * path only. Every other path (onboarding, checkout success/cancel, login, etc.)
+ * passes through so post-checkout flows are not replaced by the marketing page.
+ */
+function executiveReceptionistRewrite(request: NextRequest) {
+  if (!isExecutiveReceptionistHost(requestHost(request))) return null;
+  const { pathname } = request.nextUrl;
+  if (pathname !== '/') return null;
+  const url = request.nextUrl.clone();
+  url.pathname = '/receptionist';
+  return NextResponse.rewrite(url);
+}
+
 export async function middleware(request: NextRequest) {
   const redirected = legacyHostRedirect(request);
   if (redirected) return redirected;
+
+  const executive = executiveReceptionistRewrite(request);
+  if (executive) return executive;
 
   const standalone = standaloneAvaResponse(request);
   if (standalone) return standalone;

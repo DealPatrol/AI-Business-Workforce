@@ -1,10 +1,11 @@
 # Front Porch Growth
 
-> Property-based postcard campaigns for home service businesses (each card shows the homeowner a concept for their own home, with a QR estimate link) and Ava, an AI receptionist that answers calls for small businesses. Run by Cole Collins.
+> Property-based postcard campaigns for home service businesses (each card shows the homeowner a concept for their own home, with a QR estimate link) and Executive Receptionist, an AI receptionist that answers calls for small businesses. Run by Cole Collins.
 
 ## Products
 - [Postcard campaigns](https://frontporchgrowth.com/postcards)
-- [Ava AI receptionist](https://frontporchgrowth.com/ava)
+- [Executive Receptionist](https://frontporchgrowth.com/receptionist)
+- [Executive Receptionist guides](https://frontporchgrowth.com/ava)
 - [Receptionist demo](https://frontporchgrowth.com/receptionist-demo)
 - [Pricing](https://frontporchgrowth.com/pricing)
 

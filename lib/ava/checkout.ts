@@ -76,14 +76,14 @@ function messageFor(outcome: AvaCheckoutOutcome, subscriptionStatus: string) {
     case 'unpaid':
       return 'Stripe does not report this Checkout Session as paid or trialing.';
     case 'not_ava':
-      return 'This session is not identified as Ava checkout; use Cole’s manual trigger after review.';
+      return 'This session is not identified as Executive Receptionist checkout; use Cole’s manual trigger after review.';
     case 'ok':
       return subscriptionStatus === 'trialing'
-        ? 'Stripe confirmed a trialing Ava Checkout Session.'
-        : 'Stripe confirmed a paid Ava Checkout Session.';
+        ? 'Stripe confirmed a trialing Executive Receptionist Checkout Session.'
+        : 'Stripe confirmed a paid Executive Receptionist Checkout Session.';
     default: {
       const unexpected: never = outcome;
-      throw new Error(`Unexpected Ava checkout outcome: ${unexpected}`);
+      throw new Error(`Unexpected Executive Receptionist checkout outcome: ${unexpected}`);
     }
   }
 }
