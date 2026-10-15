@@ -5,7 +5,7 @@ import styles from '@/components/suite/suite.module.css';
 
 const title = 'Terms | Front Porch Growth';
 const description =
-  'Terms for Front Porch Growth: YardMailer postcards at $389 setup + $129/month, Executive Receptionist plans, Lead Finder, and the invoicing waitlist.';
+  'Terms for Front Porch Growth: YardMailer postcards at $127 setup plus per card, Executive Receptionist plans, Lead Finder, and the invoicing waitlist.';
 
 export const metadata: Metadata = {
   title: { absolute: title },
@@ -35,11 +35,11 @@ export default function TermsPage() {
         </p>
         <h2>Postcards</h2>
         <p>
-          The YardMailer founding offer is $389 setup + $129/month for the managed postcard campaign described on the postcards page. Demo Blast 10 is $64 when a payment link is connected. You approve the concept, audience, and mailing costs before anything is mailed. Checkout is handled by Stripe.
+          YardMailer postcards are a $127 one-time setup, charged once per customer, plus $3.54 per 4×6 card or $4.95 per 6×9 card. Postage, printing, and mailing are included. Orders start at 100 cards. AI designs the card, then it is printed and mailed directly to the homeowners. Demo Blast 10 is $64 when a payment link is connected. Checkout is a one-time Stripe payment. There is no monthly postcard plan.
         </p>
         <h2>Executive Receptionist</h2>
         <p>
-          Executive Receptionist plans are Starter $77/month, Growth $168/month, and Pro $324/month, each with a 7-day Stripe trial and $0 setup. Those prices are Executive Receptionist’s. They are not the postcard founding offer. A phone number is attached by a person after setup. The browser demo is not a live business line.
+          Executive Receptionist plans are Starter $77/month, Growth $168/month, and Pro $324/month, each with a 7-day Stripe trial and $0 setup. Those prices are Executive Receptionist’s. They are not the postcard prices. A phone number is attached by a person after setup. The browser demo is not a live business line.
         </p>
         <h2>Lead Finder</h2>
         <p>

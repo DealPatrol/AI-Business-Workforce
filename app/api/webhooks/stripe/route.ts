@@ -15,7 +15,9 @@ import {
   escapeHtml,
   sendResendEmail,
 } from '@/lib/ava/mail';
-import { STRIPE_API_VERSION } from '@/lib/stripe-checkout';
+import { recordPostcardOrder } from '@/lib/postcards/orders';
+import { postcardSetupWasCharged } from '@/lib/postcards/setup-fee';
+import { isPostcardCheckoutProduct, STRIPE_API_VERSION } from '@/lib/stripe-checkout';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -134,6 +136,26 @@ async function notifyCheckout(customer: AvaCustomerRecord, sessionId: string) {
 
 async function handleCheckoutCompleted(object: Record<string, unknown>) {
   const metadata = asMetadata(object.metadata);
+  // Legacy founding sessions used product=yardproof. Current postcard payments use yardmailer.
+  // Neither is an Executive Receptionist subscription.
+  if (isPostcardCheckoutProduct(metadata.product)) {
+    try {
+      await recordPostcardOrder({
+        sessionId: asString(object.id),
+        customerId: stripeId(object.customer),
+        email: customerEmail(object),
+        product: metadata.product,
+        size: metadata.size || '',
+        quantity: readCount(metadata.quantity),
+        setupCents: readCount(metadata.setup_cents) ?? 0,
+        setupCharged: postcardSetupWasCharged(metadata.product, metadata),
+        paymentStatus: asString(object.payment_status),
+      });
+    } catch (error) {
+      console.error('Could not store postcard order', error);
+    }
+    return { skipped: true as const, product: metadata.product };
+  }
   if (metadata.product !== 'ava') {
     return { skipped: true as const };
   }
@@ -187,6 +209,9 @@ async function readSubscriptionStatus(subscriptionId: string, fallback: string) 
 
 async function handleSubscriptionChange(object: Record<string, unknown>, deleted: boolean) {
   const metadata = asMetadata(object.metadata);
+  if (isPostcardCheckoutProduct(metadata.product)) {
+    return { skipped: true as const, product: metadata.product };
+  }
   if (metadata.product && metadata.product !== 'ava') {
     return { skipped: true as const };
   }

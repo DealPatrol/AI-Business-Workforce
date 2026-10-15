@@ -4,7 +4,7 @@ import { FormEvent, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Check, Loader2, Mail, Sparkles } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
-import { FOUNDING_CTA, foundingCheckoutHref } from '@/lib/payments';
+import { POSTCARD_FULFILLMENT_COPY, POSTCARD_PACKAGES_HREF, POSTCARD_PRICE_SUMMARY } from '@/lib/postcards/pricing';
 
 const CONTACT_EMAIL = 'colecollins763@gmail.com';
 
@@ -92,34 +92,34 @@ export default function FoundingRequestForm({ checkoutState: checkoutFromServer 
       </nav>
       <section>
         <div className="request-copy">
-          <span>FOUNDING CUSTOMER REQUEST</span>
-          <h1>Let&apos;s build the first campaign with you.</h1>
+          <span>POSTCARD ORDER</span>
+          <h1>Tell Cole where to send the cards.</h1>
           <p>
-            Tell Cole about your business and service area. No account or payment is required to
-            request a spot. He&apos;ll reply personally to confirm fit, scope, and any pass-through
-            campaign costs before you pay.
+            {POSTCARD_FULFILLMENT_COPY} Postage, printing, and mailing are included in the per-card
+            price. The $127 setup fee is included unless you are signed in and a paid setup is already on your account.
+            You can pay from the package page, or send this form first and Cole will reply.
           </p>
           <div>
             <p>
-              <Check /> $389 setup + $129/month for the managed campaign
+              <Check /> {POSTCARD_PRICE_SUMMARY}
             </p>
             <p>
-              <Check /> Materials, margin, and campaign setup tailored to your business
+              <Check /> {POSTCARD_FULFILLMENT_COPY}
             </p>
           </div>
           {checkoutState === 'success' && (
             <p className="notice">
-              Stripe checkout finished for the YardMailer Founding Plan at $389 setup + $129/month. Send your
-              business details below so Cole can start the campaign.
+              Stripe checkout finished. Your YardMailer order is a one-time charge: the $127 setup fee plus the cards
+              you selected. Send your business details below so Cole can start the campaign. {POSTCARD_FULFILLMENT_COPY}
             </p>
           )}
           {checkoutState === 'error' && (
             <p className="error">
-              Checkout could not be started. Try the payment button again, or email Cole.
+              Checkout could not be started. Choose a package again, or email Cole.
             </p>
           )}
-          <a className="payment-link" href={foundingCheckoutHref('/founding')}>
-            {FOUNDING_CTA}
+          <a className="payment-link" href={POSTCARD_PACKAGES_HREF}>
+            Choose a postcard package
           </a>
           <small>
             Want to confirm fit first?{' '}

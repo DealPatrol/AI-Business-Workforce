@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { FOUNDING_MONTHLY_CENTS } from '@/lib/stripe-checkout';
 import { getSiteUrl, isExecutiveReceptionistHost } from '@/lib/site-url';
 import {
   LIST_UNSUBSCRIBE_POST,
@@ -55,7 +54,6 @@ describe('public site url', () => {
     delete process.env.NEXT_PUBLIC_SITE_URL;
     delete process.env.NEXT_PUBLIC_APP_URL;
     assert.equal(getSiteUrl(), 'https://frontporchgrowth.com');
-    assert.equal(FOUNDING_MONTHLY_CENTS, 12900);
     assert.equal(isExecutiveReceptionistHost('executivereceptionist.com'), true);
     assert.equal(isExecutiveReceptionistHost('www.executivereceptionist.com'), true);
     assert.equal(isExecutiveReceptionistHost('Executivereceptionist.com:443'), true);

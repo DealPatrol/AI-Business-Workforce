@@ -1,10 +1,9 @@
-export const FOUNDING_CTA = 'Start for $389 + $129/month';
-
-/** Checkout for the YardMailer founding plan: $389 setup and $129/month. */
-export function foundingCheckoutHref(cancelPath?: string) {
-  if (!cancelPath || cancelPath === '/') return '/api/checkout?offer=founding';
-  return `/api/checkout?offer=founding&cancel=${encodeURIComponent(cancelPath)}`;
-}
+export {
+  POSTCARD_CTA,
+  POSTCARD_PACKAGES_HREF,
+  POSTCARD_PRICE_SUMMARY,
+  postcardCheckoutHref,
+} from '@/lib/postcards/pricing';
 
 const DEMO10_CONTACT_EMAIL = 'colecollins763@gmail.com';
 

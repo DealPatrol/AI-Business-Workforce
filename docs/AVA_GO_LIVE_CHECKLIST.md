@@ -2,7 +2,7 @@
 
 Do these in order before a landscaper (or any home-service shop) pays for Executive Receptionist. Nothing here is done by the app deploy itself. Do not commit secrets.
 
-Prices already in the product: Starter $77/mo (300 minutes), Growth $168/mo (800 minutes), Pro $324/mo (1,800 minutes). Each checkout is a 7-day Stripe trial with $0 setup. The YardMailer founding postcard offer is $389 setup + $129/mo and is a different product.
+Prices already in the product: Starter $77/mo (300 minutes), Growth $168/mo (800 minutes), Pro $324/mo (1,800 minutes). Each checkout is a 7-day Stripe trial with $0 setup. YardMailer postcards are a different product: a one-time $127 setup plus $3.54 per 4×6 card or $4.95 per 6×9 card. There is no monthly postcard plan.
 
 ## 1. Apply the database migration
 
@@ -30,7 +30,7 @@ On Vercel Production (and Preview if you test there):
 
 Optional Dashboard price IDs (`STRIPE_AVA_STARTER_PRICE_ID`, `STRIPE_AVA_GROWTH_PRICE_ID`, `STRIPE_AVA_PRO_PRICE_ID`) are not required. Checkout uses inline prices at $77 / $168 / $324 when they are blank. If you do set them, the Stripe prices must match those amounts.
 
-If `STRIPE_FOUNDING_MONTHLY_PRICE_ID` or `STRIPE_FOUNDING_SETUP_PRICE_ID` is set, point them at new Stripe prices for $129/month and $389 setup. Blank IDs use inline amounts. Do not edit the live Stripe products that existing subscriptions already use.
+Postcard checkout does not read `STRIPE_FOUNDING_MONTHLY_PRICE_ID` or `STRIPE_FOUNDING_SETUP_PRICE_ID`. Optional one-time price IDs are `STRIPE_POSTCARD_SETUP_PRICE_ID` ($127), `STRIPE_POSTCARD_4X6_PRICE_ID` ($3.54), and `STRIPE_POSTCARD_6X9_PRICE_ID` ($4.95). Blank IDs use inline amounts. Do not edit the live Stripe products that existing subscriptions already use.
 
 ## 3. Stripe webhook
 

@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Check, Phone, MessageSquare, PhoneCall } from 'lucide-react';
+import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
+import { AVA_PLAN_KEYS, AVA_PLANS, avaTrialThenPriceCopy } from '@/lib/ava/pricing';
 import HvacContactForm from './contact-form';
 import './hvac.css';
 
@@ -9,59 +11,21 @@ const COLE_TEL = 'tel:+12565953354';
 const COLE_SMS = 'sms:+12565953354';
 
 export const metadata: Metadata = {
-  title: 'Ava for HVAC | Never Miss a No-Heat or No-Cool Call | Front Porch Growth',
+  title: 'Executive Receptionist for HVAC | Never Miss a No-Heat or No-Cool Call | Front Porch Growth',
   description:
-    'Ava answers your HVAC calls 24/7, takes the details on no-heat and no-cool emergencies, books tune-ups, and texts you a summary. Built for north Alabama heating and air shops. 30-day free trial.',
+    'Executive Receptionist answers your HVAC calls 24/7, takes the details on no-heat and no-cool emergencies, and texts you a summary. Free 7-day trial, then $77, $168, or $324 a month. $0 setup.',
   alternates: { canonical: '/hvac' },
   openGraph: {
-    title: 'Ava for HVAC: Never Miss Another Call',
+    title: 'Executive Receptionist for HVAC: Never Miss Another Call',
     description:
-      'An AI receptionist for heating and air shops. Catches after-hours and overflow calls, sends urgent ones to your on-call tech. 30-day free trial.',
+      'An AI receptionist for heating and air shops. Catches after-hours and overflow calls and sends urgent ones to your on-call tech. Free 7-day trial, $0 setup.',
     url: '/hvac',
     siteName: 'Front Porch Growth',
     type: 'website',
   },
 };
 
-const plans = [
-  {
-    name: 'Never Miss a Call',
-    setup: '$297',
-    monthly: '$297',
-    minutes: '~300 min',
-    features: [
-      'Ava answers after-hours and overflow calls',
-      'Missed-call text-back',
-      'Call summaries texted to you',
-      'Urgent calls sent to your on-call phone',
-    ],
-  },
-  {
-    name: 'Booked & Reviewed',
-    setup: '$497',
-    monthly: '$497',
-    minutes: '~600 min',
-    featured: true,
-    features: [
-      'Everything in Never Miss a Call',
-      'Books jobs on your calendar',
-      'Automatic Google review requests',
-      'Monthly call report',
-    ],
-  },
-  {
-    name: 'Front Porch Complete',
-    setup: '$1,497',
-    monthly: '$797',
-    minutes: '~1,200 min',
-    features: [
-      'Everything in Booked & Reviewed',
-      'Simple website for your shop',
-      'Google Business Profile cleanup',
-      'Seasonal tune-up reminder texts',
-    ],
-  },
-];
+const plans = AVA_PLAN_KEYS.map((key) => AVA_PLANS[key]);
 
 export default function HvacPage() {
   return (
@@ -84,12 +48,12 @@ export default function HvacPage() {
         <h1>Never miss another no-heat call.</h1>
         <p className="hvac-lede">
           When it&apos;s 28 degrees out and the furnace quits, folks call the next company on the list
-          if nobody picks up. Ava answers every call, day or night, gets the name, address, and
+          if nobody picks up. Executive Receptionist answers every call, day or night, gets the name, address, and
           what&apos;s wrong, and sends the urgent ones straight to your on-call tech.
         </p>
         <div className="hvac-cta-row">
           <a className="hvac-btn hvac-btn-primary" href={DEMO_LINK} target="_blank" rel="noopener noreferrer">
-            <PhoneCall size={18} /> Talk to Ava now
+            <PhoneCall size={18} /> Talk to Executive Receptionist
           </a>
           <a className="hvac-btn hvac-btn-ghost" href={COLE_TEL}>
             <Phone size={18} /> Call Cole
@@ -99,7 +63,7 @@ export default function HvacPage() {
           </a>
         </div>
         <p className="hvac-small">
-          The demo plays Ava answering for &quot;Front Porch Heating &amp; Air,&quot; a made-up shop.
+          The demo plays Executive Receptionist answering for &quot;Front Porch Heating &amp; Air,&quot; a made-up shop.
           Try a no-heat emergency, a tune-up, or ask what a new unit costs. Works in your browser; allow
           the microphone.
         </p>
@@ -129,7 +93,7 @@ export default function HvacPage() {
       </section>
 
       <section className="hvac-how">
-        <h2>What Ava does on your line</h2>
+        <h2>What Executive Receptionist does on your line</h2>
         <ul>
           <li>
             <Check size={18} /> <b>No heat / no cool:</b> takes name, address, callback number, the
@@ -158,34 +122,43 @@ export default function HvacPage() {
         <h2>Plans</h2>
         <div className="hvac-plan-grid">
           {plans.map((plan) => (
-            <article key={plan.name} className={plan.featured ? 'hvac-plan featured' : 'hvac-plan'}>
+            <article key={plan.key} className={plan.featured ? 'hvac-plan featured' : 'hvac-plan'}>
               {plan.featured && <span className="hvac-badge">Most popular</span>}
-              <h3>{plan.name}</h3>
+              <h3>{plan.label}</h3>
               <p className="hvac-price">
-                {plan.monthly}
+                {plan.monthlyLabel}
                 <small>/mo</small>
               </p>
-              <p className="hvac-setup">{plan.setup} one-time setup</p>
+              <p className="hvac-setup">7-day free trial · $0 setup</p>
               <ul>
                 {plan.features.map((feature) => (
                   <li key={feature}>
                     <Check size={16} /> {feature}
                   </li>
                 ))}
-                <li className="hvac-minutes">Includes {plan.minutes} of calls (estimated)</li>
+                <li className="hvac-minutes">
+                  {plan.minutes.toLocaleString('en-US')} voice minutes / month · {plan.overageLabel}
+                </li>
               </ul>
+              <TrackedCheckoutLink
+                className="hvac-btn hvac-btn-primary"
+                href={`/api/checkout?plan=${plan.key}`}
+                plan={plan.key}
+              >
+                Start free trial
+              </TrackedCheckoutLink>
             </article>
           ))}
         </div>
         <div className="hvac-trial">
-          <h3>30-day free trial</h3>
+          <h3>7-day free trial</h3>
           <p>
-            If Ava doesn&apos;t catch at least 3 calls you would have missed in the first 30 days, you
-            pay nothing. Month-to-month after that, no contract, and you keep your phone number.
+            {avaTrialThenPriceCopy('starter')} Cancel anytime. Included minutes reset monthly, and overage bills at
+            the plan&apos;s published per-minute rate.
           </p>
           <p>
-            <b>Founding offer:</b> the first 10 shops get the setup fee waived and their monthly price
-            locked for 12 months.
+            Same terms as the Executive Receptionist rate card. Special telephony or integration requirements are
+            quoted before launch. Month-to-month after the trial, and you keep your phone number.
           </p>
         </div>
       </section>
@@ -195,11 +168,11 @@ export default function HvacPage() {
           <h2>Talk to a real person</h2>
           <p>
             I&apos;m Cole Collins, based in Hanceville. Call or text me at{' '}
-            <a href={COLE_TEL}>256-595-3354</a> and I&apos;ll set Ava up on your line myself, or leave
+            <a href={COLE_TEL}>256-595-3354</a> and I&apos;ll set Executive Receptionist up on your line myself, or leave
             your info here and I&apos;ll call you back.
           </p>
           <a className="hvac-btn hvac-btn-primary" href={DEMO_LINK} target="_blank" rel="noopener noreferrer">
-            <PhoneCall size={18} /> Talk to Ava now
+            <PhoneCall size={18} /> Talk to Executive Receptionist
           </a>
         </div>
         <HvacContactForm />

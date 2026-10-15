@@ -1,11 +1,12 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
+import { AVA_PLAN_KEYS, AVA_PLANS } from '@/lib/ava/pricing';
 
 const CONTACT_EMAIL = 'colecollins763@gmail.com';
 
 function mailtoFallback(data: FormData) {
-  const subject = encodeURIComponent(`HVAC Ava trial: ${String(data.get('business') || 'New shop')}`);
+  const subject = encodeURIComponent(`HVAC Executive Receptionist trial: ${String(data.get('business') || 'New shop')}`);
   const body = encodeURIComponent(
     [
       `Shop: ${data.get('business') || ''}`,
@@ -87,11 +88,17 @@ export default function HvacContactForm() {
       </label>
       <label>
         Plan you&apos;re interested in
-        <select name="interest" defaultValue="Ava HVAC: Booked & Reviewed" required>
-          <option>Ava HVAC: Never Miss a Call</option>
-          <option>Ava HVAC: Booked &amp; Reviewed</option>
-          <option>Ava HVAC: Front Porch Complete</option>
-          <option>Ava HVAC: Not sure yet</option>
+        <select name="interest" defaultValue="Executive Receptionist Growth — $168/mo" required>
+          {AVA_PLAN_KEYS.map((key) => {
+            const plan = AVA_PLANS[key];
+            const label = `Executive Receptionist ${plan.label} — ${plan.monthlyLabel}/mo`;
+            return (
+              <option key={plan.key} value={label}>
+                {label}
+              </option>
+            );
+          })}
+          <option value="Not sure yet">Not sure yet</option>
         </select>
       </label>
       <label>
@@ -101,7 +108,7 @@ export default function HvacContactForm() {
       <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hvac-hp" aria-hidden="true" />
       {error && <p className="hvac-error">{error}</p>}
       <button className="hvac-btn hvac-btn-primary" type="submit" disabled={status === 'sending'}>
-        {status === 'sending' ? 'Sending...' : 'Start my free trial'}
+        {status === 'sending' ? 'Sending...' : 'Request a callback'}
       </button>
     </form>
   );
