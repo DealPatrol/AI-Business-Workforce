@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
       .eq('id', recipient.id);
 
     // Deploy-order safety: the UI and existing review workflow remain usable
-    // before the Demo 10 migration adds change_notes.
+    // before 20260925131044_demo_blast_10.sql adds change_notes.
     if (error && MISSING_COLUMN_CODES.has(error.code)) {
       delete patch.change_notes;
       const fallback = await auth.ctx.admin

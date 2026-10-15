@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         error: migrationMissing
-          ? 'Campaign approval is unavailable until the Demo Blast 10 migration is applied.'
+          ? 'Campaign approval is unavailable until the campaign review migration is applied.'
           : approvalError.message,
       },
       { status: migrationMissing ? 503 : approvalError.code === '23514' ? 409 : 500 },

@@ -256,7 +256,7 @@ export default function ReviewBoard({ campaign, initialRecipients }: Props) {
     <section className={styles.board}>
       <div className={styles.titleRow}>
         <div>
-          <span>DEMO BLAST 10 · {profile.label.toUpperCase()}</span>
+          <span>{profile.label.toUpperCase()}</span>
           <h1>{campaign.name}</h1>
           <p>{campaign.businessName} · {approvedCount}/{recipients.length} cards approved</p>
         </div>
@@ -290,8 +290,8 @@ export default function ReviewBoard({ campaign, initialRecipients }: Props) {
 
       {!campaign.migrationReady && (
         <div className={styles.migrationNotice}>
-          Demo 10 metadata is not applied yet. Existing card review remains available; apply the
-          Demo Blast 10 migration before setting <code>ready_to_mail</code>.
+          Campaign review metadata is not applied yet. Existing card review remains available; apply the
+          campaign review migration before setting <code>ready_to_mail</code>.
         </div>
       )}
 

@@ -1,6 +1,6 @@
 # Front Porch Growth
 
-The public homepage is the Front Porch Growth suite at `/`: YardMailer postcards, Executive Receptionist, Lead Finder, and an invoicing waitlist. The previous YardMailer homepage is `/postcards`. Old anchors `/#how`, `/#demo10`, and `/#package` 308-redirect to `/postcards`. Apply `supabase/migrations/008_invoicing_waitlist.sql` before the invoicing form can save.
+The public homepage is the Front Porch Growth suite at `/`: YardMailer postcards, Executive Receptionist, Lead Finder, and an invoicing waitlist. The previous YardMailer homepage is `/postcards`. Old anchors `/#how` and `/#package` 308-redirect to those sections on `/postcards`. `/#demo10`, `/demo10`, and `/api/demo10-payment` 308-redirect to `/postcards`. Apply `supabase/migrations/008_invoicing_waitlist.sql` before the invoicing form can save.
 
 # YardMailer
 

@@ -35,7 +35,7 @@ export default function TermsPage() {
         </p>
         <h2>Postcards</h2>
         <p>
-          YardMailer postcards are a $127 one-time setup, charged once per customer, plus $3.54 per 4×6 card or $4.95 per 6×9 card. Postage, printing, and mailing are included. Orders start at 100 cards. AI designs the card, then it is printed and mailed directly to the homeowners. Demo Blast 10 is $64 when a payment link is connected. Checkout is a one-time Stripe payment. There is no monthly postcard plan.
+          YardMailer postcards are a $127 one-time setup, charged once per customer, plus $3.54 per 4×6 card or $4.95 per 6×9 card. Postage, printing, and mailing are included. Orders start at 100 cards. AI designs the card, then it is printed and mailed directly to the homeowners. Checkout is a one-time Stripe payment. There is no monthly postcard plan.
         </p>
         <h2>Executive Receptionist</h2>
         <p>

@@ -42,7 +42,6 @@ const rows = [
     `4×6 ${row.fourBySixLabel} · 6×9 ${row.sixByNineLabel}`,
   ]),
   ['Custom quantity', 'Minimum 100 cards, computed on the postcards page', 'Setup plus per card'],
-  ['Demo Blast 10', 'Up to 10 postcard concepts', '$64'],
   ['Executive Receptionist Starter', '300 voice minutes, 7-day trial, $0 setup', '$77/month'],
   ['Executive Receptionist Growth', '800 voice minutes, 7-day trial, $0 setup', '$168/month'],
   ['Executive Receptionist Pro', '1,800 voice minutes, 7-day trial, $0 setup', '$324/month'],

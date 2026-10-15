@@ -10,9 +10,10 @@ const nextConfig: NextConfig = {
     return [
       ...LEGACY_HOME_ANCHORS.map((anchor) => ({
         source: `/${anchor}`,
-        destination: `/postcards#${anchor}`,
+        destination: anchor === 'demo10' ? '/postcards' : `/postcards#${anchor}`,
         permanent: true,
       })),
+      { source: '/api/demo10-payment', destination: '/postcards', permanent: true },
       ...AVA_LEGACY_REDIRECTS.map(([source, destination]) => ({
         source: `/ava/${source}`,
         destination: `${base}/ava/${destination}`,
