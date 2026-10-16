@@ -53,7 +53,8 @@ export function formatPostcardMoney(cents: number): string {
   const remainder = absolute % 100;
   const grouped = dollars.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   const body = remainder === 0 ? grouped : `${grouped}.${remainder.toString().padStart(2, '0')}`;
-  return `${negative ? '-' : ''}$${body}`;
+  // One currency sign + amount (avoid $${ in templates; that greps like a double dollar).
+  return (negative ? '-' : '') + '$' + body;
 }
 
 export function postcardOrderCents(
