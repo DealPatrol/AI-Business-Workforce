@@ -162,7 +162,7 @@ export function buildAvaCheckoutParams(input: AvaCheckoutInput) {
     priceId: input.priceId,
     unitAmount: plan.monthlyCents,
     productName: plan.productName,
-    description: `${plan.minutes} included voice minutes/month; overage $${(plan.overageCents / 100).toFixed(2)}/minute.`,
+    description: `${plan.minutes} included voice minutes/month; overage ${'$' + (plan.overageCents / 100).toFixed(2)}/minute.`,
   });
   params.set('metadata[product]', 'ava');
   params.set('metadata[plan]', input.planKey);
