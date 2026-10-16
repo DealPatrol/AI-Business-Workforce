@@ -42,6 +42,8 @@ export function SuiteShell({ children }: { children: ReactNode }) {
       <footer className={styles.footer}>
         <p>Front Porch Growth · Cole · colecollins763@gmail.com</p>
         <nav>
+          <Link href="/missed-call">Missed-Call Text-Back</Link>
+          <Link href="/google-profile">Google Profile Setup</Link>
           <Link href="/pricing">Pricing</Link>
           <Link href="/terms">Terms</Link>
           <Link href="/privacy">Privacy</Link>
