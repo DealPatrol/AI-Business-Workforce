@@ -10,6 +10,7 @@ import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink'
 import { AVA_HOME_FAQS } from '@/lib/ava/home-faq';
 import { AVA_PLANS, avaTrialThenPriceCopy, type AvaPlanKey } from '@/lib/ava/pricing';
 import { avaProductNode, avaServiceNode, avaSoftwareNode, faqNode, jsonLdGraph } from '@/lib/ava/structured-data';
+import { LIVE_DEMO_PHONE_DISPLAY, LIVE_DEMO_PHONE_HREF } from '@/lib/ava/demo-phone';
 import { AVA_GUIDES } from '@/lib/ava/trade-pages';
 import { absoluteSiteUrl } from '@/lib/site-url';
 
@@ -38,11 +39,11 @@ const tradeGuides = AVA_GUIDES.filter((guide) => guide.kind === 'trade');
 const buyerGuides = AVA_GUIDES.filter((guide) => guide.kind !== 'trade');
 
 const callLog = [
-  { time: '7:42 PM', from: '(205) 555-0143', note: '“No cool — house is 88 degrees”' },
-  { time: '8:03 PM', from: '(256) 555-0117', note: '“Water heater leaking in the garage”' },
-  { time: '8:31 PM', from: '(205) 555-0192', note: '“Need an estimate on a new unit”' },
-  { time: '9:12 PM', from: '(256) 555-0164', note: '“Drain backing up into the tub”' },
-  { time: '9:47 PM', from: '(205) 555-0138', note: '“Storm took shingles off the roof”' },
+  { time: '7:42 PM', from: 'Homeowner · Cullman', note: '“No cool — house is 88 degrees”' },
+  { time: '8:03 PM', from: 'Homeowner · Decatur', note: '“Water heater leaking in the garage”' },
+  { time: '8:31 PM', from: 'New customer · Huntsville', note: '“Need an estimate on a new unit”' },
+  { time: '9:12 PM', from: 'Homeowner · Hanceville', note: '“Drain backing up into the tub”' },
+  { time: '9:47 PM', from: 'Homeowner · Madison', note: '“Storm took shingles off the roof”' },
 ];
 
 const SETUP_CALL_URL = process.env.NEXT_PUBLIC_AVA_SETUP_BOOKING_URL || '';
@@ -117,6 +118,9 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
           <div className="hero-ctas">
             <a className="btn btn-signal" href="#talk-to-ava">
               Talk to Executive Receptionist
+            </a>
+            <a className="btn btn-outline" href={LIVE_DEMO_PHONE_HREF}>
+              Call the live demo: {LIVE_DEMO_PHONE_DISPLAY}
             </a>
             <TrackedCheckoutLink className="btn btn-outline" href="/api/checkout?plan=starter" plan="starter">
               Start free 7-day trial <ArrowRight size={17} />

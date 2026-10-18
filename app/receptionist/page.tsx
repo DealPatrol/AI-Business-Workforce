@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
 import { ExclusiveAudio } from '@/components/receptionist/ExclusiveAudio';
 import { VoicePicker } from '@/components/receptionist/VoicePicker';
+import { LIVE_DEMO_PHONE_DISPLAY, LIVE_DEMO_PHONE_HREF } from '@/lib/ava/demo-phone';
 import { AVA_PLANS, type AvaPlanKey } from '@/lib/ava/pricing';
 import { EXAMPLE_NOTES, EXECUTIVE_FAQS, EXECUTIVE_INDUSTRIES } from '@/lib/executive-receptionist';
 import { hostnameOf, isExecutiveReceptionistHost } from '@/lib/site-url';
@@ -67,6 +68,14 @@ export default function ReceptionistPage() {
             View the rate card
           </a>
         </div>
+        <p className={styles.fine}>
+          Call the live demo:{' '}
+          <a href={LIVE_DEMO_PHONE_HREF}>
+            <strong>{LIVE_DEMO_PHONE_DISPLAY}</strong>
+          </a>{' '}
+          (answers as a sample home-service business) or try it in your browser at{' '}
+          <Link href="/receptionist-demo#live-demo">the live demo</Link>.
+        </p>
         <p className={styles.fine}>Free 7-day trial. $0 setup. Cancel anytime.</p>
       </section>
 
