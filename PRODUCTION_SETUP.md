@@ -128,3 +128,7 @@ Migrations:
 - To enable Current|After on that page: apply both migrations above (in order), create the private Storage bucket `yardproof-imagery` (none exists in prod yet), then run streetview-preview → after-render → review for that recipient.
 
 Postcard **printing and fulfillment** (Lob / vendor mail) remain out of scope until explicitly authorized.
+
+## Missed-Call Text-Back (Twilio)
+
+See `docs/MISSED_CALL_TEXT_BACK.md`. Point the number's Voice webhook at `/api/twilio/voice` and Messaging webhook at `/api/twilio/sms` (HTTP POST). Env: `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER`, `MISSED_CALL_FORWARD_NUMBER`, optional `MISSED_CALL_TEXT_TEMPLATE` and `AVA_LEAD_SMS_TO`.
