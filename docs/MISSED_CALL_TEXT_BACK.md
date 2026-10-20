@@ -41,3 +41,10 @@ Default text: "Sorry we missed your call! We're with a customer right now. Reply
 
 Twilio trial accounts can only text and call verified numbers, and prefix messages with a trial notice.
 US A2P 10DLC registration is required before texting customers at volume.
+
+## Abuse / compliance guards
+
+- Auto-text goes only to US/Canada (`+1` NANP) caller IDs that are not our own numbers (`TWILIO_FROM_NUMBER`, `MISSED_CALL_FORWARD_NUMBER`, `AVA_LEAD_SMS_TO`). Anonymous and international numbers are never texted (SMS-pumping protection).
+- At most one auto-text per caller per 24h; owner alerts capped at 30/hour; reply forwards capped at 10/hour per sender. Limits are in-memory per server instance (best effort); keep Twilio Geo Permissions for SMS limited to US/Canada as the hard backstop.
+- Every auto-text includes "Reply STOP to opt out." (appended to custom templates that don't mention STOP). Twilio Advanced Opt-Out handles STOP/HELP.
+- Do **not** point the ElevenLabs demo number (+1 256-663-7007) at these webhooks: its Voice webhook belongs to ElevenLabs. Use a separate Twilio number for Missed-Call Text-Back.
