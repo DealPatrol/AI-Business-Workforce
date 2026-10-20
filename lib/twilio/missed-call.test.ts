@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { createHmac } from 'node:crypto';
-import test from 'node:test';
+import test, { beforeEach } from 'node:test';
 import {
   DEFAULT_MISSED_CALL_TEXT_TEMPLATE,
   escapeXml,
@@ -11,6 +11,9 @@ import {
   requestUrlCandidates,
   type MissedCallEnv,
   type SendSms,
+  isTextableCaller,
+  missedCallTextBody,
+  resetMissedCallLimitsForTests,
 } from './missed-call';
 import { computeTwilioSignature, validateTwilioSignature } from './signature';
 
@@ -30,6 +33,8 @@ const fullEnv: MissedCallEnv = {
 function signed(url: string, params: Record<string, string>, token = TOKEN) {
   return { urls: [url], params, signature: computeTwilioSignature(token, url, params) };
 }
+
+beforeEach(() => resetMissedCallLimitsForTests());
 
 function recorder() {
   const sent: { to: string; body: string }[] = [];
@@ -136,7 +141,7 @@ test('status: custom template is used; owner falls back to forward number', asyn
   const { sent, send } = recorder();
   const env = { ...fullEnv, AVA_LEAD_SMS_TO: '', MISSED_CALL_TEXT_TEMPLATE: 'Custom hello' };
   await handleVoiceStatus(signed(STATUS_URL, { From: '+12565551234', DialCallStatus: 'no-answer' }), env, send);
-  assert.equal(sent[0].body, 'Custom hello');
+  assert.equal(sent[0].body, 'Custom hello Reply STOP to opt out.');
   assert.equal(sent[1].to, '+12565550199');
 });
 
@@ -170,4 +175,41 @@ test('sms: does not forward the owner’s own texts or unsigned requests', async
   const bad = await handleIncomingSms({ urls: [SMS_URL], params: { From: '+1256', Body: 'x' }, signature: 'nope' }, fullEnv, send);
   assert.equal(bad.status, 403);
   assert.equal(sent.length, 0);
+});
+
+test('opt-out wording is always present', () => {
+  assert.match(DEFAULT_MISSED_CALL_TEXT_TEMPLATE, /Reply STOP to opt out/);
+  assert.equal(missedCallTextBody({ MISSED_CALL_TEXT_TEMPLATE: 'Hi, text STOP to end' }), 'Hi, text STOP to end');
+});
+
+test('only US/Canada callers that are not our own numbers are textable', () => {
+  assert.equal(isTextableCaller('+12565551234', fullEnv), true);
+  assert.equal(isTextableCaller('+447911123456', fullEnv), false);
+  assert.equal(isTextableCaller('+882123456789', fullEnv), false);
+  assert.equal(isTextableCaller('+12565550199', fullEnv), false);
+  assert.equal(isTextableCaller('+12565550100', fullEnv), false);
+  assert.equal(isTextableCaller('anonymous', fullEnv), false);
+});
+
+test('status: same caller is auto-texted at most once per 24h; international not texted', async () => {
+  const { sent, send } = recorder();
+  const p = { From: '+12565554321', DialCallStatus: 'no-answer' };
+  await handleVoiceStatus(signed(STATUS_URL, p), fullEnv, send);
+  const second = await handleVoiceStatus(signed(STATUS_URL, p), fullEnv, send);
+  assert.equal(sent.filter((m) => m.to === '+12565554321').length, 1);
+  assert.equal(second.outcome?.callerTexted?.sent, false);
+  assert.doesNotMatch(second.body, /text you/);
+  const { sent: s2, send: send2 } = recorder();
+  await handleVoiceStatus(signed(STATUS_URL, { From: '+447911123456', DialCallStatus: 'busy' }), fullEnv, send2);
+  assert.ok(s2.every((m) => m.to !== '+447911123456'));
+});
+
+test('sms: never forwards texts from our own Twilio number and caps forwards per sender', async () => {
+  const { sent, send } = recorder();
+  await handleIncomingSms(signed(SMS_URL, { From: '+12565550100', Body: 'loop' }), fullEnv, send);
+  assert.equal(sent.length, 0);
+  for (let i = 0; i < 15; i++) {
+    await handleIncomingSms(signed(SMS_URL, { From: '+12565557777', Body: `m${i}` }), fullEnv, send);
+  }
+  assert.equal(sent.length, 10);
 });
