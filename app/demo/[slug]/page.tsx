@@ -3,6 +3,13 @@ import type { Metadata } from 'next';
 import PersonalizedDemo from '@/components/PersonalizedAvaDemo';
 import { gateProspectPage } from '@/lib/prospect-gate';
 import { getProspectBySlug, PROSPECTS } from '@/lib/prospects';
+import {
+  DEMO_NOT_FOUND_SEO,
+  PRIVATE_DEMO_SEO,
+  demoDocumentDescription,
+  demoDocumentTitle,
+  metadataTitle,
+} from '@/lib/seo/pages';
 import './demo.css';
 import './voice-picker.css';
 
@@ -11,7 +18,8 @@ type PageProps = { params: Promise<{ slug: string }> };
 export const dynamic = 'force-dynamic';
 
 const PRIVATE_META: Metadata = {
-  title: 'Private demo',
+  title: metadataTitle(PRIVATE_DEMO_SEO),
+  description: PRIVATE_DEMO_SEO.description,
   robots: { index: false, follow: false },
 };
 
@@ -28,11 +36,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const access = await gateProspectPage(nextPathFor(slug));
   if (access !== 'allow') return PRIVATE_META;
   const prospect = getProspectBySlug(slug);
-  if (!prospect) return { title: 'Demo not found', robots: { index: false, follow: false } };
+  if (!prospect) {
+    return {
+      title: metadataTitle(DEMO_NOT_FOUND_SEO),
+      description: DEMO_NOT_FOUND_SEO.description,
+      robots: { index: false, follow: false },
+    };
+  }
+  const title = demoDocumentTitle(prospect.companyName);
   return {
-    title: `${prospect.companyName} — Executive Receptionist Demo`,
+    title: { absolute: title },
     robots: { index: false, follow: false },
-    description: `See how Executive Receptionist handles missed calls for ${prospect.companyName}. Built for ${prospect.ownerName}.`,
+    description: demoDocumentDescription(prospect.companyName),
   };
 }
 

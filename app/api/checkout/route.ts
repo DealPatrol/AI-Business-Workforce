@@ -1,5 +1,6 @@
 import { track } from '@vercel/analytics/server';
 import { NextRequest, NextResponse } from 'next/server';
+import { CHECKOUT_GET_REDIRECT_PATH, isKnownCrawlerUserAgent } from '@/lib/checkout-guard';
 import {
   isPostcardSize,
   parsePostcardQuantity,
@@ -150,59 +151,54 @@ function isPostcardRequest(offer: string, planKey: string) {
   );
 }
 
+function isFormPost(req: NextRequest) {
+  const type = req.headers.get('content-type') || '';
+  return type.includes('application/x-www-form-urlencoded') || type.includes('multipart/form-data');
+}
+
+async function readPayload(req: NextRequest): Promise<Record<string, unknown>> {
+  if (!isFormPost(req)) return (await req.json()) as Record<string, unknown>;
+  const form = await req.formData();
+  const payload: Record<string, string> = {};
+  for (const [key, value] of form.entries()) {
+    if (typeof value === 'string') payload[key] = value;
+  }
+  return payload;
+}
+
+function checkoutResult(req: NextRequest, url: string) {
+  if (isFormPost(req)) return NextResponse.redirect(url, 303);
+  return NextResponse.json({ url });
+}
+
+function checkoutError(req: NextRequest, error: string, status: number, redirectPath: string) {
+  if (isFormPost(req)) return NextResponse.redirect(new URL(redirectPath, req.url), 303);
+  return NextResponse.json({ error }, { status });
+}
+
 export async function GET(req: NextRequest) {
-  const offer = String(req.nextUrl.searchParams.get('offer') || '').toLowerCase();
-  const planKey = String(req.nextUrl.searchParams.get('plan') || '').toLowerCase();
-
-  if (isPostcardRequest(offer, planKey)) {
-    const selection = postcardSelection(
-      req.nextUrl.searchParams.get('size'),
-      req.nextUrl.searchParams.get('quantity'),
-    );
-    if (!selection) return NextResponse.redirect(new URL('/postcards#packages', req.url));
-    try {
-      const result = await postcardCheckoutUrl(
-        req,
-        selection.size,
-        selection.quantity,
-        safeCancelPath(req.nextUrl.searchParams.get('cancel')),
-      );
-      if ('error' in result) return NextResponse.redirect(new URL('/founding?checkout=error', req.url));
-      return NextResponse.redirect(result.url, 303);
-    } catch (error) {
-      console.error(error);
-      return NextResponse.redirect(new URL('/founding?checkout=error', req.url));
-    }
-  }
-
-  try {
-    if (!isAvaPlanKey(planKey)) return NextResponse.redirect(new URL('/receptionist#pricing', req.url));
-    const result = await avaCheckoutUrl(
-      req,
-      planKey,
-      req.nextUrl.searchParams.get('qualificationId') || '',
-      req.nextUrl.searchParams.get('prefillToken') || req.nextUrl.searchParams.get('token') || '',
-    );
-    if ('error' in result) return NextResponse.redirect(new URL('/receptionist?checkout=unavailable#pricing', req.url));
-    return NextResponse.redirect(result.url, 303);
-  } catch (error) {
-    console.error(error);
-    return NextResponse.redirect(new URL('/receptionist?checkout=unavailable#pricing', req.url));
-  }
+  return NextResponse.redirect(new URL(CHECKOUT_GET_REDIRECT_PATH, req.url), 307);
 }
 
 export async function POST(req: NextRequest) {
+  if (isKnownCrawlerUserAgent(req.headers.get('user-agent'))) {
+    return NextResponse.json({ error: 'Checkout is not available to crawlers.' }, { status: 403 });
+  }
+
+  const form = isFormPost(req);
   try {
-    const body = await req.json();
+    const body = await readPayload(req);
     const offer = String(body?.offer || '').toLowerCase();
     const planKey = String(body?.plan || '').toLowerCase();
 
     if (isPostcardRequest(offer, planKey)) {
       const selection = postcardSelection(body?.size, body?.quantity);
       if (!selection) {
-        return NextResponse.json(
-          { error: 'Choose a 4x6 or 6x9 postcard and a quantity of at least 100.' },
-          { status: 400 },
+        return checkoutError(
+          req,
+          'Choose a 4x6 or 6x9 postcard and a quantity of at least 100.',
+          400,
+          '/postcards#packages',
         );
       }
       const result = await postcardCheckoutUrl(
@@ -212,12 +208,14 @@ export async function POST(req: NextRequest) {
         safeCancelPath(typeof body?.cancel === 'string' ? body.cancel : ''),
       );
       if ('error' in result) {
-        return NextResponse.json({ error: result.error || 'Could not start postcard checkout.' }, { status: 500 });
+        return checkoutError(req, result.error || 'Could not start postcard checkout.', 500, '/founding?checkout=error');
       }
-      return NextResponse.json({ url: result.url });
+      return checkoutResult(req, result.url);
     }
 
-    if (!isAvaPlanKey(planKey)) return NextResponse.json({ error: 'Invalid Executive Receptionist plan.' }, { status: 400 });
+    if (!isAvaPlanKey(planKey)) {
+      return checkoutError(req, 'Invalid Executive Receptionist plan.', 400, '/pricing');
+    }
     const result = await avaCheckoutUrl(
       req,
       planKey,
@@ -225,11 +223,16 @@ export async function POST(req: NextRequest) {
       String(body?.prefillToken || body?.token || ''),
     );
     if ('error' in result) {
-      return NextResponse.json({ error: result.error }, { status: result.status });
+      return checkoutError(
+        req,
+        result.error || 'Could not start Executive Receptionist checkout.',
+        result.status ?? 500,
+        '/receptionist?checkout=unavailable#pricing',
+      );
     }
-    return NextResponse.json({ url: result.url });
+    return checkoutResult(req, result.url);
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: 'Could not start checkout.' }, { status: 500 });
+    return checkoutError(req, 'Could not start checkout.', 500, form ? '/pricing?checkout=error' : '/pricing');
   }
 }

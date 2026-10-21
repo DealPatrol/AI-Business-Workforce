@@ -16,17 +16,19 @@ import {
   POSTCARD_PRICE_SUMMARY,
   postcardPublicOffers,
 } from '@/lib/postcards/pricing';
+import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 import { absoluteSiteUrl } from '@/lib/site-url';
 import styles from './home.module.css';
 import { PostcardPackagePicker } from './package-picker';
 
 const CONTACT_EMAIL = 'colecollins763@gmail.com';
 
-const title = 'YardMailer Postcards | Front Porch Growth';
-const description = `${POSTCARD_FULFILLMENT_COPY} ${POSTCARD_PRICE_SUMMARY}`;
+const seo = pageSeo('/postcards');
+const title = renderedTitle(seo);
+const description = seo.description;
 
 export const metadata: Metadata = {
-  title: { absolute: title },
+  title: metadataTitle(seo),
   description,
   alternates: { canonical: '/postcards' },
   openGraph: {

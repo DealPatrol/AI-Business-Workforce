@@ -61,10 +61,25 @@ export function isAvaStandaloneHost(hostHeader: string | null | undefined) {
   return true;
 }
 
+export const EXECUTIVE_RECEPTIONIST_APEX_HOST = 'executivereceptionist.com';
+export const EXECUTIVE_RECEPTIONIST_WWW_HOST = 'www.executivereceptionist.com';
+export const EXECUTIVE_RECEPTIONIST_ORIGIN = `https://${EXECUTIVE_RECEPTIONIST_APEX_HOST}`;
+/** Permanent redirect for the www host. 301, not 308, so caches and Google treat it as a moved host. */
+export const EXECUTIVE_RECEPTIONIST_WWW_REDIRECT_STATUS = 301;
+
 const EXECUTIVE_RECEPTIONIST_HOSTS = new Set([
-  'executivereceptionist.com',
-  'www.executivereceptionist.com',
+  EXECUTIVE_RECEPTIONIST_APEX_HOST,
+  EXECUTIVE_RECEPTIONIST_WWW_HOST,
 ]);
+
+/**
+ * www.executivereceptionist.com → https://executivereceptionist.com, keeping path and query.
+ * Returns null for every other host, including the apex.
+ */
+export function executiveReceptionistWwwRedirectUrl(hostHeader: string | null | undefined, requestUrl: URL) {
+  if (hostnameOf(hostHeader) !== EXECUTIVE_RECEPTIONIST_WWW_HOST) return null;
+  return new URL(`${requestUrl.pathname}${requestUrl.search}`, EXECUTIVE_RECEPTIONIST_ORIGIN);
+}
 
 /** Dedicated marketing host for the Executive Receptionist landing page. */
 export function isExecutiveReceptionistHost(hostHeader: string | null | undefined) {

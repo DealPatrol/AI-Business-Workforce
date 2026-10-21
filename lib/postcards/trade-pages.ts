@@ -14,3 +14,60 @@ export const POSTCARD_TRADES: readonly PostcardTrade[] = [
 ];
 
 export const getPostcardTrade = (slug: string) => POSTCARD_TRADES.find((t) => t.slug === slug);
+
+const POSTCARD_TRADE_SEO: Record<string, { title: string; description: string }> = {
+  landscaping: {
+    title: 'Landscaping Postcards Mailed for You, $3.54',
+    description:
+      'Addressed landscaping postcards show each home a planting concept, with a QR code to request an estimate. Mailed for you from $3.54.',
+  },
+  'lawn-care': {
+    title: 'Lawn Care Postcards Mailed for You, $3.54 a Card',
+    description:
+      'Addressed lawn care postcards show each home a lawn concept, with a QR code to request an estimate. Mailed for you from $3.54 a card.',
+  },
+  hardscaping: {
+    title: 'Hardscape Postcards Mailed for You, from $3.54',
+    description:
+      'Addressed hardscape postcards show each home a patio or wall concept, with a QR code to request an estimate. Mailed from $3.54.',
+  },
+  fencing: {
+    title: 'Fence Company Postcards Mailed for You, $3.54',
+    description:
+      'Addressed fence postcards show each home a fence concept, with a QR code to request an estimate. Mailed for you from $3.54.',
+  },
+  roofing: {
+    title: 'Roofing Postcards Mailed for You, from $3.54',
+    description:
+      'Addressed roofing postcards show each home a roof concept, with a QR code to request an estimate. Mailed for you from $3.54.',
+  },
+  'exterior-painting': {
+    title: 'Exterior Painting Postcards, Mailed from $3.54',
+    description:
+      'Addressed painting postcards show each home a color concept, with a QR code to request an estimate. Mailed for you from $3.54.',
+  },
+  'pressure-washing': {
+    title: 'Pressure Washing Postcards, Mailed from $3.54',
+    description:
+      'Addressed pressure-washing postcards show each home a clean exterior, with a QR code to request an estimate. Mailed from $3.54.',
+  },
+  'pool-installation': {
+    title: 'Pool Builder Postcards Mailed for You, $3.54',
+    description:
+      'Addressed pool postcards show each home a backyard pool concept, with a QR code to request an estimate. Mailed from $3.54.',
+  },
+  'outdoor-lighting': {
+    title: 'Outdoor Lighting Postcards, Mailed from $3.54',
+    description:
+      'Addressed lighting postcards show each home a lighting concept, with a QR code to request an estimate. Mailed for you from $3.54.',
+  },
+  'tree-service': {
+    title: 'Tree Service Postcards Mailed for You, $3.54',
+    description:
+      'Addressed tree-service postcards show each home trimmed trees, with a QR code to request an estimate. Mailed for you from $3.54.',
+  },
+};
+
+export function postcardTradeSeo(slug: string) {
+  return POSTCARD_TRADE_SEO[slug];
+}

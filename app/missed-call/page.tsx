@@ -2,11 +2,12 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { SuiteShell } from '@/components/suite/SuiteShell';
 import styles from '@/components/suite/suite.module.css';
+import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 
 const CHECKOUT_URL = 'https://buy.stripe.com/cNi9ATaHAeX5fdrfakebu02';
-const title = 'Missed-Call Text-Back, $39/month | Front Porch Growth';
-const description =
-  'When you miss a call, the caller gets a text from your business within seconds, so the job does not go to the next name on Google. $39 a month, cancel anytime.';
+const seo = pageSeo('/missed-call');
+const title = renderedTitle(seo);
+const description = seo.description;
 
 const FAQS = [
   { q: 'Do I need a new phone number?', a: 'No. You keep your number. We set up conditional forwarding so only calls you do not answer go to the text-back line. Customers still call the same number they always have.' },
@@ -17,7 +18,7 @@ const FAQS = [
 ] as const;
 
 export const metadata: Metadata = {
-  title: { absolute: title },
+  title: metadataTitle(seo),
   description,
   alternates: { canonical: '/missed-call' },
   openGraph: { title, description, url: '/missed-call', siteName: 'Front Porch Growth', type: 'website' },

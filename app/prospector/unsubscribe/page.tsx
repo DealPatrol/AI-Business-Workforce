@@ -1,11 +1,15 @@
 import type { Metadata } from 'next';
 import { applyUnsubscribe } from '@/lib/prospector/apply-unsubscribe';
+import { metadataTitle, pageSeo } from '@/lib/seo/pages';
 import styles from './unsubscribe.module.css';
 
 export const dynamic = 'force-dynamic';
 
+const seo = pageSeo('/prospector/unsubscribe');
+
 export const metadata: Metadata = {
-  title: 'Unsubscribe',
+  title: metadataTitle(seo),
+  description: seo.description,
   robots: { index: false, follow: false },
   alternates: { canonical: '/prospector/unsubscribe' },
 };

@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { headers } from 'next/headers';
 import Link from 'next/link';
 import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
 import { ExclusiveAudio } from '@/components/receptionist/ExclusiveAudio';
@@ -7,28 +6,27 @@ import { VoicePicker } from '@/components/receptionist/VoicePicker';
 import { LIVE_DEMO_PHONE_DISPLAY, LIVE_DEMO_PHONE_HREF } from '@/lib/ava/demo-phone';
 import { AVA_PLANS, type AvaPlanKey } from '@/lib/ava/pricing';
 import { EXAMPLE_NOTES, EXECUTIVE_FAQS, EXECUTIVE_INDUSTRIES } from '@/lib/executive-receptionist';
-import { hostnameOf, isExecutiveReceptionistHost } from '@/lib/site-url';
+import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
+import { EXECUTIVE_RECEPTIONIST_ORIGIN } from '@/lib/site-url';
 import styles from './receptionist.module.css';
 
 const plans = (Object.keys(AVA_PLANS) as AvaPlanKey[]).map((key) => AVA_PLANS[key]);
 
-const description =
-  'Executive Receptionist answers the phone for dentists, law firms, med spas, CPAs, financial advisors, real estate, and chiropractors. Choose a voice, hear a sample call, and start a 7-day trial.';
+const seo = pageSeo('/receptionist');
+const title = renderedTitle(seo);
+const description = seo.description;
+const canonical = `${EXECUTIVE_RECEPTIONIST_ORIGIN}/`;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const headerList = await headers();
-  const host = hostnameOf(headerList.get('x-forwarded-host') || headerList.get('host'));
-  const onBrand = isExecutiveReceptionistHost(host);
-  const title = 'Executive Receptionist';
   return {
-    title: { absolute: onBrand ? title : `${title} | Front Porch Growth` },
+    title: metadataTitle(seo),
     description,
-    alternates: { canonical: onBrand ? 'https://executivereceptionist.com/' : '/receptionist' },
+    alternates: { canonical },
     openGraph: {
       title,
       description,
-      url: onBrand ? 'https://executivereceptionist.com/' : '/receptionist',
-      siteName: onBrand ? title : 'Front Porch Growth',
+      url: canonical,
+      siteName: 'Executive Receptionist',
       type: 'website',
     },
     twitter: { card: 'summary_large_image', title, description },

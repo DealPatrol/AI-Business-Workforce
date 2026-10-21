@@ -11,7 +11,6 @@ import {
   POSTCARD_SIZES,
   POSTCARD_SIZE_KEYS,
   formatPostcardMoney,
-  postcardCheckoutHref,
   postcardOrderCents,
   postcardPackageRows,
   type PostcardSize,
@@ -189,17 +188,16 @@ export function PostcardPackagePicker() {
         </ul>
 
         {order && orderQuantity != null ? (
-          <a
-            className={styles.primaryButton}
-            href={postcardCheckoutHref({
-              size,
-              quantity: orderQuantity,
-              cancelPath: '/postcards#packages',
-            })}
-          >
-            {POSTCARD_CTA}: {orderQuantity.toLocaleString('en-US')} {card.label} — {formatPostcardMoney(order.totalCents)}{' '}
-            <ArrowRight size={18} />
-          </a>
+          <form className="checkout-form" method="POST" action="/api/checkout">
+            <input type="hidden" name="offer" value="postcard" />
+            <input type="hidden" name="size" value={size} />
+            <input type="hidden" name="quantity" value={String(orderQuantity)} />
+            <input type="hidden" name="cancel" value="/postcards#packages" />
+            <button type="submit" className={styles.primaryButton}>
+              {POSTCARD_CTA}: {orderQuantity.toLocaleString('en-US')} {card.label} — {formatPostcardMoney(order.totalCents)}{' '}
+              <ArrowRight size={18} />
+            </button>
+          </form>
         ) : (
           <span className={`${styles.primaryButton} ${styles.buttonDisabled}`}>Choose a quantity to continue</span>
         )}

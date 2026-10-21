@@ -3,22 +3,24 @@ import Link from 'next/link';
 import { Check, Phone, MessageSquare, PhoneCall } from 'lucide-react';
 import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
 import { AVA_PLAN_KEYS, AVA_PLANS, avaTrialThenPriceCopy } from '@/lib/ava/pricing';
+import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 import HvacContactForm from './contact-form';
 import './hvac.css';
+
+const seo = pageSeo('/hvac');
+const title = renderedTitle(seo);
 
 const DEMO_LINK = 'https://elevenlabs.io/app/talk-to?agent_id=agent_0301m4sb6c5sfdqrkthv80xt7na6';
 const COLE_TEL = 'tel:+12565953354';
 const COLE_SMS = 'sms:+12565953354';
 
 export const metadata: Metadata = {
-  title: 'Executive Receptionist for HVAC | Never Miss a No-Heat or No-Cool Call | Front Porch Growth',
-  description:
-    'Executive Receptionist answers your HVAC calls 24/7, takes the details on no-heat and no-cool emergencies, and texts you a summary. Free 7-day trial, then $77, $168, or $324 a month. $0 setup.',
+  title: metadataTitle(seo),
+  description: seo.description,
   alternates: { canonical: '/hvac' },
   openGraph: {
-    title: 'Executive Receptionist for HVAC: Never Miss Another Call',
-    description:
-      'An AI receptionist for heating and air shops. Catches after-hours and overflow calls and sends urgent ones to your on-call tech. Free 7-day trial, $0 setup.',
+    title,
+    description: seo.description,
     url: '/hvac',
     siteName: 'Front Porch Growth',
     type: 'website',

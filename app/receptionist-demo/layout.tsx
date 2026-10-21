@@ -2,13 +2,14 @@ import './receptionist.css';
 import './sales-upgrade.css';
 import './text-preview.css';
 import type { Metadata } from 'next';
+import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 
-const title = 'Try the Executive Receptionist AI Receptionist Demo';
-const description =
-  'Hear a prerecorded Executive Receptionist call or talk to her in the browser, then start a free 7-day Stripe trial. Plans are $77, $168, and $324 a month.';
+const seo = pageSeo('/receptionist-demo');
+const title = renderedTitle(seo);
+const description = seo.description;
 
 export const metadata: Metadata = {
-  title,
+  title: metadataTitle(seo),
   description,
   alternates: { canonical: '/receptionist-demo' },
   openGraph: {

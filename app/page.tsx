@@ -6,11 +6,12 @@ import { SuiteShell } from '@/components/suite/SuiteShell';
 import styles from '@/components/suite/suite.module.css';
 import { faqNode } from '@/lib/ava/structured-data';
 import { POSTCARD_FULFILLMENT_COPY, POSTCARD_PRICE_SUMMARY, postcardPublicOffers } from '@/lib/postcards/pricing';
+import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 import { absoluteSiteUrl } from '@/lib/site-url';
 
-const title = 'Front Porch Growth | Postcards and an AI receptionist for home services';
-const description =
-  'YardMailer postcards are a $127 one-time setup plus $3.54 or $4.95 per card. Executive Receptionist, the AI receptionist, has a free 7-day trial, then $77, $168, or $324 a month. For home-service businesses.';
+const seo = pageSeo('/');
+const title = renderedTitle(seo);
+const description = seo.description;
 
 const HOME_FAQS = [
   {
@@ -32,7 +33,7 @@ const HOME_FAQS = [
 ] as const;
 
 export const metadata: Metadata = {
-  title: { absolute: title },
+  title: metadataTitle(seo),
   description,
   alternates: { canonical: '/' },
   openGraph: {

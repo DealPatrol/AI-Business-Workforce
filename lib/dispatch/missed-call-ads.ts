@@ -43,3 +43,25 @@ export function missedCallTrade(value: string | undefined): MissedCallTrade {
   if (value === 'plumbing' || value === 'roofing' || value === 'hvac') return value;
   return 'hvac';
 }
+
+const MISSED_CALL_SEO: Record<MissedCallTrade, { title: string; description: string }> = {
+  hvac: {
+    title: 'AI Receptionist for Missed HVAC Calls',
+    description:
+      'AI Receptionist answers missed HVAC calls and texts you the lead. Free 7-day trial, then $77/mo. $0 setup.',
+  },
+  plumbing: {
+    title: 'AI Receptionist for Missed Plumbing Calls',
+    description:
+      'AI Receptionist answers missed plumbing calls and texts you the lead. Free 7-day trial, then $77/mo. $0 setup.',
+  },
+  roofing: {
+    title: 'AI Receptionist for Missed Roofing Calls',
+    description:
+      'AI Receptionist answers missed roofing calls and texts you the lead. Free 7-day trial, then $77/mo. $0 setup.',
+  },
+};
+
+export function missedCallSeo(trade: MissedCallTrade) {
+  return MISSED_CALL_SEO[trade];
+}

@@ -1,20 +1,21 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 import { absoluteSiteUrl } from '@/lib/site-url';
 
-const title = 'Executive Receptionist setup | Executive Receptionist by Workforce AI';
-const description =
-  'Tell us about your business so Cole can set up Executive Receptionist. She answers calls and texts you the lead. Free 7-day trial, then $77/mo. $0 setup.';
+const seo = pageSeo('/onboarding/ava');
+const title = renderedTitle(seo);
+const description = seo.description;
 
 export const metadata: Metadata = {
-  title: { absolute: title },
+  title: metadataTitle(seo),
   description,
   alternates: { canonical: '/onboarding/ava' },
   robots: { index: false, follow: false },
   openGraph: {
     title,
     description,
-    siteName: 'Executive Receptionist by Workforce AI',
+    siteName: 'Executive Receptionist',
     type: 'website',
     url: absoluteSiteUrl('/onboarding/ava'),
   },

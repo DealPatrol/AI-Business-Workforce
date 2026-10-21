@@ -1,20 +1,21 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import styles from './privacy.module.css';
+import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 import { absoluteSiteUrl } from '@/lib/site-url';
+import styles from './privacy.module.css';
 
-const title = 'Privacy | Executive Receptionist by Workforce AI';
-const description =
-  'What Executive Receptionist by Workforce AI (DealPatrol) collects: setup form details, call and lead data, and advertising cookies when measurement tags are turned on.';
+const seo = pageSeo('/privacy');
+const title = renderedTitle(seo);
+const description = seo.description;
 
 export const metadata: Metadata = {
-  title: { absolute: title },
+  title: metadataTitle(seo),
   description,
   alternates: { canonical: '/privacy' },
   openGraph: {
     title,
     description,
-    siteName: 'Executive Receptionist by Workforce AI',
+    siteName: 'Front Porch Growth',
     type: 'website',
     url: absoluteSiteUrl('/privacy'),
   },

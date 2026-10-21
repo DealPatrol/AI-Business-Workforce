@@ -2,11 +2,12 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { SuiteShell } from '@/components/suite/SuiteShell';
 import styles from '@/components/suite/suite.module.css';
+import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 
 const CHECKOUT_URL = 'https://buy.stripe.com/8x2fZh9Dw9CLe9n5zKebu03';
-const title = 'Google Business Profile setup, $99 | Front Porch Growth';
-const description =
-  'One-time Google Business Profile setup and cleanup for local service businesses: categories, services, photos, description, hours, and a review link. $99, done for you.';
+const seo = pageSeo('/google-profile');
+const title = renderedTitle(seo);
+const description = seo.description;
 
 const FAQS = [
   { q: 'What do you need from me?', a: 'Manager access to your Google Business Profile (or help claiming it), 5 to 15 job photos, your service area, and the services you want to be found for.' },
@@ -16,7 +17,7 @@ const FAQS = [
 ] as const;
 
 export const metadata: Metadata = {
-  title: { absolute: title },
+  title: metadataTitle(seo),
   description,
   alternates: { canonical: '/google-profile' },
   openGraph: { title, description, url: '/google-profile', siteName: 'Front Porch Growth', type: 'website' },

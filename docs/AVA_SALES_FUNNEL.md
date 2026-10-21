@@ -15,7 +15,7 @@
    - Upsert is only allowed for that verified conversation (no unauthenticated blank inserts).
 5. Response includes `qualificationId` plus a short-lived HMAC `prefillToken`.
 6. Prospect can:
-   - **Start plan** → `/api/checkout?plan=…&qualificationId=…&prefillToken=…` → Stripe → `/onboarding/ava?session_id=…&plan=…&qualificationId=…&prefillToken=…`
+   - **Start plan** → POST `/api/checkout` (`plan`, `qualificationId`, `prefillToken`) → Stripe → `/onboarding/ava?session_id=…&plan=…&qualificationId=…&prefillToken=…`. GET `/api/checkout` does not open Stripe; it redirects to `/pricing`.
    - **Continue to onboarding** → `/onboarding/ava?qualificationId=…&prefillToken=…`
    - Optional **Book setup call** only if `NEXT_PUBLIC_AVA_SETUP_BOOKING_URL` is set (plain link; no Cal/Google API).
 

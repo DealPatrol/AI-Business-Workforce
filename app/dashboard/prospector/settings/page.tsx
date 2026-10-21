@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { prospectorConfig } from '@/lib/prospector/config';
 import { defaultSettings } from '@/lib/prospector/rows';
 import { getSettings } from '@/lib/prospector/store';
+import { metadataTitle, pageSeo } from '@/lib/seo/pages';
 import { createClient } from '@/lib/supabase/server';
 import ProspectorShell from '../shell';
 import styles from '../prospector.module.css';
@@ -10,8 +11,11 @@ import SettingsForm from './settings-form';
 
 export const dynamic = 'force-dynamic';
 
+const seo = pageSeo('/dashboard/prospector/settings');
+
 export const metadata: Metadata = {
-  title: 'Lead Finder settings',
+  title: metadataTitle(seo),
+  description: seo.description,
   robots: { index: false, follow: false },
 };
 

@@ -3,10 +3,11 @@ import { LeadScoutApp } from '@/components/lead-scout/LeadScoutApp';
 import { SuiteShell } from '@/components/suite/SuiteShell';
 import styles from '@/components/suite/suite.module.css';
 import { faqNode, jsonLdGraph } from '@/lib/ava/structured-data';
+import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 
-const title = 'Lead Scout | Find local businesses without emailing them';
-const description =
-  'Search public Google listings by trade and city. Lead Scout shows the name, address, phone, and map link. It does not email or text anyone.';
+const seo = pageSeo('/lead-scout');
+const title = renderedTitle(seo);
+const description = seo.description;
 
 const FAQS = [
   {
@@ -24,7 +25,7 @@ const FAQS = [
 ] as const;
 
 export const metadata: Metadata = {
-  title: { absolute: title },
+  title: metadataTitle(seo),
   description,
   alternates: { canonical: '/lead-scout' },
   openGraph: { title, description, url: '/lead-scout', siteName: 'Front Porch Growth', type: 'website' },
