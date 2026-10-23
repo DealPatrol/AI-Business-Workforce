@@ -1,5 +1,6 @@
 import { sendAvaLeadSms, type AvaLeadSmsResult } from '../ava/sms';
 import { validateTwilioSignature } from './signature';
+import { createRateLimiter } from '../rate-limit';
 
 /**
  * Missed-Call Text-Back.
@@ -13,7 +14,24 @@ import { validateTwilioSignature } from './signature';
  */
 
 export const DEFAULT_MISSED_CALL_TEXT_TEMPLATE =
-  "Sorry we missed your call! We're with a customer right now. Reply to this text with what you need and we'll get right back to you.";
+  "Sorry we missed your call! We're with a customer right now. Reply to this text with what you need and we'll get right back to you. Reply STOP to opt out.";
+
+const OPT_OUT_NOTICE = ' Reply STOP to opt out.';
+/** US/Canada geographic or toll-free NANP numbers only: blocks premium/international SMS pumping. */
+const NANP = /^\+1[2-9]\d{2}[2-9]\d{6}$/;
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+const HOUR_MS = 60 * 60 * 1000;
+let callerTextLimiter = createRateLimiter(1, DAY_MS); // 1 auto-text per caller per 24h
+let ownerAlertLimiter = createRateLimiter(30, HOUR_MS); // global cap on owner alerts
+let smsForwardLimiter = createRateLimiter(10, HOUR_MS); // per-sender reply forwards
+
+/** Test hook: reset the in-memory (per-instance, best-effort) limiters. */
+export function resetMissedCallLimitsForTests() {
+  callerTextLimiter = createRateLimiter(1, DAY_MS);
+  ownerAlertLimiter = createRateLimiter(30, HOUR_MS);
+  smsForwardLimiter = createRateLimiter(10, HOUR_MS);
+}
 
 export const DIAL_TIMEOUT_SECONDS = 20;
 export const VOICE_STATUS_PATH = '/api/twilio/voice/status';
@@ -68,13 +86,27 @@ export function isE164(value: string | undefined): boolean {
   return E164.test(clean(value));
 }
 
+/** Numbers we must never auto-text (our own lines / the owner) to avoid loops. */
+function ownNumbers(env: MissedCallEnv): Set<string> {
+  return new Set(
+    [env.TWILIO_FROM_NUMBER, env.MISSED_CALL_FORWARD_NUMBER, env.AVA_LEAD_SMS_TO].map(clean).filter(Boolean),
+  );
+}
+
+/** Only real, US/Canada callers that are not our own numbers get a text-back. */
+export function isTextableCaller(caller: string, env: MissedCallEnv): boolean {
+  return NANP.test(caller) && !ownNumbers(env).has(caller);
+}
+
 /** Owner alert destination: AVA_LEAD_SMS_TO, falling back to the forwarding number. */
 export function ownerAlertNumber(env: MissedCallEnv): string {
   return clean(env.AVA_LEAD_SMS_TO) || clean(env.MISSED_CALL_FORWARD_NUMBER);
 }
 
 export function missedCallTextBody(env: MissedCallEnv): string {
-  return (clean(env.MISSED_CALL_TEXT_TEMPLATE) || DEFAULT_MISSED_CALL_TEXT_TEMPLATE).slice(0, 640);
+  let body = (clean(env.MISSED_CALL_TEXT_TEMPLATE) || DEFAULT_MISSED_CALL_TEXT_TEMPLATE).slice(0, 600);
+  if (!/\bSTOP\b/i.test(body)) body += OPT_OUT_NOTICE;
+  return body;
 }
 
 /** Convert form-encoded body text into a flat string record. */
@@ -178,14 +210,16 @@ export async function handleVoiceStatus(
   if (!smsConfigured) {
     console.error('Twilio SMS env (TWILIO_ACCOUNT_SID / TWILIO_FROM_NUMBER) missing; skipping text-back.');
   } else {
-    if (isE164(caller)) {
-      outcome.callerTexted = await sendSms({ to: caller, body: missedCallTextBody(env) });
+    if (!isTextableCaller(caller, env)) {
+      outcome.callerTexted = { sent: false, skipped: true, error: 'Caller ID unavailable or not textable.' };
+    } else if (!callerTextLimiter(caller).ok) {
+      outcome.callerTexted = { sent: false, skipped: true, error: 'Already texted this caller in the last 24h.' };
     } else {
-      outcome.callerTexted = { sent: false, skipped: true, error: 'Caller ID unavailable.' };
+      outcome.callerTexted = await sendSms({ to: caller, body: missedCallTextBody(env) });
     }
 
     const owner = ownerAlertNumber(env);
-    if (owner) {
+    if (owner && ownerAlertLimiter('owner').ok) {
       const textedNote = outcome.callerTexted?.sent ? 'Auto-text sent.' : 'Caller was NOT texted.';
       outcome.ownerAlerted = await sendSms({
         to: owner,
@@ -194,8 +228,9 @@ export async function handleVoiceStatus(
     }
   }
 
-  const say =
-    '<Say voice="Polly.Joanna">Sorry we missed your call. We will text you right away so you can tell us what you need.</Say><Hangup/>';
+  const say = outcome.callerTexted?.sent
+    ? '<Say voice="Polly.Joanna">Sorry we missed your call. We will text you right away so you can tell us what you need.</Say><Hangup/>'
+    : '<Say voice="Polly.Joanna">Sorry we missed your call. Please try again shortly.</Say><Hangup/>';
   return { status: 200, body: twiml(say), outcome };
 }
 
@@ -216,7 +251,7 @@ export async function handleIncomingSms(
   );
 
   // Do not echo the owner's own texts back to them (prevents loops).
-  if (!smsConfigured || !body || !from || from === owner) {
+  if (!smsConfigured || !body || !from || ownNumbers(env).has(from) || !smsForwardLimiter(from).ok) {
     return { status: 200, body: emptyTwiml() };
   }
 
