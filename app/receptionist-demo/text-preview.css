@@ -55,14 +55,14 @@
   color: #fff;
 }
 
-.text-preview form {
+.text-preview form:not(.checkout-form) {
   display: grid;
   grid-template-columns: 1fr 44px;
   gap: 7px;
   margin-top: 8px;
 }
 
-.text-preview form button {
+.text-preview form:not(.checkout-form) button {
   border: 0;
   border-radius: 8px;
   background: #1b6d3d;
@@ -72,7 +72,7 @@
   cursor: pointer;
 }
 
-.text-preview form button svg {
+.text-preview form:not(.checkout-form) button svg {
   width: 17px;
 }
 

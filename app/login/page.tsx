@@ -1,11 +1,15 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Leaf } from 'lucide-react';
+import { metadataTitle, pageSeo } from '@/lib/seo/pages';
 import LoginForm from './login-form';
 import styles from './login.module.css';
 
+const seo = pageSeo('/login');
+
 export const metadata: Metadata = {
-  title: 'Sign in',
+  title: metadataTitle(seo),
+  description: seo.description,
   robots: { index: false, follow: false },
 };
 

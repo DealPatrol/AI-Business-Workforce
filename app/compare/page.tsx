@@ -4,10 +4,11 @@ import { SuiteShell } from '@/components/suite/SuiteShell';
 import styles from '@/components/suite/suite.module.css';
 import { COMPARISON_AS_OF, COMPARISON_FACTS, COMPARISON_SOURCES } from '@/lib/comparison/facts';
 import { faqNode, jsonLdGraph } from '@/lib/ava/structured-data';
+import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 
-const title = 'Published prices for home-service software | Front Porch Growth';
-const description =
-  'A comparison of published starting prices and contract notes for ServiceTitan, Jobber, Housecall Pro, Podium, Birdeye, Smith.ai, Ruby, and Front Porch Growth. Sources and the check date are on the page.';
+const seo = pageSeo('/compare');
+const title = renderedTitle(seo);
+const description = seo.description;
 
 const FAQS = [
   {
@@ -21,7 +22,7 @@ const FAQS = [
 ] as const;
 
 export const metadata: Metadata = {
-  title: { absolute: title },
+  title: metadataTitle(seo),
   description,
   alternates: { canonical: '/compare' },
   openGraph: { title, description, url: '/compare', siteName: 'Front Porch Growth', type: 'website' },

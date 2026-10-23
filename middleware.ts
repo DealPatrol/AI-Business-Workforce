@@ -1,7 +1,9 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import {
+  EXECUTIVE_RECEPTIONIST_WWW_REDIRECT_STATUS,
   LEGACY_VERCEL_HOST,
+  executiveReceptionistWwwRedirectUrl,
   getSiteUrl,
   hostnameOf,
   isAvaStandaloneHost,
@@ -64,7 +66,16 @@ function executiveReceptionistRewrite(request: NextRequest) {
   return NextResponse.rewrite(url);
 }
 
+function wwwExecutiveReceptionistRedirect(request: NextRequest) {
+  const destination = executiveReceptionistWwwRedirectUrl(requestHost(request), request.nextUrl);
+  if (!destination) return null;
+  return NextResponse.redirect(destination, EXECUTIVE_RECEPTIONIST_WWW_REDIRECT_STATUS);
+}
+
 export async function middleware(request: NextRequest) {
+  const wwwRedirect = wwwExecutiveReceptionistRedirect(request);
+  if (wwwRedirect) return wwwRedirect;
+
   const redirected = legacyHostRedirect(request);
   if (redirected) return redirected;
 
@@ -111,5 +122,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!api/|_next/|.*\\..*).*)'],
+  matcher: ['/((?!_next/|.*\\..*).*)'],
 };

@@ -20,7 +20,7 @@ export const TRADE_PAGES: TradePage[] = [
     name: 'Plumbers',
     title: 'AI tools for plumbing companies | Front Porch Growth',
     description:
-      'How a plumbing shop uses Executive Receptionist for leak calls, ReputationFlow for reviews, and Lead Scout for property managers. Prices stay the published ones.',
+      'How a plumbing shop uses Executive Receptionist for leak calls, ReputationFlow for reviews, and Lead Scout for property managers.',
     h1: 'The leak call and the callback, for plumbing companies.',
     season: 'Plumbing demand shows up as interruptions: an active leak, a water heater, a drain, then a quieter fixture quote. The owner is often under a sink when the phone rings.',
     calls: ['Water still running', 'Drain or sewer backup', 'No hot water', 'A fixture that can wait until tomorrow'],
@@ -70,7 +70,7 @@ export const TRADE_PAGES: TradePage[] = [
     name: 'Roofers',
     title: 'AI tools for roofing companies | Front Porch Growth',
     description:
-      'Storm and leak intake for roofers, plus review requests and a lead search that does not send mail. Executive Receptionist texts the address and what happened.',
+      'Storm and leak intake for roofers, plus review requests and a lead search that does not send mail.',
     h1: 'The storm call, for roofing companies.',
     season: 'After a hail or wind event the phone is a pile of “we have a leak” calls while crews are already on roofs. The homeowner who reaches a person first usually books the inspection.',
     calls: ['Active leak after rain', 'Missing shingles', 'Insurance inspection questions', 'A replacement that can be scheduled'],

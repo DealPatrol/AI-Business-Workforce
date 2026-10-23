@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { POSTCARD_TRADES, getPostcardTrade } from '@/lib/postcards/trade-pages';
+import { POSTCARD_TRADES, getPostcardTrade, postcardTradeSeo } from '@/lib/postcards/trade-pages';
 import { absoluteSiteUrl } from '@/lib/site-url';
 
 export const dynamicParams = false;
@@ -13,9 +13,10 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ trade: string }> }): Promise<Metadata> {
   const { trade } = await params;
   const t = getPostcardTrade(trade);
-  if (!t) return {};
-  const title = `Marketing Postcards for ${t.plural.replace(/^./, (c) => c.toUpperCase())} | Front Porch Growth`;
-  const description = `Property-based direct mail for ${t.plural}: each postcard shows the homeowner a concept of ${t.concept} for their own home, with a QR code to request an estimate.`;
+  const seo = postcardTradeSeo(trade);
+  if (!t || !seo) return {};
+  const title = seo.title;
+  const description = seo.description;
   const url = absoluteSiteUrl(`/postcards/${t.slug}`);
   return { title: { absolute: title }, description, alternates: { canonical: url }, openGraph: { title, description, url, type: 'website' } };
 }

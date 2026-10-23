@@ -3,10 +3,11 @@ import Link from 'next/link';
 import { SuiteShell } from '@/components/suite/SuiteShell';
 import styles from '@/components/suite/suite.module.css';
 import { faqNode, jsonLdGraph } from '@/lib/ava/structured-data';
+import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 
-const title = 'ReputationFlow review requests | Front Porch Growth';
-const description =
-  'ReputationFlow requests reviews and drafts replies. The free Google review QR tool is on tryreputationflow.com. Professional is $20 a month. The same public review links are shown no matter the rating.';
+const seo = pageSeo('/reputation');
+const title = renderedTitle(seo);
+const description = seo.description;
 
 const FAQS = [
   {
@@ -24,7 +25,7 @@ const FAQS = [
 ] as const;
 
 export const metadata: Metadata = {
-  title: { absolute: title },
+  title: metadataTitle(seo),
   description,
   alternates: { canonical: '/reputation' },
   openGraph: { title, description, url: '/reputation', siteName: 'Front Porch Growth', type: 'website' },

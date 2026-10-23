@@ -4,10 +4,11 @@ import { SuiteShell } from '@/components/suite/SuiteShell';
 import styles from '@/components/suite/suite.module.css';
 import { AGENTS } from '@/lib/agents/catalog';
 import { faqNode, jsonLdGraph } from '@/lib/ava/structured-data';
+import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 
-const title = 'AI agents for home-service shops | Front Porch Growth';
-const description =
-  'Draft an estimate, a review reply, a job ad, a follow-up text, a service-area page, or an invoice reminder. The drafts stay on the page. Nothing is sent.';
+const seo = pageSeo('/agents');
+const title = renderedTitle(seo);
+const description = seo.description;
 
 const FAQS = [
   {
@@ -21,7 +22,7 @@ const FAQS = [
 ] as const;
 
 export const metadata: Metadata = {
-  title: { absolute: title },
+  title: metadataTitle(seo),
   description,
   alternates: { canonical: '/agents' },
   openGraph: { title, description, url: '/agents', siteName: 'Front Porch Growth', type: 'website' },

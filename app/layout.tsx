@@ -6,11 +6,11 @@ import { Analytics } from '@vercel/analytics/next';
 import { AdTracking } from '@/components/analytics/AdTracking';
 import { CaptureAttribution } from '@/components/analytics/CaptureAttribution';
 import { legacyHomeAnchorScript } from '@/lib/legacy-home-anchors';
+import { ROOT_DESCRIPTION, ROOT_TITLE } from '@/lib/seo/pages';
 import { getSiteUrl } from '@/lib/site-url';
 
-const title = 'Front Porch Growth';
-const description =
-  'Front Porch Growth is the home for YardMailer postcards, the Executive Receptionist AI receptionist, Lead Finder, and invoicing for home-service businesses.';
+const title = ROOT_TITLE;
+const description = ROOT_DESCRIPTION;
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),

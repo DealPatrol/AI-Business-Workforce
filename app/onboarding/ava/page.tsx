@@ -4,6 +4,7 @@ import { FormEvent, Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, CheckCircle2, Loader2, Mail, Sparkles } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
+import { CheckoutForm } from '@/components/checkout/CheckoutForm';
 import { AVA_VOICE_OPTIONS } from '@/lib/ava/voice-options';
 import {
   AVA_PLANS,
@@ -617,9 +618,9 @@ function OnboardingFallback() {
             The 7-day trial is created at checkout. Starter is $77 a month after that, with $0 setup.
             The setup form loads on this page next.
           </p>
-          <a className={styles.checkout} href="/api/checkout?plan=starter">
+          <CheckoutForm className={styles.checkout} href="/api/checkout?plan=starter">
             Start free 7-day trial
-          </a>
+          </CheckoutForm>
         </header>
       </div>
     </main>

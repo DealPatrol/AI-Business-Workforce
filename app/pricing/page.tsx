@@ -9,13 +9,14 @@ import {
   postcardPackageRows,
 } from '@/lib/postcards/pricing';
 import styles from '@/components/suite/suite.module.css';
+import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 
-const title = 'Pricing | Front Porch Growth';
-const description =
-  'YardMailer postcards are a $127 one-time setup plus $3.54 or $4.95 per card. Executive Receptionist plans are $77, $168, and $324 a month after a free 7-day trial. Invoicing is a waitlist.';
+const seo = pageSeo('/pricing');
+const title = renderedTitle(seo);
+const description = seo.description;
 
 export const metadata: Metadata = {
-  title: { absolute: title },
+  title: metadataTitle(seo),
   description,
   alternates: { canonical: '/pricing' },
   openGraph: {

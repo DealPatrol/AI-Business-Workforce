@@ -2,13 +2,14 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { SuiteShell } from '@/components/suite/SuiteShell';
 import styles from '@/components/suite/suite.module.css';
+import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 
-const title = 'Terms | Front Porch Growth';
-const description =
-  'Terms for Front Porch Growth: YardMailer postcards at $127 setup plus per card, Executive Receptionist plans, Lead Finder, and the invoicing waitlist.';
+const seo = pageSeo('/terms');
+const title = renderedTitle(seo);
+const description = seo.description;
 
 export const metadata: Metadata = {
-  title: { absolute: title },
+  title: metadataTitle(seo),
   description,
   alternates: { canonical: '/terms' },
   openGraph: {

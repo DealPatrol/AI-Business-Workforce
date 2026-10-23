@@ -69,6 +69,9 @@
   text-decoration: none;
   font-weight: 820;
   box-shadow: 0 8px 22px rgba(32, 92, 57, 0.16);
+  border: 0;
+  font-family: inherit;
+  cursor: pointer;
 }
 
 .navCta {

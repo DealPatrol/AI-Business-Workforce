@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { metadataTitle, pageSeo } from '@/lib/seo/pages';
+
+const seo = pageSeo('/property/[postcode]');
 
 export const metadata: Metadata = {
-  title: 'Project Concept Demo | YardMailer',
-  description:
-    'Preview the homeowner-facing destination for a YardMailer property-concept postcard campaign.',
+  title: metadataTitle(seo),
+  description: seo.description,
 };
 
 export default function PropertyLayout({ children }: { children: ReactNode }) {

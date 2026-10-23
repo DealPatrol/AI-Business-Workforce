@@ -248,6 +248,9 @@
   border-radius: 9px;
   padding: 14px 18px;
   font-weight: 850;
+  border: 0;
+  font-family: inherit;
+  cursor: pointer;
 }
 
 .form button {

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { TrialSignupLink } from '@/components/dispatch/TrialSignupLink';
-import { MISSED_CALL_ADS, missedCallTrade } from '@/lib/dispatch/missed-call-ads';
+import { MISSED_CALL_ADS, missedCallSeo, missedCallTrade } from '@/lib/dispatch/missed-call-ads';
 import { AVA_PLANS } from '@/lib/ava/pricing';
 import { faqNode, jsonLdGraph } from '@/lib/ava/structured-data';
 import { absoluteSiteUrl } from '@/lib/site-url';
@@ -30,8 +30,9 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   const params = await searchParams;
   const raw = Array.isArray(params.trade) ? params.trade[0] : params.trade;
   const ad = MISSED_CALL_ADS[missedCallTrade(raw)];
-  const title = `${ad.label}: missed after-hours calls | Executive Receptionist`;
-  const description = `${ad.hook} Executive Receptionist answers, texts you the lead, and starts at ${AVA_PLANS.starter.monthlyLabel}/month after a 7-day trial.`;
+  const seo = missedCallSeo(ad.trade);
+  const title = seo.title;
+  const description = seo.description;
   return {
     title: { absolute: title },
     description,

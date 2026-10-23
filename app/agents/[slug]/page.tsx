@@ -5,6 +5,7 @@ import { AgentForm } from '@/components/agents/AgentForm';
 import { SuiteShell } from '@/components/suite/SuiteShell';
 import styles from '@/components/suite/suite.module.css';
 import { AGENTS, getAgent } from '@/lib/agents/catalog';
+import { agentDocumentTitle } from '@/lib/seo/pages';
 
 export function generateStaticParams() {
   return AGENTS.map((agent) => ({ slug: agent.id }));
@@ -13,7 +14,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const agent = getAgent((await params).slug);
   if (!agent) return {};
-  const title = `${agent.title} | Front Porch Growth`;
+  const title = agentDocumentTitle(agent.title);
   return {
     title: { absolute: title },
     description: agent.blurb,

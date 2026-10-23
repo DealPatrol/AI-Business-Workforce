@@ -6,24 +6,26 @@ import './ava-redesign.css';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { AvaViewContent } from '@/components/analytics/AvaViewContent';
+import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
+
+const seo = pageSeo('/ava');
+const title = renderedTitle(seo);
 
 export const metadata: Metadata = {
-  title: 'Executive Receptionist AI Receptionist for Home Service Businesses',
-  description:
-    'Executive Receptionist answers missed and after-hours calls for HVAC, plumbing, electrical, roofing, and other home-service shops, qualifies the lead, and texts you. Self-serve plans from $77/month with a free 7-day trial.',
+  title: metadataTitle(seo),
+  description: seo.description,
   alternates: { canonical: '/ava' },
   openGraph: {
-    title: 'Executive Receptionist AI Receptionist for Home Service Businesses',
-    description:
-      'Turn missed and after-hours calls into qualified leads. Executive Receptionist answers 24/7, captures job details, and texts your phone. Plans from $77/month.',
+    title,
+    description: seo.description,
     url: '/ava',
     siteName: 'Executive Receptionist',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Executive Receptionist AI Receptionist for Home Service Businesses',
-    description: 'Self-serve plans from $77/month. Built for contractors and home-service businesses.',
+    title,
+    description: seo.description,
   },
 };
 
