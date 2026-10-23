@@ -12,6 +12,43 @@ import styles from './receptionist.module.css';
 
 const plans = (Object.keys(AVA_PLANS) as AvaPlanKey[]).map((key) => AVA_PLANS[key]);
 
+// Structured data built only from published plan data and on-page FAQs (no ratings or review counts).
+const structured = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: 'Executive Receptionist',
+    description:
+      'AI phone receptionist that answers calls, takes the caller name, number and reason, and texts the lead to the business.',
+    brand: { '@type': 'Brand', name: 'Front Porch Growth' },
+    offers: plans.map((plan) => ({
+      '@type': 'Offer',
+      name: plan.productName,
+      price: (plan.monthlyCents / 100).toFixed(2),
+      priceCurrency: 'USD',
+      availability: 'https://schema.org/InStock',
+      url: 'https://frontporchgrowth.com/receptionist#pricing',
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: EXECUTIVE_FAQS.map((faq) => ({
+      '@type': 'Question',
+      name: faq.q,
+      acceptedAnswer: { '@type': 'Answer', text: faq.a },
+    })),
+  },
+];
+
+const trustPoints = [
+  'Prices published below',
+  '7-day free trial',
+  '$0 setup',
+  'Cancel anytime',
+  'Call the demo line before you pay',
+];
+
 const description =
   'Executive Receptionist answers the phone for dentists, law firms, med spas, CPAs, financial advisors, real estate, and chiropractors. Choose a voice, hear a sample call, and start a 7-day trial.';
 
@@ -38,6 +75,10 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function ReceptionistPage() {
   return (
     <main className={styles.page}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structured).replace(/</g, '\\u003c') }}
+      />
       <nav className={styles.nav}>
         <Link href="/receptionist">Executive Receptionist</Link>
         <div>
@@ -61,22 +102,23 @@ export default function ReceptionistPage() {
           number, and texts you the lead.
         </p>
         <div className={styles.heroActions}>
-          <a className={styles.gold} href="#voices">
-            Hear the voices
+          <a className={styles.gold} href={LIVE_DEMO_PHONE_HREF} aria-label={`Call the live demo at ${LIVE_DEMO_PHONE_DISPLAY}`}>
+            Call the live demo · {LIVE_DEMO_PHONE_DISPLAY}
           </a>
-          <a className={styles.quiet} href="#pricing">
-            View the rate card
+          <a className={styles.quiet} href="#voices">
+            Hear the voices
           </a>
         </div>
         <p className={styles.fine}>
-          Call the live demo:{' '}
-          <a href={LIVE_DEMO_PHONE_HREF}>
-            <strong>{LIVE_DEMO_PHONE_DISPLAY}</strong>
-          </a>{' '}
-          (answers as a sample home-service business) or try it in your browser at{' '}
-          <Link href="/receptionist-demo#live-demo">the live demo</Link>.
+          The demo line answers as a sample HVAC company, Front Porch Heating &amp; Air. Ask about a broken AC,
+          a tune-up, or a price and hear how it handles you. No phone handy?{' '}
+          <Link href="/receptionist-demo#live-demo">Try it in your browser</Link>.
         </p>
-        <p className={styles.fine}>Free 7-day trial. $0 setup. Cancel anytime.</p>
+        <ul className={styles.trust} aria-label="What you can check before you buy">
+          {trustPoints.map((point) => (
+            <li key={point}>{point}</li>
+          ))}
+        </ul>
       </section>
 
       <section className={styles.band} id="industries">
@@ -189,14 +231,23 @@ export default function ReceptionistPage() {
       <section className={styles.closing}>
         <p className={styles.kicker}>The next call</p>
         <h2>Have it answered before it reaches voicemail.</h2>
-        <TrackedCheckoutLink className={styles.gold} href="/api/checkout?plan=growth" plan="growth">
-          Start the Growth trial
-        </TrackedCheckoutLink>
+        <div className={styles.heroActions}>
+          <TrackedCheckoutLink className={styles.gold} href="/api/checkout?plan=growth" plan="growth">
+            Start the Growth trial
+          </TrackedCheckoutLink>
+          <a className={styles.quiet} href={LIVE_DEMO_PHONE_HREF}>
+            Call the demo first
+          </a>
+        </div>
         <p className={styles.fine}>
           Part of <Link href="/">Front Porch Growth</Link>. Questions:{' '}
           <a href="mailto:colecollins763@gmail.com">colecollins763@gmail.com</a>
         </p>
       </section>
+
+      <a className={styles.callBar} href={LIVE_DEMO_PHONE_HREF}>
+        Call the live demo · {LIVE_DEMO_PHONE_DISPLAY}
+      </a>
     </main>
   );
 }
