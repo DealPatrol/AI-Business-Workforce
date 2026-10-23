@@ -357,7 +357,54 @@
   }
 }
 
+.trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  color: rgba(246, 241, 232, 0.78);
+}
+
+.trust li::before {
+  content: '✓ ';
+  color: #c4a574;
+}
+
+.callBar {
+  display: none;
+}
+
 @media (max-width: 900px) {
+  .page {
+    padding-bottom: 72px;
+  }
+
+  .callBar {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 52px;
+    background: linear-gradient(180deg, #e7d3a8, #b8924f);
+    color: #1a140c;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  }
+
+  .heroActions a {
+    width: 100%;
+  }
+
   .nav > div {
     display: none;
   }
