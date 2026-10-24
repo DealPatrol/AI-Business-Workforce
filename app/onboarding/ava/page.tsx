@@ -14,6 +14,7 @@ import {
 } from '@/lib/ava/pricing';
 import styles from './onboarding.module.css';
 import { readAttribution, readBrowserIds } from '@/lib/analytics/attribution';
+import { CheckoutSuccessTracking } from '@/components/analytics/CheckoutSuccessTracking';
 import { splitContact } from '@/lib/analytics/contact';
 import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
 import { trackOnboardingSubmitted } from '@/lib/analytics/events';
@@ -301,6 +302,7 @@ function AvaOnboardingForm() {
 
   return (
     <main className={styles.page}>
+      <CheckoutSuccessTracking sessionId={sessionId} plan={searchParams.get('plan') || undefined} />
       <nav className={styles.nav}>
         <Link href="/ava">
           <ArrowLeft /> Executive Receptionist
