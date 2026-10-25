@@ -40,6 +40,10 @@
 .transcript li[data-from='you'] { color: #5b6670; }
 .fine { margin: 0; font: 400 12px/1.45 var(--er-sans, system-ui); color: #5b6670; }
 .widget { position: fixed; right: 16px; bottom: 16px; z-index: 60; }
+@media (max-width: 900px) {
+  /* Clear the receptionist call bar: 12px inset + 52px bar + 12px gap. */
+  .widget { bottom: calc(12px + 52px + 12px + env(safe-area-inset-bottom)); }
+}
 .widgetLauncher {
   display: grid; text-align: left; gap: 2px; padding: 12px 18px; border-radius: 999px; border: 0;
   background: #15222e; color: #fff; font: 600 15px/1.2 var(--er-sans, system-ui); cursor: pointer;

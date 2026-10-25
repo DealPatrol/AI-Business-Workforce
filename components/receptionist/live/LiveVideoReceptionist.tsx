@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ConversationProvider, useConversation } from '@elevenlabs/react';
 import { LIVE_DEMO_PHONE_DISPLAY, LIVE_DEMO_PHONE_HREF } from '@/lib/ava/demo-phone';
 import { LiveAvatar, type AvatarMouth } from './LiveAvatar';
@@ -14,15 +14,24 @@ function Inner({ compact = false }: { compact?: boolean }) {
   const [phase, setPhase] = useState<Phase>('idle');
   const [error, setError] = useState('');
   const [lines, setLines] = useState<Line[]>([]);
+  const micRef = useRef<MediaStream | null>(null);
+  const startLock = useRef(false);
+  const aliveRef = useRef(true);
 
   const conversation = useConversation({
-    onConnect: () => setPhase('live'),
-    onDisconnect: () => setPhase((p) => (p === 'connecting' ? 'idle' : 'ended')),
+    onConnect: () => {
+      if (aliveRef.current) setPhase('live');
+    },
+    onDisconnect: () => {
+      if (!aliveRef.current) return;
+      setPhase((p) => (p === 'connecting' ? 'idle' : 'ended'));
+    },
     onError: (message: unknown) => {
+      if (!aliveRef.current) return;
       setError(typeof message === 'string' ? message : 'The live receptionist could not continue.');
     },
     onMessage: (msg: { source?: string; message?: string }) => {
-      if (!msg?.message) return;
+      if (!aliveRef.current || !msg?.message) return;
       const from = msg.source === 'user' ? 'you' : 'ai';
       setLines((l) => [...l.slice(-5), { from, text: msg.message as string }]);
     },
@@ -30,6 +39,22 @@ function Inner({ compact = false }: { compact?: boolean }) {
 
   const convRef = useRef(conversation);
   convRef.current = conversation;
+
+  const releaseMic = useCallback(() => {
+    const stream = micRef.current;
+    micRef.current = null;
+    if (!stream) return;
+    for (const track of stream.getTracks()) track.stop();
+  }, []);
+
+  useEffect(() => {
+    aliveRef.current = true;
+    return () => {
+      aliveRef.current = false;
+      releaseMic();
+      convRef.current.endSession();
+    };
+  }, [releaseMic]);
 
   const sample = useCallback((): AvatarMouth => {
     const c = convRef.current;
@@ -60,32 +85,50 @@ function Inner({ compact = false }: { compact?: boolean }) {
   }, []);
 
   async function start() {
+    if (startLock.current) return;
+    startLock.current = true;
     setError('');
     setLines([]);
     setPhase('connecting');
     try {
-      await navigator.mediaDevices.getUserMedia({ audio: true });
-    } catch {
-      setError('Microphone access is needed to talk. You can call instead.');
-      setPhase('idle');
-      return;
-    }
-    try {
-      const res = await fetch('/api/receptionist/live/session', { cache: 'no-store' });
-      const info = (await res.json()) as SessionInfo;
-      if (info.mode === 'signed') {
-        await conversation.startSession({ signedUrl: info.signedUrl, connectionType: 'websocket' });
-      } else {
-        await conversation.startSession({ agentId: info.agentId, connectionType: 'websocket' });
+      let stream: MediaStream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      } catch {
+        if (!aliveRef.current) return;
+        setError('Microphone access is needed to talk. You can call instead.');
+        setPhase('idle');
+        return;
       }
+      micRef.current = stream;
+      if (!aliveRef.current) return;
+      // Permission probe only. The session opens its own input, so this one must not stay live.
+      releaseMic();
+
+      const res = await fetch('/api/receptionist/live/session', { cache: 'no-store' });
+      if (!aliveRef.current) return;
+      const info = (await res.json()) as SessionInfo;
+      if (!aliveRef.current) return;
+      if (info.mode === 'signed') {
+        await convRef.current.startSession({ signedUrl: info.signedUrl, connectionType: 'websocket' });
+      } else {
+        await convRef.current.startSession({ agentId: info.agentId, connectionType: 'websocket' });
+      }
+      if (!aliveRef.current) convRef.current.endSession();
     } catch (e) {
+      if (!aliveRef.current) return;
       setError(e instanceof Error ? e.message : 'Could not connect. Please call instead.');
       setPhase('idle');
+    } finally {
+      releaseMic();
+      startLock.current = false;
     }
   }
 
   async function stop() {
-    await conversation.endSession();
+    releaseMic();
+    await convRef.current.endSession();
+    if (!aliveRef.current) return;
     setPhase('ended');
   }
 
