@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { LiveVideoReceptionist } from '@/components/receptionist/live/LiveVideoReceptionist';
+import { realFaceEnabled } from '@/lib/live-receptionist/config';
 import { AVA_PLANS } from '@/lib/ava/pricing';
 import styles from './live.module.css';
 
@@ -21,7 +22,8 @@ export default function LiveReceptionistPage() {
           <h1 className={styles.h1}>Put a face on your website that can answer.</h1>
           <p className={styles.lede}>
             Press Start, allow your microphone, and talk. This is the same Executive Receptionist that answers our demo
-            phone line, shown as an animated assistant whose lips move with its voice.
+            phone line, shown on screen as a computer-generated video receptionist whose lips move with its voice.
+            It is an AI, not a real person.
           </p>
           <ul className={styles.points}>
             <li>Answers as the demo business “Front Porch Heating &amp; Air”</li>
@@ -33,7 +35,7 @@ export default function LiveReceptionistPage() {
             {AVA_PLANS.pro.monthlyLabel} per month. <Link href="/receptionist">See plans</Link>
           </p>
         </div>
-        <LiveVideoReceptionist />
+        <LiveVideoReceptionist realFace={realFaceEnabled()} />
       </section>
     </main>
   );

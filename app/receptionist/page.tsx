@@ -9,7 +9,7 @@ import { EXAMPLE_NOTES, EXECUTIVE_FAQS, EXECUTIVE_INDUSTRIES } from '@/lib/execu
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 import { EXECUTIVE_RECEPTIONIST_ORIGIN } from '@/lib/site-url';
 import { FaceToFaceWidget } from '@/components/receptionist/live/FaceToFaceWidget';
-import { liveWidgetEnabled } from '@/lib/live-receptionist/config';
+import { liveWidgetEnabled, realFaceEnabled } from '@/lib/live-receptionist/config';
 import styles from './receptionist.module.css';
 
 const plans = (Object.keys(AVA_PLANS) as AvaPlanKey[]).map((key) => AVA_PLANS[key]);
@@ -249,7 +249,7 @@ export default function ReceptionistPage() {
       <a className={styles.callBar} href={LIVE_DEMO_PHONE_HREF}>
         Call the live demo · {LIVE_DEMO_PHONE_DISPLAY}
       </a>
-      {liveWidgetEnabled() ? <FaceToFaceWidget /> : null}
+      {liveWidgetEnabled() ? <FaceToFaceWidget realFace={realFaceEnabled()} /> : null}
     </main>
   );
 }

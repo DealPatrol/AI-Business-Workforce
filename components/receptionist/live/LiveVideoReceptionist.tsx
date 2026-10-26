@@ -4,19 +4,33 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { ConversationProvider, useConversation } from '@elevenlabs/react';
 import { LIVE_DEMO_PHONE_DISPLAY, LIVE_DEMO_PHONE_HREF } from '@/lib/ava/demo-phone';
 import { LiveAvatar, type AvatarMouth } from './LiveAvatar';
+import { RealFaceSession } from './realFaceSession';
 import styles from './live.module.css';
 
-type SessionInfo = { mode: 'signed'; signedUrl: string } | { mode: 'public'; agentId: string };
+type SessionInfo = ({ mode: 'signed'; signedUrl: string } | { mode: 'public'; agentId: string }) & {
+  simliToken?: string;
+};
 type Phase = 'idle' | 'connecting' | 'live' | 'ended';
 type Line = { from: 'ai' | 'you'; text: string };
 
-function Inner({ compact = false }: { compact?: boolean }) {
+type Props = {
+  compact?: boolean;
+  /** Server-side flag (SIMLI_API_KEY set): show the photorealistic stock face instead of the illustration. */
+  realFace?: boolean;
+};
+
+function Inner({ compact = false, realFace = false }: Props) {
   const [phase, setPhase] = useState<Phase>('idle');
   const [error, setError] = useState('');
   const [lines, setLines] = useState<Line[]>([]);
   const micRef = useRef<MediaStream | null>(null);
   const startLock = useRef(false);
   const aliveRef = useRef(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const realRef = useRef<RealFaceSession | null>(null);
+  const [usingReal, setUsingReal] = useState(false);
+  const [realSpeaking, setRealSpeaking] = useState(false);
 
   const conversation = useConversation({
     onConnect: () => {
@@ -52,6 +66,7 @@ function Inner({ compact = false }: { compact?: boolean }) {
     return () => {
       aliveRef.current = false;
       releaseMic();
+      realRef.current?.stop();
       convRef.current.endSession();
     };
   }, [releaseMic]);
@@ -109,6 +124,36 @@ function Inner({ compact = false }: { compact?: boolean }) {
       if (!aliveRef.current) return;
       const info = (await res.json()) as SessionInfo;
       if (!aliveRef.current) return;
+      if (info.simliToken && videoRef.current && audioRef.current) {
+        const wsUrl =
+          info.mode === 'signed'
+            ? info.signedUrl
+            : `wss://api.elevenlabs.io/v1/convai/conversation?agent_id=${encodeURIComponent(info.agentId)}`;
+        setUsingReal(true);
+        const session = new RealFaceSession({
+          simliToken: info.simliToken,
+          wsUrl,
+          video: videoRef.current,
+          audio: audioRef.current,
+          events: {
+            onLive: () => aliveRef.current && setPhase('live'),
+            onEnded: () => {
+              if (realRef.current === session) realRef.current = null;
+              if (!aliveRef.current) return;
+              setRealSpeaking(false);
+              setPhase((p) => (p === 'connecting' ? 'idle' : 'ended'));
+            },
+            onError: (m) => aliveRef.current && setError(m),
+            onSpeaking: (v) => aliveRef.current && setRealSpeaking(v),
+            onLine: (from, text) => aliveRef.current && setLines((l) => [...l.slice(-5), { from, text }]),
+          },
+        });
+        realRef.current = session;
+        await session.start();
+        if (!aliveRef.current) session.stop();
+        return;
+      }
+      setUsingReal(false);
       if (info.mode === 'signed') {
         await convRef.current.startSession({ signedUrl: info.signedUrl, connectionType: 'websocket' });
       } else {
@@ -127,16 +172,23 @@ function Inner({ compact = false }: { compact?: boolean }) {
 
   async function stop() {
     releaseMic();
+    if (realRef.current) {
+      realRef.current.stop();
+      return;
+    }
     await convRef.current.endSession();
     if (!aliveRef.current) return;
     setPhase('ended');
   }
 
+  const speaking = usingReal ? realSpeaking : conversation.isSpeaking;
+  const showReal = realFace && (usingReal || phase === 'idle' || phase === 'connecting');
+
   const avatarState =
     phase === 'connecting'
       ? 'connecting'
       : phase === 'live'
-        ? conversation.isSpeaking
+        ? speaking
           ? 'speaking'
           : 'listening'
         : 'idle';
@@ -145,7 +197,7 @@ function Inner({ compact = false }: { compact?: boolean }) {
     phase === 'connecting'
       ? 'Connecting…'
       : phase === 'live'
-        ? conversation.isSpeaking
+        ? speaking
           ? 'Speaking'
           : 'Listening — go ahead'
         : phase === 'ended'
@@ -155,8 +207,24 @@ function Inner({ compact = false }: { compact?: boolean }) {
   return (
     <div className={`${styles.stage} ${compact ? styles.compact : ''}`}>
       <div className={styles.frame} data-state={avatarState}>
-        <LiveAvatar sample={sample} state={avatarState} />
-        <span className={styles.aiBadge}>AI assistant · not a real person</span>
+        {/* Simli streams the photorealistic stock face + the agent's voice into these elements. */}
+        <video
+          ref={videoRef}
+          className={styles.video}
+          autoPlay
+          playsInline
+          muted
+          hidden={!showReal || phase !== 'live'}
+          aria-label="AI receptionist video (computer-generated stock avatar)"
+        />
+        <audio ref={audioRef} autoPlay />
+        {showReal && phase !== 'live' ? (
+          <div className={styles.realPlaceholder} aria-hidden="true">
+            <span>{phase === 'connecting' ? 'Connecting the video…' : 'Press Start to see and talk to the AI receptionist'}</span>
+          </div>
+        ) : null}
+        {!showReal ? <LiveAvatar sample={sample} state={avatarState} /> : null}
+        <span className={styles.aiBadge}>AI receptionist · not a real person</span>
         <span className={styles.status} aria-live="polite">
           <i className={styles.dot} data-on={phase === 'live'} /> {statusText}
         </span>
@@ -194,17 +262,19 @@ function Inner({ compact = false }: { compact?: boolean }) {
       ) : null}
 
       <p className={styles.fine}>
-        You are talking to an AI voice assistant shown as an illustrated character. Your microphone is used only while
+        {realFace
+          ? 'You are talking to an AI receptionist. The face is a computer-generated stock avatar, not a real person or employee.'
+          : 'You are talking to an AI voice assistant shown as an illustrated character.'} Your microphone is used only while
         the conversation is open. It answers as the demo business “Front Porch Heating &amp; Air.”
       </p>
     </div>
   );
 }
 
-export function LiveVideoReceptionist({ compact = false }: { compact?: boolean }) {
+export function LiveVideoReceptionist({ compact = false, realFace = false }: Props) {
   return (
     <ConversationProvider>
-      <Inner compact={compact} />
+      <Inner compact={compact} realFace={realFace} />
     </ConversationProvider>
   );
 }

@@ -8,7 +8,7 @@ import styles from './live.module.css';
  * Floating "Talk to us face to face" launcher. Not mounted anywhere by default;
  * render it only when NEXT_PUBLIC_LIVE_AVATAR_WIDGET=1 (see liveWidgetEnabled()).
  */
-export function FaceToFaceWidget() {
+export function FaceToFaceWidget({ realFace = false }: { realFace?: boolean }) {
   const [open, setOpen] = useState(false);
   return (
     <div className={styles.widget}>
@@ -17,7 +17,7 @@ export function FaceToFaceWidget() {
           <button type="button" className={styles.widgetClose} onClick={() => setOpen(false)} aria-label="Close">
             ×
           </button>
-          <LiveVideoReceptionist compact />
+          <LiveVideoReceptionist compact realFace={realFace} />
         </div>
       ) : (
         <button type="button" className={styles.widgetLauncher} onClick={() => setOpen(true)}>

@@ -1,23 +1,14 @@
 import { NextResponse } from 'next/server';
-import { liveAgentId } from '@/lib/live-receptionist/config';
+import { liveAgentId, simliFaceId } from '@/lib/live-receptionist/config';
 
 export const dynamic = 'force-dynamic';
 
-/**
- * GET /api/receptionist/live/session
- *
- * Returns a short-lived ElevenLabs signed URL when ELEVENLABS_API_KEY is configured.
- * Without a key it returns the public agent id so the browser can connect directly
- * (works only while the agent has authentication disabled). The key is never returned.
- */
-export async function GET() {
-  const agentId = liveAgentId();
+const NO_STORE = { 'Cache-Control': 'no-store' };
+
+/** Short-lived ElevenLabs signed URL, or null without a key / on failure. The key is never returned. */
+async function elevenSignedUrl(agentId: string): Promise<string | null> {
   const apiKey = process.env.ELEVENLABS_API_KEY;
-
-  if (!apiKey) {
-    return NextResponse.json({ mode: 'public', agentId }, { headers: { 'Cache-Control': 'no-store' } });
-  }
-
+  if (!apiKey) return null;
   try {
     const params = new URLSearchParams({ agent_id: agentId });
     const res = await fetch(`https://api.elevenlabs.io/v1/convai/conversation/get-signed-url?${params}`, {
@@ -25,18 +16,41 @@ export async function GET() {
       cache: 'no-store',
     });
     const data = (await res.json().catch(() => ({}))) as { signed_url?: string };
-    if (!res.ok || !data.signed_url) {
-      // Fall back to a public connection rather than failing the visitor.
-      return NextResponse.json(
-        { mode: 'public', agentId, warning: `signed-url request failed (${res.status})` },
-        { headers: { 'Cache-Control': 'no-store' } },
-      );
-    }
-    return NextResponse.json(
-      { mode: 'signed', signedUrl: data.signed_url },
-      { headers: { 'Cache-Control': 'no-store' } },
-    );
+    return res.ok && data.signed_url ? data.signed_url : null;
   } catch {
-    return NextResponse.json({ mode: 'public', agentId }, { headers: { 'Cache-Control': 'no-store' } });
+    return null;
   }
+}
+
+/** Short-lived Simli session token for the stock face, or null when SIMLI_API_KEY is unset / on failure. */
+async function simliSessionToken(): Promise<string | null> {
+  const apiKey = process.env.SIMLI_API_KEY;
+  if (!apiKey) return null;
+  try {
+    const res = await fetch('https://api.simli.ai/compose/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-simli-api-key': apiKey },
+      body: JSON.stringify({ faceId: simliFaceId(), handleSilence: true, maxSessionLength: 600, maxIdleTime: 120 }),
+      cache: 'no-store',
+    });
+    const data = (await res.json().catch(() => ({}))) as { session_token?: string };
+    return res.ok && data.session_token ? data.session_token : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * GET /api/receptionist/live/session
+ *
+ * - `simliToken` is present when the photorealistic face is available (SIMLI_API_KEY set and the token
+ *   minted). The browser then streams the ElevenLabs agent's audio into the Simli face.
+ * - Otherwise the browser uses the animated fallback face.
+ * Secrets never leave the server; only short-lived session credentials do.
+ */
+export async function GET() {
+  const agentId = liveAgentId();
+  const [signedUrl, simliToken] = await Promise.all([elevenSignedUrl(agentId), simliSessionToken()]);
+  const base = signedUrl ? { mode: 'signed' as const, signedUrl } : { mode: 'public' as const, agentId };
+  return NextResponse.json(simliToken ? { ...base, simliToken } : base, { headers: NO_STORE });
 }
