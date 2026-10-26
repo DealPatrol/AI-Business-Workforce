@@ -34,11 +34,14 @@ function b64ToBytes(b64: string) {
   return out;
 }
 
-function int16ToB64(pcm: Int16Array) {
-  const u8 = new Uint8Array(pcm.buffer, pcm.byteOffset, pcm.byteLength);
+function bytesToB64(bytes: Uint8Array) {
   let s = '';
-  for (let i = 0; i < u8.length; i += 8192) s += String.fromCharCode(...u8.subarray(i, i + 8192));
+  for (let i = 0; i < bytes.length; i += 8192) s += String.fromCharCode(...bytes.subarray(i, i + 8192));
   return btoa(s);
+}
+
+function int16ToB64(pcm: Int16Array) {
+  return bytesToB64(new Uint8Array(pcm.buffer, pcm.byteOffset, pcm.byteLength));
 }
 
 function ulawToInt16(u8: Uint8Array) {
@@ -51,6 +54,27 @@ function ulawToInt16(u8: Uint8Array) {
     let s = ((mant << 3) + 0x84) << exp;
     s -= 0x84;
     out[i] = sign ? -s : s;
+  }
+  return out;
+}
+
+/** G.711 u-law, the inverse of ulawToInt16 (same encoder the ElevenLabs client uses). */
+function int16ToUlaw(pcm: Int16Array) {
+  const out = new Uint8Array(pcm.length);
+  for (let i = 0; i < pcm.length; i++) {
+    let sample = pcm[i];
+    const sign = (sample >> 8) & 0x80;
+    if (sign) sample = -sample;
+    sample += 0x84;
+    if (sample > 32635) sample = 32635;
+    let exponent = 7;
+    let mask = 0x4000;
+    while (exponent > 0 && (sample & mask) === 0) {
+      exponent--;
+      mask >>= 1;
+    }
+    const mantissa = (sample >> (exponent + 3)) & 0x0f;
+    out[i] = ~(sign | (exponent << 4) | mantissa);
   }
   return out;
 }
@@ -84,6 +108,13 @@ function toSimliPcm(b64: string, format: string) {
   return new Uint8Array(resample(pcm, rate, TARGET_RATE).buffer);
 }
 
+/** Encodes one mic buffer as the PCM16 or u-law base64 payload ElevenLabs requested. */
+function toAgentAudio(pcm: Int16Array, fromRate: number, format: string, toRate: number) {
+  const samples = resample(pcm, fromRate, toRate);
+  if (format.startsWith('ulaw')) return bytesToB64(int16ToUlaw(samples));
+  return int16ToB64(samples);
+}
+
 export class RealFaceSession {
   private simli: SimliClient | null = null;
   private ws: WebSocket | null = null;
@@ -91,6 +122,7 @@ export class RealFaceSession {
   private ctx: AudioContext | null = null;
   private proc: ScriptProcessorNode | null = null;
   private outFormat = 'pcm_16000';
+  private inFormat = 'pcm_16000';
   private inRate = TARGET_RATE;
   private speakingTimer: ReturnType<typeof setTimeout> | null = null;
   private closed = false;
@@ -129,7 +161,8 @@ export class RealFaceSession {
         case 'conversation_initiation_metadata': {
           const m = data.conversation_initiation_metadata_event ?? {};
           this.outFormat = m.agent_output_audio_format || 'pcm_16000';
-          this.inRate = Number(String(m.user_input_audio_format || 'pcm_16000').split('_')[1]) || TARGET_RATE;
+          this.inFormat = String(m.user_input_audio_format || 'pcm_16000');
+          this.inRate = Number(this.inFormat.split('_')[1]) || TARGET_RATE;
           this.startMic().then(
             () => !this.closed && events.onLive(),
             () => this.fail('Microphone access is needed to talk. You can call instead.'),
@@ -179,6 +212,10 @@ export class RealFaceSession {
     this.mic = mic;
     const ctx = new AudioContext({ sampleRate: this.inRate });
     this.ctx = ctx;
+    // Created from the socket callback, long after Start. Chrome and Safari leave that
+    // context suspended, and a suspended context never fires onaudioprocess.
+    await ctx.resume();
+    if (this.closed) return;
     const src = ctx.createMediaStreamSource(mic);
     const proc = ctx.createScriptProcessor(2048, 1, 1);
     this.proc = proc;
@@ -188,7 +225,8 @@ export class RealFaceSession {
       const f = e.inputBuffer.getChannelData(0);
       const pcm = new Int16Array(f.length);
       for (let i = 0; i < f.length; i++) pcm[i] = Math.max(-1, Math.min(1, f[i])) * 0x7fff;
-      ws.send(JSON.stringify({ user_audio_chunk: int16ToB64(pcm) }));
+      const chunk = toAgentAudio(pcm, e.inputBuffer.sampleRate, this.inFormat, this.inRate);
+      ws.send(JSON.stringify({ user_audio_chunk: chunk }));
     };
     src.connect(proc);
     // ScriptProcessor only runs when connected; route through a muted gain so nothing is played back.
