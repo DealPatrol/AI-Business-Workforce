@@ -73,6 +73,12 @@ export default function PrivacyPage() {
           a shared event id, so a browser event and a server event are not counted twice.
         </p>
         <p>
+          On the Executive Receptionist pages, the Meta Pixel may also record each page you view
+          (including moves between pages), a view of the receptionist page, a tap on the live demo phone
+          number (sent as a Lead), a click on a plan&apos;s checkout button, and a StartTrial event when
+          Stripe returns you to the setup page after checkout. We do not send card details to Meta.
+        </p>
+        <p>
           These tags are not loaded unless we have configured their IDs. If the IDs are not set, the
           tags are not added to the page.
         </p>

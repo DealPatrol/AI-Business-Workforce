@@ -1,5 +1,7 @@
 import { Cormorant_Garamond, Outfit } from 'next/font/google';
 import type { ReactNode } from 'react';
+import { AvaViewContent } from '@/components/analytics/AvaViewContent';
+import { DemoCallLeadTracking } from '@/components/analytics/DemoCallLeadTracking';
 
 const serif = Cormorant_Garamond({
   subsets: ['latin'],
@@ -17,5 +19,9 @@ const sans = Outfit({
 });
 
 export default function ReceptionistLayout({ children }: { children: ReactNode }) {
-  return <div className={`${serif.variable} ${sans.variable}`}>{children}</div>;
+  return <div className={`${serif.variable} ${sans.variable}`}>
+      <AvaViewContent />
+      <DemoCallLeadTracking />
+      {children}
+    </div>;
 }

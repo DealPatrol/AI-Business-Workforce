@@ -124,3 +124,40 @@ export function trackOnboardingSubmitted(input: { eventId: string; email?: strin
   }
   return eventId;
 }
+
+/** PageView for client-side route changes (the first one comes from the inline pixel snippet). */
+export function trackPageView() {
+  if (!metaPixelEnabled() || typeof window === 'undefined' || typeof window.fbq !== 'function') return;
+  window.fbq('track', 'PageView');
+}
+
+/** Lead when a visitor taps the live demo phone number. */
+export function trackDemoCallClick() {
+  const eventId = newEventId();
+  if (readGa4Id()) gtagEvent('demo_call_click', { transaction_id: eventId });
+  metaTrack('track', 'Lead', eventId, { content_name: 'demo-call' });
+  postServerEvent('Lead', eventId);
+  return eventId;
+}
+
+/**
+ * StartTrial after Stripe returns to the success page. The event id is derived from the
+ * checkout session so reloads and the server copy deduplicate; sessionStorage stops repeat fires.
+ */
+export function trackCheckoutCompleted(sessionId: string, plan?: string) {
+  if (typeof window === 'undefined' || !sessionId) return '';
+  const safe = sessionId.replace(/[^A-Za-z0-9_]/g, '').slice(0, 80);
+  if (!safe) return '';
+  const eventId = `trial-${safe}`;
+  const key = `meta-start-trial:${safe}`;
+  try {
+    if (window.sessionStorage.getItem(key)) return eventId;
+    window.sessionStorage.setItem(key, '1');
+  } catch {
+    // storage blocked; still send once for this render
+  }
+  if (readGa4Id()) gtagEvent('trial_started', { transaction_id: eventId, plan: plan || undefined });
+  metaTrack('track', 'StartTrial', eventId, plan ? { content_name: plan } : undefined);
+  postServerEvent('StartTrial', eventId);
+  return eventId;
+}
