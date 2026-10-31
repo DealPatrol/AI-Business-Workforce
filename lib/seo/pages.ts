@@ -5,7 +5,7 @@ export const ROOT_TITLE = 'Front Porch Growth';
 export const AI_RECEPTIONIST = 'AI Receptionist';
 
 export const ROOT_DESCRIPTION =
-  'YardMailer postcards and an AI Receptionist for home-service businesses, plus Lead Finder and an invoicing waitlist.';
+  'Phone answering and postcard marketing for home-service businesses. An AI Receptionist takes the job and texts you the lead, built by a lawn care owner.';
 
 export type SeoSpec = {
   title: string;
@@ -23,9 +23,9 @@ export const ROOT_SEO: SeoSpec = {
 
 const PAGES = {
   '/': {
-    title: 'Front Porch Growth: Postcards & AI Receptionist',
+    title: 'More Booked Jobs for Service Businesses | AI Receptionist',
     description:
-      'YardMailer postcards from $3.54 a card and an AI Receptionist with a free 7-day trial, then $77 a month. For home-service businesses.',
+      'Answer every call and mail your best streets. AI Receptionist takes the job and texts you the lead, plus YardMailer postcards. $77/mo after trial.',
     titleMode: 'absolute',
     receptionist: true,
   },

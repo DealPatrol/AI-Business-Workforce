@@ -1,11 +1,14 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
 import { InvoicingWaitlistForm } from '@/components/suite/InvoicingWaitlistForm';
 import { SuiteShell } from '@/components/suite/SuiteShell';
-import styles from '@/components/suite/suite.module.css';
+import styles from '@/components/suite/home.module.css';
+import { LIVE_DEMO_PHONE_DISPLAY, LIVE_DEMO_PHONE_HREF } from '@/lib/ava/demo-phone';
+import { AVA_PLANS } from '@/lib/ava/pricing';
 import { faqNode } from '@/lib/ava/structured-data';
-import { POSTCARD_FULFILLMENT_COPY, POSTCARD_PRICE_SUMMARY, postcardPublicOffers } from '@/lib/postcards/pricing';
+import { POSTCARD_FULFILLMENT_COPY, POSTCARD_PRICE_SUMMARY, POSTCARD_SIZES, postcardPublicOffers } from '@/lib/postcards/pricing';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 import { absoluteSiteUrl } from '@/lib/site-url';
 
@@ -13,18 +16,34 @@ const seo = pageSeo('/');
 const title = renderedTitle(seo);
 const description = seo.description;
 
+const starter = AVA_PLANS.starter;
+const growth = AVA_PLANS.growth;
+const pro = AVA_PLANS.pro;
+
 const HOME_FAQS = [
   {
-    q: 'What can I buy on this site today?',
-    a: 'Two products have a checkout. YardMailer postcards are a $127 one-time setup, charged once per customer, plus $3.54 per 4×6 card or $4.95 per 6×9 card. Postage, printing, and mailing are included. Executive Receptionist is a separate AI receptionist: Starter $77, Growth $168, and Pro $324 a month after a free 7-day trial, with a $0 setup fee. ReputationFlow is a separate site with a free starter and Professional at $20/month. Lead Scout and the writing agents have no separate public price. Lead Finder is a signed-in workspace. Invoicing is a waitlist and is not for sale.',
+    q: 'What does this actually do for my service business?',
+    a: 'Two things. Executive Receptionist answers the calls you cannot pick up, takes the caller’s name, number, and what the job is, then texts that lead to you so you can call back and book it. YardMailer puts designed postcards in front of homeowners so the phone rings in the first place. Neither one promises a number of jobs.',
   },
   {
-    q: 'How is Executive Receptionist different from the postcard campaign?',
-    a: `Postcards are mail. ${POSTCARD_FULFILLMENT_COPY} Each card has a QR page where a homeowner can request an estimate. Executive Receptionist answers phone calls, asks for the caller’s name, number, and what they need, and texts you that lead. They are separate products. You can buy one without the other.`,
+    q: 'Is this only for lawn care?',
+    a: 'No. It was built by a lawn care owner and is used on a lawn care line every week, but the same call flow works for plumbing, HVAC, roofing, cleaning, pressure washing, tree service, fencing, pest control, electrical, painting, and pool work. The questions it asks, the greeting, and where the lead text goes are all written per business.',
   },
   {
-    q: 'How do I start?',
-    a: 'For postcards, choose a size and quantity on the postcards page. The charge is a one-time $127 setup plus the cards, or email Cole at colecollins763@gmail.com. For Executive Receptionist, choose a plan and Stripe starts the 7-day trial. After checkout you finish a setup form. A person attaches the phone number. The browser demo is not your business line.',
+    q: 'Is the receptionist a person?',
+    a: 'No. Executive Receptionist is an AI phone receptionist, and the greeting says so. It answers with words you approve, asks the questions you approve, and texts you the lead. It does not pretend to be a human, and it does not quote a price you have not published.',
+  },
+  {
+    q: 'Does it book the job for me?',
+    a: 'It captures the lead and sends it to you; you confirm the time and book the work. It is not a scheduling system and it does not replace Jobber, Housecall Pro, or ServiceTitan. Several of those are compared on the compare page.',
+  },
+  {
+    q: 'What does it cost?',
+    a: 'Executive Receptionist is $77, $168, or $324 a month after a free 7-day trial, with a $0 setup fee. YardMailer is a $127 one-time setup, charged once per customer, plus $3.54 per 4×6 card or $4.95 per 6×9 card. Those are separate products with separate checkouts; there is no combined price.',
+  },
+  {
+    q: 'Can I hear it before I pay?',
+    a: `Yes. Call the public demo line at ${LIVE_DEMO_PHONE_DISPLAY} and it answers as a sample HVAC company, or talk to it in the browser on the demo page. Neither is your business line, and the demo company is made up.`,
   },
   {
     q: 'Does the invoicing form email me?',
@@ -59,7 +78,7 @@ const orgJsonLd = {
       name: 'Front Porch Growth',
       url: absoluteSiteUrl('/'),
       logo: absoluteSiteUrl('/brand-logo.png'),
-      description: 'Tools that bring home-service businesses more jobs.',
+      description: 'Phone answering and postcard marketing for home-service businesses, built by a lawn care owner.',
       email: 'hello@frontporchgrowth.com',
       makesOffer: [
         ...postcardPublicOffers(absoluteSiteUrl('/postcards')),
@@ -75,189 +94,374 @@ const orgJsonLd = {
   ],
 };
 
+const BUSINESS_TYPES = [
+  'Plumbers',
+  'HVAC',
+  'Roofers',
+  'Cleaners',
+  'Pressure washing',
+  'Lawn care',
+  'Landscaping',
+  'Tree service',
+  'Fencing',
+  'Pest control',
+  'Electricians',
+  'Painters',
+];
+
+const FITS = [
+  { label: 'Lawn care & landscaping', detail: 'Weekly routes and cleanups', href: '/trades/lawn-care' },
+  { label: 'Plumbers', detail: 'Leaks and callbacks', href: '/trades/plumbers' },
+  { label: 'HVAC', detail: 'No-heat, no-cool calls', href: '/trades/hvac' },
+  { label: 'Roofers', detail: 'Storm and leak intake', href: '/trades/roofers' },
+  { label: 'Cleaning companies', detail: 'Recurring and move-outs', href: '/trades/cleaners' },
+  { label: 'Pressure washing', detail: 'Driveways and siding', href: '/postcards/pressure-washing' },
+  { label: 'Pest control', detail: 'Same-day visits', href: '/ava/ai-answering-service-for-pest-control' },
+  { label: 'Electricians', detail: 'Outages and panel work', href: '/ava/ai-answering-service-for-electricians' },
+  { label: 'Tree service', detail: 'Limbs and storm cleanup', href: '/ava/ai-answering-service-for-tree-service' },
+  { label: 'Fencing', detail: 'Privacy and repair quotes', href: '/ava/ai-answering-service-for-fencing' },
+  { label: 'Pool companies', detail: 'Openings and service calls', href: '/ava/ai-answering-service-for-pool-companies' },
+  { label: 'Garage doors', detail: 'Stuck doors and springs', href: '/ava/ai-answering-service-for-garage-door' },
+];
+
+const STEPS = [
+  {
+    number: '01',
+    title: 'The phone rings while you work',
+    detail: 'You are on a mower, under a sink, or up a ladder. Nobody at the shop can reach the phone.',
+  },
+  {
+    number: '02',
+    title: 'The AI receptionist answers',
+    detail: 'It greets the caller, says it is an AI receptionist, and asks the questions you wrote for your trade.',
+  },
+  {
+    number: '03',
+    title: 'You get a text with the job',
+    detail: 'Name, number, address, and what they need, sent to your phone before the caller has moved on.',
+  },
+  {
+    number: '04',
+    title: 'You call back and book it',
+    detail: 'You keep the pricing and the calendar. The lead is waiting instead of sitting in a voicemail box.',
+  },
+];
+
 export default function SuiteHomePage() {
   return (
     <SuiteShell>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd).replace(/</g, '\\u003c') }} />
+
       <section className={styles.hero} id="start">
         <div>
-          <span className={styles.eyebrow}>HOME-SERVICE TOOLS</span>
-          <h1>Tools that bring home-service businesses more jobs.</h1>
+          <span className={styles.eyebrow}>FOR SERVICE BUSINESSES THAT LIVE ON THE PHONE</span>
+          <h1>More booked jobs. No more calls that go unanswered.</h1>
           <p className={styles.lede}>
-            Postcards that show the job, an AI receptionist that answers the call, a lead finder you approve before anything sends, and invoicing when it is ready.
+            Front Porch Growth answers the calls you cannot pick up, writes down what the caller needs, and texts it
+            straight to your phone so you can follow up fast. It also mails postcards that keep the phone ringing.
+            Built by a lawn care owner who runs it on his own business.
           </p>
-          <div className={styles.heroActions}>
-            <TrackedCheckoutLink className={styles.button} href="/api/checkout?plan=starter" plan="starter">
-              Start Executive Receptionist’s free trial
+          <div className={styles.actions}>
+            <TrackedCheckoutLink className={styles.primary} href="/api/checkout?plan=starter" plan="starter">
+              Start the 7-day free trial
             </TrackedCheckoutLink>
-            <Link className={styles.buttonSecondary} href="/postcards#packages">
-              See postcard packages
-            </Link>
+            <a className={styles.secondary} href="#bundle">
+              See what you get
+            </a>
           </div>
           <p className={styles.fine}>
-            Executive Receptionist is a 7-day trial, then $77, $168, or $324 a month. {POSTCARD_PRICE_SUMMARY}
+            Executive Receptionist is an AI phone receptionist, disclosed to every caller. {starter.monthlyLabel},{' '}
+            {growth.monthlyLabel}, or {pro.monthlyLabel} a month after the trial, $0 setup. YardMailer postcards are a
+            separate product: {POSTCARD_PRICE_SUMMARY} <Link href="/pricing">All published prices</Link>.
           </p>
-          <div className={styles.priceRow}>
-            <Link href="/receptionist">Executive Receptionist from $77/month</Link>
-            <Link href="/postcards#packages">Postcards from $127 setup + per card</Link>
-            <Link href="/pricing">All prices</Link>
-            <Link href="/compare">Compare published prices</Link>
-          </div>
         </div>
-        <aside className={styles.chooser} aria-label="Which tool to start with">
-          <h2>Two products you can start today.</h2>
-          <div className={styles.choice}>
-            <span className={styles.kicker}>CALLS</span>
-            <h3>Executive Receptionist answers the phone.</h3>
-            <p>Missed and after-hours calls. She takes the name, number, and job, then texts you.</p>
-            <Link className={styles.textLink} href="/receptionist">
-              See how Executive Receptionist works
-            </Link>
+
+        <aside className={styles.phone} aria-label="Example of the lead text a business receives">
+          <div className={styles.phoneHead}>
+            <small>What you get</small>
+            <b>New lead · text message</b>
           </div>
-          <div className={styles.choice}>
-            <span className={styles.kicker}>MAIL</span>
-            <h3>YardMailer sends the postcard.</h3>
-            <p>{POSTCARD_FULFILLMENT_COPY} Each card has a QR page where the homeowner can request an estimate.</p>
-            <Link className={styles.textLink} href="/postcards">
-              See postcard campaigns
-            </Link>
+          <div className={styles.bubbles}>
+            <div className={styles.bubble}>
+              <span className={styles.bubbleLabel}>Caller said</span>
+              “Hi, I need a price on mowing a half-acre in town, and maybe the beds cleaned up.”
+            </div>
+            <div className={`${styles.bubble} ${styles.bubbleMine}`}>
+              <span className={styles.bubbleLabel}>Texted to your phone</span>
+              Example caller · 7:42 PM · half-acre mowing + bed cleanup · wants a call back this week
+            </div>
+            <div className={styles.bubble}>
+              <span className={styles.bubbleLabel}>You</span>
+              Call back, confirm the price, put it on the route.
+            </div>
           </div>
-          <p className={styles.quiet}>
-            Lead Finder stays inside the signed-in workspace. Invoicing is a waitlist, not a product you can buy yet.
+          <p className={styles.phoneFoot}>
+            A made-up example of the lead text, not a real customer or recorded call. What the receptionist asks is
+            written for your trade.
           </p>
         </aside>
       </section>
 
-      <section className={styles.grid}>
-        <article className={styles.card}>
-          <span className={styles.kicker}>POSTCARDS</span>
-          <h2>
-            <Link href="/postcards">YardMailer</Link>
-          </h2>
-          <p>{POSTCARD_FULFILLMENT_COPY} Postage, printing, and mailing are included. The setup fee is charged once per customer.</p>
-          <p className={styles.price}>$127 setup + $3.54 or $4.95 per card</p>
-          <p className={styles.quiet}>100, 250, or 500 cards, or a custom quantity of at least 100.</p>
-          <div className={styles.cardActions}>
-            <Link className={styles.button} href="/postcards#packages">
-              See postcard packages
-            </Link>
-            <Link className={styles.textLink} href="/postcards">
-              See the campaign
-            </Link>
-          </div>
-        </article>
-
-        <article className={styles.card}>
-          <span className={styles.kicker}>AI RECEPTIONIST</span>
-          <h2>
-            <Link href="/receptionist">Executive Receptionist</Link>
-          </h2>
-          <p>Executive Receptionist answers missed and after-hours calls, qualifies the lead, and texts you. Starter, Growth, and Pro stay on their own prices.</p>
-          <p className={styles.price}>$77 / $168 / $324 a month</p>
-          <p className={styles.quiet}>Free 7-day trial. $0 setup.</p>
-          <div className={styles.cardActions}>
-            <TrackedCheckoutLink className={styles.button} href="/api/checkout?plan=starter" plan="starter">
-              Start free 7-day trial
-            </TrackedCheckoutLink>
-            <Link className={styles.textLink} href="/receptionist">
-              See Executive Receptionist
-            </Link>
-          </div>
-        </article>
-
-        <article className={styles.card}>
-          <span className={styles.kicker}>REVIEWS</span>
-          <h2>
-            <Link href="/reputation">ReputationFlow</Link>
-          </h2>
-          <p>Request a review and draft the reply. The free Google review QR lives on ReputationFlow. The public review links stay the same no matter the rating.</p>
-          <p className={styles.price}>Free, or $20/month</p>
-          <p className={styles.quiet}>Professional price is published on tryreputationflow.com.</p>
-          <div className={styles.cardActions}>
-            <a className={styles.button} href="https://tryreputationflow.com/tools/qr-code">
-              Free review QR
-            </a>
-            <Link className={styles.textLink} href="/reputation">
-              How reviews work
-            </Link>
-          </div>
-        </article>
-
-        <article className={styles.card}>
-          <span className={styles.kicker}>LEAD SCOUT</span>
-          <h2>
-            <Link href="/lead-scout">Lead Scout</Link>
-          </h2>
-          <p>Search public listings by trade and city. The page shows the results. It does not email or text them.</p>
-          <p className={styles.price}>No separate price</p>
-          <div className={styles.cardActions}>
-            <Link className={styles.button} href="/lead-scout">
-              Search a city
-            </Link>
-          </div>
-        </article>
-
-        <article className={styles.card}>
-          <span className={styles.kicker}>WRITING AGENTS</span>
-          <h2>
-            <Link href="/agents">Six drafts</Link>
-          </h2>
-          <p>Estimate, review reply, job ad, follow-up text, service-area page, and invoice reminder. You copy the draft. Nothing is sent.</p>
-          <p className={styles.price}>Included on the site</p>
-          <div className={styles.cardActions}>
-            <Link className={styles.button} href="/agents">
-              Open the agents
-            </Link>
-          </div>
-        </article>
-
-        <article className={styles.card}>
-          <span className={styles.kicker}>LEAD FINDER</span>
-          <h2>
-            <Link href="/dashboard/prospector">Lead Finder</Link>
-          </h2>
-          <p>Turn a website into buyer types, search Google Maps, and draft outreach. Every send stays approved, capped, and off until cold email is explicitly enabled.</p>
-          <p className={styles.price}>Operator workspace</p>
-          <p className={styles.quiet}>Sign in with the same account as the campaign inbox.</p>
-          <div className={styles.cardActions}>
-            <Link className={styles.button} href="/dashboard/prospector">
-              Sign in to Lead Finder
-            </Link>
-          </div>
-        </article>
-
-        <article className={styles.card} id="invoicing">
-          <span className={styles.soon}>COMING SOON</span>
-          <h2>Invoicing</h2>
-          <p>Estimates and invoices for the jobs the other tools bring in. Join the list and we save it. This form does not send email.</p>
-          <InvoicingWaitlistForm />
-        </article>
+      <section className={styles.strip} aria-label="Business types this fits">
+        <span className={styles.stripLabel}>Works for</span>
+        {BUSINESS_TYPES.map((type) => (
+          <span key={type} className={styles.chip}>
+            {type}
+          </span>
+        ))}
       </section>
 
-      <section className={styles.section} id="tour">
-        <span className={styles.eyebrow}>PRODUCT TOUR</span>
-        <h2>A short look at the suite.</h2>
-        <p>The video is the pages on this site, with captions. It is not a customer testimonial.</p>
-        <video
-          controls
-          playsInline
-          preload="metadata"
-          style={{ width: '100%', borderRadius: 16, background: '#10281c' }}
-          aria-label="Front Porch Growth product tour"
-        >
-          <source src="/suite-tour.mp4" type="video/mp4" />
-        </video>
-        <p className={styles.quiet}>
-          Trades: <Link href="/trades/plumbers">plumbers</Link>, <Link href="/trades/hvac">HVAC</Link>,{' '}
-          <Link href="/trades/roofers">roofers</Link>, <Link href="/trades/lawn-care">lawn care</Link>,{' '}
-          <Link href="/trades/cleaners">cleaners</Link>. After-hours ad page:{' '}
-          <Link href="/receptionist/missed-calls">missed calls</Link>.
+      <section className={styles.band} id="founder">
+        <div className={styles.split}>
+          <div>
+            <span className={styles.kicker}>Who built this</span>
+            <h2 className={styles.h2}>A lawn care owner built it because he was missing his own calls.</h2>
+            <p className={styles.body}>
+              Cole Collins runs Collins Lawncare: mowing, Christmas light installation, and pressure washing. That is a
+              job where the phone rings while both hands are busy and the caller does not wait around.
+            </p>
+            <p className={styles.body}>
+              He built it for a line like his own, and his own line runs on it. The receptionist taking a lawn care call
+              and the lead text landing mid-job are the same setup sold on this page, not a demo assembled for a sales
+              page.
+            </p>
+            <p className={styles.body}>
+              The same setup is sold to other service businesses. The trade changes the questions and the greeting. It
+              does not change the point, which is that the call gets answered and the job gets written down.
+            </p>
+          </div>
+          <div className={styles.founderCard}>
+            <span className={styles.founderRole}>Founder</span>
+            <p className={styles.founderName}>Cole Collins</p>
+            <p className={styles.founderBiz}>Collins Lawncare</p>
+            <ul className={styles.serviceRow}>
+              <li>Mowing</li>
+              <li>Christmas light installation</li>
+              <li>Pressure washing</li>
+            </ul>
+            <p className={styles.founderNote}>
+              Collins Lawncare has a Google Business Profile you can look up yourself. This page does not quote reviews,
+              ratings, or customer counts, because the products do not need them to be explained.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.band} id="bundle">
+        <div className={styles.bundleHead}>
+          <div>
+            <span className={styles.kicker}>The two-piece setup</span>
+            <h2 className={styles.h2}>Answer the call, then go get more of them.</h2>
+          </div>
+          <p>
+            One piece catches the calls you already get. The other puts your business in front of homeowners who did not
+            know you existed. You can start with the phone and add mail when the calendar has room.
+          </p>
+        </div>
+
+        <div className={styles.offerGrid}>
+          <article className={styles.offer}>
+            <span className={styles.offerTag}>Piece one · the phone</span>
+            <h3 className={styles.h3}>Executive Receptionist</h3>
+            <p className={styles.offerPrice}>
+              {starter.monthlyLabel} / {growth.monthlyLabel} / {pro.monthlyLabel} a month
+            </p>
+            <p className={styles.offerMeta}>
+              Free 7-day trial, $0 setup. An AI phone receptionist that answers missed and after-hours calls, takes the
+              job details, and texts you the lead. The greeting tells callers it is an AI receptionist.
+            </p>
+            <ul className={styles.offerFeatures}>
+              <li>Answers 24/7, including nights and weekends</li>
+              <li>Asks the questions you approve for your trade</li>
+              <li>Texts you the name, number, and job</li>
+              <li>{starter.minutes} to {pro.minutes.toLocaleString('en-US')} included voice minutes by plan</li>
+            </ul>
+            <div className={styles.offerActions}>
+              <TrackedCheckoutLink className={styles.primary} href="/api/checkout?plan=starter" plan="starter">
+                Start free 7-day trial
+              </TrackedCheckoutLink>
+              <Link className={styles.textLink} href="/receptionist">
+                See the receptionist
+              </Link>
+            </div>
+          </article>
+
+          <article className={styles.offer}>
+            <span className={styles.offerTag}>Piece two · the mail</span>
+            <h3 className={styles.h3}>YardMailer postcards</h3>
+            <p className={styles.offerPrice}>
+              $127 setup, then {POSTCARD_SIZES['4x6'].unitLabel} or {POSTCARD_SIZES['6x9'].unitLabel} per card
+            </p>
+            <p className={styles.offerMeta}>
+              {POSTCARD_FULFILLMENT_COPY} Each card carries a QR page where the homeowner can request an estimate, so a
+              postcard can turn into a phone call that the receptionist answers.
+            </p>
+            <ul className={styles.offerFeatures}>
+              <li>Pick the streets you actually want to work</li>
+              <li>AI designs the card, you approve it before it mails</li>
+              <li>Postage, printing, and mailing included</li>
+              <li>4×6 or 6×9, packs of 100, 250, 500, or a custom count</li>
+            </ul>
+            <div className={styles.offerActions}>
+              <Link className={styles.primary} href="/postcards#packages">
+                See postcard packages
+              </Link>
+              <Link className={styles.textLink} href="/postcards">
+                How postcards work
+              </Link>
+            </div>
+          </article>
+        </div>
+
+        <p className={styles.bundleNote}>
+          Two pieces, two published prices, two checkouts. Start with the phone and add the mail later, or the other way
+          around. Buying one never signs you up for the other. The $127 postcard setup is charged once per customer and
+          is left off a later order when a paid setup is already on the account.
         </p>
       </section>
 
-      <section className={styles.faq} id="faq">
-        <span className={styles.eyebrow}>BEFORE YOU PAY</span>
-        <h2>Which tool, and what it costs.</h2>
+      <section className={styles.band} id="mailer">
+        <div className={styles.mailWrap}>
+          <figure className={styles.cardArt}>
+            <Image
+              src="/postcard-yard.png"
+              alt="Labeled example postcard showing a current yard beside a landscaped version"
+              width={900}
+              height={600}
+              sizes="(max-width: 980px) 90vw, 46vw"
+            />
+            <figcaption>An example card concept. The left side is the yard as it is; the right side is the idea.</figcaption>
+          </figure>
+          <div>
+            <span className={styles.kicker}>Why postcards belong with the phone</span>
+            <h2 className={styles.h2}>A card starts the conversation. The receptionist makes sure it lands.</h2>
+            <p className={styles.body}>
+              A postcard asks a homeowner to look at their own yard and picture the work done. If the card works, they
+              call or scan the QR. If nobody answers that call, the card was postage spent for nothing.
+            </p>
+            <p className={styles.body}>
+              That is the whole argument for using both. Mail creates the call; the receptionist keeps the call from
+              turning into a voicemail. You still approve the concept, the streets, and the cost before anything is
+              printed.
+            </p>
+            <ul className={styles.list}>
+              <li>You approve every card before it mails. Nothing goes out on its own.</li>
+              <li>The QR page asks the homeowner for the estimate, so a scan is trackable.</li>
+              <li>Every call the card produces gets answered, even when you are on a job.</li>
+            </ul>
+            <div className={styles.actions}>
+              <Link className={styles.secondary} href="/postcards#packages">
+                Pick a card package
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.band} id="how-it-works">
+        <span className={styles.kicker}>How the phone piece works</span>
+        <h2 className={styles.h2}>From a ringing phone to a booked job, in one thread.</h2>
+        <p className={styles.body}>
+          These are the four steps every customer gets, in whatever words fit the trade. The receptionist never invents
+          a price and never promises a time you have not offered.
+        </p>
+        <ol className={styles.steps}>
+          {STEPS.map((step) => (
+            <li key={step.number} className={styles.step}>
+              <span className={styles.stepNum}>{step.number}</span>
+              <h3>{step.title}</h3>
+              <p>{step.detail}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section className={styles.band} id="fit">
+        <span className={styles.kicker}>Who it fits</span>
+        <h2 className={styles.h2}>If your business runs on phone calls, this is built for you.</h2>
+        <p className={styles.body}>
+          Lawn care is the example on this page because it is the owner’s own trade. The same setup is used by other
+          service businesses that cannot answer the phone with both hands full.
+        </p>
+        <ul className={styles.fitGrid}>
+          {FITS.map((fit) => (
+            <li key={fit.label}>
+              <Link className={styles.fit} href={fit.href}>
+                <span>{fit.label}</span>
+                <small>{fit.detail}</small>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className={styles.band} id="also">
+        <span className={styles.kicker}>Also on the site</span>
+        <h2 className={styles.h2}>The rest of the tools, if you need them.</h2>
+        <ul className={styles.alsoGrid}>
+          <li className={styles.also}>
+            <h3>ReputationFlow</h3>
+            <p>Ask for a review after a finished job and draft the reply. The public review links are the same no matter the rating.</p>
+            <span className={styles.alsoMeta}>Free starter, or $20/month</span>
+            <Link href="/reputation">How reviews work</Link>
+          </li>
+          <li className={styles.also}>
+            <h3>Lead Scout</h3>
+            <p>Search public Google listings by trade and city. It shows the results and does not email or text anyone.</p>
+            <span className={styles.alsoMeta}>No separate price</span>
+            <Link href="/lead-scout">Search a city</Link>
+          </li>
+          <li className={styles.also}>
+            <h3>Writing agents</h3>
+            <p>Draft an estimate, a review reply, a job ad, a follow-up text, a service-area page, or an invoice reminder. You copy the draft; nothing sends.</p>
+            <span className={styles.alsoMeta}>Included on the site</span>
+            <Link href="/agents">Open the agents</Link>
+          </li>
+          <li className={styles.also}>
+            <h3>Lead Finder</h3>
+            <p>A signed-in workspace for buyer lists and outreach drafts. Every send stays approved, capped, and off until you turn it on.</p>
+            <span className={styles.alsoMeta}>Operator workspace</span>
+            <Link href="/dashboard/prospector">Sign in to Lead Finder</Link>
+          </li>
+          <li className={styles.also}>
+            <h3>Missed-Call Text-Back</h3>
+            <p>A lighter option: when you miss a call, the caller gets a text from your business. It texts, it does not answer.</p>
+            <span className={styles.alsoMeta}>$39/month</span>
+            <Link href="/missed-call">See text-back</Link>
+          </li>
+          <li className={styles.also} id="invoicing">
+            <h3>Invoicing</h3>
+            <p>Estimates and invoices for the jobs these tools bring in. Join the list and we save it. This form does not send email.</p>
+            <InvoicingWaitlistForm />
+          </li>
+        </ul>
+      </section>
+
+      <section className={styles.band} id="tour">
+        <span className={styles.kicker}>A short look</span>
+        <h2 className={styles.h2}>The pages, in about a minute.</h2>
+        <p className={styles.body}>
+          The video walks the site. It is not a customer testimonial, and there are no client results in it.
+        </p>
+        <div className={styles.tour}>
+          <video controls playsInline preload="metadata" aria-label="Front Porch Growth product tour">
+            <source src="/suite-tour.mp4" type="video/mp4" />
+          </video>
+          <p className={styles.tradeLinks}>
+            Trade pages: <Link href="/trades/lawn-care">lawn care</Link>, <Link href="/trades/plumbers">plumbers</Link>,{' '}
+            <Link href="/trades/hvac">HVAC</Link>, <Link href="/trades/roofers">roofers</Link>,{' '}
+            <Link href="/trades/cleaners">cleaners</Link>. Guides:{' '}
+            <Link href="/ava/ai-answering-service-for-landscapers">landscapers</Link>,{' '}
+            <Link href="/ava/ai-answering-service-for-lawn-care">lawn care</Link>. After-hours:{' '}
+            <Link href="/receptionist/missed-calls">missed calls</Link>.{' '}
+            <a href={LIVE_DEMO_PHONE_HREF}>Demo line {LIVE_DEMO_PHONE_DISPLAY}</a>.
+          </p>
+        </div>
+      </section>
+
+      <section className={styles.wideFaq} id="faq">
+        <span className={styles.kicker}>Before you pay</span>
+        <h2>Straight answers.</h2>
         {HOME_FAQS.map((faq) => (
           <details key={faq.q}>
             <summary>{faq.q}</summary>
@@ -265,6 +469,28 @@ export default function SuiteHomePage() {
           </details>
         ))}
       </section>
+
+      <section className={styles.closing}>
+        <span className={styles.kicker}>Start with the phone</span>
+        <h2>The next call is the one that pays for this.</h2>
+        <p>
+          Run the receptionist for a week on your own line and see what it catches. Add postcards when you want more
+          calls rather than just fewer missed ones. Prices are published; there is no quote to sit through.
+        </p>
+        <div className={styles.actions}>
+          <TrackedCheckoutLink className={styles.primary} href="/api/checkout?plan=starter" plan="starter">
+            Start the 7-day free trial
+          </TrackedCheckoutLink>
+          <Link className={styles.secondary} href="/pricing">
+            See every price
+          </Link>
+        </div>
+        <p className={styles.closingFine}>
+          Executive Receptionist is an AI receptionist; callers are told. Questions go to{' '}
+          <a href="mailto:colecollins763@gmail.com">colecollins763@gmail.com</a>.
+        </p>
+      </section>
     </SuiteShell>
   );
 }
+
