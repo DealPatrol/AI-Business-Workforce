@@ -155,6 +155,35 @@ export async function syncExistingAvaSubscription(input: AvaCustomerWrite) {
   return upsertAvaCustomer(input);
 }
 
+/**
+ * Status-only sync used by invoice webhook events. Never creates a customer
+ * row from an invoice event, and never resurrects a canceled row: a paid
+ * invoice must not bring back a subscription the owner already canceled.
+ */
+export async function syncAvaSubscriptionStatus(input: AvaCustomerWrite) {
+  const next = clean(input.subscriptionStatus);
+  if (!next) return null;
+  const existing = await findExistingCustomer(input);
+  if (!existing || (existing.product && existing.product !== 'ava')) return null;
+  if (existing.subscription_status === 'canceled' && next !== 'canceled') return existing;
+  if (existing.subscription_status === next) return existing;
+
+  const supabase = createAdminClient();
+  const patch: CustomerPatch = {
+    stripe_customer_id: preferText(input.stripeCustomerId, existing.stripe_customer_id),
+    stripe_subscription_id: preferText(input.stripeSubscriptionId, existing.stripe_subscription_id),
+    subscription_status: next,
+  };
+  const { data, error } = await supabase
+    .from('ava_customers')
+    .update({ ...patch, updated_at: new Date().toISOString() })
+    .eq('id', existing.id)
+    .select('*')
+    .single();
+  if (error) throw new Error(`Unable to sync Executive Receptionist subscription status: ${error.message}`);
+  return data as AvaCustomerRecord;
+}
+
 export async function markAvaCustomerNotified(
   id: string,
   column: 'buyer_onboarding_email_sent_at' | 'owner_checkout_email_sent_at',
