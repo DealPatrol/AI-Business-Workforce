@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, ArrowUpRight, Check } from 'lucide-react';
-import { Fraunces, IBM_Plex_Mono } from 'next/font/google';
+import localFont from 'next/font/local';
 import SalesAvaQualify from '@/components/SalesAvaQualify';
 import { AvaFooter } from '@/components/ava/AvaFooter';
 import { JsonLd } from '@/components/ava/JsonLd';
@@ -19,17 +19,23 @@ export const metadata: Metadata = {
   openGraph: { url: absoluteSiteUrl('/ava') },
 };
 
-const display = Fraunces({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  style: ['normal', 'italic'],
+// Self-hosted (latin subset, SIL OFL) so the build never depends on fetching
+// from Google Fonts: a failed fetch there broke the Vercel build.
+const display = localFont({
+  src: [
+    { path: './fonts/Fraunces-latin-normal.woff2', weight: '400 700', style: 'normal' },
+    { path: './fonts/Fraunces-latin-italic.woff2', weight: '400 700', style: 'italic' },
+  ],
   variable: '--ava-display',
   display: 'swap',
 });
 
-const mono = IBM_Plex_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
+const mono = localFont({
+  src: [
+    { path: './fonts/IBMPlexMono-400-latin.woff2', weight: '400', style: 'normal' },
+    { path: './fonts/IBMPlexMono-500-latin.woff2', weight: '500', style: 'normal' },
+    { path: './fonts/IBMPlexMono-600-latin.woff2', weight: '600', style: 'normal' },
+  ],
   variable: '--ava-mono',
   display: 'swap',
 });
