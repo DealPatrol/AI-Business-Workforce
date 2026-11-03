@@ -71,23 +71,4 @@ export async function sendAvaLeadSms(opts: {
   }
 }
 
-export function formatAvaLeadSmsBody(lead: {
-  caller_name?: string | null;
-  caller_phone?: string | null;
-  service_job_type?: string | null;
-  business_name?: string | null;
-}): string {
-  const parts = [
-    'New Executive Receptionist lead',
-    lead.caller_name,
-    lead.service_job_type,
-    lead.caller_phone,
-    lead.business_name,
-  ].filter(Boolean);
-  return parts.join(' — ').slice(0, 320);
-}
-
-export function formatSalesQualifySmsBody(businessName: string): string {
-  const name = String(businessName || 'Unknown business').trim() || 'Unknown business';
-  return `Executive Receptionist qualify — ${name}`.slice(0, 320);
-}
+export { formatAvaLeadSmsBody, formatSalesQualifySmsBody } from '@/lib/ava/sms-format';
