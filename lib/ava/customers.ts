@@ -162,8 +162,8 @@ export async function syncExistingAvaSubscription(input: AvaCustomerWrite) {
  */
 export async function syncAvaSubscriptionStatus(input: AvaCustomerWrite) {
   const next = clean(input.subscriptionStatus);
-  if (!next) return null;
-  const existing = await findExistingCustomer(input);
+  if (!next || !input.stripeSubscriptionId) return null;
+  const existing = await findExistingCustomer({ stripeSubscriptionId: input.stripeSubscriptionId });
   if (!existing || (existing.product && existing.product !== 'ava')) return null;
   if (existing.subscription_status === 'canceled' && next !== 'canceled') return existing;
   if (existing.subscription_status === next) return existing;
