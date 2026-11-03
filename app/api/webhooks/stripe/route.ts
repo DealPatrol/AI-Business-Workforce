@@ -241,7 +241,11 @@ async function handleSubscriptionChange(object: Record<string, unknown>, deleted
 }
 
 async function handleInvoiceEvent(object: Record<string, unknown>, kind: 'paid' | 'payment_failed') {
-  const subscriptionId = stripeId(object.subscription);
+  const parent = asRecord(object.parent);
+  const subscriptionId =
+    parent.type === 'subscription_details'
+      ? stripeId(asRecord(parent.subscription_details).subscription)
+      : stripeId(object.subscription);
   const customerId = stripeId(object.customer);
   // One-off invoices (no subscription) are not receptionist subscription
   // billing; there is no customer row they should move.
