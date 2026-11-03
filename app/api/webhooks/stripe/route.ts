@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createHmac, timingSafeEqual } from 'crypto';
+import { resolveInvoiceSubscriptionStatus } from '@/lib/ava/billing-status';
 import { AVA_PLANS, isAvaPlanKey } from '@/lib/ava/pricing';
 import {
   markAvaCustomerNotified,
   recordWebhookEvent,
+  syncAvaSubscriptionStatus,
   syncExistingAvaSubscription,
   upsertAvaCustomer,
   webhookEventProcessed,
@@ -238,6 +240,32 @@ async function handleSubscriptionChange(object: Record<string, unknown>, deleted
   return { skipped: false as const, customerId: customer.id };
 }
 
+async function handleInvoiceEvent(object: Record<string, unknown>, kind: 'paid' | 'payment_failed') {
+  const parent = asRecord(object.parent);
+  const subscriptionId =
+    parent.type === 'subscription_details'
+      ? stripeId(asRecord(parent.subscription_details).subscription)
+      : stripeId(object.subscription);
+  const customerId = stripeId(object.customer);
+  // One-off invoices (no subscription) are not receptionist subscription
+  // billing; there is no customer row they should move.
+  if (!subscriptionId || !customerId) return { skipped: true as const };
+
+  // Prefer the subscription's live Stripe status; the resolver falls back to
+  // 'past_due' / 'active' when the read is unavailable.
+  const liveStatus = await readSubscriptionStatus(subscriptionId, '');
+  const subscriptionStatus = resolveInvoiceSubscriptionStatus(kind, liveStatus);
+
+  const customer = await syncAvaSubscriptionStatus({
+    stripeCustomerId: customerId,
+    stripeSubscriptionId: subscriptionId,
+    subscriptionStatus,
+    product: 'ava' as const,
+  });
+  if (!customer) return { skipped: true as const };
+  return { skipped: false as const, customerId: customer.id };
+}
+
 export async function POST(req: NextRequest) {
   const secret = process.env.STRIPE_WEBHOOK_SECRET?.trim();
   if (!secret) {
@@ -271,6 +299,7 @@ export async function POST(req: NextRequest) {
       case 'checkout.session.completed':
         await handleCheckoutCompleted(object);
         break;
+      case 'customer.subscription.created':
       case 'customer.subscription.updated':
         await handleSubscriptionChange(object, false);
         break;
@@ -278,7 +307,10 @@ export async function POST(req: NextRequest) {
         await handleSubscriptionChange(object, true);
         break;
       case 'invoice.paid':
+        await handleInvoiceEvent(object, 'paid');
+        break;
       case 'invoice.payment_failed':
+        await handleInvoiceEvent(object, 'payment_failed');
         break;
       default:
         break;
