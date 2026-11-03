@@ -232,7 +232,7 @@ function AvaOnboardingForm() {
     const payload: Record<string, FormDataEntryValue | string> = {
       ...formPayload,
       calendarPreference: String(
-        formPayload.leadHandoff || 'Text the lead to the owner for a callback.',
+        formPayload.leadHandoff || 'The owner gets the details and follows up with the caller.',
       ),
     };
     const eventId = crypto.randomUUID();
@@ -455,7 +455,7 @@ function AvaOnboardingForm() {
                   name="callHandlingRules"
                   required
                   rows={4}
-                  placeholder="Ask what they need, collect their name and number, and text you the lead."
+                  placeholder="Ask what they need, collect their name and number, and send you the lead."
                   defaultValue={prefill.callHandlingRules}
                 />
               </label>
@@ -572,7 +572,7 @@ function AvaOnboardingForm() {
             <input
               type="hidden"
               name="leadHandoff"
-              defaultValue={prefill.calendarPreference || 'Text the lead to the owner for a callback.'}
+              defaultValue={prefill.calendarPreference || 'The owner gets the details and follows up with the caller.'}
             />
             <input type="hidden" name="sessionId" value={sessionId} />
             <input type="hidden" name="editToken" value={editToken} />

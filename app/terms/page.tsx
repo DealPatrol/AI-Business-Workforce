@@ -66,10 +66,9 @@ export default function TermsPage() {
           <strong>Opt out:</strong> Reply STOP at any time to stop receiving texts. You will get one confirmation text, and you will
           not get more lead texts after that. Lead alerts will still go to your email. Reply START to turn texts back on.
         </p>
-        {/* TODO [COLE]: add the support email and support phone for HELP (10DLC packet, section 5 help_message), then
-            change the Help line below to name them. Until then it points to the contact details at the bottom of this page. */}
         <p>
-          <strong>Help:</strong> Reply HELP for help, or use the contact details at the bottom of this page.
+          <strong>Help:</strong> Reply HELP for help, or contact us at{' '}
+          <a href="mailto:colecollins763@gmail.com">colecollins763@gmail.com</a>.
         </p>
         <p>
           <strong>Carriers:</strong> Carriers and Executive Receptionist are not liable for delayed or undelivered messages.

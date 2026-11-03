@@ -203,7 +203,7 @@ function SalesAvaQualifyContent() {
         calendarPreference:
           q.calendarPreference ||
           pickCollected(collected, 'calendarPreference', 'calendar_preference') ||
-          'Text the lead to the owner for a callback.',
+          'The owner gets the details and follows up with the caller.',
         companyWebsite:
           q.companyWebsite ||
           pickCollected(collected, 'companyWebsite', 'company_website') ||
