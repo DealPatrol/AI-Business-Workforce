@@ -62,6 +62,29 @@ export default function PrivacyPage() {
           those details so the owner can call the person back and so we can operate the service.
         </p>
 
+        <h2>Text messaging (SMS)</h2>
+        <p>
+          If you give us a mobile number for lead texts and check the box agreeing to receive them, Executive
+          Receptionist will text that number when it takes a new lead for your business. These texts are lead
+          notifications only. We do not send marketing or promotional texts. Message frequency varies with your
+          call volume. Message and data rates may apply. Reply STOP at any time to opt out, or HELP for help.
+        </p>
+        <p>
+          <strong>
+            We do not sell, rent, or share mobile phone numbers or text-messaging opt-in data or consent with third
+            parties or affiliates for marketing or promotional purposes.
+          </strong>{' '}
+          Mobile numbers and opt-in consent collected for text messaging are not used for, or sent to, any
+          advertising or measurement service. Text messages are sent through our messaging provider, Twilio, which
+          processes them only to deliver the messages for us. Opt-in records (the number, the date and time you
+          agreed, the wording you saw, and your IP address) are kept to show your consent and for as long as needed
+          to run the service and meet legal requirements.
+        </p>
+        <p>
+          Texting is optional. You will still receive lead alerts by email, and you can buy and use Executive
+          Receptionist without agreeing to text messages.
+        </p>
+
         <h2>Advertising cookies and pixels</h2>
         <p>
           When advertising measurement is turned on, this site may load a Google tag (Google Ads and,

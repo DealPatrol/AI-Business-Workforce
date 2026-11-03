@@ -17,6 +17,7 @@ import {
   verifySalesConversation,
 } from '@/lib/ava/sales-qualify-security';
 import { formatSalesQualifySmsBody, sendAvaLeadSms } from '@/lib/ava/sms';
+import { SMS_SKIPPED_NO_CONSENT, operatorSmsConsented } from '@/lib/ava/sms-consent';
 
 const escapeHtml = (value: unknown) =>
   String(value ?? 'Not provided').replace(
@@ -228,9 +229,12 @@ export async function POST(req: NextRequest) {
       const email = await notifySalesQualificationEmail(data);
       let sms;
       try {
-        sms = await sendAvaLeadSms({
-          body: formatSalesQualifySmsBody(data.business_name),
-        });
+        // Goes to the operator's own number; off unless AVA_OPERATOR_SMS_CONSENT=true.
+        sms = operatorSmsConsented()
+          ? await sendAvaLeadSms({
+              body: formatSalesQualifySmsBody(data.business_name),
+            })
+          : { ...SMS_SKIPPED_NO_CONSENT };
       } catch (smsError) {
         console.error('Executive Receptionist lead SMS failed', smsError);
         sms = {

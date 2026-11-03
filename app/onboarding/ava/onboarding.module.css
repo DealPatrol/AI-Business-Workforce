@@ -220,6 +220,28 @@
   border-color: #2e8b57;
 }
 
+.form .consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: #3b4a40;
+}
+
+.form .consent input {
+  width: auto;
+  flex: none;
+  margin-top: 3px;
+  padding: 0;
+}
+
+.consent a {
+  color: #205c39;
+  font-weight: 800;
+}
+
 .paywall {
   background: #fff;
   border: 1px solid #d7e3d8;

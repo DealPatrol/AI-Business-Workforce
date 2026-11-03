@@ -3,6 +3,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { formatAvaLeadSmsBody, sendAvaLeadSms, type AvaLeadSmsResult } from '@/lib/ava/sms';
 import { avaOwnerEmail, escapeHtml, sendResendEmail } from '@/lib/ava/mail';
 import { decidePostCallGate, planPostCallEffects } from '@/lib/ava/post-call-gate';
+import { SMS_SKIPPED_NO_CONSENT, decideOwnerSms } from '@/lib/ava/sms-consent';
 
 type TranscriptTurn = {
   role: string;
@@ -29,6 +30,7 @@ type OnboardingMatch = {
   staff_contact: string | null;
   staff_email?: string | null;
   staff_phone?: string | null;
+  sms_consent?: boolean | null;
   elevenlabs_agent_id?: string | null;
   stripe_session_id?: string | null;
 };
@@ -140,29 +142,26 @@ export function extractPostCallLead(event: unknown): ExtractedCallLead | null {
 async function listOnboardingsByAgent(agentId: string): Promise<OnboardingMatch[]> {
   if (!agentId.trim()) return [];
   const supabase = createAdminClient();
-  const full = await supabase
-    .from('ava_onboardings')
-    .select(
-      'id, business_name, staff_name, staff_contact, staff_email, staff_phone, elevenlabs_agent_id, stripe_session_id',
-    )
-    .eq('elevenlabs_agent_id', agentId)
-    .order('created_at', { ascending: false })
-    .limit(5);
-  if (!full.error) return (full.data ?? []) as OnboardingMatch[];
-  if (!isMissingColumn(full.error.message)) {
-    throw new Error(`Unable to match Executive Receptionist agent: ${full.error.message}`);
+  // Newest schema first. Older schemas fall back so email routing keeps working, and a missing
+  // sms_consent column leaves consent undefined, which the SMS gate treats as "no consent".
+  const selects = [
+    'id, business_name, staff_name, staff_contact, staff_email, staff_phone, sms_consent, elevenlabs_agent_id, stripe_session_id',
+    'id, business_name, staff_name, staff_contact, staff_email, staff_phone, elevenlabs_agent_id, stripe_session_id',
+    'id, business_name, staff_name, staff_contact, elevenlabs_agent_id, stripe_session_id',
+  ];
+  for (const [index, columns] of selects.entries()) {
+    const result = await supabase
+      .from('ava_onboardings')
+      .select(columns)
+      .eq('elevenlabs_agent_id', agentId)
+      .order('created_at', { ascending: false })
+      .limit(5);
+    if (!result.error) return (result.data ?? []) as unknown as OnboardingMatch[];
+    if (!isMissingColumn(result.error.message) || index === selects.length - 1) {
+      throw new Error(`Unable to match Executive Receptionist agent: ${result.error.message}`);
+    }
   }
-
-  const basic = await supabase
-    .from('ava_onboardings')
-    .select('id, business_name, staff_name, staff_contact, elevenlabs_agent_id, stripe_session_id')
-    .eq('elevenlabs_agent_id', agentId)
-    .order('created_at', { ascending: false })
-    .limit(5);
-  if (basic.error) {
-    throw new Error(`Unable to match Executive Receptionist agent: ${basic.error.message}`);
-  }
-  return (basic.data ?? []) as OnboardingMatch[];
+  return [];
 }
 
 async function listCustomersForOnboarding(row: OnboardingMatch): Promise<CustomerGateRow[]> {
@@ -251,7 +250,12 @@ function isMissingColumn(message: string) {
 
 export async function savePostCallLead(lead: ExtractedCallLead) {
   const target = await resolvePostCallTarget(lead.agentId);
-  const effects = planPostCallEffects(target.decision);
+  // Owner text needs recorded SMS consent and a staff phone. Email is not affected.
+  const ownerSms = decideOwnerSms({
+    smsConsent: target.onboarding?.sms_consent,
+    phone: target.onboarding ? staffDestinations(target.onboarding).phone : '',
+  });
+  const effects = planPostCallEffects(target.decision, { smsAllowed: ownerSms.send });
   // Demo agents, Executive Receptionist, and any other unknown agent_id stop here.
   // effects.sendSms is false, so Twilio is not called and no credit is spent.
   if (!effects.saveLead || !target.onboarding) {
@@ -320,10 +324,7 @@ export async function savePostCallLead(lead: ExtractedCallLead) {
   const subject = `New Executive Receptionist lead${lead.callerName ? ` — ${lead.callerName}` : ''}${lead.need ? ` — ${lead.need}` : ''}`;
   const html = `<div style="font-family:Arial,sans-serif;max-width:680px;margin:auto;color:#17211b"><h1 style="font-size:22px">New Executive Receptionist lead</h1><p>Executive Receptionist finished a call for ${escapeHtml(match?.business_name || 'your business')}.</p><table style="border-collapse:collapse;width:100%"><tr><td><b>Caller</b></td><td>${escapeHtml(lead.callerName || 'Not provided')}</td></tr><tr><td><b>Phone</b></td><td>${escapeHtml(lead.callerPhone || 'Not provided')}</td></tr><tr><td><b>Need</b></td><td>${escapeHtml(lead.need || 'Not provided')}</td></tr><tr><td><b>Address</b></td><td>${escapeHtml(lead.address || 'Not provided')}</td></tr><tr><td><b>Urgency</b></td><td>${escapeHtml(lead.urgency || 'Not provided')}</td></tr></table><h2 style="font-size:18px">Summary</h2><p style="white-space:pre-wrap">${escapeHtml(lead.summary)}</p></div>`;
 
-  let sms: AvaLeadSmsResult = {
-    sent: false,
-    skipped: true,
-  };
+  let sms: AvaLeadSmsResult = { ...SMS_SKIPPED_NO_CONSENT };
   if (effects.sendEmail) {
     await sendResendEmail({
       to: destinations.email,
@@ -332,9 +333,9 @@ export async function savePostCallLead(lead: ExtractedCallLead) {
     });
   }
 
-  if (effects.sendSms) {
+  if (effects.sendSms && ownerSms.send) {
     sms = await sendAvaLeadSms({
-      ...(destinations.phone ? { to: destinations.phone } : {}),
+      to: ownerSms.to,
       body: formatAvaLeadSmsBody({
         caller_name: lead.callerName,
         caller_phone: lead.callerPhone,

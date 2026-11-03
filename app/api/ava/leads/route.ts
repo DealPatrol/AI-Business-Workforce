@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { avaFromAddress, avaOwnerEmail } from '@/lib/ava/mail';
 import { formatAvaLeadSmsBody, sendAvaLeadSms } from '@/lib/ava/sms';
+import { SMS_SKIPPED_NO_CONSENT, operatorSmsConsented } from '@/lib/ava/sms-consent';
 
 const escapeHtml=(value:unknown)=>String(value??'Not provided').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]||c));
 
@@ -46,7 +47,8 @@ export async function POST(req: NextRequest) {
       const email=await notifyLeadEmail(data);
       let sms;
       try {
-        sms=await sendAvaLeadSms({ body: formatAvaLeadSmsBody(data) });
+        // Goes to the operator's own number; off unless AVA_OPERATOR_SMS_CONSENT=true.
+        sms=operatorSmsConsented() ? await sendAvaLeadSms({ body: formatAvaLeadSmsBody(data) }) : { ...SMS_SKIPPED_NO_CONSENT };
       } catch (smsError) {
         console.error('Executive Receptionist lead SMS failed', smsError);
         sms={ sent:false, error: smsError instanceof Error ? smsError.message : 'SMS send failed' };

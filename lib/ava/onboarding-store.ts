@@ -1,4 +1,5 @@
 import { createAdminClient } from '@/lib/supabase/admin';
+import { SMS_CONSENT_TEXT } from '@/lib/ava/sms-consent';
 import { linkAvaCustomerToOnboarding } from '@/lib/ava/customers';
 import { assertNotificationDestinationChange } from '@/lib/ava/destination-guard';
 import {
@@ -6,8 +7,8 @@ import {
   notificationDestinationsFromParts,
 } from '@/lib/ava/destination-edit';
 import {
-  AvaOnboardingDetails,
-  AvaProvisioningResult,
+  type AvaOnboardingDetails,
+  type AvaProvisioningResult,
   provisionAvaAgent,
 } from '@/lib/ava/provisioning';
 
@@ -17,6 +18,9 @@ export type AvaOnboardingInput = AvaOnboardingDetails & {
   staffEmail?: string;
   staffPhone?: string;
   preferredVoice?: string;
+  /** Optional SMS lead-alert consent for staffPhone. Absent or false means no texts. */
+  smsConsent?: boolean;
+  smsConsentIp?: string;
   editToken?: string;
 };
 
@@ -30,6 +34,7 @@ type AvaOnboardingRow = {
   staff_contact: string;
   staff_email?: string | null;
   staff_phone?: string | null;
+  sms_consent?: boolean | null;
   calendar_preference: string;
   urgent_call_rules: string;
   stripe_session_id: string | null;
@@ -111,6 +116,12 @@ export async function saveAvaOnboarding(input: AvaOnboardingInput) {
 
       const saved = data as AvaOnboardingRow;
       await saveOptionalOnboardingFields(saved.id, input, { replaceDestinations: true });
+      await saveSmsConsent(saved.id, input, {
+        // Keep the original consent timestamp when nothing changed; a new phone needs fresh consent.
+        keepExisting:
+          Boolean(stored.sms_consent) &&
+          !notificationDestinationsChanged(currentDestinations, nextDestinations),
+      });
       await linkAvaCustomerToOnboarding({
         sessionId: input.sessionId,
         onboardingId: saved.id,
@@ -143,6 +154,7 @@ export async function saveAvaOnboarding(input: AvaOnboardingInput) {
 
   const saved = data as AvaOnboardingRow;
   await saveOptionalOnboardingFields(saved.id, input);
+  await saveSmsConsent(saved.id, input, { keepExisting: false, firstSave: true });
   await linkAvaCustomerToOnboarding({
     sessionId: input.sessionId,
     onboardingId: saved.id,
@@ -176,6 +188,42 @@ async function saveOptionalOnboardingFields(
     if (error) console.error('Optional Executive Receptionist onboarding fields were not saved', error.message);
   } catch (error) {
     console.error('Optional Executive Receptionist onboarding fields were not saved', error);
+  }
+}
+
+/**
+ * Stored separately from the other optional fields so a database that has not run the
+ * sms_consent migration yet cannot block saving the staff email, phone, or voice.
+ * If these columns are missing, consent simply stays unrecorded and no texts are sent.
+ */
+async function saveSmsConsent(
+  id: string,
+  input: AvaOnboardingInput,
+  options: { keepExisting: boolean; firstSave?: boolean },
+) {
+  const consented = input.smsConsent === true && Boolean(input.staffPhone?.trim());
+  if (consented && options.keepExisting) return;
+  // New row without consent: the column default (false) already applies.
+  if (!consented && options.firstSave) return;
+  const now = new Date().toISOString();
+  const fields = consented
+    ? {
+        sms_consent: true,
+        sms_consent_at: now,
+        sms_consent_text: SMS_CONSENT_TEXT,
+        sms_consent_ip: input.smsConsentIp?.trim() || null,
+      }
+    : { sms_consent: false, sms_consent_at: null, sms_consent_text: null, sms_consent_ip: null };
+
+  try {
+    const supabase = createAdminClient();
+    const { error } = await supabase
+      .from('ava_onboardings')
+      .update({ ...fields, updated_at: now })
+      .eq('id', id);
+    if (error) console.error('Executive Receptionist SMS consent was not saved', error.message);
+  } catch (error) {
+    console.error('Executive Receptionist SMS consent was not saved', error);
   }
 }
 

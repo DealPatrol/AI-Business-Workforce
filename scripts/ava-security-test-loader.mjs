@@ -10,6 +10,8 @@ function withTypeScriptExtension(filePath) {
 
 /** Lets `node --test` load the TypeScript sources and the `@/` alias. */
 export async function resolve(specifier, context, nextResolve) {
+  // Next's own entry points have no extension and no package export map for node's ESM resolver.
+  if (specifier === 'next/headers') return nextResolve('next/headers.js', context);
   if (specifier.startsWith('@/')) {
     const absolute = withTypeScriptExtension(path.join(root, specifier.slice(2)));
     return nextResolve(pathToFileURL(absolute).href, context);

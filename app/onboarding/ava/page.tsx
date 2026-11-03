@@ -504,7 +504,21 @@ function AvaOnboardingForm() {
                   />
                 </label>
               </div>
-              <p className={styles.notice}>Add a phone, an email, or both. Real call leads go to these.</p>
+              {/* Optional, unchecked by default, and not a condition of purchase. Wording must match SMS_CONSENT_TEXT in lib/ava/sms-consent.ts. */}
+              <label className={styles.consent}>
+                <input type="checkbox" name="smsConsent" defaultChecked={false} />
+                <span>
+                  Text me new-lead alerts from Executive Receptionist at this number. Message frequency
+                  varies with call volume. Msg &amp; data rates may apply. Reply STOP to opt out, HELP for
+                  help. Consent is not a condition of purchase. See our{' '}
+                  <Link href="/privacy" target="_blank">Privacy Policy</Link> and{' '}
+                  <Link href="/terms" target="_blank">Terms</Link>.
+                </span>
+              </label>
+              <p className={styles.notice}>
+                Add a phone, an email, or both. Lead emails go to the email address. Lead texts go to the
+                phone only if you tick the box above.
+              </p>
               {sessionId ? (
                 <>
                   <p className={styles.notice}>

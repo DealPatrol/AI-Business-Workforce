@@ -55,6 +55,7 @@ describe('ElevenLabs post-call agent gate', () => {
           customerProduct: 'ava',
           subscriptionStatus,
         }),
+        { smsAllowed: true },
       );
       assert.deepEqual(effects, { saveLead: true, sendEmail: true, sendSms: true });
     }

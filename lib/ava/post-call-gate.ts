@@ -48,10 +48,17 @@ export type PostCallEffects = {
   sendSms: boolean;
 };
 
-/** Ignored agents save nothing and never call Resend or Twilio. */
-export function planPostCallEffects(decision: PostCallGateDecision): PostCallEffects {
+/**
+ * Ignored agents save nothing and never call Resend or Twilio.
+ * Email follows the gate; the owner text additionally needs recorded SMS consent
+ * (and a phone number), passed in as options.smsAllowed. It defaults to false.
+ */
+export function planPostCallEffects(
+  decision: PostCallGateDecision,
+  options: { smsAllowed?: boolean } = {},
+): PostCallEffects {
   if (!decision.process) {
     return { saveLead: false, sendEmail: false, sendSms: false };
   }
-  return { saveLead: true, sendEmail: true, sendSms: true };
+  return { saveLead: true, sendEmail: true, sendSms: options.smsAllowed === true };
 }

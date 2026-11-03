@@ -21,6 +21,7 @@ import {
   safePageUrl,
 } from '@/lib/analytics/request-context';
 import { DestinationLockedError } from '@/lib/ava/destination-edit';
+import { parseSmsConsent } from '@/lib/ava/sms-consent';
 import { AVA_VOICE_OPTIONS, isAvaVoiceKey } from '@/lib/ava/voice-options';
 
 const NOTIFICATION_EMAIL = 'colecollins763@gmail.com';
@@ -150,6 +151,9 @@ export async function POST(request: NextRequest) {
         staffEmail: parsedStaff.email,
         staffPhone: parsedStaff.phone,
         preferredVoice: fields.preferredVoice,
+        // Optional and unchecked by default. Only counts when a phone number was given.
+        smsConsent: Boolean(parsedStaff.phone) && parseSmsConsent(body.smsConsent),
+        smsConsentIp: clientIp(request.headers.get('x-forwarded-for')),
         calendarPreference: fields.calendarPreference,
         urgentCallRules: fields.urgentCallRules,
         sessionId: fields.sessionId,
