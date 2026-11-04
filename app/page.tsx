@@ -39,7 +39,7 @@ const HOME_FAQS = [
   },
   {
     q: 'What does it cost?',
-    a: 'Executive Receptionist is $77, $168, or $324 a month after a free 7-day trial, with a $0 setup fee. YardMailer is a $127 one-time setup, charged once per customer, plus $3.54 per 4×6 card or $4.95 per 6×9 card. Those are separate products with separate checkouts; there is no combined price.',
+    a: 'Executive Receptionist is $0 until the first booked job, then $25 per booked job, capped at $297 a month, after a free 14-day pilot. YardMailer is a $127 one-time setup, charged once per customer, plus $3.54 per 4×6 card or $4.95 per 6×9 card. Those are separate products with separate checkouts; there is no combined price.',
   },
   {
     q: 'Can I hear it before I pay?',
@@ -84,7 +84,7 @@ const orgJsonLd = {
         ...postcardPublicOffers(absoluteSiteUrl('/postcards')),
         {
           '@type': 'Offer',
-          name: 'Executive Receptionist, plans from $77/month after a 7-day trial',
+          name: 'Executive Receptionist, free 14-day pilot, then $25 per booked job (max $297/month)',
           url: absoluteSiteUrl('/receptionist'),
         },
       ],
@@ -163,7 +163,7 @@ export default function SuiteHomePage() {
           </p>
           <div className={styles.actions}>
             <TrackedCheckoutLink className={styles.primary} href="/api/checkout?plan=starter" plan="starter">
-              Start the 7-day free trial
+              Start your free 14-day pilot
             </TrackedCheckoutLink>
             <a className={styles.secondary} href="#bundle">
               See what you get
@@ -266,7 +266,7 @@ export default function SuiteHomePage() {
               {starter.monthlyLabel} / {growth.monthlyLabel} / {pro.monthlyLabel} a month
             </p>
             <p className={styles.offerMeta}>
-              Free 7-day trial, $0 setup. An AI phone receptionist that answers missed and after-hours calls, takes the
+              Free 14-day pilot, $0 setup. An AI phone receptionist that answers missed and after-hours calls, takes the
               job details, and sends you the lead. The greeting tells callers it is an AI receptionist.
             </p>
             <ul className={styles.offerFeatures}>
@@ -277,7 +277,7 @@ export default function SuiteHomePage() {
             </ul>
             <div className={styles.offerActions}>
               <TrackedCheckoutLink className={styles.primary} href="/api/checkout?plan=starter" plan="starter">
-                Start free 7-day trial
+                Start your free 14-day pilot
               </TrackedCheckoutLink>
               <Link className={styles.textLink} href="/receptionist">
                 See the receptionist
@@ -478,7 +478,7 @@ export default function SuiteHomePage() {
         </p>
         <div className={styles.actions}>
           <TrackedCheckoutLink className={styles.primary} href="/api/checkout?plan=starter" plan="starter">
-            Start the 7-day free trial
+            Start your free 14-day pilot
           </TrackedCheckoutLink>
           <Link className={styles.secondary} href="/pricing">
             See every price

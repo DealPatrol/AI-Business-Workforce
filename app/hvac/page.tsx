@@ -131,7 +131,7 @@ export default function HvacPage() {
                 {plan.monthlyLabel}
                 <small>/mo</small>
               </p>
-              <p className="hvac-setup">7-day free trial · $0 setup</p>
+              <p className="hvac-setup">Free 14-day pilot · $0 setup</p>
               <ul>
                 {plan.features.map((feature) => (
                   <li key={feature}>
@@ -153,7 +153,7 @@ export default function HvacPage() {
           ))}
         </div>
         <div className="hvac-trial">
-          <h3>7-day free trial</h3>
+          <h3>Free 14-day pilot</h3>
           <p>
             {avaTrialThenPriceCopy('starter')} Cancel anytime. Included minutes reset monthly, and overage bills at
             the plan&apos;s published per-minute rate.

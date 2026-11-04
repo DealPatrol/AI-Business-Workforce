@@ -50,7 +50,7 @@ export default function MissedCallPage() {
           </article>
         </div>
         <p>
-          Want the call answered, not just texted? <Link href="/receptionist">Executive Receptionist</Link> answers with a voice receptionist and books the job. Plans are $77, $168, and $324 a month.
+          Want the call answered, not just texted? <Link href="/receptionist">Executive Receptionist</Link> answers with a voice receptionist and books the job. Pricing: $25 per booked job, capped at $297 a month, after a free 14-day pilot.
         </p>
         <section className={styles.faq}>
           {FAQS.map((faq) => (

@@ -36,7 +36,7 @@ export const TRADE_PAGES: TradePage[] = [
       },
       {
         q: 'Which plan answers after hours?',
-        a: 'Starter is $77 a month after the 7-day trial and includes 300 minutes. That is the same price as the pricing page.',
+        a: '$0 until your first booked job, then $25 per booked job, capped at $297 a month, after a free 14-day pilot. That is the same price as the pricing page.',
       },
     ],
   },

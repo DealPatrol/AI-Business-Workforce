@@ -77,6 +77,24 @@ export const AVA_ASSISTED_LAUNCH = {
     'Optional one-time help: rules workshop, greeting polish, and a live test call before you forward the line.',
 } as const;
 
+/**
+ * Canonical offer (Nov 2026). Replaces the Starter/Growth/Pro tiers in all customer copy.
+ * NOTE: checkout (lib/stripe-checkout.ts, app/api/checkout) still sells AVA_PLANS until a metered
+ * `booked_job` Stripe price exists. Do not deploy copy and checkout out of sync.
+ */
+export const AVA_OFFER = {
+  pilotDays: 14,
+  perBookedJobCents: 2500,
+  perBookedJobLabel: '$25',
+  monthlyCapCents: 29700,
+  monthlyCapLabel: '$297',
+  summary:
+    'Free 14-day pilot, then $0 until your first booked job, then $25 per booked job, capped at $297/month. Set up in person in Gadsden.',
+  guarantee:
+    "If the receptionist doesn't capture a single real caller lead during your 14-day pilot, you pay nothing.",
+  demoUrl: 'https://elevenlabs.io/app/talk-to?agent_id=agent_0001m6k8pwnaebqver0sztwknn72',
+} as const;
+
 export function isAvaPlanKey(value: string): value is AvaPlanKey {
   return value === 'starter' || value === 'growth' || value === 'pro';
 }
@@ -86,9 +104,10 @@ export function avaPlanPriceLine(planKey: AvaPlanKey = 'starter') {
 }
 
 export function avaTrialThenPriceCopy(planKey: AvaPlanKey = 'starter') {
-  return `Free 7-day trial, then ${AVA_PLANS[planKey].monthlyLabel}/mo. $0 setup.`;
+  void planKey;
+  return 'Free 14-day pilot, then $25 per booked job, max $297/mo. $0 until your first booked job.';
 }
 
 export function avaPricingSummaryCopy() {
-  return `Free 7-day trial, then Starter ${AVA_PLANS.starter.monthlyLabel}/mo. Growth ${AVA_PLANS.growth.monthlyLabel}. Pro ${AVA_PLANS.pro.monthlyLabel}. $0 setup.`;
+  return AVA_OFFER.summary;
 }

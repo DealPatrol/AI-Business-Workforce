@@ -156,8 +156,9 @@ export function buildAvaCheckoutParams(input: AvaCheckoutInput) {
   params.set('cancel_url', `${input.origin}/receptionist#pricing`);
   params.set('billing_address_collection', 'auto');
   params.set('allow_promotion_codes', 'true');
-  // Stripe Checkout trial: 7 days before first charge when using price_data or Dashboard prices without their own trial.
-  params.set('subscription_data[trial_period_days]', '7');
+  // Stripe Checkout trial: 14-day pilot before first charge (was 7). Tier prices below are still the OLD model;
+  // replace with the metered `booked_job` price before deploying (see stripe-pricing-prep.md).
+  params.set('subscription_data[trial_period_days]', '14');
   appendRecurringPrice(params, 0, {
     priceId: input.priceId,
     unitAmount: plan.monthlyCents,

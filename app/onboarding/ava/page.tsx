@@ -325,8 +325,8 @@ function AvaOnboardingForm() {
           </h1>
           <p>
               {searchParams.get('session_id')
-              ? 'Checkout is confirmed — you are paid or on the 7-day trial. Submit this form and Executive Receptionist’s agent is created from your answers. The phone number stays pending until Cole attaches it.'
-              : `Stripe creates the 7-day trial for ${AVA_PLANS[selectedPlan].label}, then ${avaPlanPriceLine(selectedPlan)}. $0 setup. This form emails Cole. It does not start billing by itself.`}
+              ? 'Checkout is confirmed — you are paid or on the 14-day pilot. Submit this form and Executive Receptionist’s agent is created from your answers. The phone number stays pending until Cole attaches it.'
+              : `Stripe creates the 14-day pilot for ${AVA_PLANS[selectedPlan].label}, then ${avaPlanPriceLine(selectedPlan)}. $0 setup. This form emails Cole. It does not start billing by itself.`}
           </p>
           {prefillNote ? <p className={styles.notice}>{prefillNote}</p> : null}
         </header>
@@ -403,7 +403,7 @@ function AvaOnboardingForm() {
                 }${prefillToken ? `&prefillToken=${encodeURIComponent(prefillToken)}` : ''}`}
                 plan={selectedPlan}
               >
-                Start free 7-day trial
+                Start your free 14-day pilot
               </TrackedCheckoutLink>
             </section>
           ) : null}
@@ -631,11 +631,11 @@ function OnboardingFallback() {
           <span className={styles.eyebrow}>CHECKOUT STARTS THE TRIAL</span>
           <h1>Start the trial in Stripe, then send setup notes.</h1>
           <p>
-            The 7-day trial is created at checkout. Starter is $77 a month after that, with $0 setup.
+            After the free 14-day pilot it is $25 per booked job, capped at $297 a month.
             The setup form loads on this page next.
           </p>
           <CheckoutForm className={styles.checkout} href="/api/checkout?plan=starter">
-            Start free 7-day trial
+            Start your free 14-day pilot
           </CheckoutForm>
         </header>
       </div>

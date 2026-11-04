@@ -43,9 +43,9 @@ const rows = [
     `4×6 ${row.fourBySixLabel} · 6×9 ${row.sixByNineLabel}`,
   ]),
   ['Custom quantity', 'Minimum 100 cards, computed on the postcards page', 'Setup plus per card'],
-  ['Executive Receptionist Starter', '300 voice minutes, 7-day trial, $0 setup', '$77/month'],
-  ['Executive Receptionist Growth', '800 voice minutes, 7-day trial, $0 setup', '$168/month'],
-  ['Executive Receptionist Pro', '1,800 voice minutes, 7-day trial, $0 setup', '$324/month'],
+  ['Executive Receptionist Starter', '300 voice minutes, 14-day pilot, $0 setup', '$77/month'],
+  ['Executive Receptionist Growth', '800 voice minutes, 14-day pilot, $0 setup', '$168/month'],
+  ['Executive Receptionist Pro', '1,800 voice minutes, 14-day pilot, $0 setup', '$324/month'],
   ['Lead Finder', 'Signed-in Maps search and approved drafts', 'No separate public price'],
   ['Lead Scout', 'Public listing search. Does not contact anyone.', 'No separate public price'],
   ['Writing agents', 'Drafts on the page. Nothing is sent.', 'No separate public price'],
@@ -60,7 +60,7 @@ export default function PricingPage() {
         <span className={styles.eyebrow}>PRICING</span>
         <h1>Published prices, one page.</h1>
         <p>
-          {POSTCARD_PRICE_SUMMARY} There is no monthly postcard plan. Executive Receptionist’s Starter, Growth, and Pro plans are $77, $168, and $324 a month. Those are different products. ReputationFlow’s $20 price is on tryreputationflow.com, not a new charge here.
+          {POSTCARD_PRICE_SUMMARY} There is no monthly postcard plan. Executive Receptionist is $25 per booked job, capped at $297 a month, after a free 14-day pilot. Those are different products. ReputationFlow’s $20 price is on tryreputationflow.com, not a new charge here.
         </p>
         <table className={styles.table}>
           <thead>

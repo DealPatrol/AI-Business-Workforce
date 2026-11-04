@@ -14,7 +14,7 @@ const FAQS = [
   },
   {
     q: 'What does the free trial cost?',
-    a: `The trial is 7 days. After that, Starter is ${AVA_PLANS.starter.monthlyLabel} a month, Growth is ${AVA_PLANS.growth.monthlyLabel}, and Pro is ${AVA_PLANS.pro.monthlyLabel}. Setup is $0. Those are the prices on the pricing page.`,
+    a: `The pilot is 14 days. After that, Starter is ${AVA_PLANS.starter.monthlyLabel} a month, Growth is ${AVA_PLANS.growth.monthlyLabel}, and Pro is ${AVA_PLANS.pro.monthlyLabel}. Setup is $0. Those are the prices on the pricing page.`,
   },
   {
     q: 'Does the browser demo become my business line?',
@@ -59,7 +59,7 @@ export default async function MissedCallsPage({ searchParams }: PageProps) {
         '@type': 'Offer',
         price: (starter.monthlyCents / 100).toFixed(2),
         priceCurrency: 'USD',
-        description: `Free 7-day trial, then ${starter.monthlyLabel} per month.`,
+        description: `Free 14-day pilot, then ${starter.monthlyLabel} per month.`,
         url: absoluteSiteUrl('/receptionist/missed-calls'),
       },
     },
@@ -80,10 +80,10 @@ export default async function MissedCallsPage({ searchParams }: PageProps) {
         <section className={styles.offer} aria-label="Price and trial">
           <p className={styles.price}>
             {starter.monthlyLabel}
-            <span> /month after a 7-day free trial</span>
+            <span> /month after a Free 14-day pilot</span>
           </p>
           <TrialSignupLink className={styles.cta} href="/api/checkout?plan=starter" plan="starter">
-            Start the 7-day free trial
+            Start your free 14-day pilot
           </TrialSignupLink>
           <p className={styles.fine}>
             Starter includes {starter.minutes} minutes, then {starter.overageLabel}. Growth is {AVA_PLANS.growth.monthlyLabel}. Pro is{' '}

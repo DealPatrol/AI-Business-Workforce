@@ -40,7 +40,7 @@ export default function TermsPage() {
         </p>
         <h2>Executive Receptionist</h2>
         <p>
-          Executive Receptionist plans are Starter $77/month, Growth $168/month, and Pro $324/month, each with a 7-day Stripe trial and $0 setup. Those prices are Executive Receptionist’s. They are not the postcard prices. A phone number is attached by a person after setup. The browser demo is not a live business line.
+          Executive Receptionist is a free 14-day pilot, then $0 until your first booked job, then $25 per booked job, capped at $297 a month. If the receptionist doesn't capture a single real caller lead during the pilot, you pay nothing. Those prices are Executive Receptionist’s. They are not the postcard prices. A phone number is attached by a person after setup. The browser demo is not a live business line.
         </p>
         <h2>SMS lead alerts</h2>
         <p>

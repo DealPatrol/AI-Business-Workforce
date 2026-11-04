@@ -48,17 +48,17 @@ const MISSED_CALL_SEO: Record<MissedCallTrade, { title: string; description: str
   hvac: {
     title: 'AI Receptionist for Missed HVAC Calls',
     description:
-      'AI Receptionist answers missed HVAC calls and texts you the lead. Free 7-day trial, then $77/mo. $0 setup.',
+      'AI Receptionist answers missed HVAC calls and texts you the lead. Free 14-day pilot, then $25 per booked job, max $297/mo.',
   },
   plumbing: {
     title: 'AI Receptionist for Missed Plumbing Calls',
     description:
-      'AI Receptionist answers missed plumbing calls and texts you the lead. Free 7-day trial, then $77/mo. $0 setup.',
+      'AI Receptionist answers missed plumbing calls and texts you the lead. Free 14-day pilot, then $25 per booked job, max $297/mo.',
   },
   roofing: {
     title: 'AI Receptionist for Missed Roofing Calls',
     description:
-      'AI Receptionist answers missed roofing calls and texts you the lead. Free 7-day trial, then $77/mo. $0 setup.',
+      'AI Receptionist answers missed roofing calls and texts you the lead. Free 14-day pilot, then $25 per booked job, max $297/mo.',
   },
 };
 

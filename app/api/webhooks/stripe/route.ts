@@ -116,7 +116,7 @@ async function notifyCheckout(customer: AvaCustomerRecord, sessionId: string) {
     await sendResendEmail({
       to: customer.email,
       subject: `Finish setting up Executive Receptionist ${planLabel}`,
-      html: `<div style="font-family:Arial,sans-serif;max-width:640px;margin:auto;color:#17211b"><h1>Your Executive Receptionist trial is started</h1><p>Thanks for starting Executive Receptionist ${escapeHtml(planLabel)}${priceLabel ? ` (${escapeHtml(priceLabel)}/mo after the 7-day trial)` : ''}. Setup fee is $0.</p><p><a href="${escapeHtml(link)}">Finish setup</a> so we can build your receptionist from your hours, services, and call rules.</p><p>Cole attaches the phone number after you submit the form. Executive Receptionist is not answering your business line until that number is connected and you pass a test call.</p></div>`,
+      html: `<div style="font-family:Arial,sans-serif;max-width:640px;margin:auto;color:#17211b"><h1>Your Executive Receptionist trial is started</h1><p>Thanks for starting Executive Receptionist ${escapeHtml(planLabel)}${priceLabel ? ` (${escapeHtml(priceLabel)}/mo after the 14-day pilot)` : ''}. Setup fee is $0.</p><p><a href="${escapeHtml(link)}">Finish setup</a> so we can build your receptionist from your hours, services, and call rules.</p><p>Cole attaches the phone number after you submit the form. Executive Receptionist is not answering your business line until that number is connected and you pass a test call.</p></div>`,
     });
     await markAvaCustomerNotified(customer.id, 'buyer_onboarding_email_sent_at');
     customer.buyer_onboarding_email_sent_at = new Date().toISOString();

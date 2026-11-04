@@ -1,7 +1,7 @@
 export const AVA_HOME_FAQS = [
   {
     q: 'How much does Executive Receptionist cost?',
-    a: 'Three monthly plans after a free 7-day trial and a $0 setup fee: Starter $77 with 300 minutes, Growth $168 with 800 minutes, and Pro $324 with 1,800 minutes. Extra minutes bill at the plan rate: $0.36, $0.31, or $0.26.',
+    a: 'A free 14-day pilot, then $0 until your first booked job, then $25 per booked job, capped at $297 a month. Set up in person in Gadsden. If the receptionist does not capture a single real caller lead during the pilot, you pay nothing.',
   },
   {
     q: 'Can I hear Executive Receptionist before I pay?',
@@ -9,7 +9,7 @@ export const AVA_HOME_FAQS = [
   },
   {
     q: 'How do I start the paid trial?',
-    a: 'Choose a plan. Stripe Checkout creates the 7-day trial. When it finishes, you land on the setup form with that session attached. Sending the form without checkout only emails Cole your notes. It does not start the subscription.',
+    a: 'Choose a plan. Stripe Checkout creates the 14-day pilot. When it finishes, you land on the setup form with that session attached. Sending the form without checkout only emails Cole your notes. It does not start the subscription.',
   },
   {
     q: 'What does Executive Receptionist do on a call?',

@@ -82,7 +82,7 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
     }),
     avaProductNode({
       name: 'Executive Receptionist AI Receptionist',
-      description: `Self-serve AI receptionist with a free 7-day trial. Starter ${AVA_PLANS.starter.monthlyLabel}, Growth ${AVA_PLANS.growth.monthlyLabel}, Pro ${AVA_PLANS.pro.monthlyLabel} per month. $0 setup.`,
+      description: `Self-serve AI receptionist with a free 14-day pilot. Starter ${AVA_PLANS.starter.monthlyLabel}, Growth ${AVA_PLANS.growth.monthlyLabel}, Pro ${AVA_PLANS.pro.monthlyLabel} per month. $0 setup.`,
       url: canonical,
     }),
     faqNode([...AVA_HOME_FAQS]),
@@ -129,7 +129,7 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
               Call the live demo: {LIVE_DEMO_PHONE_DISPLAY}
             </a>
             <TrackedCheckoutLink className="btn btn-outline" href="/api/checkout?plan=starter" plan="starter">
-              Start free 7-day trial <ArrowRight size={17} />
+              Start your free 14-day pilot <ArrowRight size={17} />
             </TrackedCheckoutLink>
           </div>
           <SampleCall
@@ -144,7 +144,7 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
             <span aria-hidden="true">·</span>
             Pro {AVA_PLANS.pro.monthlyLabel}
             <span aria-hidden="true">·</span>
-            7-day trial · $0 setup
+            14-day pilot · $0 setup
           </p>
           <p className="hero-fine">{avaTrialThenPriceCopy('starter')} Cancel anytime.</p>
         </div>
@@ -233,7 +233,7 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
           The <em>rate card.</em>
         </h2>
         <p className="ratecard-sub">
-          Free 7-day trial on every plan. Included minutes reset monthly — overage is billed at the plan&apos;s
+          Free 14-day pilot on every plan. Included minutes reset monthly — overage is billed at the plan&apos;s
           published per-minute rate.
         </p>
         {checkoutUnavailable && (
@@ -330,7 +330,7 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
 
       {/* ── Final CTA ────────────────────────────────────────── */}
       <section className="finale">
-        <p className="stamp stamp-light">Free 7-day trial · $0 setup</p>
+        <p className="stamp stamp-light">Free 14-day pilot · $0 setup</p>
         <h2>
           Put Executive Receptionist on the <em>phones.</em>
         </h2>
@@ -340,7 +340,7 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
         </p>
         <div className="hero-ctas">
           <TrackedCheckoutLink className="btn btn-paper" href="/api/checkout?plan=starter" plan="starter">
-            Start free 7-day trial <ArrowRight size={17} />
+            Start your free 14-day pilot <ArrowRight size={17} />
           </TrackedCheckoutLink>
           <a className="btn btn-ghostlight" href="#talk-to-ava">
             Talk to Executive Receptionist first

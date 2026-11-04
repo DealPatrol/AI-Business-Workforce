@@ -346,7 +346,7 @@ function SalesAvaQualifyContent() {
               </p>
             </div>
             <TrackedCheckoutLink className="talk-btn" href={checkoutHref} plan={planKey}>
-              Start free 7-day trial <ArrowRight size={16} />
+              Start your free 14-day pilot <ArrowRight size={16} />
             </TrackedCheckoutLink>
             <Link
               className="text-next"
@@ -439,7 +439,7 @@ function SalesAvaQualifyContent() {
                     <Mic2 size={14} /> Enable mic &amp; try the live demo
                   </button>
                   <TrackedCheckoutLink className="text-next" href={checkoutHref} plan={planKey}>
-                    Start free 7-day trial <ArrowRight size={14} />
+                    Start your free 14-day pilot <ArrowRight size={14} />
                   </TrackedCheckoutLink>
                 </div>
               </div>

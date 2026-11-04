@@ -44,7 +44,7 @@ export default function AvaPilotPage() {
           <div className="pilot-price">
             <div>
               <small>Executive Receptionist PLANS</small>
-              <strong>From $77/mo</strong>
+              <strong>$25 per booked job</strong>
             </div>
           </div>
           <p className="pilot-terms">
@@ -111,7 +111,7 @@ export default function AvaPilotPage() {
           <div>
             <small>14-DAY PAID PILOT</small>
             <h3>
-              Plans from $77/month
+              Max $297/month
             </h3>
             <p>
               {AVA_PILOT_OFFER.usageLimit}. {AVA_PILOT_OFFER.cancelPolicy}. We configure Executive Receptionist for

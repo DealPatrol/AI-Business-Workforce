@@ -50,7 +50,7 @@ const structured = [
 
 const trustPoints = [
   'Prices published below',
-  '7-day free trial',
+  'Free 14-day pilot',
   '$0 setup',
   'Cancel anytime',
   'Call the demo line before you pay',
@@ -191,7 +191,7 @@ export default function ReceptionistPage() {
                 ))}
               </ul>
               <TrackedCheckoutLink href={`/api/checkout?plan=${plan.key}`} plan={plan.key}>
-                Start 7-day trial
+                Start your free 14-day pilot
               </TrackedCheckoutLink>
             </article>
           ))}

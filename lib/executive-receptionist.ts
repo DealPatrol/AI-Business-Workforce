@@ -105,7 +105,7 @@ export const EXECUTIVE_FAQS = [
   },
   {
     q: 'What does it cost?',
-    a: 'Starter, Growth, and Pro are monthly plans after a free 7-day trial, with $0 setup. Included minutes and the per-minute rate after that are printed on each plan.',
+    a: 'Starter, Growth, and Pro are monthly plans after a free 14-day pilot, with $0 setup. Included minutes and the per-minute rate after that are printed on each plan.',
   },
 ] as const;
 

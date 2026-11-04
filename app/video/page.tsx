@@ -34,8 +34,8 @@ const SCENES = [
   {
     time: '0:55–1:05',
     title: '14-day pilot offer',
-    visual: 'Simple pricing card: Executive Receptionist plans from $77/month, 300 minutes, cancel anytime.',
-    audio: `Executive Receptionist plans start at $77 a month. ${AVA_PILOT_OFFER.usageLimit}. Cancel anytime.`,
+    visual: 'Simple pricing card: Executive Receptionist free 14-day pilot, then $25 per booked job, max $297/month.',
+    audio: `Free 14-day pilot, then $25 per booked job, never more than $297 a month. Cancel anytime.`,
     note: 'Keep pricing on screen for 3 seconds max. Outcome first, price second.',
   },
   {

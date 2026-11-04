@@ -13,7 +13,7 @@ export function avaOfferNodes(pageUrl: string) {
       priceCurrency: 'USD',
       availability: 'https://schema.org/InStock',
       url: pageUrl,
-      description: `Free 7-day trial, then ${plan.monthlyLabel} per month. ${plan.minutes} included voice minutes. ${plan.overageLabel}. $0 setup fee.`,
+      description: `Free 14-day pilot, then ${plan.monthlyLabel} per month. ${plan.minutes} included voice minutes. ${plan.overageLabel}. $0 setup fee.`,
     };
   });
 }
