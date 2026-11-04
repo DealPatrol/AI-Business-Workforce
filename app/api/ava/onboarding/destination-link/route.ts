@@ -3,6 +3,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { readDestinationEditAuthorization } from '@/lib/ava/destination-guard';
 import { signDestinationEditToken } from '@/lib/ava/destination-edit';
 import { avaDestinationEditUrl, escapeHtml, sendResendEmail } from '@/lib/ava/mail';
+import { isPilotPlanKey } from '@/lib/ava/pilot-pricing';
 import { isAvaPlanKey } from '@/lib/ava/pricing';
 
 export const dynamic = 'force-dynamic';
@@ -109,7 +110,7 @@ export async function POST(request: NextRequest) {
     }
 
     const plan =
-      onboarding.selected_plan && isAvaPlanKey(onboarding.selected_plan)
+      onboarding.selected_plan && (isAvaPlanKey(onboarding.selected_plan) || isPilotPlanKey(onboarding.selected_plan))
         ? onboarding.selected_plan
         : undefined;
     const token = signDestinationEditToken({

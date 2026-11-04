@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createHmac, timingSafeEqual } from 'crypto';
 import { resolveInvoiceSubscriptionStatus } from '@/lib/ava/billing-status';
+import {
+  PILOT_MONTHLY_CAP_CENTS,
+  PILOT_PLANS,
+  PILOT_SALE_CENTS,
+  PILOT_TRIAL_DAYS,
+  isPilotPlanKey,
+} from '@/lib/ava/pilot-pricing';
 import { AVA_PLANS, isAvaPlanKey } from '@/lib/ava/pricing';
 import {
   markAvaCustomerNotified,
@@ -106,17 +113,22 @@ function customerName(object: Record<string, unknown>) {
 
 async function notifyCheckout(customer: AvaCustomerRecord, sessionId: string) {
   const planKey = customer.plan && isAvaPlanKey(customer.plan) ? customer.plan : null;
+  const pilot = customer.plan && isPilotPlanKey(customer.plan) ? PILOT_PLANS[customer.plan] : null;
   const plan = planKey ? AVA_PLANS[planKey] : null;
   const link = avaOnboardingUrl(sessionId, customer.plan || undefined);
-  const planLabel = plan?.label || customer.plan || 'Executive Receptionist';
+  const planLabel = pilot?.label || plan?.label || customer.plan || 'Executive Receptionist';
   const priceLabel = plan?.monthlyLabel || '';
   const minutes = customer.included_minutes ?? plan?.minutes;
+  // Pilot copy: 14-day trial, base fee, $50 per booked job, $397 cap. The standard copy below is unchanged.
+  const pilotTerms = pilot
+    ? `Free ${PILOT_TRIAL_DAYS}-day trial, then ${pilot.baseLabel}/mo plus $${PILOT_SALE_CENTS / 100} for each booked job you mark in a lead email. Your total never exceeds $${PILOT_MONTHLY_CAP_CENTS / 100}/mo.`
+    : '';
 
   if (customer.email && !customer.buyer_onboarding_email_sent_at) {
     await sendResendEmail({
       to: customer.email,
       subject: `Finish setting up Executive Receptionist ${planLabel}`,
-      html: `<div style="font-family:Arial,sans-serif;max-width:640px;margin:auto;color:#17211b"><h1>Your Executive Receptionist trial is started</h1><p>Thanks for starting Executive Receptionist ${escapeHtml(planLabel)}${priceLabel ? ` (${escapeHtml(priceLabel)}/mo after the 7-day trial)` : ''}. Setup fee is $0.</p><p><a href="${escapeHtml(link)}">Finish setup</a> so we can build your receptionist from your hours, services, and call rules.</p><p>Cole attaches the phone number after you submit the form. Executive Receptionist is not answering your business line until that number is connected and you pass a test call.</p></div>`,
+      html: `<div style="font-family:Arial,sans-serif;max-width:640px;margin:auto;color:#17211b"><h1>Your Executive Receptionist trial is started</h1>${pilot ? `<p>Thanks for starting Executive Receptionist ${escapeHtml(planLabel)}. ${escapeHtml(pilotTerms)} Setup fee is $0.</p>` : `<p>Thanks for starting Executive Receptionist ${escapeHtml(planLabel)}${priceLabel ? ` (${escapeHtml(priceLabel)}/mo after the 7-day trial)` : ''}. Setup fee is $0.</p>`}<p><a href="${escapeHtml(link)}">Finish setup</a> so we can build your receptionist from your hours, services, and call rules.</p><p>Cole attaches the phone number after you submit the form. Executive Receptionist is not answering your business line until that number is connected and you pass a test call.</p></div>`,
     });
     await markAvaCustomerNotified(customer.id, 'buyer_onboarding_email_sent_at');
     customer.buyer_onboarding_email_sent_at = new Date().toISOString();
@@ -130,7 +142,7 @@ async function notifyCheckout(customer: AvaCustomerRecord, sessionId: string) {
       to: avaOwnerEmail(),
       replyTo: customer.email || undefined,
       subject: `New Executive Receptionist checkout — ${planLabel}${customer.email ? ` — ${customer.email}` : ''}`,
-      html: `<div style="font-family:Arial,sans-serif;max-width:640px;margin:auto;color:#17211b"><h1>New Executive Receptionist checkout</h1><table style="border-collapse:collapse;width:100%"><tr><td><b>Plan</b></td><td>${escapeHtml(planLabel)}</td></tr><tr><td><b>Status</b></td><td>${escapeHtml(customer.subscription_status)}</td></tr><tr><td><b>Included minutes</b></td><td>${escapeHtml(minutes == null ? 'Not on the session' : String(minutes))}</td></tr><tr><td><b>Buyer</b></td><td>${escapeHtml(customer.email || 'No email on the Checkout Session')}</td></tr><tr><td><b>Name</b></td><td>${escapeHtml(customer.name || 'Not provided')}</td></tr><tr><td><b>Session</b></td><td>${escapeHtml(sessionId)}</td></tr></table><p><a href="${escapeHtml(link)}">Onboarding link</a></p><p>Phone setup stays manual. Use <a href="https://github.com/DealPatrol/AI-Business-Workforce/blob/main/docs/AVA_PHONE_SETUP_RUNBOOK.md">docs/AVA_PHONE_SETUP_RUNBOOK.md</a> after they submit the form.</p></div>`,
+      html: `<div style="font-family:Arial,sans-serif;max-width:640px;margin:auto;color:#17211b"><h1>New Executive Receptionist checkout</h1><table style="border-collapse:collapse;width:100%"><tr><td><b>Plan</b></td><td>${escapeHtml(planLabel)}${pilot ? ' (pilot billing)' : ''}</td></tr>${pilot ? `<tr><td><b>Pilot terms</b></td><td>${escapeHtml(pilotTerms)}</td></tr>` : ''}<tr><td><b>Status</b></td><td>${escapeHtml(customer.subscription_status)}</td></tr><tr><td><b>Included minutes</b></td><td>${escapeHtml(minutes == null ? 'Not on the session' : String(minutes))}</td></tr><tr><td><b>Buyer</b></td><td>${escapeHtml(customer.email || 'No email on the Checkout Session')}</td></tr><tr><td><b>Name</b></td><td>${escapeHtml(customer.name || 'Not provided')}</td></tr><tr><td><b>Session</b></td><td>${escapeHtml(sessionId)}</td></tr></table><p><a href="${escapeHtml(link)}">Onboarding link</a></p><p>Phone setup stays manual. Use <a href="https://github.com/DealPatrol/AI-Business-Workforce/blob/main/docs/AVA_PHONE_SETUP_RUNBOOK.md">docs/AVA_PHONE_SETUP_RUNBOOK.md</a> after they submit the form.</p></div>`,
     });
     await markAvaCustomerNotified(customer.id, 'owner_checkout_email_sent_at');
   }

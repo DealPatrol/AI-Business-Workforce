@@ -4,6 +4,13 @@ import {
   isAvaPlanKey,
 } from '@/lib/ava/pricing';
 import {
+  PILOT_MONTHLY_CAP_CENTS,
+  PILOT_PLANS,
+  PILOT_SALE_CENTS,
+  PILOT_TRIAL_DAYS,
+  type PilotPlanKey,
+} from '@/lib/ava/pilot-pricing';
+import {
   POSTCARD_SETUP_CENTS,
   POSTCARD_SIZES,
   type PostcardSize,
@@ -175,6 +182,59 @@ export function buildAvaCheckoutParams(input: AvaCheckoutInput) {
   params.set('subscription_data[metadata][overage_cents]', String(plan.overageCents));
   if (input.qualificationId) {
     params.set('subscription_data[metadata][qualification_id]', input.qualificationId);
+  }
+  return params;
+}
+
+type AvaPilotCheckoutInput = {
+  origin: string;
+  planKey: PilotPlanKey;
+  priceId?: string;
+};
+
+/**
+ * Outcome-based pilot checkout: 14-day free trial with the card collected up front, then a monthly
+ * base by tier. The $50-per-booked-job charges are added later as pending invoice items
+ * (see lib/ava/pilot-sales.ts), not as Checkout line items. Separate from buildAvaCheckoutParams.
+ */
+export function buildAvaPilotCheckoutParams(input: AvaPilotCheckoutInput) {
+  const plan = PILOT_PLANS[input.planKey];
+  const params = new URLSearchParams();
+  params.set('mode', 'subscription');
+  params.set(
+    'success_url',
+    `${input.origin}/onboarding/ava?session_id={CHECKOUT_SESSION_ID}&plan=${input.planKey}`,
+  );
+  params.set('cancel_url', `${input.origin}/receptionist/pilot`);
+  params.set('billing_address_collection', 'auto');
+  params.set('allow_promotion_codes', 'false');
+  // Card is required even though nothing is charged during the trial.
+  params.set('payment_method_collection', 'always');
+  params.set('subscription_data[trial_period_days]', String(PILOT_TRIAL_DAYS));
+  // If a trial ends without a usable card, cancel instead of leaving an unbillable subscription.
+  params.set('subscription_data[trial_settings][end_behavior][missing_payment_method]', 'cancel');
+  appendRecurringPrice(params, 0, {
+    priceId: input.priceId,
+    unitAmount: plan.baseCents,
+    productName: plan.productName,
+    description: `${plan.callVolume}. Base ${plan.baseLabel}/mo, plus $${PILOT_SALE_CENTS / 100} per booked job, capped at $${PILOT_MONTHLY_CAP_CENTS / 100}/mo total.`,
+  });
+  params.set(
+    'custom_text[submit][message]',
+    `Free for ${PILOT_TRIAL_DAYS} days. Then ${plan.baseLabel}/month plus $${PILOT_SALE_CENTS / 100} for each booked job you confirm. Your total monthly bill never exceeds $${PILOT_MONTHLY_CAP_CENTS / 100}. Cancel anytime.`,
+  );
+  const metadata: Record<string, string> = {
+    product: 'ava',
+    plan: input.planKey,
+    pricing: 'pilot',
+    base_cents: String(plan.baseCents),
+    sale_cents: String(PILOT_SALE_CENTS),
+    cap_cents: String(PILOT_MONTHLY_CAP_CENTS),
+    trial_days: String(PILOT_TRIAL_DAYS),
+  };
+  for (const [key, value] of Object.entries(metadata)) {
+    params.set(`metadata[${key}]`, value);
+    params.set(`subscription_data[metadata][${key}]`, value);
   }
   return params;
 }

@@ -1,4 +1,5 @@
 import { normalizeEmail } from '@/lib/analytics/contact';
+import { isPilotPlanKey } from '@/lib/ava/pilot-pricing';
 import { AVA_PLANS, isAvaPlanKey } from '@/lib/ava/pricing';
 
 const STRIPE_API = 'https://api.stripe.com/v1';
@@ -140,6 +141,8 @@ export async function readAvaCheckoutIdentity(sessionId: string): Promise<AvaChe
   const avaPaymentLinkId = process.env.AVA_STRIPE_PAYMENT_LINK_ID;
   const recognizedAvaCheckout =
     Boolean(checkoutPlan && isAvaPlanKey(checkoutPlan) && AVA_PLANS[checkoutPlan]) ||
+    // Pilot checkout (/receptionist/pilot) sets metadata[product]=ava and metadata[plan]=pilot_*.
+    Boolean(session.metadata?.product === 'ava' && isPilotPlanKey(checkoutPlan)) ||
     Boolean(avaPaymentLinkId && session.payment_link === avaPaymentLinkId);
 
   if (!recognizedAvaCheckout) {

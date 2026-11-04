@@ -12,6 +12,7 @@ import {
   isAvaPlanKey,
   type AvaPlanKey,
 } from '@/lib/ava/pricing';
+import { PILOT_PLANS, isPilotPlanKey, pilotTermsCopy } from '@/lib/ava/pilot-pricing';
 import styles from './onboarding.module.css';
 import { readAttribution, readBrowserIds } from '@/lib/analytics/attribution';
 import { CheckoutSuccessTracking } from '@/components/analytics/CheckoutSuccessTracking';
@@ -299,6 +300,8 @@ function AvaOnboardingForm() {
 
   const selectedPlanRaw = (prefill.plan || searchParams.get('plan') || 'starter').toLowerCase();
   const selectedPlan: AvaPlanKey = isAvaPlanKey(selectedPlanRaw) ? selectedPlanRaw : 'starter';
+  // Pilot billing (separate checkout at /receptionist/pilot) passes plan=pilot_97 | pilot_147 | pilot_197.
+  const pilotPlan = isPilotPlanKey(selectedPlanRaw) ? PILOT_PLANS[selectedPlanRaw] : null;
 
   return (
     <main className={styles.page}>
@@ -325,7 +328,9 @@ function AvaOnboardingForm() {
           </h1>
           <p>
               {searchParams.get('session_id')
-              ? 'Checkout is confirmed — you are paid or on the 7-day trial. Submit this form and Executive Receptionist’s agent is created from your answers. The phone number stays pending until Cole attaches it.'
+              ? pilotPlan
+                ? `Checkout is confirmed — you are on the ${pilotPlan.label} free trial. ${pilotTermsCopy(pilotPlan.key)} Submit this form and Executive Receptionist’s agent is created from your answers. The phone number stays pending until Cole attaches it.`
+                : 'Checkout is confirmed — you are paid or on the 7-day trial. Submit this form and Executive Receptionist’s agent is created from your answers. The phone number stays pending until Cole attaches it.'
               : `Stripe creates the 7-day trial for ${AVA_PLANS[selectedPlan].label}, then ${avaPlanPriceLine(selectedPlan)}. $0 setup. This form emails Cole. It does not start billing by itself.`}
           </p>
           {prefillNote ? <p className={styles.notice}>{prefillNote}</p> : null}
@@ -580,8 +585,9 @@ function AvaOnboardingForm() {
             <input type="hidden" name="plan" value={prefill.plan || searchParams.get('plan') || ''} />
             <input type="hidden" name="qualificationId" value={qualificationId} />
             <p className={styles.notice}>
-              Selected plan: {AVA_PLANS[selectedPlan].label} · {AVA_PLANS[selectedPlan].monthlyLabel}
-              /mo after trial · {AVA_PLANS[selectedPlan].minutes} included minutes
+              {pilotPlan
+                ? `Selected plan: ${pilotPlan.label} · ${pilotTermsCopy(pilotPlan.key)}`
+                : `Selected plan: ${AVA_PLANS[selectedPlan].label} · ${AVA_PLANS[selectedPlan].monthlyLabel}/mo after trial · ${AVA_PLANS[selectedPlan].minutes} included minutes`}
             </p>
             <label className={styles.honeypot} aria-hidden="true">
               Company website

@@ -2,6 +2,7 @@ import { parseStaffContacts, toE164 } from '@/lib/analytics/contact';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { formatAvaLeadSmsBody, sendAvaLeadSms, type AvaLeadSmsResult } from '@/lib/ava/sms';
 import { avaOwnerEmail, escapeHtml, sendResendEmail } from '@/lib/ava/mail';
+import { pilotBookedJobBlock } from '@/lib/ava/pilot-sale-email';
 import { decidePostCallGate, planPostCallEffects } from '@/lib/ava/post-call-gate';
 import { SMS_SKIPPED_NO_CONSENT, decideOwnerSms } from '@/lib/ava/sms-consent';
 
@@ -39,6 +40,7 @@ type CustomerGateRow = {
   id: string;
   product: string | null;
   subscription_status: string | null;
+  plan?: string | null;
 };
 
 function asRecord(value: unknown): Record<string, unknown> {
@@ -168,7 +170,7 @@ async function listCustomersForOnboarding(row: OnboardingMatch): Promise<Custome
   const supabase = createAdminClient();
   const byOnboarding = await supabase
     .from('ava_customers')
-    .select('id, product, subscription_status')
+    .select('id, product, subscription_status, plan')
     .eq('onboarding_id', row.id)
     .limit(5);
   if (byOnboarding.error) {
@@ -180,7 +182,7 @@ async function listCustomersForOnboarding(row: OnboardingMatch): Promise<Custome
 
   const bySession = await supabase
     .from('ava_customers')
-    .select('id, product, subscription_status')
+    .select('id, product, subscription_status, plan')
     .eq('stripe_checkout_session_id', row.stripe_session_id)
     .limit(5);
   if (bySession.error) {
@@ -209,7 +211,7 @@ async function resolvePostCallTarget(agentId: string) {
         customerProduct: customer.product,
         subscriptionStatus: customer.subscription_status,
       });
-      if (decision.process) return { decision, onboarding };
+      if (decision.process) return { decision, onboarding, customer };
     }
   }
 
@@ -221,6 +223,7 @@ async function resolvePostCallTarget(agentId: string) {
       subscriptionStatus: null,
     }),
     onboarding: null,
+    customer: null,
   };
 }
 
@@ -322,7 +325,7 @@ export async function savePostCallLead(lead: ExtractedCallLead) {
   }
 
   const subject = `New Executive Receptionist lead${lead.callerName ? ` — ${lead.callerName}` : ''}${lead.need ? ` — ${lead.need}` : ''}`;
-  const html = `<div style="font-family:Arial,sans-serif;max-width:680px;margin:auto;color:#17211b"><h1 style="font-size:22px">New Executive Receptionist lead</h1><p>Executive Receptionist finished a call for ${escapeHtml(match?.business_name || 'your business')}.</p><table style="border-collapse:collapse;width:100%"><tr><td><b>Caller</b></td><td>${escapeHtml(lead.callerName || 'Not provided')}</td></tr><tr><td><b>Phone</b></td><td>${escapeHtml(lead.callerPhone || 'Not provided')}</td></tr><tr><td><b>Need</b></td><td>${escapeHtml(lead.need || 'Not provided')}</td></tr><tr><td><b>Address</b></td><td>${escapeHtml(lead.address || 'Not provided')}</td></tr><tr><td><b>Urgency</b></td><td>${escapeHtml(lead.urgency || 'Not provided')}</td></tr></table><h2 style="font-size:18px">Summary</h2><p style="white-space:pre-wrap">${escapeHtml(lead.summary)}</p></div>`;
+  const html = `<div style="font-family:Arial,sans-serif;max-width:680px;margin:auto;color:#17211b"><h1 style="font-size:22px">New Executive Receptionist lead</h1><p>Executive Receptionist finished a call for ${escapeHtml(match?.business_name || 'your business')}.</p><table style="border-collapse:collapse;width:100%"><tr><td><b>Caller</b></td><td>${escapeHtml(lead.callerName || 'Not provided')}</td></tr><tr><td><b>Phone</b></td><td>${escapeHtml(lead.callerPhone || 'Not provided')}</td></tr><tr><td><b>Need</b></td><td>${escapeHtml(lead.need || 'Not provided')}</td></tr><tr><td><b>Address</b></td><td>${escapeHtml(lead.address || 'Not provided')}</td></tr><tr><td><b>Urgency</b></td><td>${escapeHtml(lead.urgency || 'Not provided')}</td></tr></table><h2 style="font-size:18px">Summary</h2><p style="white-space:pre-wrap">${escapeHtml(lead.summary)}</p>${pilotBookedJobBlock({ plan: target.customer?.plan, leadId: row.id })}</div>`;
 
   let sms: AvaLeadSmsResult = { ...SMS_SKIPPED_NO_CONSENT };
   if (effects.sendEmail) {

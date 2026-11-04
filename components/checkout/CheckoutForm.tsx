@@ -18,6 +18,8 @@ type CheckoutFormProps = {
   className?: string;
   children: ReactNode;
   onSubmit?: () => void;
+  /** Defaults to the live checkout. The pilot page posts to /api/checkout/pilot. */
+  action?: string;
 };
 
 function checkoutFields(href: string) {
@@ -29,7 +31,7 @@ function checkoutFields(href: string) {
 }
 
 /** POSTs to checkout so a plain link crawl cannot open a Stripe session. */
-export function CheckoutForm({ href, className, children, onSubmit }: CheckoutFormProps) {
+export function CheckoutForm({ href, className, children, onSubmit, action = '/api/checkout' }: CheckoutFormProps) {
   const fields = checkoutFields(href);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -39,7 +41,7 @@ export function CheckoutForm({ href, className, children, onSubmit }: CheckoutFo
   }
 
   return (
-    <form className="checkout-form" method="POST" action="/api/checkout" onSubmit={handleSubmit}>
+    <form className="checkout-form" method="POST" action={action} onSubmit={handleSubmit}>
       {fields.map((field) => (
         <input key={field.key} type="hidden" name={field.key} value={field.value} />
       ))}

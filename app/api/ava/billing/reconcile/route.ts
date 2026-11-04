@@ -94,6 +94,17 @@ export async function GET(req: NextRequest) {
         });
         continue;
       }
+      // Pilot subscriptions have no included minutes or overage; their billing is base + $50 per booked job.
+      if (session.metadata?.pricing === 'pilot') {
+        results.push({
+          onboardingId: row.id,
+          business: row.business_name,
+          ok: true,
+          skipped: true,
+          reason: 'Pilot billing has no minute overage; booked-job charges are added by lib/ava/pilot-sales.',
+        });
+        continue;
+      }
       if (session.metadata?.product && session.metadata.product !== 'ava') {
         results.push({
           onboardingId: row.id,
