@@ -23,15 +23,15 @@ const pro = AVA_PLANS.pro;
 const HOME_FAQS = [
   {
     q: 'What does this actually do for my service business?',
-    a: 'Two things. Executive Receptionist answers the calls you cannot pick up, takes the caller’s name, number, and what the job is, then texts that lead to you so you can call back and book it. YardMailer puts designed postcards in front of homeowners so the phone rings in the first place. Neither one promises a number of jobs.',
+    a: 'Two things. Executive Receptionist answers the calls you cannot pick up, takes the caller’s name, number, and what the job is, then sends that lead to you so you can call back and book it. YardMailer puts designed postcards in front of homeowners so the phone rings in the first place. Neither one promises a number of jobs.',
   },
   {
     q: 'Is this only for lawn care?',
-    a: 'No. It was built by a lawn care owner and is used on a lawn care line every week, but the same call flow works for plumbing, HVAC, roofing, cleaning, pressure washing, tree service, fencing, pest control, electrical, painting, and pool work. The questions it asks, the greeting, and where the lead text goes are all written per business.',
+    a: 'No. It was built by a lawn care owner and is used on a lawn care line every week, but the same call flow works for plumbing, HVAC, roofing, cleaning, pressure washing, tree service, fencing, pest control, electrical, painting, and pool work. The questions it asks, the greeting, and where the lead goes are all written per business.',
   },
   {
     q: 'Is the receptionist a person?',
-    a: 'No. Executive Receptionist is an AI phone receptionist, and the greeting says so. It answers with words you approve, asks the questions you approve, and texts you the lead. It does not pretend to be a human, and it does not quote a price you have not published.',
+    a: 'No. Executive Receptionist is an AI phone receptionist, and the greeting says so. It answers with words you approve, asks the questions you approve, and sends you the lead. It does not pretend to be a human, and it does not quote a price you have not published.',
   },
   {
     q: 'Does it book the job for me?',
@@ -137,8 +137,8 @@ const STEPS = [
   },
   {
     number: '03',
-    title: 'You get a text with the job',
-    detail: 'Name, number, address, and what they need, sent to your phone before the caller has moved on.',
+    title: 'You get the call summary',
+    detail: 'Name, number, address, and what they need, sent to you before the caller has moved on.',
   },
   {
     number: '04',
@@ -157,9 +157,9 @@ export default function SuiteHomePage() {
           <span className={styles.eyebrow}>FOR SERVICE BUSINESSES THAT LIVE ON THE PHONE</span>
           <h1>More booked jobs. No more calls that go unanswered.</h1>
           <p className={styles.lede}>
-            Front Porch Growth answers the calls you cannot pick up, writes down what the caller needs, and texts it
-            straight to your phone so you can follow up fast. It also mails postcards that keep the phone ringing.
-            Built by a lawn care owner who runs it on his own business.
+            Front Porch Growth answers the calls you cannot pick up, writes down what the caller needs, and sends it to
+            you so you can follow up fast. It also mails postcards that keep the phone ringing. Built by a lawn care
+            owner who runs it on his own business.
           </p>
           <div className={styles.actions}>
             <TrackedCheckoutLink className={styles.primary} href="/api/checkout?plan=starter" plan="starter">
@@ -176,10 +176,10 @@ export default function SuiteHomePage() {
           </p>
         </div>
 
-        <aside className={styles.phone} aria-label="Example of the lead text a business receives">
+        <aside className={styles.phone} aria-label="Example of the lead summary a business receives">
           <div className={styles.phoneHead}>
             <small>What you get</small>
-            <b>New lead · text message</b>
+            <b>New lead · summary</b>
           </div>
           <div className={styles.bubbles}>
             <div className={styles.bubble}>
@@ -187,7 +187,7 @@ export default function SuiteHomePage() {
               “Hi, I need a price on mowing a half-acre in town, and maybe the beds cleaned up.”
             </div>
             <div className={`${styles.bubble} ${styles.bubbleMine}`}>
-              <span className={styles.bubbleLabel}>Texted to your phone</span>
+              <span className={styles.bubbleLabel}>Sent to you</span>
               Example caller · 7:42 PM · half-acre mowing + bed cleanup · wants a call back this week
             </div>
             <div className={styles.bubble}>
@@ -196,14 +196,14 @@ export default function SuiteHomePage() {
             </div>
           </div>
           <p className={styles.phoneFoot}>
-            A made-up example of the lead text, not a real customer or recorded call. What the receptionist asks is
+            A made-up example of the lead summary, not a real customer or recorded call. What the receptionist asks is
             written for your trade.
           </p>
         </aside>
       </section>
 
-      <section className={styles.strip} aria-label="Business types this fits">
-        <span className={styles.stripLabel}>Works for</span>
+      <section className={styles.strip} aria-label="Business types this is designed for">
+        <span className={styles.stripLabel}>Designed for</span>
         {BUSINESS_TYPES.map((type) => (
           <span key={type} className={styles.chip}>
             {type}
@@ -222,8 +222,8 @@ export default function SuiteHomePage() {
             </p>
             <p className={styles.body}>
               He built it for a line like his own, and his own line runs on it. The receptionist taking a lawn care call
-              and the lead text landing mid-job are the same setup sold on this page, not a demo assembled for a sales
-              page.
+              and the lead summary landing mid-job are the same setup sold on this page, not a demo assembled for a
+              sales page.
             </p>
             <p className={styles.body}>
               The same setup is sold to other service businesses. The trade changes the questions and the greeting. It
@@ -240,8 +240,7 @@ export default function SuiteHomePage() {
               <li>Pressure washing</li>
             </ul>
             <p className={styles.founderNote}>
-              Collins Lawncare has a Google Business Profile you can look up yourself. This page does not quote reviews,
-              ratings, or customer counts, because the products do not need them to be explained.
+              Collins Lawncare has a Google Business Profile you can look up yourself.
             </p>
           </div>
         </div>
@@ -268,12 +267,12 @@ export default function SuiteHomePage() {
             </p>
             <p className={styles.offerMeta}>
               Free 7-day trial, $0 setup. An AI phone receptionist that answers missed and after-hours calls, takes the
-              job details, and texts you the lead. The greeting tells callers it is an AI receptionist.
+              job details, and sends you the lead. The greeting tells callers it is an AI receptionist.
             </p>
             <ul className={styles.offerFeatures}>
               <li>Answers 24/7, including nights and weekends</li>
               <li>Asks the questions you approve for your trade</li>
-              <li>Texts you the name, number, and job</li>
+              <li>Sends you the name, number, and job</li>
               <li>{starter.minutes} to {pro.minutes.toLocaleString('en-US')} included voice minutes by plan</li>
             </ul>
             <div className={styles.offerActions}>

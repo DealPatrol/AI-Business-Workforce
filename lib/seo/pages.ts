@@ -5,7 +5,7 @@ export const ROOT_TITLE = 'Front Porch Growth';
 export const AI_RECEPTIONIST = 'AI Receptionist';
 
 export const ROOT_DESCRIPTION =
-  'Phone answering and postcard marketing for home-service businesses. An AI Receptionist takes the job and texts you the lead, built by a lawn care owner.';
+  'Phone answering and postcard marketing for home-service businesses. An AI Receptionist takes the job and sends you the lead, built by a lawn care owner.';
 
 export type SeoSpec = {
   title: string;
@@ -25,7 +25,7 @@ const PAGES = {
   '/': {
     title: 'More Booked Jobs for Service Businesses | AI Receptionist',
     description:
-      'Answer every call and mail your best streets. AI Receptionist takes the job and texts you the lead, plus YardMailer postcards. $77/mo after trial.',
+      'Answer every call and mail your best streets. AI Receptionist takes the job and sends you the lead, plus YardMailer postcards. $77/mo after trial.',
     titleMode: 'absolute',
     receptionist: true,
   },
