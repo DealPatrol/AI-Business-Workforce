@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { ArrowRight, BellRing, PhoneCall, Play, Sparkles } from 'lucide-react';
-import { AVA_PILOT_OFFER } from '@/lib/ava-pilot-offer';
 import { getPersonalizedDemos } from '@/lib/prospects';
 import './video.css';
 
