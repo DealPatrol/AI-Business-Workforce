@@ -1,5 +1,5 @@
 import { adsSendTo, readGa4Id, readGoogleAdsCheckoutLabel, readGoogleAdsDemoLabel, readGoogleAdsOnboardingLabel } from '@/lib/analytics/config';
-import { normalizeEmail } from '@/lib/analytics/contact';
+import { metaPhoneDigits, normalizeEmail, toE164 } from '@/lib/analytics/contact';
 import { readAttribution, readBrowserIds } from '@/lib/analytics/attribution';
 
 type GtagFn = (...args: unknown[]) => void;
@@ -41,8 +41,7 @@ function metaTrack(command: 'track' | 'trackCustom', name: string, eventId: stri
   window.fbq(command, name, params || {}, { eventID: eventId });
 }
 
-/** Phone numbers are never sent to ad or analytics services, only an optional email. */
-function postServerEvent(eventName: TrackedEventName, eventId: string, extra?: { email?: string }) {
+function postServerEvent(eventName: TrackedEventName, eventId: string, extra?: { email?: string; phone?: string }) {
   if (typeof window === 'undefined' || !metaPixelEnabled()) return;
   const { fbp, fbc } = readBrowserIds();
   const body = JSON.stringify({
@@ -52,6 +51,7 @@ function postServerEvent(eventName: TrackedEventName, eventId: string, extra?: {
     fbp,
     fbc,
     email: extra?.email || '',
+    phone: extra?.phone || '',
     attribution: readAttribution(),
   });
   void fetch('/api/analytics/meta', {
@@ -100,22 +100,26 @@ export function trackCheckoutStarted(plan?: string) {
   return eventId;
 }
 
-/**
- * Onboarding form submitted. Only the email can be used for matching; staff phone numbers
- * (raw or hashed) are intentionally never passed to Google, Meta, or any other ad platform.
- */
-export function trackOnboardingSubmitted(input: { eventId: string; email?: string }) {
+export function trackOnboardingSubmitted(input: { eventId: string; email?: string; phone?: string }) {
   const eventId = input.eventId || newEventId();
   const email = normalizeEmail(input.email);
-  if (typeof window !== 'undefined' && typeof window.gtag === 'function' && email) {
-    window.gtag('set', 'user_data', { email });
+  const phone = toE164(input.phone);
+  if (typeof window !== 'undefined' && typeof window.gtag === 'function' && (email || phone)) {
+    window.gtag('set', 'user_data', {
+      ...(email ? { email } : {}),
+      ...(phone ? { phone_number: phone } : {}),
+    });
   }
   googleConversion(readGoogleAdsOnboardingLabel(), eventId);
   if (readGa4Id()) gtagEvent('generate_lead', { transaction_id: eventId });
 
   if (metaPixelEnabled() && typeof window !== 'undefined' && typeof window.fbq === 'function') {
+    const userData: Record<string, string> = {};
+    if (email) userData.em = email;
+    const digits = metaPhoneDigits(phone);
+    if (digits) userData.ph = digits;
     const pixelId = document.documentElement.dataset.metaPixelId || '';
-    if (pixelId && email) window.fbq('init', pixelId, { em: email });
+    if (pixelId && Object.keys(userData).length > 0) window.fbq('init', pixelId, userData);
     window.fbq('track', 'Lead', {}, { eventID: eventId });
   }
   return eventId;

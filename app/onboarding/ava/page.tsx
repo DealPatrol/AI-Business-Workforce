@@ -238,9 +238,9 @@ function AvaOnboardingForm() {
     const eventId = crypto.randomUUID();
     const attribution = readAttribution();
     const { fbp, fbc } = readBrowserIds();
-    // Only the email is used for ad matching. Phone numbers are never sent to ad platforms.
     const contact = {
       email: String(payload.staffEmail || splitContact(String(payload.staffContact || '')).email),
+      phone: String(payload.staffPhone || splitContact(String(payload.staffContact || '')).phone),
     };
 
     try {
@@ -284,6 +284,7 @@ function AvaOnboardingForm() {
       trackOnboardingSubmitted({
         eventId: typeof result.eventId === 'string' ? result.eventId : eventId,
         email: contact.email,
+        phone: contact.phone,
       });
       setStatus('sent');
     } catch (submissionError) {

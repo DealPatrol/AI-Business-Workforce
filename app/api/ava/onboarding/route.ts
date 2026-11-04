@@ -287,6 +287,7 @@ export async function POST(request: NextRequest) {
       eventId,
       eventSourceUrl: safePageUrl(body.pageUrl, request.nextUrl.origin),
       email: contact.email || fields.staffEmail,
+      phone: contact.phone,
       clientIp: clientIp(request.headers.get('x-forwarded-for')),
       userAgent: request.headers.get('user-agent') || '',
       fbp: readCookieId(body.fbp),

@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { readFileSync } from 'node:fs';
 import { describe, it } from 'node:test';
 import { parseMetaServerEventName, sendMetaServerEvent } from '@/lib/analytics/meta-capi';
 
@@ -23,7 +22,7 @@ describe('meta events', () => {
     if (previousPixel) process.env.META_PIXEL_ID = previousPixel;
   });
 
-  it('never sends a phone number, raw or hashed, even if a caller passes one', async () => {
+  it('sends a hashed phone number (ph) alongside the email hash when provided', async () => {
     const saved = {
       token: process.env.META_CAPI_TOKEN,
       pixel: process.env.META_PIXEL_ID,
@@ -41,34 +40,20 @@ describe('meta events', () => {
         eventName: 'Lead',
         eventId: 'event-id-5678',
         email: 'owner@example.com',
-        // Not part of the type any more; simulates a stale or hostile client payload.
-        ...({ phone: '+12565550142' } as object),
+        phone: '+1 (256) 555-0142',
       });
       assert.deepEqual(result, { sent: true, skipped: false });
       const userData = JSON.parse(sentBody).data[0].user_data as Record<string, unknown>;
-      assert.ok(Array.isArray(userData.em), 'email hash is still sent');
-      assert.equal('ph' in userData, false);
-      assert.ok(!sentBody.includes('2565550142'));
+      assert.ok(Array.isArray(userData.em), 'email hash is sent');
       const phoneHash = createHash('sha256').update('12565550142').digest('hex');
-      assert.ok(!sentBody.includes(phoneHash));
+      assert.deepEqual(userData.ph, [phoneHash]);
+      assert.ok(!sentBody.includes('2565550142'), 'raw phone digits are never sent');
     } finally {
       globalThis.fetch = saved.fetch;
       if (saved.token === undefined) delete process.env.META_CAPI_TOKEN;
       else process.env.META_CAPI_TOKEN = saved.token;
       if (saved.pixel === undefined) delete process.env.META_PIXEL_ID;
       else process.env.META_PIXEL_ID = saved.pixel;
-    }
-  });
-
-  it('keeps phone fields out of the browser tracking code and the analytics route', () => {
-    const files = [
-      'lib/analytics/events.ts',
-      'lib/analytics/meta-capi.ts',
-      'app/api/analytics/meta/route.ts',
-    ];
-    for (const file of files) {
-      const source = readFileSync(file, 'utf8');
-      assert.ok(!/phone_number|\bph\b\s*[:=]|userData\.ph|metaPhoneDigits|phone:/.test(source), file);
     }
   });
 });

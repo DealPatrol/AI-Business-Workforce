@@ -1,5 +1,5 @@
 import { createHash } from 'crypto';
-import { normalizeEmail } from '@/lib/analytics/contact';
+import { metaPhoneDigits, normalizeEmail } from '@/lib/analytics/contact';
 import { readMetaPixelId } from '@/lib/analytics/config';
 
 export type MetaServerEventName = 'Lead' | 'StartTrial' | 'InitiateCheckout' | 'DemoStarted' | 'ViewContent';
@@ -9,6 +9,7 @@ export type MetaServerEventInput = {
   eventId: string;
   eventSourceUrl?: string;
   email?: string;
+  phone?: string;
   clientIp?: string;
   userAgent?: string;
   fbp?: string;
@@ -69,7 +70,6 @@ function pixelId() {
 
 /**
  * Sends one website event to the Meta Conversions API.
- * Only a hashed email and browser ids are sent; phone numbers (raw or hashed) never are.
  * No-ops when META_CAPI_TOKEN or a pixel ID is missing. Never throws.
  */
 export async function sendMetaServerEvent(input: MetaServerEventInput): Promise<MetaServerEventResult> {
@@ -78,8 +78,10 @@ export async function sendMetaServerEvent(input: MetaServerEventInput): Promise<
   if (!token || !pixel) return { sent: false, skipped: true };
 
   const email = normalizeEmail(input.email);
+  const phone = metaPhoneDigits(input.phone);
   const userData: Record<string, string | string[]> = {};
   if (email) userData.em = [sha256(email)];
+  if (phone) userData.ph = [sha256(phone)];
   if (input.clientIp) userData.client_ip_address = input.clientIp;
   if (input.userAgent) userData.client_user_agent = input.userAgent;
   if (input.fbp) userData.fbp = input.fbp;

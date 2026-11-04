@@ -14,6 +14,7 @@ export async function POST(request: NextRequest) {
     eventId: readEventId(body?.eventId),
     eventSourceUrl: safePageUrl(body?.pageUrl, request.nextUrl.origin),
     email: String(body?.email || ''),
+    phone: String(body?.phone || ''),
     clientIp: clientIp(request.headers.get('x-forwarded-for')),
     userAgent: request.headers.get('user-agent') || '',
     fbp: readCookieId(body?.fbp),

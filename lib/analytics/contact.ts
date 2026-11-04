@@ -14,6 +14,12 @@ export function toE164(value: string | undefined | null) {
   return '';
 }
 
+/** Digits with country code, no plus. Meta hashes this form. */
+export function metaPhoneDigits(value: string | undefined | null) {
+  const e164 = toE164(value);
+  return e164 ? e164.slice(1) : '';
+}
+
 export function splitContact(value: string | undefined | null) {
   const trimmed = String(value || '').trim();
   if (trimmed.includes('@')) {
