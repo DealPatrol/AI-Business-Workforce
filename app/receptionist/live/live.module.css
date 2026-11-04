@@ -1,0 +1,13 @@
+.page { min-height: 100vh; background: linear-gradient(180deg, #faf6ef 0%, #efe6d6 100%); color: #15222e; }
+.hero {
+  display: grid; gap: 28px; padding: 32px 18px 48px; max-width: 1080px; margin: 0 auto; align-items: center;
+}
+@media (min-width: 900px) { .hero { grid-template-columns: 1.1fr 1fr; padding: 64px 28px; gap: 48px; } }
+.copy { display: grid; gap: 14px; }
+.kicker { margin: 0; font: 600 13px/1 var(--er-sans, system-ui); letter-spacing: 0.12em; text-transform: uppercase; color: #8a6a2e; }
+.h1 { margin: 0; font: 600 clamp(34px, 6vw, 56px)/1.05 var(--er-serif, Georgia, serif); }
+.lede { margin: 0; font: 400 18px/1.55 var(--er-sans, system-ui); color: #33424f; }
+.points { margin: 0; padding-left: 20px; display: grid; gap: 6px; font: 400 16px/1.5 var(--er-sans, system-ui); }
+.pricing { margin: 0; font: 400 15px/1.5 var(--er-sans, system-ui); color: #33424f; }
+.pricing a { color: #15222e; font-weight: 600; }
+@media (max-width: 899px) { .copy .points, .copy .pricing { display: none; } }
