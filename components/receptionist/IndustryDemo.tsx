@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { ExclusiveAudio } from '@/components/receptionist/ExclusiveAudio';
 import {
   DEFAULT_ER_DEMO_SLUG,
@@ -22,8 +22,6 @@ export function IndustryDemo({ initialSlug, syncUrl = true }: Props) {
   const [liveOpen, setLiveOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
-  const searchParams = useSearchParams();
-
   useEffect(() => {
     const fromProp = getErDemoNiche(initialSlug)?.slug;
     if (fromProp && fromProp !== slug) setSlug(fromProp);
@@ -54,9 +52,7 @@ export function IndustryDemo({ initialSlug, syncUrl = true }: Props) {
     setSlug(next);
     if (!syncUrl) return;
     if (pathname === '/receptionist') {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set('industry', next);
-      router.replace(`/receptionist?${params.toString()}#demo`, { scroll: false });
+      router.replace(`/receptionist?industry=${next}#demo`, { scroll: false });
     } else if (pathname.startsWith('/receptionist/')) {
       router.replace(`/receptionist/${next}#demo`, { scroll: false });
     }
