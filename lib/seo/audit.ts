@@ -20,6 +20,7 @@ import {
   type SeoSpec,
 } from '@/lib/seo/pages';
 import { TRADE_PAGES } from '@/lib/trades/pages';
+import { ER_DEMO_NICHES } from '@/lib/er-demos';
 
 export type ResolvedSeo = {
   path: string;
@@ -88,6 +89,17 @@ export function resolveRouteSeo(route: string, companyNames: string[]): Resolved
 
   if (route === '/agents/[slug]') {
     return AGENTS.map((agent) => absolute(`/agents/${agent.id}`, agentDocumentTitle(agent.title), agent.blurb, false));
+  }
+
+  if (route === '/receptionist/[industry]') {
+    return ER_DEMO_NICHES.map((niche) =>
+      absolute(
+        `/receptionist/${niche.slug}`,
+        `AI Receptionist for ${niche.name} Shops`,
+        `Hear a sample ${niche.name} call, then talk to a demo receptionist in your browser. Free 14-day pilot, then $25 per booked job, max $297/mo.`,
+        true,
+      ),
+    );
   }
 
   if (route === '/receptionist/missed-calls') {

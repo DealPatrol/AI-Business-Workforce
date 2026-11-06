@@ -54,6 +54,24 @@ export const EXECUTIVE_FOCUS_INDUSTRIES = [
     line: 'Leak, no-hot-water, and clogged-line calls captured so you can call back and book the job yourself.',
     sample: 'The receptionist asks where the leak is, whether water can be shut off, and a callback number.',
   },
+  {
+    slug: 'roofing',
+    name: 'Roofing',
+    line: 'Storm-damage and active-leak calls taken while the crew is on a roof — name, number, and whether water is coming inside.',
+    sample: 'The receptionist asks about missing shingles, interior dripping, and a time for an inspection.',
+  },
+  {
+    slug: 'electrical',
+    name: 'Electrical',
+    line: 'No-power, breaker, and panel-upgrade calls captured while you are already in someone else’s panel.',
+    sample: 'The receptionist checks for smoke or a burning smell, then takes the address and what went dark.',
+  },
+  {
+    slug: 'auto-repair',
+    name: 'Auto repair',
+    line: 'No-start, breakdown, and drop-off calls taken while both hands are under a hood.',
+    sample: 'The receptionist asks for the vehicle, whether it will start, and a drop-off window.',
+  },
 ] as const;
 
 export const EXECUTIVE_INDUSTRIES = [
@@ -121,6 +139,10 @@ export const EXECUTIVE_FAQS = [
   {
     q: 'What does it cost?',
     a: 'Free 14-day pilot, then $0 until the first booked job, then $25 per booked job, capped at $297 a month. Setup is in person in Gadsden.',
+  },
+  {
+    q: 'Can I hear a demo for my kind of shop?',
+    a: 'Yes. Play a sample HVAC, plumbing, roofing, electrical, or auto-repair call on this page, then talk to that receptionist in your browser. Your browser will ask for microphone permission. Each live demo is a fictional shop, not a real dispatch line.',
   },
 ] as const;
 
