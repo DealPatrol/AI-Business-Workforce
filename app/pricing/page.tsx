@@ -1,15 +1,16 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
+import { headers } from 'next/headers';
 import { SuiteShell } from '@/components/suite/SuiteShell';
+import { OfferPricingLayout } from '@/components/ava/OfferPricingLayout';
 import {
   POSTCARD_PRICE_SUMMARY,
   POSTCARD_SETUP_LABEL,
   POSTCARD_SIZES,
   postcardPackageRows,
 } from '@/lib/postcards/pricing';
-import styles from '@/components/suite/suite.module.css';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
+import { isExecutiveReceptionistHost } from '@/lib/site-url';
+import styles from '@/components/ava/offer-pricing.module.css';
 
 const seo = pageSeo('/pricing');
 const title = renderedTitle(seo);
@@ -43,9 +44,7 @@ const rows = [
     `4×6 ${row.fourBySixLabel} · 6×9 ${row.sixByNineLabel}`,
   ]),
   ['Custom quantity', 'Minimum 100 cards, computed on the postcards page', 'Setup plus per card'],
-  ['Executive Receptionist Starter', '300 voice minutes, 14-day pilot, $0 setup', '$77/month'],
-  ['Executive Receptionist Growth', '800 voice minutes, 14-day pilot, $0 setup', '$168/month'],
-  ['Executive Receptionist Pro', '1,800 voice minutes, 14-day pilot, $0 setup', '$324/month'],
+  ['Executive Receptionist', 'Free 14-day pilot, then $0 until the first booked job, then $25 per booked job', 'Capped at $297/month'],
   ['Lead Finder', 'Signed-in Maps search and approved drafts', 'No separate public price'],
   ['Lead Scout', 'Public listing search. Does not contact anyone.', 'No separate public price'],
   ['Writing agents', 'Drafts on the page. Nothing is sent.', 'No separate public price'],
@@ -53,45 +52,48 @@ const rows = [
   ['Invoicing', 'Coming soon', 'Waitlist'],
 ];
 
-export default function PricingPage() {
+function OtherProducts() {
   return (
-    <SuiteShell>
-      <section className={styles.section}>
-        <span className={styles.eyebrow}>PRICING</span>
-        <h1>Published prices, one page.</h1>
-        <p>
-          {POSTCARD_PRICE_SUMMARY} There is no monthly postcard plan. Executive Receptionist is $25 per booked job, capped at $297 a month, after a free 14-day pilot. Those are different products. ReputationFlow’s $20 price is on tryreputationflow.com, not a new charge here.
-        </p>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>Product</th>
-              <th>What it is</th>
-              <th>Price</th>
+    <section className={styles.other} id="other-products">
+      <p className={styles.kicker}>Other Front Porch Growth products</p>
+      <h2>Published prices for the rest of the suite.</h2>
+      <p style={{ fontFamily: 'Segoe UI, sans-serif', color: '#5c5348', margin: '0 0 16px', maxWidth: '62ch' }}>
+        {POSTCARD_PRICE_SUMMARY} These are different products from Executive Receptionist. ReputationFlow’s $20 price is
+        on tryreputationflow.com, not a new charge here.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>What it is</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map(([product, detail, price]) => (
+            <tr key={product}>
+              <td>{product}</td>
+              <td>{detail}</td>
+              <td>{price}</td>
             </tr>
-          </thead>
-          <tbody>
-            {rows.map(([product, detail, price]) => (
-              <tr key={product}>
-                <td>{product}</td>
-                <td>{detail}</td>
-                <td>{price}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <div className={styles.priceRow}>
-          <Link className={styles.button} href="/postcards#packages">
-            See postcard packages
-          </Link>
-          <TrackedCheckoutLink className={styles.button} href="/api/checkout?plan=starter" plan="starter">
-            Start Executive Receptionist trial
-          </TrackedCheckoutLink>
-          <Link className={styles.button} href="/#invoicing">
-            Join the invoicing list
-          </Link>
-        </div>
-      </section>
-    </SuiteShell>
+          ))}
+        </tbody>
+      </table>
+    </section>
   );
+}
+
+export default async function PricingPage() {
+  const headerList = await headers();
+  const host = headerList.get('x-forwarded-host') || headerList.get('host');
+  const onReceptionistSite = isExecutiveReceptionistHost(host);
+  const layout = (
+    <OfferPricingLayout showTopbar={onReceptionistSite} otherProducts={onReceptionistSite ? undefined : <OtherProducts />} />
+  );
+
+  if (onReceptionistSite) {
+    return layout;
+  }
+
+  return <SuiteShell>{layout}</SuiteShell>;
 }

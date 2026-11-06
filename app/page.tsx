@@ -1,12 +1,10 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
 import { InvoicingWaitlistForm } from '@/components/suite/InvoicingWaitlistForm';
 import { SuiteShell } from '@/components/suite/SuiteShell';
 import styles from '@/components/suite/home.module.css';
-import { LIVE_DEMO_PHONE_DISPLAY, LIVE_DEMO_PHONE_HREF } from '@/lib/ava/demo-phone';
-import { AVA_PLANS } from '@/lib/ava/pricing';
+import { AVA_OFFER } from '@/lib/ava/pricing';
 import { faqNode } from '@/lib/ava/structured-data';
 import { POSTCARD_FULFILLMENT_COPY, POSTCARD_PRICE_SUMMARY, POSTCARD_SIZES, postcardPublicOffers } from '@/lib/postcards/pricing';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
@@ -15,10 +13,6 @@ import { absoluteSiteUrl } from '@/lib/site-url';
 const seo = pageSeo('/');
 const title = renderedTitle(seo);
 const description = seo.description;
-
-const starter = AVA_PLANS.starter;
-const growth = AVA_PLANS.growth;
-const pro = AVA_PLANS.pro;
 
 const HOME_FAQS = [
   {
@@ -43,7 +37,7 @@ const HOME_FAQS = [
   },
   {
     q: 'Can I hear it before I pay?',
-    a: `Yes. Call the public demo line at ${LIVE_DEMO_PHONE_DISPLAY} and it answers as a sample HVAC company, or talk to it in the browser on the demo page. Neither is your business line, and the demo company is made up.`,
+    a: `Yes. Talk to it in the browser on the live demo: ${AVA_OFFER.demoUrl}. It answers as a sample HVAC company. That is not your business line, and the demo company is made up.`,
   },
   {
     q: 'Does the invoicing form email me?',
@@ -162,17 +156,18 @@ export default function SuiteHomePage() {
             owner who runs it on his own business.
           </p>
           <div className={styles.actions}>
-            <TrackedCheckoutLink className={styles.primary} href="/api/checkout?plan=starter" plan="starter">
-              Start your free 14-day pilot
-            </TrackedCheckoutLink>
+            <a className={styles.primary} href={AVA_OFFER.demoUrl} target="_blank" rel="noopener noreferrer">
+              Try the live demo
+            </a>
             <a className={styles.secondary} href="#bundle">
               See what you get
             </a>
           </div>
           <p className={styles.fine}>
-            Executive Receptionist is an AI phone receptionist, disclosed to every caller. {starter.monthlyLabel},{' '}
-            {growth.monthlyLabel}, or {pro.monthlyLabel} a month after the trial, $0 setup. YardMailer postcards are a
-            separate product: {POSTCARD_PRICE_SUMMARY} <Link href="/pricing">All published prices</Link>.
+            Executive Receptionist is an AI phone receptionist, disclosed to every caller. Free 14-day pilot, then $0
+            until the first booked job, then {AVA_OFFER.perBookedJobLabel} per booked job, capped at {AVA_OFFER.monthlyCapLabel}{' '}
+            a month. YardMailer postcards are a separate product: {POSTCARD_PRICE_SUMMARY}{' '}
+            <Link href="/pricing">All published prices</Link>.
           </p>
         </div>
 
@@ -263,24 +258,25 @@ export default function SuiteHomePage() {
             <span className={styles.offerTag}>Piece one · the phone</span>
             <h3 className={styles.h3}>Executive Receptionist</h3>
             <p className={styles.offerPrice}>
-              {starter.monthlyLabel} / {growth.monthlyLabel} / {pro.monthlyLabel} a month
+              {AVA_OFFER.perBookedJobLabel} per booked job, capped at {AVA_OFFER.monthlyCapLabel}/month
             </p>
             <p className={styles.offerMeta}>
-              Free 14-day pilot, $0 setup. An AI phone receptionist that answers missed and after-hours calls, takes the
-              job details, and sends you the lead. The greeting tells callers it is an AI receptionist.
+              Free 14-day pilot, then $0 until the first booked job. An AI phone receptionist that answers missed and
+              after-hours calls, takes the job details, and emails you the lead. The greeting tells callers it is an AI
+              receptionist.
             </p>
             <ul className={styles.offerFeatures}>
               <li>Answers 24/7, including nights and weekends</li>
               <li>Asks the questions you approve for your trade</li>
-              <li>Sends you the name, number, and job</li>
-              <li>{starter.minutes} to {pro.minutes.toLocaleString('en-US')} included voice minutes by plan</li>
+              <li>Emails you the name, number, and job</li>
+              <li>Built first for HVAC and plumbing shops</li>
             </ul>
             <div className={styles.offerActions}>
-              <TrackedCheckoutLink className={styles.primary} href="/api/checkout?plan=starter" plan="starter">
-                Start your free 14-day pilot
-              </TrackedCheckoutLink>
-              <Link className={styles.textLink} href="/receptionist">
-                See the receptionist
+              <a className={styles.primary} href={AVA_OFFER.demoUrl} target="_blank" rel="noopener noreferrer">
+                Try the live demo
+              </a>
+              <Link className={styles.textLink} href="/pricing">
+                See how billing works
               </Link>
             </div>
           </article>
@@ -453,7 +449,7 @@ export default function SuiteHomePage() {
             <Link href="/ava/ai-answering-service-for-landscapers">landscapers</Link>,{' '}
             <Link href="/ava/ai-answering-service-for-lawn-care">lawn care</Link>. After-hours:{' '}
             <Link href="/receptionist/missed-calls">missed calls</Link>.{' '}
-            <a href={LIVE_DEMO_PHONE_HREF}>Demo line {LIVE_DEMO_PHONE_DISPLAY}</a>.
+            <a href={AVA_OFFER.demoUrl} target="_blank" rel="noopener noreferrer">Try the live demo</a>.
           </p>
         </div>
       </section>
@@ -477,9 +473,9 @@ export default function SuiteHomePage() {
           calls rather than just fewer missed ones. Prices are published; there is no quote to sit through.
         </p>
         <div className={styles.actions}>
-          <TrackedCheckoutLink className={styles.primary} href="/api/checkout?plan=starter" plan="starter">
-            Start your free 14-day pilot
-          </TrackedCheckoutLink>
+          <a className={styles.primary} href={AVA_OFFER.demoUrl} target="_blank" rel="noopener noreferrer">
+            Try the live demo
+          </a>
           <Link className={styles.secondary} href="/pricing">
             See every price
           </Link>

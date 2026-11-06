@@ -93,6 +93,11 @@ export const AVA_OFFER = {
   guarantee:
     "If the receptionist doesn't capture a single real caller lead during your 14-day pilot, you pay nothing.",
   demoUrl: 'https://elevenlabs.io/app/talk-to?agent_id=agent_0001m6k8pwnaebqver0sztwknn72',
+  contactPhoneDisplay: '(256) 595-3354',
+  contactPhoneHref: 'tel:+12565953354',
+  contactEmail: 'colecollins763@gmail.com',
+  setupCity: 'Gadsden',
+  footerLine: 'Executive Receptionist, 12476 County Road 747, Hanceville, AL 35077',
 } as const;
 
 export function isAvaPlanKey(value: string): value is AvaPlanKey {

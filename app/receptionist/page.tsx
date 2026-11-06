@@ -1,18 +1,15 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
 import { ExclusiveAudio } from '@/components/receptionist/ExclusiveAudio';
 import { VoicePicker } from '@/components/receptionist/VoicePicker';
-import { LIVE_DEMO_PHONE_DISPLAY, LIVE_DEMO_PHONE_HREF } from '@/lib/ava/demo-phone';
-import { AVA_PLANS, type AvaPlanKey } from '@/lib/ava/pricing';
+import { OfferPricingLayout } from '@/components/ava/OfferPricingLayout';
+import { AVA_OFFER } from '@/lib/ava/pricing';
 import { EXAMPLE_NOTES, EXECUTIVE_FAQS, EXECUTIVE_INDUSTRIES } from '@/lib/executive-receptionist';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 import { EXECUTIVE_RECEPTIONIST_ORIGIN } from '@/lib/site-url';
 import { FaceToFaceWidget } from '@/components/receptionist/live/FaceToFaceWidget';
 import { liveWidgetEnabled, realFaceEnabled } from '@/lib/live-receptionist/config';
 import styles from './receptionist.module.css';
-
-const plans = (Object.keys(AVA_PLANS) as AvaPlanKey[]).map((key) => AVA_PLANS[key]);
 
 const seo = pageSeo('/receptionist');
 const title = renderedTitle(seo);
@@ -26,16 +23,19 @@ const structured = [
     '@type': 'Product',
     name: 'Executive Receptionist',
     description:
-      'AI phone receptionist that answers calls, takes the caller name, number and reason, and texts the lead to the business.',
+      'AI phone receptionist that answers inbound calls, takes the caller name, number and job, and emails a summary to the business.',
     brand: { '@type': 'Brand', name: 'Front Porch Growth' },
-    offers: plans.map((plan) => ({
-      '@type': 'Offer',
-      name: plan.productName,
-      price: (plan.monthlyCents / 100).toFixed(2),
-      priceCurrency: 'USD',
-      availability: 'https://schema.org/InStock',
-      url: 'https://frontporchgrowth.com/receptionist#pricing',
-    })),
+    offers: [
+      {
+        '@type': 'Offer',
+        name: 'Executive Receptionist, $25 per booked job after a free 14-day pilot',
+        price: '25.00',
+        priceCurrency: 'USD',
+        availability: 'https://schema.org/InStock',
+        url: 'https://executivereceptionist.com/pricing',
+        description: AVA_OFFER.summary,
+      },
+    ],
   },
   {
     '@context': 'https://schema.org',
@@ -51,9 +51,9 @@ const structured = [
 const trustPoints = [
   'Prices published below',
   'Free 14-day pilot',
-  '$0 setup',
-  'Cancel anytime',
-  'Call the demo line before you pay',
+  '$0 until the first booked job',
+  '$25 per booked job, capped at $297/month',
+  'Try the live demo before you pay',
 ];
 
 
@@ -89,31 +89,31 @@ export default function ReceptionistPage() {
           <a href="#pricing">Pricing</a>
           <a href="#faq">FAQ</a>
         </div>
-        <TrackedCheckoutLink href="/api/checkout?plan=growth" plan="growth">
-          Begin
-        </TrackedCheckoutLink>
+        <a href={AVA_OFFER.demoUrl} target="_blank" rel="noopener noreferrer">
+          Try the live demo
+        </a>
       </nav>
 
       <section className={styles.hero}>
-        <p className={styles.kicker}>For practices that cannot leave the line unanswered</p>
-        <h1>The office stays with the client. The phone is already answered.</h1>
+        <p className={styles.kicker}>For HVAC and plumbing shops that cannot leave the line unanswered</p>
+        <h1>You stay on the job. The phone is already answered.</h1>
         <p className={styles.lede}>
-          Executive Receptionist is the AI phone receptionist for dentists, law firms, med spas, and other
-          high-ticket professional offices. It greets the caller in a voice you choose, takes the name and
-          number, and texts you the lead.
+          Executive Receptionist is the AI phone receptionist built first for HVAC and plumbing companies.
+          It greets the caller in a voice you choose, takes the name, number, and what the job is, and emails
+          you the summary so you can call back and book the work.
         </p>
         <div className={styles.heroActions}>
-          <a className={styles.gold} href={LIVE_DEMO_PHONE_HREF} aria-label={`Call the live demo at ${LIVE_DEMO_PHONE_DISPLAY}`}>
-            Call the live demo · {LIVE_DEMO_PHONE_DISPLAY}
+          <a className={styles.gold} href={AVA_OFFER.demoUrl} target="_blank" rel="noopener noreferrer">
+            Try the live demo
           </a>
           <a className={styles.quiet} href="#voices">
             Hear the voices
           </a>
         </div>
         <p className={styles.fine}>
-          The demo line answers as a sample HVAC company, Front Porch Heating &amp; Air. Ask about a broken AC,
-          a tune-up, or a price and hear how it handles you. No phone handy?{' '}
-          <Link href="/receptionist-demo#live-demo">Try it in your browser</Link>.
+          The browser demo talks as a sample HVAC company. Ask about a no-cool call, a tune-up, or a plumbing
+          leak and hear how it takes the details. It is a sample, not your business line.{' '}
+          <Link href="/receptionist-demo#live-demo">Open the longer demo page</Link>.
         </p>
         <ul className={styles.trust} aria-label="What you can check before you buy">
           {trustPoints.map((point) => (
@@ -124,8 +124,9 @@ export default function ReceptionistPage() {
 
       <section className={styles.band} id="industries">
         <div className={styles.sectionHead}>
-          <p className={styles.kicker}>The practices</p>
-          <h2>Built for rooms where the person who should answer is already with someone.</h2>
+          <p className={styles.kicker}>The trades</p>
+          <h2>Built first for HVAC and plumbing, when both hands are already on a repair.</h2>
+          <p>The same inbound answering can be written for other kinds of offices after that. The clips below are samples, not customer results.</p>
         </div>
         <ul className={styles.industryGrid}>
           {EXECUTIVE_INDUSTRIES.map((industry) => (
@@ -169,33 +170,7 @@ export default function ReceptionistPage() {
       </section>
 
       <section className={styles.band} id="pricing">
-        <div className={styles.sectionHead}>
-          <p className={styles.kicker}>The rate card</p>
-          <h2>Published monthly plans. A week to hear it on your calls.</h2>
-        </div>
-        <div className={styles.plans}>
-          {plans.map((plan) => (
-            <article key={plan.key} className={plan.featured ? styles.planFeatured : undefined}>
-              <h3>{plan.label}</h3>
-              <p className={styles.price}>
-                <strong>{plan.monthlyLabel}</strong>
-                <span>/month after trial</span>
-              </p>
-              <p>{plan.description}</p>
-              <p className={styles.minutes}>
-                {plan.minutes.toLocaleString('en-US')} minutes · {plan.overageLabel}
-              </p>
-              <ul>
-                {plan.features.map((feature) => (
-                  <li key={feature}>{feature}</li>
-                ))}
-              </ul>
-              <TrackedCheckoutLink href={`/api/checkout?plan=${plan.key}`} plan={plan.key}>
-                Start your free 14-day pilot
-              </TrackedCheckoutLink>
-            </article>
-          ))}
-        </div>
+        <OfferPricingLayout variant="section" showTopbar={false} />
       </section>
 
       <section className={styles.band} id="examples">
@@ -233,21 +208,21 @@ export default function ReceptionistPage() {
         <p className={styles.kicker}>The next call</p>
         <h2>Have it answered before it reaches voicemail.</h2>
         <div className={styles.heroActions}>
-          <TrackedCheckoutLink className={styles.gold} href="/api/checkout?plan=growth" plan="growth">
-            Start the Growth trial
-          </TrackedCheckoutLink>
-          <a className={styles.quiet} href={LIVE_DEMO_PHONE_HREF}>
-            Call the demo first
+          <a className={styles.gold} href={AVA_OFFER.demoUrl} target="_blank" rel="noopener noreferrer">
+            Try the live demo
+          </a>
+          <a className={styles.quiet} href={`mailto:${AVA_OFFER.contactEmail}?subject=${encodeURIComponent('Start an Executive Receptionist pilot')}`}>
+            Ask Cole about a pilot
           </a>
         </div>
         <p className={styles.fine}>
-          Part of <Link href="/">Front Porch Growth</Link>. Questions:{' '}
-          <a href="mailto:colecollins763@gmail.com">colecollins763@gmail.com</a>
+          {AVA_OFFER.footerLine}. Part of <Link href="/">Front Porch Growth</Link>. Questions:{' '}
+          <a href={`mailto:${AVA_OFFER.contactEmail}`}>{AVA_OFFER.contactEmail}</a>
         </p>
       </section>
 
-      <a className={styles.callBar} href={LIVE_DEMO_PHONE_HREF}>
-        Call the live demo · {LIVE_DEMO_PHONE_DISPLAY}
+      <a className={styles.callBar} href={AVA_OFFER.demoUrl} target="_blank" rel="noopener noreferrer">
+        Try the live demo
       </a>
       {liveWidgetEnabled() ? <FaceToFaceWidget realFace={realFaceEnabled()} /> : null}
     </main>

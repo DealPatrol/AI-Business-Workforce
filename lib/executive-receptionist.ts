@@ -89,7 +89,7 @@ export const EXECUTIVE_INDUSTRIES = [
 export const EXECUTIVE_FAQS = [
   {
     q: 'Is this a person in the office?',
-    a: 'No. Executive Receptionist is an AI phone receptionist. The greeting says so. You approve the words, the questions, and where the lead text goes.',
+    a: 'No. Executive Receptionist is an AI phone receptionist. The greeting says so. You approve the words, the questions, and the email the summary is sent to.',
   },
   {
     q: 'Can a dental or medical office use it for charts?',
@@ -97,7 +97,7 @@ export const EXECUTIVE_FAQS = [
   },
   {
     q: 'Will it give legal, tax, or investment advice?',
-    a: 'No. It repeats the hours and the sentences you approve, then texts you the name, number, and the reason for the call. Advice stays with the professional.',
+    a: 'No. It repeats the hours and the sentences you approve, then emails you the name, number, and the reason for the call. Advice stays with the professional.',
   },
   {
     q: 'Can I choose the voice?',
@@ -105,7 +105,7 @@ export const EXECUTIVE_FAQS = [
   },
   {
     q: 'What does it cost?',
-    a: 'Starter, Growth, and Pro are monthly plans after a free 14-day pilot, with $0 setup. Included minutes and the per-minute rate after that are printed on each plan.',
+    a: 'Free 14-day pilot, then $0 until the first booked job, then $25 per booked job, capped at $297 a month. Setup is in person in Gadsden.',
   },
 ] as const;
 

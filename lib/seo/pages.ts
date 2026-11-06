@@ -37,9 +37,9 @@ const PAGES = {
     receptionist: true,
   },
   '/receptionist': {
-    title: 'AI Receptionist for Dentists and Law Firms',
+    title: 'AI Receptionist for HVAC and Plumbing',
     description:
-      'AI Receptionist for dentists, law firms, med spas, and advisors. Executive Receptionist answers, takes the details, and texts you the lead.',
+      'AI Receptionist for HVAC and plumbing. It answers 24/7, takes the job details, and emails you a summary. $25 per booked job after a 14-day pilot.',
     titleMode: 'absolute',
     receptionist: true,
   },
@@ -60,7 +60,7 @@ const PAGES = {
   '/pricing': {
     title: 'Pricing | Front Porch Growth',
     description:
-      'Postcard prices and AI Receptionist plans: $3.54 or $4.95 a card after $127 setup, and $0 until the first booked job, then $25 per booked job, capped at $297 a month, after a free 14-day pilot.',
+      'YardMailer postcard prices plus Executive Receptionist: $25 per booked job, max $297 a month, after a free 14-day pilot.',
     titleMode: 'absolute',
     receptionist: false,
   },

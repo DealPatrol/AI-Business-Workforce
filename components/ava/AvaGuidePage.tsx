@@ -245,7 +245,7 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
         <h2>Try the demo, then start the trial in Stripe.</h2>
         <p>
           The sample call is a landscaping estimate. The live demo is in the browser. Checkout opens
-          Stripe for the plan you pick. After the pilot it's $25 per booked job, capped at $297 a month.
+          Stripe for the plan you pick. After the pilot it is $25 per booked job, capped at $297 a month.
         </p>
         <div>
           <Link className="sales-btn light" href={liveHref}>
