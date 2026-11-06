@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import Link from 'next/link';
 import { AVA_OFFER } from '@/lib/ava/pricing';
 import { BookedJobCalculator } from '@/components/ava/BookedJobCalculator';
 import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
@@ -128,9 +129,9 @@ export function OfferPricingLayout({
     <div className={`${styles.wrap} ${isPage ? styles.pageWrap : styles.sectionWrap}`}>
       {renderTopbar ? (
         <header className={styles.topbar}>
-          <a className={styles.brand} href="/receptionist">
+          <Link className={styles.brand} href="/receptionist">
             Executive Receptionist
-          </a>
+          </Link>
           <nav aria-label="Pricing page">
             <a href="#plans">Plans</a>
             <a href="#features">Features</a>
