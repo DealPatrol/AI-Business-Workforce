@@ -159,6 +159,36 @@ const PAGES = {
     titleMode: 'template',
     receptionist: false,
   },
+  '/dashboard/leads': {
+    title: 'Leads',
+    description: 'Caller leads captured by Executive Receptionist, plus web forms, texts, and online bookings.',
+    titleMode: 'template',
+    receptionist: false,
+  },
+  '/dashboard/leads/[id]': {
+    title: 'Lead details',
+    description: 'Review one captured lead, add notes, and update its status.',
+    titleMode: 'template',
+    receptionist: false,
+  },
+  '/dashboard/bookings': {
+    title: 'Booking calendar',
+    description: 'Set services, hours, and blackout dates, then share a public page where customers pay a deposit to book.',
+    titleMode: 'template',
+    receptionist: false,
+  },
+  '/book/[slug]': {
+    title: 'Book an appointment | Front Porch Growth',
+    description: 'Pick a service and time, then pay a deposit to confirm the appointment.',
+    titleMode: 'absolute',
+    receptionist: false,
+  },
+  '/book/[slug]/confirmed': {
+    title: 'Booking confirmed | Front Porch Growth',
+    description: 'Your deposit was submitted. The business will see the confirmed appointment.',
+    titleMode: 'absolute',
+    receptionist: false,
+  },
   '/dashboard/prospector': {
     title: 'Lead Finder',
     description: ROOT_DESCRIPTION,

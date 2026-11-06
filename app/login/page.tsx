@@ -20,6 +20,8 @@ type LoginPageProps = {
 const ALLOWED_RETURN_PATHS = new Set([
   '/dashboard',
   '/dashboard/campaigns',
+  '/dashboard/leads',
+  '/dashboard/bookings',
   '/dashboard/prospector',
   '/dashboard/prospector/settings',
 ]);
@@ -27,6 +29,7 @@ const ALLOWED_RETURN_PATHS = new Set([
 function returnPath(next: string | undefined) {
   if (!next) return '/dashboard/campaigns';
   if (ALLOWED_RETURN_PATHS.has(next)) return next;
+  if (/^\/dashboard\/leads\/[0-9a-f-]{36}$/i.test(next)) return next;
   if (next === '/sales' || /^\/demo\/[a-z0-9-]+$/.test(next)) return next;
   return '/dashboard/campaigns';
 }
