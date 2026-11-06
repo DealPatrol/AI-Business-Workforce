@@ -19,7 +19,7 @@ export const AVA_PLANS = {
       'Executive Receptionist',
       '24/7 answering',
       'Lead qualification + summaries',
-      'Lead texts to your phone',
+      'Lead summaries by email',
       'Business-specific greeting & FAQs',
     ],
     featured: false,
@@ -79,8 +79,8 @@ export const AVA_ASSISTED_LAUNCH = {
 
 /**
  * Canonical offer (Nov 2026). Replaces the Starter/Growth/Pro tiers in all customer copy.
- * NOTE: checkout (lib/stripe-checkout.ts, app/api/checkout) still sells AVA_PLANS until a metered
- * `booked_job` Stripe price exists. Do not deploy copy and checkout out of sync.
+ * Checkout uses STRIPE_AVA_BOOKED_JOB_PRICE_ID (metered $25 / booked_job). AVA_PLANS remains for
+ * older session metadata and tests only — do not show those dollar tiers to customers.
  */
 export const AVA_OFFER = {
   pilotDays: 14,
@@ -105,7 +105,8 @@ export function isAvaPlanKey(value: string): value is AvaPlanKey {
 }
 
 export function avaPlanPriceLine(planKey: AvaPlanKey = 'starter') {
-  return `${AVA_PLANS[planKey].monthlyLabel}/mo`;
+  void planKey;
+  return `${AVA_OFFER.perBookedJobLabel} per booked job, max ${AVA_OFFER.monthlyCapLabel}/mo`;
 }
 
 export function avaTrialThenPriceCopy(planKey: AvaPlanKey = 'starter') {

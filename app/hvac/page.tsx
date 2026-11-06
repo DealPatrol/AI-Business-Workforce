@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Check, Phone, MessageSquare, PhoneCall } from 'lucide-react';
 import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
-import { AVA_PLAN_KEYS, AVA_PLANS, avaTrialThenPriceCopy } from '@/lib/ava/pricing';
+import { AVA_OFFER, avaTrialThenPriceCopy } from '@/lib/ava/pricing';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 import HvacContactForm from './contact-form';
 import './hvac.css';
@@ -27,7 +27,6 @@ export const metadata: Metadata = {
   },
 };
 
-const plans = AVA_PLAN_KEYS.map((key) => AVA_PLANS[key]);
 
 export default function HvacPage() {
   return (
@@ -123,40 +122,33 @@ export default function HvacPage() {
       <section className="hvac-plans" id="plans">
         <h2>Plans</h2>
         <div className="hvac-plan-grid">
-          {plans.map((plan) => (
-            <article key={plan.key} className={plan.featured ? 'hvac-plan featured' : 'hvac-plan'}>
-              {plan.featured && <span className="hvac-badge">Most popular</span>}
-              <h3>{plan.label}</h3>
-              <p className="hvac-price">
-                {plan.monthlyLabel}
-                <small>/mo</small>
-              </p>
-              <p className="hvac-setup">Free 14-day pilot · $0 setup</p>
-              <ul>
-                {plan.features.map((feature) => (
-                  <li key={feature}>
-                    <Check size={16} /> {feature}
-                  </li>
-                ))}
-                <li className="hvac-minutes">
-                  {plan.minutes.toLocaleString('en-US')} voice minutes / month · {plan.overageLabel}
-                </li>
-              </ul>
-              <TrackedCheckoutLink
-                className="hvac-btn hvac-btn-primary"
-                href={`/api/checkout?plan=${plan.key}`}
-                plan={plan.key}
-              >
-                Start free trial
-              </TrackedCheckoutLink>
-            </article>
-          ))}
+          <article className="hvac-plan featured">
+            <span className="hvac-badge">Published offer</span>
+            <h3>Executive Receptionist</h3>
+            <p className="hvac-price">
+              {AVA_OFFER.perBookedJobLabel}
+              <small>per booked job</small>
+            </p>
+            <p className="hvac-setup">{AVA_OFFER.summary}</p>
+            <ul>
+              <li><Check size={16} /> Answers HVAC calls 24/7</li>
+              <li><Check size={16} /> Takes no-heat and no-cool details</li>
+              <li><Check size={16} /> Emails you each lead summary</li>
+              <li><Check size={16} /> {AVA_OFFER.guarantee}</li>
+            </ul>
+            <TrackedCheckoutLink
+              className="hvac-btn hvac-btn-primary"
+              href="/api/checkout?plan=pilot"
+              plan="pilot"
+            >
+              Start free 14-day pilot
+            </TrackedCheckoutLink>
+          </article>
         </div>
         <div className="hvac-trial">
           <h3>Free 14-day pilot</h3>
           <p>
-            {avaTrialThenPriceCopy('starter')} Cancel anytime. Included minutes reset monthly, and overage bills at
-            the plan&apos;s published per-minute rate.
+            {avaTrialThenPriceCopy()} Cancel anytime. There is no per-minute overage on this offer.
           </p>
           <p>
             Same terms as the Executive Receptionist rate card. Special telephony or integration requirements are

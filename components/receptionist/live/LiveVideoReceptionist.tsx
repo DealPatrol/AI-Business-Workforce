@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ConversationProvider, useConversation } from '@elevenlabs/react';
-import { LIVE_DEMO_PHONE_DISPLAY, LIVE_DEMO_PHONE_HREF } from '@/lib/ava/demo-phone';
+import { LIVE_DEMO_URL } from '@/lib/ava/demo-phone';
 import { LiveAvatar, type AvatarMouth } from './LiveAvatar';
 import { RealFaceSession } from './realFaceSession';
 import styles from './live.module.css';
@@ -240,8 +240,8 @@ function Inner({ compact = false, realFace = false }: Props) {
             {phase === 'ended' ? 'Start again' : 'Start — talk face to face'}
           </button>
         )}
-        <a className={styles.callBtn} href={LIVE_DEMO_PHONE_HREF}>
-          Call {LIVE_DEMO_PHONE_DISPLAY}
+        <a className={styles.callBtn} href={LIVE_DEMO_URL} target="_blank" rel="noopener noreferrer">
+          Try the live demo
         </a>
       </div>
 

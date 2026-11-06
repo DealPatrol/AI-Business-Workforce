@@ -25,14 +25,14 @@ const PAGES = {
   '/': {
     title: 'More Booked Jobs for Service Businesses | AI Receptionist',
     description:
-      'Answer every call and mail your best streets. AI Receptionist takes the job and sends you the lead, plus YardMailer postcards. $25 per booked job after a free 14-day pilot.',
+      'Answer every call and mail your streets. An AI receptionist emails you the lead, plus YardMailer postcards. $25 per booked job after a 14-day pilot.',
     titleMode: 'absolute',
     receptionist: true,
   },
   '/ava': {
-    title: 'AI Receptionist for Home Service Businesses, $25 per Booked Job',
+    title: 'AI Receptionist for Home Services, $25 per Booked Job',
     description:
-      'AI Receptionist for HVAC, plumbing, roofing, and other home-service shops. She takes the job details and texts you. Free 14-day pilot, then $25 per booked job, max $297/mo.',
+      'AI Receptionist for HVAC and plumbing. It takes the job details and emails you a summary. Free 14-day pilot, then $25 per booked job, max $297/mo.',
     titleMode: 'absolute',
     receptionist: true,
   },
@@ -46,14 +46,14 @@ const PAGES = {
   '/receptionist-demo': {
     title: 'Try the AI Receptionist Demo',
     description:
-      'Hear a prerecorded AI Receptionist call or talk in the browser, then start a free 14-day pilot. Pricing: $25 per booked job, capped at $297 a month, after a free 14-day pilot.',
+      'Hear a prerecorded AI Receptionist call or talk in the browser, then start a free 14-day pilot. After that: $25 per booked job, capped at $297 a month.',
     titleMode: 'absolute',
     receptionist: true,
   },
   '/hvac': {
     title: 'AI Receptionist for HVAC Companies',
     description:
-      'AI Receptionist answers HVAC calls 24/7, takes no-heat and no-cool details, and texts you. Free 14-day pilot, then $25 per booked job, max $297/mo.',
+      'AI Receptionist answers HVAC calls 24/7, takes no-heat and no-cool details, and emails you a summary. Free 14-day pilot, then $25 per booked job.',
     titleMode: 'absolute',
     receptionist: true,
   },
@@ -123,7 +123,7 @@ const PAGES = {
   '/onboarding/ava': {
     title: 'AI Receptionist setup',
     description:
-      'Tell us about your business so Executive Receptionist can be set up. The AI Receptionist answers calls and texts you the lead. Free 14-day pilot, then $25 per booked job.',
+      'Tell us about your business so Executive Receptionist can be set up. It answers calls and emails you the lead. Free 14-day pilot, then $25 per booked job.',
     titleMode: 'absolute',
     receptionist: true,
   },

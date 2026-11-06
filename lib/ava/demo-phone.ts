@@ -1,7 +1,7 @@
 /**
- * Public live demo line for Executive Receptionist.
- * Answers as the demo business "Front Porch Heating & Air".
+ * Public live demo for Executive Receptionist.
+ * The browser conversation is the advertised demo. Do not publish
+ * (256) 663-7007 — that number belongs to Collins Lawncare.
  */
-export const LIVE_DEMO_PHONE_DISPLAY = '(256) 663-7007';
-export const LIVE_DEMO_PHONE_E164 = '+12566637007';
-export const LIVE_DEMO_PHONE_HREF = `tel:${LIVE_DEMO_PHONE_E164}`;
+export const LIVE_DEMO_URL =
+  'https://elevenlabs.io/app/talk-to?agent_id=agent_0001m6k8pwnaebqver0sztwknn72';

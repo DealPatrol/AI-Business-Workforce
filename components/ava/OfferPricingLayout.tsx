@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { AVA_OFFER } from '@/lib/ava/pricing';
 import { BookedJobCalculator } from '@/components/ava/BookedJobCalculator';
+import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
 import styles from './offer-pricing.module.css';
 
 const FEATURE_GROUPS: Array<{
@@ -63,7 +64,7 @@ const BILLING_STEPS = [
 const FAQS = [
   {
     q: 'What happens during the 14-day pilot?',
-    a: 'The receptionist answers inbound calls on your line, takes the caller’s name, number, and what they need, and emails you the summary. A card stays on file. If it does not capture a single real caller lead during those 14 days, you pay nothing.',
+    a: `The receptionist answers inbound calls on your line, takes the caller’s name, number, and what they need, and emails you the summary. A card stays on file. ${AVA_OFFER.guarantee}`,
   },
   {
     q: 'When do I start paying?',
@@ -105,9 +106,9 @@ function DemoLink({ className, children }: { className: string; children: ReactN
 
 function PilotLink({ className, children }: { className: string; children: ReactNode }) {
   return (
-    <a className={className} href={`mailto:${AVA_OFFER.contactEmail}?subject=${encodeURIComponent('Start an Executive Receptionist pilot')}`}>
+    <TrackedCheckoutLink className={className} href="/api/checkout?plan=pilot" plan="pilot">
       {children}
-    </a>
+    </TrackedCheckoutLink>
   );
 }
 
@@ -200,7 +201,7 @@ export function OfferPricingLayout({
         <a href={AVA_OFFER.contactPhoneHref}>Call Cole at {AVA_OFFER.contactPhoneDisplay}</a>
         {' or '}
         <a href={`mailto:${AVA_OFFER.contactEmail}`}>{AVA_OFFER.contactEmail}</a>.
-        Online checkout for the older monthly tiers is turned off until metered billing matches this offer.
+        Online checkout collects a card for the 14-day pilot and bills $25 per booked job after that, capped at $297 a month.
       </p>
 
       <section className={styles.billing} id="billing">

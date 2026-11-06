@@ -4,7 +4,6 @@ import { SuiteShell } from '@/components/suite/SuiteShell';
 import styles from '@/components/suite/suite.module.css';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 
-const CHECKOUT_URL = 'https://buy.stripe.com/cNi9ATaHAeX5fdrfakebu02';
 const seo = pageSeo('/missed-call');
 const title = renderedTitle(seo);
 const description = seo.description;
@@ -12,8 +11,8 @@ const description = seo.description;
 const FAQS = [
   { q: 'Do I need a new phone number?', a: 'No. You keep your number. We set up conditional forwarding so only calls you do not answer go to the text-back line. Customers still call the same number they always have.' },
   { q: 'What does the text say?', a: 'Something like: "Hey, this is Mike with Ace Lawn. Sorry we missed you, we are on a job. What can we help with?" We write it with you and you can change it anytime.' },
-  { q: 'How fast is setup?', a: 'Usually within 1 business day of checkout. Cole texts you, you dial one forwarding code from your phone, and we place a test call together.' },
-  { q: 'How is this different from Executive Receptionist?', a: 'Text-back sends a text. Executive Receptionist answers the call with a voice receptionist, books the job, and sends you the details. Text-back is the entry tier; you can upgrade anytime.' },
+  { q: 'How fast is setup?', a: 'Setup starts after carrier texting registration is approved (planned around mid-November 2026 at the earliest). Join the waitlist and Cole will email you when it can legally run.' },
+  { q: 'How is this different from Executive Receptionist?', a: 'Text-back sends a text after an unanswered call. Executive Receptionist answers the call with a voice receptionist, captures the details, and emails you the summary. Text-back cannot start until carrier texting registration is approved.' },
   { q: 'Can I cancel?', a: 'Yes. It is month to month with no contract.' },
 ] as const;
 
@@ -43,14 +42,15 @@ export default function MissedCallPage() {
           <article className={styles.card}>
             <h2>Missed-Call Text-Back</h2>
             <p>Keep your number. Custom message. Setup done for you. Month to month.</p>
-            <p className={styles.price}>$39/month</p>
-            <a className={styles.button} href={CHECKOUT_URL}>
-              Start text-back
+            <p className={styles.price}>$39/month after launch</p>
+            <p>Join the waitlist. Service starts after carrier registration (A2P/10DLC), planned around mid-November 2026 or later. There is no live checkout for this product yet.</p>
+            <a className={styles.button} href={`mailto:colecollins763@gmail.com?subject=${encodeURIComponent('Missed-Call Text-Back waitlist')}`}>
+              Join the waitlist
             </a>
           </article>
         </div>
         <p>
-          Want the call answered, not just texted? <Link href="/receptionist">Executive Receptionist</Link> answers with a voice receptionist and books the job. Pricing: $25 per booked job, capped at $297 a month, after a free 14-day pilot.
+          Want the call answered, not just texted? <Link href="/receptionist">Executive Receptionist</Link> answers with a voice receptionist and emails you the summary. Pricing: $25 per booked job, capped at $297 a month, after a free 14-day pilot.
         </p>
         <section className={styles.faq}>
           {FAQS.map((faq) => (

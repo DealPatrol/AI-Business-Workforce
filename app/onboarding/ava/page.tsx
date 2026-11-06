@@ -326,7 +326,7 @@ function AvaOnboardingForm() {
           <p>
               {searchParams.get('session_id')
               ? 'Checkout is confirmed — you are paid or on the 14-day pilot. Submit this form and Executive Receptionist’s agent is created from your answers. The phone number stays pending until Cole attaches it.'
-              : `Stripe creates the 14-day pilot for ${AVA_PLANS[selectedPlan].label}, then ${avaPlanPriceLine(selectedPlan)}. $0 setup. This form emails Cole. It does not start billing by itself.`}
+              : `Stripe creates the 14-day pilot and collects a card. After that you pay $0 until the first booked job, then ${avaPlanPriceLine()}. $0 setup. This form emails Cole. It does not start billing by itself.`}
           </p>
           {prefillNote ? <p className={styles.notice}>{prefillNote}</p> : null}
         </header>
@@ -393,15 +393,15 @@ function AvaOnboardingForm() {
             <section className={styles.paywall}>
               <h2>The free trial starts at Stripe.</h2>
               <p>
-                {AVA_PLANS[selectedPlan].label} is {avaPlanPriceLine(selectedPlan)} after 7 days. Checkout
+                After the 14-day pilot you pay $0 until the first booked job, then {avaPlanPriceLine()}. Checkout
                 returns you here with the session attached.
               </p>
               <TrackedCheckoutLink
                 className={styles.checkout}
-                href={`/api/checkout?plan=${selectedPlan}${
+                href={`/api/checkout?plan=pilot${
                   qualificationId ? `&qualificationId=${encodeURIComponent(qualificationId)}` : ''
                 }${prefillToken ? `&prefillToken=${encodeURIComponent(prefillToken)}` : ''}`}
-                plan={selectedPlan}
+                plan="pilot"
               >
                 Start your free 14-day pilot
               </TrackedCheckoutLink>
@@ -580,8 +580,7 @@ function AvaOnboardingForm() {
             <input type="hidden" name="plan" value={prefill.plan || searchParams.get('plan') || ''} />
             <input type="hidden" name="qualificationId" value={qualificationId} />
             <p className={styles.notice}>
-              Selected plan: {AVA_PLANS[selectedPlan].label} · {AVA_PLANS[selectedPlan].monthlyLabel}
-              /mo after trial · {AVA_PLANS[selectedPlan].minutes} included minutes
+              Offer: {avaPlanPriceLine()} after a free 14-day pilot. $0 until the first booked job.
             </p>
             <label className={styles.honeypot} aria-hidden="true">
               Company website

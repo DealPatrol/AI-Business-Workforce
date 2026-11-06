@@ -53,7 +53,7 @@ type PostcardCheckoutInput = {
 
 type AvaCheckoutInput = {
   origin: string;
-  planKey: AvaPlanKey;
+  planKey?: string;
   priceId?: string;
   qualificationId?: string;
   prefillToken?: string;
@@ -143,37 +143,36 @@ export function buildPostcardCheckoutParams(input: PostcardCheckoutInput) {
 }
 
 export function buildAvaCheckoutParams(input: AvaCheckoutInput) {
-  const plan = AVA_PLANS[input.planKey];
   const params = new URLSearchParams();
+  const planKey = input.planKey || 'pilot';
   const successParts = [
     'session_id={CHECKOUT_SESSION_ID}',
-    `plan=${input.planKey}`,
+    `plan=${planKey}`,
     ...(input.qualificationId ? [`qualificationId=${encodeURIComponent(input.qualificationId)}`] : []),
     ...(input.prefillToken ? [`prefillToken=${encodeURIComponent(input.prefillToken)}`] : []),
   ];
   params.set('mode', 'subscription');
   params.set('success_url', `${input.origin}/onboarding/ava?${successParts.join('&')}`);
-  params.set('cancel_url', `${input.origin}/receptionist#pricing`);
+  params.set('cancel_url', `${input.origin}/pricing#plans`);
   params.set('billing_address_collection', 'auto');
   params.set('allow_promotion_codes', 'true');
-  // Stripe Checkout trial: 14-day pilot before first charge (was 7). Tier prices below are still the OLD model;
-  // replace with the metered `booked_job` price before deploying (see stripe-pricing-prep.md).
+  params.set('payment_method_collection', 'always');
   params.set('subscription_data[trial_period_days]', '14');
-  appendRecurringPrice(params, 0, {
-    priceId: input.priceId,
-    unitAmount: plan.monthlyCents,
-    productName: plan.productName,
-    description: `${plan.minutes} included voice minutes/month; overage ${'$' + (plan.overageCents / 100).toFixed(2)}/minute.`,
-  });
+  // Metered prices cannot be created inline. The booked-job price ID must be set.
+  if (!input.priceId) {
+    throw new Error('STRIPE_AVA_BOOKED_JOB_PRICE_ID is not set');
+  }
+  params.set('line_items[0][price]', input.priceId);
   params.set('metadata[product]', 'ava');
-  params.set('metadata[plan]', input.planKey);
-  params.set('metadata[included_minutes]', String(plan.minutes));
-  params.set('metadata[overage_cents]', String(plan.overageCents));
+  params.set('metadata[plan]', 'pilot');
+  params.set('metadata[offer]', 'booked_job');
+  params.set('metadata[monthly_cap_cents]', '29700');
   if (input.qualificationId) params.set('metadata[qualification_id]', input.qualificationId);
   params.set('subscription_data[metadata][product]', 'ava');
-  params.set('subscription_data[metadata][plan]', input.planKey);
-  params.set('subscription_data[metadata][included_minutes]', String(plan.minutes));
-  params.set('subscription_data[metadata][overage_cents]', String(plan.overageCents));
+  params.set('subscription_data[metadata][plan]', 'pilot');
+  params.set('subscription_data[metadata][offer]', 'booked_job');
+  params.set('subscription_data[metadata][meter_event]', 'booked_job');
+  params.set('subscription_data[metadata][monthly_cap_cents]', '29700');
   if (input.qualificationId) {
     params.set('subscription_data[metadata][qualification_id]', input.qualificationId);
   }

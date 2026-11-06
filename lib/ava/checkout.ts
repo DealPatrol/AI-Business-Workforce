@@ -138,7 +138,11 @@ export async function readAvaCheckoutIdentity(sessionId: string): Promise<AvaChe
 
   const checkoutPlan = session.metadata?.plan?.toLowerCase() || '';
   const avaPaymentLinkId = process.env.AVA_STRIPE_PAYMENT_LINK_ID;
+  const offer = session.metadata?.offer?.toLowerCase() || '';
   const recognizedAvaCheckout =
+    offer === 'booked_job' ||
+    checkoutPlan === 'pilot' ||
+    checkoutPlan === 'booked_job' ||
     Boolean(checkoutPlan && isAvaPlanKey(checkoutPlan) && AVA_PLANS[checkoutPlan]) ||
     Boolean(avaPaymentLinkId && session.payment_link === avaPaymentLinkId);
 

@@ -1,7 +1,7 @@
 export const AVA_HOME_FAQS = [
   {
     q: 'How much does Executive Receptionist cost?',
-    a: 'A free 14-day pilot, then $0 until your first booked job, then $25 per booked job, capped at $297 a month. Set up in person in Gadsden. If the receptionist does not capture a single real caller lead during the pilot, you pay nothing.',
+    a: 'A free 14-day pilot with a card on file, then $0 until your first booked job, then $25 per booked job, capped at $297 a month. Set up in person in Gadsden. If the receptionist doesn\'t capture a single real caller lead during your 14-day pilot, you pay nothing.',
   },
   {
     q: 'Can I hear Executive Receptionist before I pay?',
@@ -9,14 +9,14 @@ export const AVA_HOME_FAQS = [
   },
   {
     q: 'How do I start the paid trial?',
-    a: 'Choose a plan. Stripe Checkout creates the 14-day pilot. When it finishes, you land on the setup form with that session attached. Sending the form without checkout only emails Cole your notes. It does not start the subscription.',
+    a: 'Start the 14-day pilot from checkout. Stripe collects a card and does not charge until after the pilot, and then only when a booked job is confirmed. Sending the setup form without checkout only emails Cole your notes. It does not start the subscription.',
   },
   {
     q: 'What does Executive Receptionist do on a call?',
-    a: 'She answers, asks for the caller’s name, number, and what they need, and texts that lead to the phone you set. Urgent handling follows rules you write. She is an AI receptionist, and the greeting says so.',
+    a: 'It answers, asks for the caller’s name, number, and what they need, and emails that lead to the address you set. Urgent handling follows rules you write. It is an AI receptionist, and the greeting says so.',
   },
   {
     q: 'Which businesses is this for?',
-    a: 'Home-service shops are the main fit: HVAC, plumbing, roofing, lawn care, and similar trades. Dentists, law firms, and other small businesses can use the same plans if the questions you approve are appropriate. Executive Receptionist is not a HIPAA product and is not legal advice.',
+    a: 'HVAC and plumbing shops first. Other home-service trades can follow. Dental offices, med spas, and law firms are on hold for a later wave. Executive Receptionist is not a HIPAA product and is not legal advice.',
   },
 ] as const;

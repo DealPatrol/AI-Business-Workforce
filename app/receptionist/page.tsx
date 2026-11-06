@@ -4,7 +4,7 @@ import { ExclusiveAudio } from '@/components/receptionist/ExclusiveAudio';
 import { VoicePicker } from '@/components/receptionist/VoicePicker';
 import { OfferPricingLayout } from '@/components/ava/OfferPricingLayout';
 import { AVA_OFFER } from '@/lib/ava/pricing';
-import { EXAMPLE_NOTES, EXECUTIVE_FAQS, EXECUTIVE_INDUSTRIES } from '@/lib/executive-receptionist';
+import { EXAMPLE_NOTES, EXECUTIVE_FAQS, EXECUTIVE_FOCUS_INDUSTRIES, EXECUTIVE_INDUSTRIES } from '@/lib/executive-receptionist';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 import { EXECUTIVE_RECEPTIONIST_ORIGIN } from '@/lib/site-url';
 import { FaceToFaceWidget } from '@/components/receptionist/live/FaceToFaceWidget';
@@ -83,7 +83,7 @@ export default function ReceptionistPage() {
       <nav className={styles.nav}>
         <Link href="/receptionist">Executive Receptionist</Link>
         <div>
-          <a href="#industries">Practices</a>
+          <a href="#industries">Trades</a>
           <a href="#voices">Voices</a>
           <a href="#samples">Sample calls</a>
           <a href="#pricing">Pricing</a>
@@ -126,10 +126,10 @@ export default function ReceptionistPage() {
         <div className={styles.sectionHead}>
           <p className={styles.kicker}>The trades</p>
           <h2>Built first for HVAC and plumbing, when both hands are already on a repair.</h2>
-          <p>The same inbound answering can be written for other kinds of offices after that. The clips below are samples, not customer results.</p>
+          <p>Wave 1 is HVAC and plumbing. Other home services can follow. Dental, med spa, and law are on hold. The extra voice clips further down are samples, not customer results.</p>
         </div>
         <ul className={styles.industryGrid}>
-          {EXECUTIVE_INDUSTRIES.map((industry) => (
+          {EXECUTIVE_FOCUS_INDUSTRIES.map((industry) => (
             <li key={industry.slug}>
               <h3>{industry.name}</h3>
               <p>{industry.line}</p>
@@ -150,10 +150,10 @@ export default function ReceptionistPage() {
       <section className={styles.band} id="samples">
         <div className={styles.sectionHead}>
           <p className={styles.kicker}>Sample calls</p>
-          <h2>One recorded example for each kind of office.</h2>
+          <h2>Extra voice samples, not the launch offer.</h2>
           <p>
-            Madison’s side of a scripted call, in the default voice. These are not recordings of real clients.
-            The caller’s lines are pauses.
+            These clips show other office scripts in Madison’s voice. Wave 1 is HVAC and plumbing; dental, med spa,
+            and law are on hold. These are not recordings of real clients. The caller’s lines are pauses.
           </p>
         </div>
         <ul className={styles.sampleList}>

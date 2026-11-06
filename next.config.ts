@@ -22,6 +22,8 @@ const nextConfig: NextConfig = {
       { source: '/dispatch/missed-calls', destination: '/receptionist/missed-calls', permanent: true },
       { source: '/dispatch', destination: '/receptionist', permanent: true },
       { source: '/dispatch/:slug', destination: '/ava/:slug', permanent: true },
+      { source: '/reviews', destination: '/reputation', permanent: true },
+      { source: '/lead-finder', destination: '/dashboard/prospector', permanent: true },
     ];
   },
 };

@@ -112,7 +112,7 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
           </div>
           <div className="trust-row">
             <span>
-              <Check /> Texts you the lead
+              <Check /> Emails you the lead
             </span>
             <span>
               <Check /> 24/7 if you forward the line

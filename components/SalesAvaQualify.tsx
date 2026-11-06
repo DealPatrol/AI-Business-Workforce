@@ -295,7 +295,7 @@ function SalesAvaQualifyContent() {
             <Check /> Call handling + urgent rules
           </li>
           <li>
-            <Check /> Where to text the lead
+            <Check /> Where to email the lead
           </li>
           <li>
             <Check /> Prefill onboarding after the call

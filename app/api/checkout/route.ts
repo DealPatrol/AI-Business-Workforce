@@ -8,7 +8,6 @@ import {
 } from '@/lib/postcards/pricing';
 import { postcardSetupForCheckout } from '@/lib/postcards/setup-session';
 import {
-  type AvaPlanKey,
   buildAvaCheckoutParams,
   buildPostcardCheckoutParams,
   createStripeCheckoutSession,
@@ -29,19 +28,17 @@ function sanitizePrefillToken(value: unknown) {
   return token;
 }
 
-function avaPriceId(planKey: AvaPlanKey) {
-  switch (planKey) {
-    case 'starter':
-      return readStripePriceId(process.env.STRIPE_AVA_STARTER_PRICE_ID);
-    case 'growth':
-      return readStripePriceId(process.env.STRIPE_AVA_GROWTH_PRICE_ID);
-    case 'pro':
-      return readStripePriceId(process.env.STRIPE_AVA_PRO_PRICE_ID);
-    default: {
-      const unreachable: never = planKey;
-      return unreachable;
-    }
-  }
+function isAvaCheckoutPlan(planKey: string) {
+  return (
+    planKey === '' ||
+    planKey === 'pilot' ||
+    planKey === 'booked_job' ||
+    isAvaPlanKey(planKey)
+  );
+}
+
+function avaBookedJobPriceId() {
+  return readStripePriceId(process.env.STRIPE_AVA_BOOKED_JOB_PRICE_ID);
 }
 
 function postcardCardPriceId(size: PostcardSize) {
@@ -110,7 +107,7 @@ async function postcardCheckoutUrl(
 
 async function avaCheckoutUrl(
   req: NextRequest,
-  planKey: AvaPlanKey,
+  planKey: string,
   qualificationId?: string,
   prefillToken?: string,
 ) {
@@ -120,13 +117,28 @@ async function avaCheckoutUrl(
     return { error: 'Executive Receptionist checkout is not connected yet.', status: 503 as const };
   }
 
-  const params = buildAvaCheckoutParams({
-    origin: req.nextUrl.origin,
-    planKey,
-    priceId: avaPriceId(planKey),
-    qualificationId: sanitizeQualificationId(qualificationId),
-    prefillToken: sanitizePrefillToken(prefillToken),
-  });
+  const priceId = avaBookedJobPriceId();
+  if (!priceId) {
+    console.error('STRIPE_AVA_BOOKED_JOB_PRICE_ID is not set; refusing to start the old tier checkout.');
+    return {
+      error: 'Executive Receptionist checkout is not connected to the $25 booked-job price yet.',
+      status: 503 as const,
+    };
+  }
+
+  let params: URLSearchParams;
+  try {
+    params = buildAvaCheckoutParams({
+      origin: req.nextUrl.origin,
+      planKey: planKey || 'pilot',
+      priceId,
+      qualificationId: sanitizeQualificationId(qualificationId),
+      prefillToken: sanitizePrefillToken(prefillToken),
+    });
+  } catch (error) {
+    console.error('Executive Receptionist checkout could not be built', error);
+    return { error: 'Executive Receptionist checkout is not connected yet.', status: 503 as const };
+  }
   const result = await createStripeCheckoutSession(secret, params);
   if ('error' in result) {
     console.error('Stripe Executive Receptionist checkout error', result.error);
@@ -213,7 +225,7 @@ export async function POST(req: NextRequest) {
       return checkoutResult(req, result.url);
     }
 
-    if (!isAvaPlanKey(planKey)) {
+    if (!isAvaCheckoutPlan(planKey)) {
       return checkoutError(req, 'Invalid Executive Receptionist plan.', 400, '/pricing');
     }
     const result = await avaCheckoutUrl(

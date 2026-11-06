@@ -8,9 +8,9 @@ import { JsonLd } from '@/components/ava/JsonLd';
 import { SampleCall } from '@/components/ava/SampleCall';
 import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
 import { AVA_HOME_FAQS } from '@/lib/ava/home-faq';
-import { AVA_PLANS, avaTrialThenPriceCopy, type AvaPlanKey } from '@/lib/ava/pricing';
+import { AVA_OFFER, avaTrialThenPriceCopy } from '@/lib/ava/pricing';
 import { avaProductNode, avaServiceNode, avaSoftwareNode, faqNode, jsonLdGraph } from '@/lib/ava/structured-data';
-import { LIVE_DEMO_PHONE_DISPLAY, LIVE_DEMO_PHONE_HREF } from '@/lib/ava/demo-phone';
+import { LIVE_DEMO_URL } from '@/lib/ava/demo-phone';
 import { AVA_GUIDES } from '@/lib/ava/trade-pages';
 import { absoluteSiteUrl } from '@/lib/site-url';
 
@@ -40,7 +40,6 @@ const mono = localFont({
   display: 'swap',
 });
 
-const plans = (Object.keys(AVA_PLANS) as AvaPlanKey[]).map((key) => AVA_PLANS[key]);
 const tradeGuides = AVA_GUIDES.filter((guide) => guide.kind === 'trade');
 const buyerGuides = AVA_GUIDES.filter((guide) => guide.kind !== 'trade');
 
@@ -69,20 +68,20 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
   const structuredData = jsonLdGraph([
     avaSoftwareNode({
       description:
-        'AI receptionist that answers calls for contractors and small businesses, qualifies the lead, and texts the owner.',
+        'AI receptionist that answers calls for contractors and small businesses, qualifies the lead, and emails the owner a summary.',
       url: canonical,
     }),
     avaServiceNode({
       name: 'Executive Receptionist AI answering service',
       description:
-        '24/7 call answering for home-service businesses and other small teams. Executive Receptionist captures the job and texts you the lead.',
+        '24/7 call answering for home-service businesses and other small teams. Executive Receptionist captures the job and emails you the lead.',
       url: canonical,
       audience: 'contractors and small businesses',
       serviceType: 'AI answering service',
     }),
     avaProductNode({
       name: 'Executive Receptionist AI Receptionist',
-      description: `Self-serve AI receptionist with a free 14-day pilot. Starter ${AVA_PLANS.starter.monthlyLabel}, Growth ${AVA_PLANS.growth.monthlyLabel}, Pro ${AVA_PLANS.pro.monthlyLabel} per month. $0 setup.`,
+      description: `Self-serve AI receptionist. ${AVA_OFFER.summary}`,
       url: canonical,
     }),
     faqNode([...AVA_HOME_FAQS]),
@@ -105,7 +104,7 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
           <a href="#how">How it works</a>
           <a href="#pricing">Rate card</a>
         </nav>
-        <TrackedCheckoutLink className="btn btn-ink" href="/api/checkout?plan=starter" plan="starter">
+        <TrackedCheckoutLink className="btn btn-ink" href="/api/checkout?plan=pilot" plan="pilot">
           Start free trial
         </TrackedCheckoutLink>
       </header>
@@ -119,16 +118,16 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
           </h1>
           <p className="lede">
             Executive Receptionist answers your business line 24/7 in a friendly Southern voice — takes the caller&apos;s
-            name, number, and what they need, then <strong>texts you the lead</strong>. {heroNext}
+            name, number, and what they need, then <strong>emails you the lead</strong>. {heroNext}
           </p>
           <div className="hero-ctas">
             <a className="btn btn-signal" href="#talk-to-ava">
               Talk to Executive Receptionist
             </a>
-            <a className="btn btn-outline" href={LIVE_DEMO_PHONE_HREF}>
-              Call the live demo: {LIVE_DEMO_PHONE_DISPLAY}
+            <a className="btn btn-outline" href={LIVE_DEMO_URL} target="_blank" rel="noopener noreferrer">
+              Try the live demo
             </a>
-            <TrackedCheckoutLink className="btn btn-outline" href="/api/checkout?plan=starter" plan="starter">
+            <TrackedCheckoutLink className="btn btn-outline" href="/api/checkout?plan=pilot" plan="pilot">
               Start your free 14-day pilot <ArrowRight size={17} />
             </TrackedCheckoutLink>
           </div>
@@ -138,13 +137,11 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
             surface="ava-home"
           />
           <p className="hero-prices">
-            <a href="#pricing">Starter {AVA_PLANS.starter.monthlyLabel}</a>
+            <a href="#pricing">$25 per booked job</a>
             <span aria-hidden="true">·</span>
-            Growth {AVA_PLANS.growth.monthlyLabel}
+            capped at $297/month
             <span aria-hidden="true">·</span>
-            Pro {AVA_PLANS.pro.monthlyLabel}
-            <span aria-hidden="true">·</span>
-            14-day pilot · $0 setup
+            14-day pilot · $0 until the first booked job
           </p>
           <p className="hero-fine">{avaTrialThenPriceCopy('starter')} Cancel anytime.</p>
         </div>
@@ -233,8 +230,7 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
           The <em>rate card.</em>
         </h2>
         <p className="ratecard-sub">
-          Free 14-day pilot on every plan. Included minutes reset monthly — overage is billed at the plan&apos;s
-          published per-minute rate.
+          {avaTrialThenPriceCopy()}. Set up in person in Gadsden.
         </p>
         {checkoutUnavailable && (
           <p className="ratecard-alert">
@@ -243,38 +239,29 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
           </p>
         )}
         <div className="ratecard-list">
-          {plans.map((plan) => (
-            <article className={plan.featured ? 'plan featured' : 'plan'} key={plan.key}>
-              <div className="plan-main">
-                <div className="plan-head">
-                  <h3>{plan.label}</h3>
-                </div>
-                <p className="plan-desc">{plan.description}</p>
-                <ul className="plan-features">
-                  {plan.features.map((feature) => (
-                    <li key={feature}>
-                      <Check size={14} /> {feature}
-                    </li>
-                  ))}
-                </ul>
-                <p className="plan-minutes">
-                  {plan.minutes.toLocaleString('en-US')} voice minutes / month · {plan.overageLabel}
-                </p>
+          <article className="plan featured">
+            <div className="plan-main">
+              <div className="plan-head">
+                <h3>Executive Receptionist</h3>
               </div>
-              <div className="plan-side">
-                <p className="plan-price">
-                  <strong>{plan.monthlyLabel}</strong>
-                  <span>/mo</span>
-                </p>
-                <TrackedCheckoutLink className="btn btn-signal" href={`/api/checkout?plan=${plan.key}`} plan={plan.key}>
-                  Start free trial
-                </TrackedCheckoutLink>
-                <TrackedCheckoutLink className="plan-direct" href={`/api/checkout?plan=${plan.key}`} plan={plan.key}>
-                  or check out directly <ArrowUpRight size={13} />
-                </TrackedCheckoutLink>
-              </div>
-            </article>
-          ))}
+              <p className="plan-desc">{AVA_OFFER.summary}</p>
+              <ul className="plan-features">
+                <li><Check size={14} /> Answers inbound calls 24/7</li>
+                <li><Check size={14} /> Captures the name, number, and job</li>
+                <li><Check size={14} /> Emails you each lead summary</li>
+                <li><Check size={14} /> {AVA_OFFER.guarantee}</li>
+              </ul>
+            </div>
+            <div className="plan-side">
+              <p className="plan-price">
+                <strong>{AVA_OFFER.perBookedJobLabel}</strong>
+                <span>per booked job</span>
+              </p>
+              <TrackedCheckoutLink className="btn btn-signal" href="/api/checkout?plan=pilot" plan="pilot">
+                Start free 14-day pilot
+              </TrackedCheckoutLink>
+            </div>
+          </article>
         </div>
         <p className="ratecard-fine">
           Special telephony or integration requirements are quoted before launch. Cancel anytime. $0 setup.
@@ -335,11 +322,11 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
           Put Executive Receptionist on the <em>phones.</em>
         </h2>
         <p>
-          Talk to her above, then start the trial. {AVA_PLANS.starter.monthlyLabel}, {AVA_PLANS.growth.monthlyLabel}, or{' '}
-          {AVA_PLANS.pro.monthlyLabel} a month after the trial. Tomorrow&apos;s after-hours calls answer themselves.
+          Talk to her above, then start the 14-day pilot. After that you pay $0 until the first booked job, then $25
+          per booked job, capped at $297 a month. Tomorrow&apos;s after-hours calls answer themselves.
         </p>
         <div className="hero-ctas">
-          <TrackedCheckoutLink className="btn btn-paper" href="/api/checkout?plan=starter" plan="starter">
+          <TrackedCheckoutLink className="btn btn-paper" href="/api/checkout?plan=pilot" plan="pilot">
             Start your free 14-day pilot <ArrowRight size={17} />
           </TrackedCheckoutLink>
           <a className="btn btn-ghostlight" href="#talk-to-ava">

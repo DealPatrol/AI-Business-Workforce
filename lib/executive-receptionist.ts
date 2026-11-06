@@ -41,6 +41,21 @@ export type ExecutiveVoiceSlug = (typeof EXECUTIVE_VOICES)[number]['slug'];
 
 export const DEFAULT_EXECUTIVE_VOICE: ExecutiveVoiceSlug = 'madison';
 
+export const EXECUTIVE_FOCUS_INDUSTRIES = [
+  {
+    slug: 'hvac',
+    name: 'HVAC',
+    line: 'No-cool and no-heat calls taken while both hands are on a repair — name, number, and what the system is doing.',
+    sample: 'The receptionist asks whether the house has heat or cooling, what the system is doing, and when someone can be home.',
+  },
+  {
+    slug: 'plumbing',
+    name: 'Plumbing',
+    line: 'Leak, no-hot-water, and clogged-line calls captured so you can call back and book the job yourself.',
+    sample: 'The receptionist asks where the leak is, whether water can be shut off, and a callback number.',
+  },
+] as const;
+
 export const EXECUTIVE_INDUSTRIES = [
   {
     slug: 'dental',
@@ -93,7 +108,7 @@ export const EXECUTIVE_FAQS = [
   },
   {
     q: 'Can a dental or medical office use it for charts?',
-    a: 'No. It is not a HIPAA product. Use it for hours, location, and a callback. Do not collect health details, insurance member IDs, or clinical notes.',
+    a: 'Not now. Dental offices, med spas, and law firms are on hold for a later wave. It is not a HIPAA product. Do not collect health details, insurance member IDs, or clinical notes.',
   },
   {
     q: 'Will it give legal, tax, or investment advice?',
@@ -111,15 +126,15 @@ export const EXECUTIVE_FAQS = [
 
 export const EXAMPLE_NOTES = [
   {
-    practice: 'Example dental practice',
-    quote: 'The after-hours line used to ring through to voicemail. Now the office gets a name and a number before the morning huddle.',
+    practice: 'Example HVAC shop',
+    quote: 'The after-hours no-cool line used to ring through to voicemail. Now the owner gets a name, a number, and what the system is doing by email.',
   },
   {
-    practice: 'Example law firm',
-    quote: 'Callers hear a calm greeting and leave a matter in plain language. The attorney still decides whether to take the call back.',
+    practice: 'Example plumbing company',
+    quote: 'Leak calls reach the owner as an emailed summary instead of a missed-call notification with no details.',
   },
   {
-    practice: 'Example advisory firm',
-    quote: 'Lunchtime inquiries no longer sit in a full mailbox. The callback list is a text, not a stack of slips.',
+    practice: 'Example home-service shop',
+    quote: 'Lunchtime inquiries no longer sit in a full mailbox. The callback list arrives by email, not a stack of slips.',
   },
 ] as const;
