@@ -4,7 +4,7 @@ import { SuiteShell } from '@/components/suite/SuiteShell';
 import styles from '@/components/suite/suite.module.css';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 
-const CHECKOUT_URL = 'https://buy.stripe.com/7sYcN56kfe9x1NX8upgIo0e';
+const CHECKOUT_URL = 'https://buy.stripe.com/14A3cx1Rc2W9dWx4200Ba02';
 const seo = pageSeo('/google-profile');
 const title = renderedTitle(seo);
 const description = seo.description;
