@@ -47,6 +47,7 @@ export function SuiteShell({ children }: { children: ReactNode }) {
           <Link href="/pricing">Pricing</Link>
           <Link href="/terms">Terms</Link>
           <Link href="/privacy">Privacy</Link>
+          <Link href="/sms">SMS terms</Link>
         </nav>
       </footer>
     </div>

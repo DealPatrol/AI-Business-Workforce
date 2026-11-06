@@ -61,6 +61,10 @@ export default function PrivacyPage() {
           need, along with a summary of the call. That lead is emailed to the business owner and, if the owner opted in, texted to them. We keep
           those details so the owner can call the person back and so we can operate the service.
         </p>
+        <p>
+          If you call a business that uses our missed-call callback program and no one answers, we also collect the
+          caller phone number from that inbound call so we can send the single transactional text described below.
+        </p>
 
         <h2>Text messaging (SMS)</h2>
         <p>
@@ -83,6 +87,25 @@ export default function PrivacyPage() {
         <p>
           Texting is optional. You will still receive lead alerts by email, and you can buy and use Executive
           Receptionist without agreeing to text messages.
+        </p>
+
+        <h2>Missed-call callback texts</h2>
+        <p>
+          If you call a business that uses Executive Receptionist and the call is missed, we may send you one text
+          message about that missed call so you can reply or call back. These texts are sent as Executive Receptionist
+          on behalf of the client business you called. They are transactional only. We do not send marketing texts to
+          callers. Message frequency is at most one automated text per missed call. Message and data rates may apply.
+          Reply STOP to opt out, HELP for help. SMS program details are on our <Link href="/sms">SMS terms</Link> page.
+          Support: colecollins763@gmail.com or (256) 595-3354.
+        </p>
+        <p>
+          <strong>
+            We do not sell, rent, or share mobile phone numbers or text-messaging opt-in data or consent with third
+            parties or affiliates for marketing or promotional purposes.
+          </strong>{' '}
+          Caller mobile numbers collected for missed-call text-back are used only to deliver that callback text through
+          our messaging provider, Twilio, which processes them only to send the message for us. We do not use those
+          numbers for advertising or measurement, and we do not share mobile opt-in data with third parties for marketing.
         </p>
 
         <h2>Advertising cookies and pixels</h2>
@@ -108,7 +131,7 @@ export default function PrivacyPage() {
 
         <h2>How we use this</h2>
         <p>
-          We use the information above to set up Executive Receptionist, send lead alerts to the owner by email and, with the owner&apos;s consent, by text, run the service,
+          We use the information above to set up Executive Receptionist, send lead alerts to the owner by email and, with the owner&apos;s consent, by text, send a single transactional missed-call callback text to a caller when that program is running, operate the service,
           and measure advertising. We do not sell personal information.
         </p>
 

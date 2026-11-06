@@ -23,6 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: absoluteSiteUrl('/missed-call'), lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
     { url: absoluteSiteUrl('/google-profile'), lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
     { url: absoluteSiteUrl('/privacy'), lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
+    { url: absoluteSiteUrl('/sms'), lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
     { url: absoluteSiteUrl('/receptionist-demo'), lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
     ...POSTCARD_TRADES.map((t) => ({
       url: absoluteSiteUrl(`/postcards/${t.slug}`),

@@ -100,9 +100,16 @@ const PAGES = {
     receptionist: false,
   },
   '/missed-call': {
-    title: 'Missed-Call Text-Back, $39/month | Front Porch Growth',
+    title: 'Missed-Call Text-Back waitlist | Front Porch Growth',
     description:
-      'When you miss a call, the caller gets a text from your business within seconds, so the job does not go to the next company. $39 a month.',
+      'Waitlist for missed-call callback texts from Executive Receptionist, sent on behalf of your business after carrier verification.',
+    titleMode: 'absolute',
+    receptionist: false,
+  },
+  '/sms': {
+    title: 'SMS terms | Front Porch Growth',
+    description:
+      'Executive Receptionist missed-call callback texts: who receives them, frequency, STOP and HELP, and how mobile numbers are handled.',
     titleMode: 'absolute',
     receptionist: false,
   },
@@ -116,7 +123,7 @@ const PAGES = {
   '/privacy': {
     title: 'Privacy | Front Porch Growth',
     description:
-      'What Front Porch Growth collects: setup details, call and lead data, and advertising cookies when measurement tags are turned on.',
+      'What we collect: setup details, call and lead data, caller numbers for missed-call callback texts, and ad cookies when tags are on.',
     titleMode: 'absolute',
     receptionist: false,
   },
