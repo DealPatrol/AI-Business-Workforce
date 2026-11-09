@@ -23,6 +23,11 @@ import {
 import { DestinationLockedError } from '@/lib/ava/destination-edit';
 import { parseSmsConsent } from '@/lib/ava/sms-consent';
 import { AVA_VOICE_OPTIONS, isAvaVoiceKey } from '@/lib/ava/voice-options';
+import {
+  buildWebChatEmbedSnippet,
+  channelSummaryLine,
+  parseChannelFlags,
+} from '@/lib/ava/channels';
 
 const NOTIFICATION_EMAIL = 'colecollins763@gmail.com';
 const MAX_FIELD_LENGTH = 4_000;
@@ -127,6 +132,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Choose a valid Executive Receptionist voice option.' }, { status: 400 });
     }
 
+    const channelFlags = parseChannelFlags({
+      channelVoice: body.channelVoice,
+      channelSms: body.channelSms,
+      channelWebChat: body.channelWebChat,
+    });
+
     const replyTo = parsedStaff.email || (EMAIL_PATTERN.test(fields.staffEmail) ? fields.staffEmail : '');
     const apiKey = process.env.RESEND_API_KEY;
 
@@ -161,6 +172,9 @@ export async function POST(request: NextRequest) {
         editToken: String(body.editToken ?? '')
           .trim()
           .slice(0, 2_000),
+        channelVoice: channelFlags.channelVoice,
+        channelSms: channelFlags.channelSms,
+        channelWebChat: channelFlags.channelWebChat,
       });
       onboardingId = onboarding.id;
 
@@ -261,7 +275,13 @@ export async function POST(request: NextRequest) {
         to: [avaOwnerEmail()],
         ...(replyTo ? { reply_to: replyTo } : {}),
         subject: `Executive Receptionist paid pilot setup — ${fields.businessName}`,
-        html: `<div style="font-family:Arial,sans-serif;max-width:760px;margin:auto;color:#17211b"><h1>New Executive Receptionist setup</h1><p>The phone number stays <b>pending_manual</b>. Attach one using <a href="${AVA_PHONE_RUNBOOK_URL}">${AVA_PHONE_RUNBOOK_PATH}</a>, then run one live test call before launch.</p><table style="border-collapse:collapse;width:100%">${htmlRows}</table></div>`,
+        html: `<div style="font-family:Arial,sans-serif;max-width:760px;margin:auto;color:#17211b"><h1>New Executive Receptionist setup</h1><p>The phone number stays <b>pending_manual</b>. Attach one using <a href="${AVA_PHONE_RUNBOOK_URL}">${AVA_PHONE_RUNBOOK_PATH}</a>, then run one live test call before launch.</p><table style="border-collapse:collapse;width:100%">${htmlRows}</table>${
+          channelFlags.channelWebChat
+            ? `<h2 style="margin-top:24px">Website chat embed</h2><p>Paste this on the customer&apos;s site after the agent ID is ready (Voice + text widget).</p><pre style="background:#f3f4f6;padding:12px;border-radius:8px;white-space:pre-wrap">${escapeHtml(
+                buildWebChatEmbedSnippet(provisioning.agentId || ''),
+              )}</pre>`
+            : ''
+        }</div>`,
       }),
     });
     const result = await response.json().catch(() => ({}));
@@ -299,6 +319,11 @@ export async function POST(request: NextRequest) {
       onboardingId,
       eventId,
       provisioning,
+      channels: channelFlags,
+      webChatEmbed:
+        channelFlags.channelWebChat
+          ? buildWebChatEmbedSnippet(provisioning.agentId || '')
+          : null,
       ...(persistenceWarning ? { warning: persistenceWarning } : {}),
     });
   } catch (error) {

@@ -76,7 +76,7 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
   const structuredData = jsonLdGraph([
     avaSoftwareNode({
       description:
-        'AI receptionist that answers calls for contractors and small businesses, qualifies the lead, and texts the owner.',
+        'AI receptionist that answers calls and website chat for contractors and small businesses, qualifies the lead, and emails the owner.',
       url: canonical,
     }),
     avaServiceNode({
