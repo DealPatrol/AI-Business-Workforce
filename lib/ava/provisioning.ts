@@ -109,6 +109,7 @@ async function duplicateTemplateAgent(templateAgentId: string, name: string) {
 }
 
 async function configureCustomerAgent(agentId: string, details: AvaOnboardingDetails) {
+  // Voice + typed chat on the same agent for the website embed. Does not change SMS.
   await elevenLabsRequest(`/convai/agents/${encodeURIComponent(agentId)}`, {
     method: 'PATCH',
     body: JSON.stringify({
@@ -119,6 +120,16 @@ async function configureCustomerAgent(agentId: string, details: AvaOnboardingDet
           prompt: {
             prompt: buildAvaAgentPrompt(details),
           },
+        },
+      },
+      platform_settings: {
+        widget: {
+          text_input_enabled: true,
+          supports_text_only: true,
+          conversation_mode_toggle_enabled: true,
+          action_text: 'Chat with us',
+          start_call_text: 'Start voice call',
+          expand_text: 'Open chat',
         },
       },
     }),
