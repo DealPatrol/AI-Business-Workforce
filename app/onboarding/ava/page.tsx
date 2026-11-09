@@ -543,8 +543,7 @@ function AvaOnboardingForm() {
               <legend>How customers reach you</legend>
               <p className={styles.notice}>
                 Pick any combination. Same greeting and rules on every channel you turn on. Texting
-                is saved now and turns on after carrier approval — we will not send customer texts
-                until then.
+                is available after setup — we will not send customer texts until then.
               </p>
               <label className={styles.consent}>
                 <input type="checkbox" name="channelVoice" value="true" defaultChecked />
@@ -563,9 +562,8 @@ function AvaOnboardingForm() {
               <label className={styles.consent}>
                 <input type="checkbox" name="channelSms" value="true" defaultChecked={false} />
                 <span>
-                  <strong>Texting (coming soon, activates after carrier approval)</strong> — missed-call
-                  text-back and reply forwarding. Stored when you check this; sending stays off until
-                  approval.
+                  <strong>Texting (available after setup)</strong> — missed-call text-back and reply
+                  forwarding. Stored when you check this; sending stays off until setup is complete.
                 </span>
               </label>
             </fieldset>

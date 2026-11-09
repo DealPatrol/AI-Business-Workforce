@@ -29,7 +29,7 @@ export function parseChannelFlags(input: {
 }): AvaChannelFlags {
   return {
     channelVoice: parseChannelFlag(input.channelVoice, true),
-    // SMS stays off by default; checkbox is informational until carrier approval.
+    // SMS stays off by default; checkbox is informational until setup activates it.
     channelSms: parseChannelFlag(input.channelSms, false),
     channelWebChat: parseChannelFlag(input.channelWebChat, false),
   };
@@ -55,6 +55,6 @@ export function channelSummaryLine(flags: AvaChannelFlags): string {
   const parts: string[] = [];
   if (flags.channelVoice) parts.push('Voice');
   if (flags.channelWebChat) parts.push('Website chat');
-  if (flags.channelSms) parts.push('Texting (pending carrier approval)');
+  if (flags.channelSms) parts.push('Texting (available after setup)');
   return parts.length ? parts.join(', ') : 'None selected';
 }

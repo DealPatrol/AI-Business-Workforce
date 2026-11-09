@@ -231,6 +231,7 @@ export async function POST(request: NextRequest) {
         AVA_VOICE_OPTIONS.find((option) => option.key === fields.preferredVoice)?.label ||
           'No preference',
       ],
+      ['Channels requested', channelSummaryLine(channelFlags)],
       ['Stripe Checkout session', fields.sessionId || 'Not provided'],
       ['Selected plan', fields.plan || 'Not provided'],
       ['Onboarding record', onboardingId || 'Not persisted — use the answers in this email'],

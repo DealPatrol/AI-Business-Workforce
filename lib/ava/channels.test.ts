@@ -24,9 +24,9 @@ test('embed snippet includes agent id', () => {
   assert.match(snip, /convai-widget-embed/);
 });
 
-test('channel summary names pending SMS', () => {
+test('channel summary names texting after setup', () => {
   assert.match(
     channelSummaryLine({ channelVoice: true, channelSms: true, channelWebChat: true }),
-    /pending carrier/,
+    /available after setup/,
   );
 });
