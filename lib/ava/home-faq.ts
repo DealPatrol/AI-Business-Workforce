@@ -9,7 +9,7 @@ export const AVA_HOME_FAQS = [
   },
   {
     q: 'How do customers reach the receptionist — phone, chat, or text?',
-    a: 'Voice calls and a website chat box are available now (chat is a paste-in widget; phone needs Cole to attach your number and a live test). Texting is coming soon after carrier approval — you can request it during setup, but we do not send customer texts until that approval is done. Same greeting and rules on every channel you turn on.',
+    a: 'Voice calls and a website chat box are available now (chat is a paste-in widget; phone needs Cole to attach your number and a live test). Texting is available after setup — you can request it during onboarding, but we do not send customer texts until setup is complete. Same greeting and rules on every channel you turn on.',
   },
   {
     q: 'How do I start the paid trial?',
