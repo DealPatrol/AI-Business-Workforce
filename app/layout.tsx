@@ -25,11 +25,13 @@ export const metadata: Metadata = {
     url: '/',
     siteName: 'Front Porch Growth',
     type: 'website',
+    images: [{ url: '/og-home.png', width: 1200, height: 630, alt: 'Front Porch Growth AI receptionist for home service businesses' }],
   },
   twitter: {
     card: 'summary_large_image',
     title,
     description,
+    images: ['/og-home.png'],
   },
 };
 

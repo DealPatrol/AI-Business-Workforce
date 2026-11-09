@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+import { HeroDemoPicker } from '@/components/suite/HeroDemoPicker';
 import { InvoicingWaitlistForm } from '@/components/suite/InvoicingWaitlistForm';
 import { SuiteShell } from '@/components/suite/SuiteShell';
 import styles from '@/components/suite/home.module.css';
@@ -55,11 +56,13 @@ export const metadata: Metadata = {
     url: '/',
     siteName: 'Front Porch Growth',
     type: 'website',
+    images: [{ url: '/og-home.png', width: 1200, height: 630, alt: 'Front Porch Growth AI receptionist for home service businesses' }],
   },
   twitter: {
     card: 'summary_large_image',
     title,
     description,
+    images: ['/og-home.png'],
   },
 };
 
@@ -150,10 +153,11 @@ export default function SuiteHomePage() {
         <div>
           <span className={styles.eyebrow}>FOR SERVICE BUSINESSES THAT LIVE ON THE PHONE</span>
           <h1>More booked jobs. No more calls that go unanswered.</h1>
+          <HeroDemoPicker />
           <p className={styles.lede}>
             Front Porch Growth answers the calls you cannot pick up, writes down what the caller needs, and sends it to
-            you so you can follow up fast. It also mails postcards that keep the phone ringing. Built by a lawn care
-            owner who runs it on his own business.
+            you so you can follow up fast. It also mails postcards that keep the phone ringing. Made for every home
+            service business.
           </p>
           <div className={styles.actions}>
             <a className={styles.primary} href={AVA_OFFER.demoUrl} target="_blank" rel="noopener noreferrer">
