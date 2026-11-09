@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { urlsForRequest } from '@/lib/seo/host-metadata';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 import { absoluteSiteUrl } from '@/lib/site-url';
 import styles from './privacy.module.css';
@@ -8,23 +9,28 @@ const seo = pageSeo('/privacy');
 const title = renderedTitle(seo);
 const description = seo.description;
 
-export const metadata: Metadata = {
-  title: metadataTitle(seo),
-  description,
-  alternates: { canonical: '/privacy' },
-  openGraph: {
-    title,
+export const dynamic = 'force-dynamic';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { canonical, openGraphUrl } = await urlsForRequest('/privacy', '/privacy', absoluteSiteUrl('/privacy'));
+  return {
+    title: metadataTitle(seo),
     description,
-    siteName: 'Front Porch Growth',
-    type: 'website',
-    url: absoluteSiteUrl('/privacy'),
-  },
-  twitter: {
-    card: 'summary',
-    title,
-    description,
-  },
-};
+    alternates: { canonical },
+    openGraph: {
+      title,
+      description,
+      siteName: 'Front Porch Growth',
+      type: 'website',
+      url: openGraphUrl,
+    },
+    twitter: {
+      card: 'summary',
+      title,
+      description,
+    },
+  };
+}
 
 export default function PrivacyPage() {
   return (

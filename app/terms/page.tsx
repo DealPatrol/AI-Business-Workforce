@@ -2,29 +2,35 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { SuiteShell } from '@/components/suite/SuiteShell';
 import styles from '@/components/suite/suite.module.css';
+import { urlsForRequest } from '@/lib/seo/host-metadata';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 
 const seo = pageSeo('/terms');
 const title = renderedTitle(seo);
 const description = seo.description;
 
-export const metadata: Metadata = {
-  title: metadataTitle(seo),
-  description,
-  alternates: { canonical: '/terms' },
-  openGraph: {
-    title,
+export const dynamic = 'force-dynamic';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { canonical, openGraphUrl } = await urlsForRequest('/terms', '/terms');
+  return {
+    title: metadataTitle(seo),
     description,
-    url: '/terms',
-    siteName: 'Front Porch Growth',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title,
-    description,
-  },
-};
+    alternates: { canonical },
+    openGraph: {
+      title,
+      description,
+      url: openGraphUrl,
+      siteName: 'Front Porch Growth',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
+  };
+}
 
 export default function TermsPage() {
   return (

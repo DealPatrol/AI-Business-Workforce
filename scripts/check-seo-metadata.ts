@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import robots from '@/app/robots';
+import { robotsForHost } from '@/lib/seo/sitemaps';
 import { collectRouteSeo, discoverPageRoutes, seoProblems } from '@/lib/seo/audit';
 import { SEO_DESCRIPTION_MAX, SEO_TITLE_MAX } from '@/lib/seo/pages';
 
@@ -34,7 +34,7 @@ describe('route SEO limits', () => {
   });
 
   it('disallows /api/ in robots.txt', () => {
-    const rules = robots().rules;
+    const rules = robotsForHost(null).rules;
     const list = Array.isArray(rules) ? rules : [rules];
     const disallows = list.flatMap((rule) => {
       const value = rule.disallow;

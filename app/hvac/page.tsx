@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Check, Phone, MessageSquare, PhoneCall } from 'lucide-react';
 import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
 import { AVA_PLAN_KEYS, AVA_PLANS, avaTrialThenPriceCopy } from '@/lib/ava/pricing';
+import { urlsForRequest } from '@/lib/seo/host-metadata';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 import HvacContactForm from './contact-form';
 import './hvac.css';
@@ -14,18 +15,23 @@ const DEMO_LINK = 'https://elevenlabs.io/app/talk-to?agent_id=agent_0301m4sb6c5s
 const COLE_TEL = 'tel:+12565953354';
 const COLE_SMS = 'sms:+12565953354';
 
-export const metadata: Metadata = {
-  title: metadataTitle(seo),
-  description: seo.description,
-  alternates: { canonical: '/hvac' },
-  openGraph: {
-    title,
+export const dynamic = 'force-dynamic';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { canonical, openGraphUrl } = await urlsForRequest('/hvac', '/hvac');
+  return {
+    title: metadataTitle(seo),
     description: seo.description,
-    url: '/hvac',
-    siteName: 'Front Porch Growth',
-    type: 'website',
-  },
-};
+    alternates: { canonical },
+    openGraph: {
+      title,
+      description: seo.description,
+      url: openGraphUrl,
+      siteName: 'Front Porch Growth',
+      type: 'website',
+    },
+  };
+}
 
 const plans = AVA_PLAN_KEYS.map((key) => AVA_PLANS[key]);
 
