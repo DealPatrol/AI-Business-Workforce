@@ -6,28 +6,34 @@ import './ava-redesign.css';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { AvaViewContent } from '@/components/analytics/AvaViewContent';
+import { urlsForRequest } from '@/lib/seo/host-metadata';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 
 const seo = pageSeo('/ava');
 const title = renderedTitle(seo);
 
-export const metadata: Metadata = {
-  title: metadataTitle(seo),
-  description: seo.description,
-  alternates: { canonical: '/ava' },
-  openGraph: {
-    title,
+export const dynamic = 'force-dynamic';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { canonical, openGraphUrl } = await urlsForRequest('/ava', '/ava');
+  return {
+    title: metadataTitle(seo),
     description: seo.description,
-    url: '/ava',
-    siteName: 'Executive Receptionist',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title,
-    description: seo.description,
-  },
-};
+    alternates: { canonical },
+    openGraph: {
+      title,
+      description: seo.description,
+      url: openGraphUrl,
+      siteName: 'Executive Receptionist',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: seo.description,
+    },
+  };
+}
 
 export default function AvaLayout({ children }: { children: ReactNode }) {
   return (

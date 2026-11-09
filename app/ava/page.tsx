@@ -12,12 +12,19 @@ import { AVA_PLANS, avaTrialThenPriceCopy, type AvaPlanKey } from '@/lib/ava/pri
 import { avaProductNode, avaServiceNode, avaSoftwareNode, faqNode, jsonLdGraph } from '@/lib/ava/structured-data';
 import { LIVE_DEMO_PHONE_DISPLAY, LIVE_DEMO_PHONE_HREF } from '@/lib/ava/demo-phone';
 import { AVA_GUIDES } from '@/lib/ava/trade-pages';
+import { urlsForRequest } from '@/lib/seo/host-metadata';
 import { absoluteSiteUrl } from '@/lib/site-url';
 
-export const metadata: Metadata = {
-  alternates: { canonical: absoluteSiteUrl('/ava') },
-  openGraph: { url: absoluteSiteUrl('/ava') },
-};
+export const dynamic = 'force-dynamic';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const published = absoluteSiteUrl('/ava');
+  const { canonical, openGraphUrl } = await urlsForRequest('/ava', published, published);
+  return {
+    alternates: { canonical },
+    openGraph: { url: openGraphUrl },
+  };
+}
 
 // Self-hosted (latin subset, SIL OFL) so the build never depends on fetching
 // from Google Fonts: a failed fetch there broke the Vercel build.
