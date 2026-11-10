@@ -14,6 +14,18 @@ import { bookingLinks, bookingWindowLabel } from '@/lib/ava/booking/event';
 import { DEFAULT_WEEKLY_HOURS, localDateOf } from '@/lib/ava/booking/slots';
 import { calendarForOnboarding, listBookings, type BookingRow, type CalendarRow } from '@/lib/ava/booking/store';
 import { BookingSettings } from './booking-settings';
+import { googleCalendarConfig, isGoogleLinked } from '@/lib/ava/booking/google';
+
+const GOOGLE_STATUS: Record<string, string> = {
+  connected: 'Google Calendar connected. Ava now skips your busy times and adds each booking to your calendar.',
+  disconnected: 'Google Calendar disconnected. Bookings already on it stay there.',
+  declined: 'Google Calendar was not connected.',
+  expired: 'That Google sign-in link expired. Try Connect Google Calendar again.',
+  scopes: 'Google did not grant calendar access. Try again and allow both calendar permissions.',
+  setup: 'Finish setup before connecting a calendar.',
+  store: 'Calendar sync is for home-service plans.',
+  failed: 'Google Calendar could not be connected right now. Try again in a minute.',
+};
 import { LeadActions } from './lead-actions';
 import { SignOut } from './sign-out';
 import styles from './desk.module.css';
@@ -150,7 +162,14 @@ function startOfMonthChicago() {
   return new Date(`${year}-${month}-01T06:00:00Z`);
 }
 
-export default async function DeskPage() {
+export default async function DeskPage({
+  searchParams,
+}: {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const query = (await searchParams) ?? {};
+  const googleStatus = typeof query.google === 'string' ? GOOGLE_STATUS[query.google] ?? '' : '';
+  const googleSyncAvailable = Boolean(googleCalendarConfig());
   const supabase = await createClient();
   const { data: authData } = await supabase.auth.getUser();
   const user = authData.user;
@@ -397,6 +416,7 @@ export default async function DeskPage() {
                           <span>
                             <b>{row.caller_name || 'Caller'}</b>
                             {row.is_demo ? <span className={styles.demoTag}>Demo</span> : null}
+                            {row.google_event_id ? <span className={styles.demoTag}>On Google</span> : null}
                             {row.issue ? ` · ${row.issue}` : ''}
                             {row.service_address ? ` · ${row.service_address}` : ''}
                             {row.caller_phone ? (
@@ -415,6 +435,34 @@ export default async function DeskPage() {
               ))}
             </ul>
           )}
+          {googleStatus ? (
+            <p className={styles.googleNote} role="status">
+              {googleStatus}
+            </p>
+          ) : null}
+          {googleSyncAvailable && !booking.calendar?.is_demo ? (
+            <div className={styles.googleSync}>
+              {isGoogleLinked(booking.calendar) ? (
+                <>
+                  <p>
+                    <b>Google Calendar connected.</b> Ava skips your busy times when she offers windows, and each booking
+                    lands on your calendar.
+                  </p>
+                  <form method="post" action="/api/desk/google/disconnect">
+                    <button type="submit">Disconnect</button>
+                  </form>
+                </>
+              ) : (
+                <>
+                  <p>
+                    <b>Sync with Google Calendar.</b> Ava will skip times you are busy and add each booking to your
+                    calendar. You can disconnect any time.
+                  </p>
+                  <a href="/api/desk/google/connect">Connect Google Calendar</a>
+                </>
+              )}
+            </div>
+          ) : null}
           <details className={styles.settingsWrap}>
             <summary>Booking settings</summary>
             <BookingSettings

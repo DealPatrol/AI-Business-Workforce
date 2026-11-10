@@ -1,5 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse, after } from 'next/server';
+import { runAfterBook } from '@/lib/ava/booking/after-book';
 import { authorizeToolCall } from '@/lib/ava/booking/route-helpers';
+import { businessNameForCalendar, updateBookingSync } from '@/lib/ava/booking/store';
 import { handleBook } from '@/lib/ava/booking/tool-handlers';
 
 export const dynamic = 'force-dynamic';
@@ -9,7 +11,13 @@ export async function POST(request: NextRequest) {
   try {
     const auth = await authorizeToolCall(request);
     if (!auth.ok) return auth.response;
-    return NextResponse.json(await handleBook(auth.calendar, auth.body));
+    const result = await handleBook(auth.calendar, auth.body, new Date(), {
+      // Text the caller and add the owner's Google event after Ava has her answer.
+      afterBook: (calendar, booking, window) => {
+        after(() => runAfterBook(calendar, booking, window, { businessName: businessNameForCalendar, record: updateBookingSync }));
+      },
+    });
+    return NextResponse.json(result);
   } catch (error) {
     console.error('Ava booking failed', error);
     return NextResponse.json(

@@ -17,6 +17,10 @@ export type CalendarRow = {
   blackouts: Blackout[];
   tool_secret_hash: string | null;
   elevenlabs_tool_ids: string[] | null;
+  google_refresh_token_enc?: string | null;
+  google_calendar_id?: string | null;
+  google_connected_at?: string | null;
+  google_last_error?: string | null;
 };
 
 export type BookingRow = {
@@ -32,10 +36,14 @@ export type BookingRow = {
   conversation_id: string | null;
   is_demo: boolean;
   created_at: string;
+  sms_opt_in?: boolean;
+  sms_status?: string | null;
+  sms_sid?: string | null;
+  google_event_id?: string | null;
 };
 
 const CALENDAR_SELECT =
-  'id, onboarding_id, label, is_demo, enabled, timezone, slot_minutes, slot_capacity, min_notice_minutes, horizon_days, weekly_hours, blackouts, tool_secret_hash, elevenlabs_tool_ids';
+  'id, onboarding_id, label, is_demo, enabled, timezone, slot_minutes, slot_capacity, min_notice_minutes, horizon_days, weekly_hours, blackouts, tool_secret_hash, elevenlabs_tool_ids, google_refresh_token_enc, google_calendar_id, google_connected_at, google_last_error';
 
 export function settingsOf(row: CalendarRow): CalendarSettings {
   return {
@@ -98,6 +106,42 @@ export async function listBookings(calendarId: string, fromIso: string, toIso: s
     .limit(500);
   if (error) throw new Error(`Unable to load bookings: ${error.message}`);
   return (data ?? []) as BookingRow[];
+}
+
+/** Records what happened after a booking (text sent, Google event id). Never throws. */
+export async function updateBookingSync(id: string, patch: Partial<Pick<BookingRow, 'sms_status' | 'sms_sid' | 'google_event_id'>>) {
+  try {
+    const supabase = createAdminClient();
+    const { error } = await supabase.from('ava_bookings').update(patch).eq('id', id);
+    if (error) console.error('Unable to record booking sync', error.message);
+  } catch (error) {
+    console.error('Unable to record booking sync', error);
+  }
+}
+
+/** Saves or clears the Google link on a calendar. */
+export async function updateCalendarGoogle(
+  calendarId: string,
+  patch: Partial<Pick<CalendarRow, 'google_refresh_token_enc' | 'google_calendar_id' | 'google_connected_at' | 'google_last_error'>>,
+) {
+  const supabase = createAdminClient();
+  const { error } = await supabase
+    .from('ava_calendars')
+    .update({ ...patch, updated_at: new Date().toISOString() })
+    .eq('id', calendarId);
+  if (error) throw new Error(`Unable to save Google link: ${error.message}`);
+}
+
+/** The business name an Ava calendar answers for (used in the caller's text). */
+export async function businessNameForCalendar(calendar: CalendarRow) {
+  if (!calendar.onboarding_id) return calendar.label || '';
+  try {
+    const supabase = createAdminClient();
+    const { data } = await supabase.from('ava_onboardings').select('business_name').eq('id', calendar.onboarding_id).maybeSingle();
+    return String((data as { business_name?: string } | null)?.business_name || calendar.label || '');
+  } catch {
+    return calendar.label || '';
+  }
 }
 
 export async function insertBooking(row: Omit<BookingRow, 'id' | 'created_at' | 'status'>) {

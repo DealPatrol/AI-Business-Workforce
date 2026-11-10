@@ -64,6 +64,11 @@ export function bookingToolConfigs(baseUrl: string, secret: string) {
               caller_phone: { type: 'string', description: 'Callback number, digits only.' },
               service_address: { type: 'string', description: 'Service address with city, or empty.' },
               issue: { type: 'string', description: 'One short sentence about the problem.' },
+              text_ok: {
+                type: 'boolean',
+                description:
+                  'true only if check_availability said text_confirmations is true AND the caller said yes to a text confirmation at that number. Otherwise false.',
+              },
               conversation_id: { type: 'string', dynamic_variable: 'system__conversation_id', description: '' },
             },
           },
@@ -74,7 +79,7 @@ export function bookingToolConfigs(baseUrl: string, secret: string) {
 }
 
 export const BOOKING_PROMPT_SECTION = `BOOKING (the booking calendar is turned on)
-After you have the caller's name, callback number, service address and issue, and it is not an emergency you are transferring, offer to put them on the schedule. Ask if they prefer a day or morning versus afternoon, then call check_availability. Offer two windows using the "say" phrase, never more than three. When the caller picks one, call book_appointment with that window's slot_start copied exactly. Read the booked window back. Say the team will confirm before the visit. Never invent a time that check_availability did not return, never promise an exact arrival minute, and if the tools fail or nothing is open, take the details and say the team will call to schedule.`;
+After you have the caller's name, callback number, service address and issue, and it is not an emergency you are transferring, offer to put them on the schedule. Ask if they prefer a day or morning versus afternoon, then call check_availability. Offer two windows using the "say" phrase, never more than three. When the caller picks one, call book_appointment with that window's slot_start copied exactly. If check_availability returned text_confirmations: true, ask before booking: "Want a text confirmation at that number?" and pass text_ok true only if they say yes; otherwise never mention texts. Read the booked window back. Say the team will confirm before the visit. Never invent a time that check_availability did not return, never promise an exact arrival minute, and if the tools fail or nothing is open, take the details and say the team will call to schedule.`;
 
 async function elevenLabs(path: string, init: RequestInit) {
   const apiKey = process.env.ELEVENLABS_API_KEY;

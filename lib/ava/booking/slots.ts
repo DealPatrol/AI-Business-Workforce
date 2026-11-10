@@ -133,8 +133,16 @@ function overlaps(aStart: number, aEnd: number, bStart: number, bEnd: number) {
   return aStart < bEnd && bStart < aEnd;
 }
 
-/** Every open slot from `now` through the horizon, in order. */
-export function computeOpenSlots(settings: CalendarSettings, booked: BookedRange[], now: Date): OpenSlot[] {
+/**
+ * Every open slot from `now` through the horizon, in order.
+ * `busy` is outside busy time (the owner's Google Calendar): any overlap closes the window whatever its capacity.
+ */
+export function computeOpenSlots(
+  settings: CalendarSettings,
+  booked: BookedRange[],
+  now: Date,
+  busy: BookedRange[] = [],
+): OpenSlot[] {
   const tz = settings.timezone;
   const slot = settings.slotMinutes;
   const earliest = now.getTime() + settings.minNoticeMinutes * 60_000;
@@ -142,6 +150,9 @@ export function computeOpenSlots(settings: CalendarSettings, booked: BookedRange
     .map((b) => blackoutRange(b, tz))
     .filter((b): b is { start: number; end: number } => Boolean(b));
   const bookedMs = booked.map((b) => ({ start: Date.parse(b.start_at), end: Date.parse(b.end_at) }));
+  const busyMs = busy
+    .map((b) => ({ start: Date.parse(b.start_at), end: Date.parse(b.end_at) }))
+    .filter((b) => Number.isFinite(b.start) && Number.isFinite(b.end) && b.end > b.start);
   const today = localDateOf(now, tz).date;
   const out: OpenSlot[] = [];
 
@@ -160,6 +171,7 @@ export function computeOpenSlots(settings: CalendarSettings, booked: BookedRange
         const end = localToUtc(date, endLocal, tz).getTime();
         if (start < earliest) continue;
         if (blackouts.some((b) => overlaps(start, end, b.start, b.end))) continue;
+        if (busyMs.some((b) => overlaps(start, end, b.start, b.end))) continue;
         const taken = bookedMs.filter((b) => overlaps(start, end, b.start, b.end)).length;
         if (taken >= settings.slotCapacity) continue;
         out.push({

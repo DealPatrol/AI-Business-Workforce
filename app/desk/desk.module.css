@@ -126,3 +126,48 @@
 
 .settingsWrap { margin-top: 14px; border-top: 1px solid #eef1ee; padding-top: 12px; }
 .settingsWrap > summary { cursor: pointer; font-weight: 800; color: #205c39; }
+
+.googleNote {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #eef5ef;
+  color: #1d3a2a;
+  font-size: 14px;
+}
+.googleSync {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 14px 16px;
+  border: 1px solid #d9e3da;
+  border-radius: 12px;
+}
+.googleSync p {
+  margin: 0;
+  flex: 1 1 320px;
+  font-size: 14px;
+  color: #33413a;
+}
+.googleSync a,
+.googleSync button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid #1f6b43;
+  border-radius: 10px;
+  background: #1f6b43;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+.googleSync button {
+  background: #fff;
+  color: #1f6b43;
+}
