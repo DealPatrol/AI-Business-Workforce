@@ -338,7 +338,7 @@ export default async function DeskPage() {
                         {detail?.property_address ? <div><dt>Address</dt><dd>{detail.property_address}</dd></div> : null}
                         {detail?.intent_urgency ? <div><dt>Urgency</dt><dd>{detail.intent_urgency}</dd></div> : null}
                       </dl>
-                      {lead.conversation_id ? (
+                      {lead.conversation_id && /^conv_/.test(lead.conversation_id) ? (
                         <div className={styles.recording}>
                           <span>Recording</span>
                           <audio controls preload="none" src={`/api/desk/calls/${lead.id}/audio`}>

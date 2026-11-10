@@ -120,7 +120,7 @@ describe('tool auth and agent wiring', () => {
     assert.equal(availability.tool_config.api_schema.url, 'https://example.test/api/ava/availability');
     assert.equal(book.tool_config.api_schema.request_headers['x-ava-tool-secret'], 'avt_x');
     assert.equal(
-      (book.tool_config.api_schema.request_body_schema.properties as Record<string, { dynamic_variable?: string }>).conversation_id
+      (book.tool_config.api_schema.request_body_schema.properties as unknown as Record<string, { dynamic_variable?: string }>).conversation_id
         .dynamic_variable,
       'system__conversation_id',
     );
