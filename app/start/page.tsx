@@ -71,10 +71,22 @@ const ECOM_ESCALATES = [
 
 const COMPARE = [
   ['How the bill is counted', 'Per minute, per call, or per caller', 'Per booked job, with a $297 monthly cap'],
-  ['Spam and wrong numbers', 'Usually count toward the bill', 'Never billed. Only booked jobs are'],
+  ['Spam and wrong numbers', 'Count toward the bill on most per-call and per-minute plans', 'Never billed. Only booked jobs are'],
   ['Hear it before you pay', 'Often a sales demo first', 'Six sample calls, a call-in line, and a browser demo on this page'],
   ['Guarantee', 'Rare', 'No real caller lead in 14 days, you pay nothing'],
   ['Setup', 'Do it yourself', `Done with you in person in ${AVA_OFFER.setupCity}`],
+] as const;
+
+/** Published plans, read from each company's own pricing page on the date below. */
+const VENDOR_PLANS_CHECKED = 'November 10, 2026';
+const VENDOR_PLANS = [
+  { name: 'Smith.ai AI Receptionist', bills: 'Each answered call (spam counts by default; up to 10% can be removed)', entry: 'Free for 25 calls/mo, then $3 per call. Pro $150/mo for 75 calls', href: 'https://smith.ai/pricing/ai-receptionist' },
+  { name: 'Upfirst', bills: 'Each call (spam, silent, and very short calls are free)', entry: '$24.95/mo for 30 calls', href: 'https://upfirst.ai/pricing' },
+  { name: 'Goodcall', bills: 'Each unique caller per month', entry: '$79/mo for 100 callers', href: 'https://www.goodcall.com/pricing' },
+  { name: 'Rosie', bills: 'Minutes, rounded up on every call', entry: '$49/mo for 250 minutes', href: 'https://heyrosie.com/pricing' },
+  { name: 'Dialzara', bills: 'Minutes', entry: '$29/mo for 60 minutes', href: 'https://dialzara.com/pricing' },
+  { name: 'My AI Front Desk', bills: 'Minutes', entry: '$99/mo with 200 minutes, then per minute', href: 'https://www.myaifrontdesk.com/tutorials/how-does-billing-pricing-work-for-my-ai-front-desk' },
+  { name: 'Ruby (live receptionists)', bills: 'Receptionist minutes, in 30-second increments', entry: '$250/mo for 50 minutes', href: 'https://www.ruby.com/plans-and-pricing/' },
 ] as const;
 
 const FAQS = [
@@ -213,6 +225,46 @@ export default function StartPage() {
         </div>
         <p className={styles.note}>
           “Typical” describes the per-minute, per-call, and per-caller plans that most AI receptionist companies publish.
+        </p>
+
+        <h3 className={styles.subhead}>What the others publish</h3>
+        <div className={styles.tableWrap}>
+          <table className={`${styles.table} ${styles.compareVendors}`}>
+            <caption className={styles.srOnly}>Published starting plans of other AI receptionist services</caption>
+            <thead>
+              <tr>
+                <th scope="col">Service</th>
+                <th scope="col">What you pay for</th>
+                <th scope="col">Published starting plan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className={styles.usRow}>
+                <th scope="row">Ava (home services)</th>
+                <td>Booked jobs only</td>
+                <td>{`Free ${AVA_OFFER.pilotDays}-day pilot, then $0 until your first booked job, ${AVA_OFFER.perBookedJobLabel} per booked job, capped at ${AVA_OFFER.monthlyCapLabel}/month`}</td>
+              </tr>
+              <tr className={styles.usRow}>
+                <th scope="row">Ava (online stores)</th>
+                <td>A monthly fee plus calls Ava handles; calls she flags as spam or a wrong number are free</td>
+                <td>{AVA_STORE_OFFER.priceLine}</td>
+              </tr>
+              {VENDOR_PLANS.map((vendor) => (
+                <tr key={vendor.name}>
+                  <th scope="row">
+                    <a href={vendor.href} target="_blank" rel="noopener noreferrer nofollow">{vendor.name}</a>
+                  </th>
+                  <td>{vendor.bills}</td>
+                  <td>{vendor.entry}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className={styles.note}>
+          Read from each company’s own pricing page on {VENDOR_PLANS_CHECKED}. Prices change, so check the linked page.
+          Several of these services book appointments on your calendar during the call; Ava takes the details and you
+          book the job. Names are trademarks of their owners; no endorsement implied.
         </p>
       </section>
 

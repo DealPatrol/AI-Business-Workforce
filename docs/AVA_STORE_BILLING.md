@@ -31,7 +31,8 @@ A call is billed only when:
 
 - the agent's onboarding is matched to an `ava_customers` row with `plan='store'` and a `stripe_customer_id`;
 - the subscription is `active` or `past_due` (trial calls are free; canceled is never billed);
-- the caller spoke at least once (hang-ups before anyone speaks are free).
+- the caller spoke at least once (hang-ups before anyone speaks are free),
+- the agent's `call_type` data-collection result is not spam, sales, robocall or wrong number (`isJunkCallType`).
 
 Prerequisite: the store's ElevenLabs agent must send post-call webhooks to `/api/webhooks/elevenlabs`
 and its agent id must be on the store's `ava_onboardings.elevenlabs_agent_id`.

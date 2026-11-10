@@ -21,7 +21,7 @@ export const AVA_STORE_OFFER = {
   summary:
     'Free 14-day trial with a card on file. Then $119/month plus $1 for each call Ava handles. Calls during the trial are free.',
   callDefinition:
-    'A handled call is a completed call where the caller spoke to Ava. Hang-ups before anyone speaks are not counted.',
+    'A handled call is a completed call where the caller spoke to Ava. Hang-ups before anyone speaks, and calls Ava flags as spam or a wrong number, are not counted.',
   ctaLabel: 'Start store pilot',
 } as const;
 

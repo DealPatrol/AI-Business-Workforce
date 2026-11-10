@@ -39,6 +39,7 @@ export type IngestLeadInput = {
   conversationId?: string;
   agentId?: string;
   notes?: string;
+  status?: LeadStatus;
 };
 
 export const UUID_PATTERN =

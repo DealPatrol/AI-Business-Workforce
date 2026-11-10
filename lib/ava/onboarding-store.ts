@@ -63,6 +63,7 @@ function toProvisioningRecord(row: AvaOnboardingRow) {
     staffContact: row.staff_contact,
     calendarPreference: row.calendar_preference,
     urgentCallRules: row.urgent_call_rules,
+    plan: row.selected_plan,
     elevenlabsAgentId: row.elevenlabs_agent_id,
   };
 }

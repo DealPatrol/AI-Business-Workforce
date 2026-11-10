@@ -336,6 +336,7 @@ function AvaOnboardingForm() {
 
   const selectedPlanRaw = (prefill.plan || searchParams.get('plan') || 'starter').toLowerCase();
   const selectedPlan: AvaPlanKey = isAvaPlanKey(selectedPlanRaw) ? selectedPlanRaw : 'starter';
+  const isStoreOnboarding = selectedPlanRaw === 'store';
 
   return (
     <main className={styles.page}>
@@ -508,12 +509,16 @@ function AvaOnboardingForm() {
                 </label>
               </div>
               <label>
-                Services
+                {isStoreOnboarding ? 'What you sell, plus your shipping, return, exchange and sizing policies' : 'Services'}
                 <textarea
                   name="services"
                   required
-                  rows={3}
-                  placeholder="HVAC repair and installation in Birmingham"
+                  rows={isStoreOnboarding ? 6 : 3}
+                  placeholder={
+                    isStoreOnboarding
+                      ? 'Outdoor apparel. Ships in 1–2 business days; standard 3–5 days, free over $75. Returns within 30 days, unworn with tags; refunds in 5–7 days. Sizes run true to size.'
+                      : 'HVAC repair and installation in Birmingham'
+                  }
                   defaultValue={prefill.services}
                 />
               </label>
@@ -537,7 +542,11 @@ function AvaOnboardingForm() {
                   name="urgentCallRules"
                   required
                   rows={3}
-                  placeholder="No heat is urgent. Call Sam; if no answer, text him and tell the caller we will respond in 15 minutes."
+                  placeholder={
+                    isStoreOnboarding
+                      ? 'Damaged items, missing packages, double charges, and anyone asking for a manager go to Sam.'
+                      : 'No heat is urgent. Call Sam; if no answer, text him and tell the caller we will respond in 15 minutes.'
+                  }
                   defaultValue={prefill.urgentCallRules}
                 />
               </label>

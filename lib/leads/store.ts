@@ -67,7 +67,7 @@ export async function insertLead(input: IngestLeadInput) {
     summary: input.summary,
     called_at: input.calledAt ?? now,
     source: input.source ?? 'receptionist call',
-    status: 'New' as LeadStatus,
+    status: (input.status ?? 'New') as LeadStatus,
     notes: input.notes ?? '',
     conversation_id: input.conversationId ?? null,
     updated_at: now,

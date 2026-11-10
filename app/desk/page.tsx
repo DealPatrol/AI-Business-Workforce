@@ -40,7 +40,39 @@ type OnboardingRow = {
   channel_voice: boolean | null;
   channel_sms: boolean | null;
   channel_web_chat: boolean | null;
+  elevenlabs_agent_id: string | null;
 };
+
+type CallDetail = {
+  conversation_id: string;
+  property_address: string | null;
+  intent_urgency: string | null;
+  transcript: Array<{ role?: string; message?: string }> | null;
+};
+
+/** Transcripts saved by the post-call webhook, keyed by conversation id. Never throws. */
+async function loadCallDetails(conversationIds: string[]) {
+  const ids = conversationIds.filter(Boolean);
+  const details = new Map<string, CallDetail>();
+  if (!ids.length) return details;
+  try {
+    const supabase = createAdminClient();
+    const { data, error } = await supabase
+      .from('ava_call_leads')
+      .select('conversation_id, property_address, intent_urgency, transcript')
+      .in('conversation_id', ids);
+    if (error) throw new Error(error.message);
+    for (const row of (data ?? []) as CallDetail[]) details.set(row.conversation_id, row);
+  } catch (error) {
+    console.error('Desk could not load call transcripts', error);
+  }
+  return details;
+}
+
+/** Calls the store plan bills for: excludes calls Ava itself flagged as spam or a wrong number. */
+function isBillableStoreCall(lead: ErLead) {
+  return Boolean(lead.conversation_id) && !lead.notes?.startsWith('Ava marked this call as');
+}
 
 const SUBSCRIPTION_LABELS: Record<string, string> = {
   trialing: 'Pilot running',
@@ -77,7 +109,7 @@ async function loadAccount(email: string) {
   if (onboardingIds.length) {
     const { data, error: onboardingError } = await supabase
       .from('ava_onboardings')
-      .select('id, business_name, agent_status, phone_status, channel_voice, channel_sms, channel_web_chat')
+      .select('id, business_name, agent_status, phone_status, channel_voice, channel_sms, channel_web_chat, elevenlabs_agent_id')
       .in('id', onboardingIds);
     if (onboardingError) throw new Error(onboardingError.message);
     onboardings = (data ?? []) as OnboardingRow[];
@@ -119,13 +151,17 @@ export default async function DeskPage() {
   const bookedThisMonth = leads.filter((lead) => lead.status === 'Booked' && lead.booked_at && new Date(lead.booked_at) >= monthStart).length;
   const isStore = customer?.plan === STORE_PLAN_KEY;
   const storeTrial = isStore && customer?.subscription_status === 'trialing';
-  const callsThisMonth = leads.filter((lead) => lead.created_at && new Date(lead.created_at) >= monthStart).length;
+  const callsThisMonth = leads.filter(
+    (lead) => isBillableStoreCall(lead) && lead.created_at && new Date(lead.created_at) >= monthStart,
+  ).length;
   const billedThisMonth = isStore
     ? storeTrial
       ? 0
       : storeMonthlyEstimateCents(callsThisMonth) / 100
     : Math.min(bookedThisMonth * AVA_OFFER.perBookedJobCents, AVA_OFFER.monthlyCapCents) / 100;
   const recent = leads.slice(0, 8);
+  const callDetails = await loadCallDetails(recent.map((lead) => lead.conversation_id || ''));
+  const testAgentId = /^agent_[a-z0-9]+$/i.test(onboarding?.elevenlabs_agent_id || '') ? onboarding?.elevenlabs_agent_id : '';
 
   const channels = onboarding
     ? [
@@ -225,6 +261,15 @@ export default async function DeskPage() {
             Want to change Ava’s greeting, questions, hours, or channels? Call or text Cole at{' '}
             <a href={AVA_OFFER.contactPhoneHref}>{AVA_OFFER.contactPhoneDisplay}</a>.
           </p>
+          {testAgentId ? (
+            <p className={styles.help}>
+              Test your own Ava in the browser:{' '}
+              <a href={`https://elevenlabs.io/app/talk-to?agent_id=${testAgentId}`} target="_blank" rel="noopener noreferrer">
+                talk to your receptionist
+              </a>
+              . Test calls show up below like real ones.
+            </p>
+          ) : null}
           <p className={styles.help}>
             Hear how Ava sounds: call the demo line at <a href={AVA_DEMO_LINE.href}>{AVA_DEMO_LINE.display}</a>.
           </p>
@@ -233,27 +278,63 @@ export default async function DeskPage() {
 
       <section className={styles.panel} aria-labelledby="recent">
         <div className={styles.panelHead}>
-          <h2 id="recent">Recent callers</h2>
+          <h2 id="recent">Recent calls</h2>
           <Link href="/dashboard/leads">Open the CRM →</Link>
         </div>
         {recent.length === 0 ? (
-          <p className={styles.empty}>No calls yet. Your first caller will appear here.</p>
+          <p className={styles.empty}>No calls yet. Your first caller will appear here with a summary, the transcript, and the recording.</p>
         ) : (
-          <table className={styles.table}>
-            <thead>
-              <tr><th>Caller</th><th>Need</th><th>When</th><th>Status</th></tr>
-            </thead>
-            <tbody>
-              {recent.map((lead) => (
-                <tr key={lead.id}>
-                  <td><Link href={`/dashboard/leads/${lead.id}`}>{lead.caller_name || 'Unknown caller'}</Link></td>
-                  <td>{lead.job_type || lead.summary.slice(0, 60)}</td>
-                  <td>{formatTime(lead.called_at)}</td>
-                  <td><span className={styles.badge}>{lead.status}</span></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <ul className={styles.calls}>
+            {recent.map((lead) => {
+              const detail = lead.conversation_id ? callDetails.get(lead.conversation_id) : undefined;
+              const turns = (detail?.transcript ?? []).filter((turn) => turn?.message?.trim());
+              return (
+                <li key={lead.id}>
+                  <details>
+                    <summary>
+                      <span className={styles.callWho}>{lead.caller_name || 'Unknown caller'}</span>
+                      <span className={styles.callNeed}>{lead.job_type || lead.summary.slice(0, 70)}</span>
+                      <span className={styles.callWhen}>{formatTime(lead.called_at)}</span>
+                      <span className={styles.badge}>{lead.status}</span>
+                    </summary>
+                    <div className={styles.callBody}>
+                      <p>{lead.summary}</p>
+                      <dl className={styles.callFacts}>
+                        {lead.caller_phone ? (
+                          <div><dt>Phone</dt><dd><a href={`tel:${lead.caller_phone.replace(/[^\d+]/g, '')}`}>{lead.caller_phone}</a></dd></div>
+                        ) : null}
+                        {detail?.property_address ? <div><dt>Address</dt><dd>{detail.property_address}</dd></div> : null}
+                        {detail?.intent_urgency ? <div><dt>Urgency</dt><dd>{detail.intent_urgency}</dd></div> : null}
+                      </dl>
+                      {lead.conversation_id ? (
+                        <div className={styles.recording}>
+                          <span>Recording</span>
+                          <audio controls preload="none" src={`/api/desk/calls/${lead.id}/audio`}>
+                            <a href={`/api/desk/calls/${lead.id}/audio`}>Download the recording</a>
+                          </audio>
+                        </div>
+                      ) : null}
+                      {turns.length ? (
+                        <ol className={styles.transcript} aria-label="Transcript">
+                          {turns.map((turn, index) => (
+                            <li key={index} className={turn.role === 'user' ? styles.turnCaller : styles.turnAva}>
+                              <b>{turn.role === 'user' ? 'Caller' : 'Ava'}</b> {turn.message}
+                            </li>
+                          ))}
+                        </ol>
+                      ) : (
+                        <p className={styles.muted}>No transcript saved for this lead.</p>
+                      )}
+                      <div className={styles.callFoot}>
+                        {lead.status === 'New' ? <LeadActions id={lead.id} store={isStore} /> : null}
+                        <Link href={`/dashboard/leads/${lead.id}`}>Notes and history →</Link>
+                      </div>
+                    </div>
+                  </details>
+                </li>
+              );
+            })}
+          </ul>
         )}
       </section>
 

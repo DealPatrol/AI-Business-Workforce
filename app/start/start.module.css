@@ -125,3 +125,8 @@
 
 .storePrice { margin-top: 26px; display: grid; gap: 10px; }
 .storePrice .note, .storePrice .note a { color: inherit; opacity: 0.85; }
+
+.subhead { margin: 28px 0 12px; font-size: 20px; }
+.compareVendors td:last-child { background: transparent; color: inherit; }
+.compareVendors .usRow th, .compareVendors .usRow td, .compareVendors .usRow td:last-child { background: var(--mint); color: var(--green); font-weight: 750; }
+.table tbody th a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }

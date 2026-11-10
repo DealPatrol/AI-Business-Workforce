@@ -70,3 +70,33 @@
   .who { display: none; }
   .table th:nth-child(3), .table td:nth-child(3) { display: none; }
 }
+
+.calls { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.calls > li { border: 1px solid #e6ece6; border-radius: 12px; background: #fff; }
+.calls summary { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 2fr) auto auto; gap: 12px; align-items: center; padding: 12px 14px; cursor: pointer; font-size: 14px; list-style: none; }
+.calls summary::-webkit-details-marker { display: none; }
+.calls summary:focus-visible { outline: 3px solid #205c39; outline-offset: 2px; border-radius: 12px; }
+.callWho { font-weight: 800; color: #14201a; }
+.callNeed { color: #34403a; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.callWhen { color: #6b776f; font-size: 13px; }
+.callBody { border-top: 1px solid #eef1ee; padding: 12px 14px 14px; display: grid; gap: 10px; font-size: 14.5px; line-height: 1.5; }
+.callBody > p { margin: 0; color: #34403a; }
+.callFacts { margin: 0; display: flex; flex-wrap: wrap; gap: 8px 20px; }
+.callFacts div { display: flex; gap: 6px; }
+.callFacts dt { color: #6b776f; }
+.callFacts dd { margin: 0; font-weight: 750; }
+.callFacts a { color: #205c39; }
+.recording { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font-size: 13px; font-weight: 800; color: #6b776f; }
+.recording audio { width: min(100%, 360px); height: 36px; }
+.transcript { list-style: none; margin: 0; padding: 10px; max-height: 320px; overflow: auto; background: #f7f9f7; border-radius: 10px; display: grid; gap: 6px; font-size: 14px; }
+.transcript b { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; margin-right: 4px; }
+.turnAva b { color: #205c39; }
+.turnCaller b { color: #7a4b12; }
+.muted { margin: 0; color: #6b776f; font-size: 13.5px; }
+.callFoot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; }
+.callFoot > a { color: #205c39; font-weight: 800; font-size: 13.5px; }
+@media (max-width: 560px) {
+  .calls summary { grid-template-columns: 1fr auto; }
+  .callNeed { grid-column: 1 / -1; grid-row: 2; white-space: normal; }
+  .callWhen { display: none; }
+}

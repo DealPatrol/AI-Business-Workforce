@@ -21,11 +21,16 @@ export type StoreCallCustomer = {
   subscription_status: string | null;
 };
 
+/** Spam, sales pitches, robocalls and wrong numbers are never billed. */
+export function isJunkCallType(callType: string | null | undefined) {
+  return /spam|sales|solicit|robo|telemarket|wrong[\s_-]*number/i.test(callType || '');
+}
+
 export type StoreCallDecision =
   | { bill: true; stripeCustomerId: string; identifier: string }
   | {
       bill: false;
-      reason: 'not_store' | 'no_stripe_customer' | 'trialing' | 'inactive' | 'caller_never_spoke' | 'missing_conversation';
+      reason: 'not_store' | 'no_stripe_customer' | 'trialing' | 'inactive' | 'caller_never_spoke' | 'junk_call' | 'missing_conversation';
     };
 
 const BILLABLE_STATUSES = new Set(['active', 'past_due']);
@@ -38,6 +43,7 @@ export function decideStoreCallMeter(input: {
   customer: StoreCallCustomer | null;
   conversationId: string;
   transcript: StoreCallTurn[];
+  callType?: string | null;
 }): StoreCallDecision {
   const customer = input.customer;
   if (!customer || (customer.plan || '').toLowerCase() !== STORE_PLAN_KEY) return { bill: false, reason: 'not_store' };
@@ -49,6 +55,7 @@ export function decideStoreCallMeter(input: {
   if (status === 'trialing') return { bill: false, reason: 'trialing' };
   if (!BILLABLE_STATUSES.has(status)) return { bill: false, reason: 'inactive' };
   if (!callerSpoke(input.transcript)) return { bill: false, reason: 'caller_never_spoke' };
+  if (isJunkCallType(input.callType)) return { bill: false, reason: 'junk_call' };
   return { bill: true, stripeCustomerId, identifier: `${STORE_CALL_EVENT_NAME}_${conversationId}`.slice(0, 100) };
 }
 
@@ -93,6 +100,7 @@ export async function meterStoreCall(input: {
   customer: StoreCallCustomer | null;
   conversationId: string;
   transcript: StoreCallTurn[];
+  callType?: string | null;
 }) {
   const decision = decideStoreCallMeter(input);
   if (!decision.bill) return { metered: false as const, reason: decision.reason };
