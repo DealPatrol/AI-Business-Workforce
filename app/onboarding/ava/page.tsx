@@ -6,6 +6,7 @@ import { ArrowLeft, CheckCircle2, Loader2, Mail, Sparkles } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { CheckoutForm } from '@/components/checkout/CheckoutForm';
 import { AVA_VOICE_OPTIONS } from '@/lib/ava/voice-options';
+import { AVA_STORE_OFFER } from '@/lib/ava/store-pricing';
 import { buildWebChatEmbedSnippet } from '@/lib/ava/channels';
 import {
   AVA_PLANS,
@@ -364,7 +365,9 @@ function AvaOnboardingForm() {
           <p>
               {searchParams.get('session_id')
               ? 'Checkout is confirmed — you are paid or on the 14-day pilot. Submit this form and Executive Receptionist’s agent is created from your answers. The phone number stays pending until Cole attaches it.'
-              : `Stripe creates the 14-day pilot and collects a card. After that you pay $0 until the first booked job, then ${avaPlanPriceLine()}. $0 setup. This form emails Cole. It does not start billing by itself.`}
+              : isStoreOnboarding
+                ? `Stripe starts the free 14-day store trial and collects a card. After that it is ${AVA_STORE_OFFER.priceLine}. $0 setup. This form emails Cole. It does not start billing by itself.`
+                : `Stripe creates the 14-day pilot and collects a card. After that you pay $0 until the first booked job, then ${avaPlanPriceLine()}. $0 setup. This form emails Cole. It does not start billing by itself.`}
           </p>
           {prefillNote ? <p className={styles.notice}>{prefillNote}</p> : null}
         </header>
@@ -465,17 +468,19 @@ function AvaOnboardingForm() {
             <section className={styles.paywall}>
               <h2>The free trial starts at Stripe.</h2>
               <p>
-                After the 14-day pilot you pay $0 until the first booked job, then {avaPlanPriceLine()}. Checkout
-                returns you here with the session attached.
+                {isStoreOnboarding
+                  ? `After the free 14-day trial it is ${AVA_STORE_OFFER.priceLine}. Calls during the trial are free.`
+                  : `After the 14-day pilot you pay $0 until the first booked job, then ${avaPlanPriceLine()}.`}{' '}
+                Checkout returns you here with the session attached.
               </p>
               <TrackedCheckoutLink
                 className={styles.checkout}
-                href={`/api/checkout?plan=pilot${
+                href={`/api/checkout?plan=${isStoreOnboarding ? 'store' : 'pilot'}${
                   qualificationId ? `&qualificationId=${encodeURIComponent(qualificationId)}` : ''
                 }${prefillToken ? `&prefillToken=${encodeURIComponent(prefillToken)}` : ''}`}
-                plan="pilot"
+                plan={isStoreOnboarding ? 'store' : 'pilot'}
               >
-                Start your free 14-day pilot
+                {isStoreOnboarding ? AVA_STORE_OFFER.ctaLabel : 'Start your free 14-day pilot'}
               </TrackedCheckoutLink>
             </section>
           ) : null}
@@ -690,7 +695,9 @@ function AvaOnboardingForm() {
             <input type="hidden" name="plan" value={prefill.plan || searchParams.get('plan') || ''} />
             <input type="hidden" name="qualificationId" value={qualificationId} />
             <p className={styles.notice}>
-              Offer: {avaPlanPriceLine()} after a free 14-day pilot. $0 until the first booked job.
+              {isStoreOnboarding
+                ? `Offer: ${AVA_STORE_OFFER.priceLine} after a free 14-day trial.`
+                : `Offer: ${avaPlanPriceLine()} after a free 14-day pilot. $0 until the first booked job.`}
             </p>
             <label className={styles.honeypot} aria-hidden="true">
               Company website
