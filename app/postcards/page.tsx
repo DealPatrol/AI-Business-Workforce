@@ -31,14 +31,14 @@ export const metadata: Metadata = {
   title: metadataTitle(seo),
   description,
   alternates: { canonical: '/postcards' },
-  openGraph: {
+  openGraph: { images: ['/og-default.png'],
     title,
     description,
     url: '/postcards',
     siteName: 'Front Porch Growth',
     type: 'website',
   },
-  twitter: {
+  twitter: { images: ['/og-default.png'],
     card: 'summary_large_image',
     title,
     description,

@@ -19,14 +19,14 @@ export const metadata: Metadata = {
     template: '%s | Front Porch Growth',
   },
   description,
-  openGraph: {
+  openGraph: { images: ['/og-default.png'],
     title,
     description,
     url: '/',
     siteName: 'Front Porch Growth',
     type: 'website',
   },
-  twitter: {
+  twitter: { images: ['/og-default.png'],
     card: 'summary_large_image',
     title,
     description,

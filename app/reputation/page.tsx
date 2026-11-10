@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   title: metadataTitle(seo),
   description,
   alternates: { canonical: '/reputation' },
-  openGraph: { title, description, url: '/reputation', siteName: 'Front Porch Growth', type: 'website' },
+  openGraph: { images: ['/og-default.png'], title, description, url: '/reputation', siteName: 'Front Porch Growth', type: 'website' },
 };
 
 export default function ReputationPage() {

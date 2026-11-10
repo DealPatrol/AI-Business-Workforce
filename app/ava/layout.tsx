@@ -20,14 +20,14 @@ export async function generateMetadata(): Promise<Metadata> {
     title: metadataTitle(seo),
     description: seo.description,
     alternates: { canonical },
-    openGraph: {
+    openGraph: { images: ['/og-default.png'],
       title,
       description: seo.description,
       url: openGraphUrl,
       siteName: 'Executive Receptionist',
       type: 'website',
     },
-    twitter: {
+    twitter: { images: ['/og-default.png'],
       card: 'summary_large_image',
       title,
       description: seo.description,

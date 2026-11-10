@@ -1,16 +1,60 @@
 # Front Porch Growth
 
-> Property-based postcard campaigns for home service businesses (each card shows the homeowner a concept for their own home, with a QR estimate link) and Executive Receptionist, an AI receptionist that answers calls for small businesses. Run by Cole Collins.
+> Front Porch Growth sells two things to small and home-service businesses: Executive Receptionist, an AI receptionist that answers forwarded calls and website chat, and YardMailer postcard campaigns that show each homeowner a concept for their own property. Run by Cole Collins, who built it for his own lawn care business.
+
+## Key facts: Executive Receptionist
+- What it does: answers your business calls 24/7 when you forward your line to it, asks the questions you approve (name, callback number, address, what they need, how urgent), and emails you the lead.
+- You keep your existing business number. Calls reach the receptionist by call forwarding from your phone.
+- Channels: phone calls and a chat box for your website, both from one AI agent. Texting is available after setup.
+- What it does not do: it does not book your calendar, quote prices you have not approved, or give technical, legal, or medical advice. You call the lead back and schedule in the system you already use.
+- Who it is for: HVAC, plumbing, roofing, electrical, lawn care, landscaping, cleaning, pest control, and other home-service shops, plus dentists, law firms, med spas, and advisors (executivereceptionist.com).
+- Try it: call the live demo line (256) 663-7007. It answers as the sample business "Front Porch Heating and Air".
+- Plans and the free trial are published on the pricing page: https://frontporchgrowth.com/pricing
+
+## Key facts: YardMailer postcards
+- Each postcard shows the homeowner an AI-made concept for their own home or yard, with a QR link to request an estimate.
+- You approve the design, the audience, and the cost before anything is mailed.
+- Setup and per-card prices are published on https://frontporchgrowth.com/pricing
 
 ## Products
-- [Postcard campaigns](https://frontporchgrowth.com/postcards)
-- [Executive Receptionist](https://frontporchgrowth.com/receptionist)
-- [Executive Receptionist guides](https://frontporchgrowth.com/ava)
+- [Executive Receptionist (home services)](https://frontporchgrowth.com/ava)
+- [Executive Receptionist (offices: dental, legal, med spa, advisors)](https://executivereceptionist.com/)
 - [Receptionist demo](https://frontporchgrowth.com/receptionist-demo)
+- [AI receptionist for missed calls](https://frontporchgrowth.com/receptionist/missed-calls)
+- [Missed-call text-back (texting available after setup)](https://frontporchgrowth.com/missed-call)
+- [Postcard campaigns](https://frontporchgrowth.com/postcards)
+- [Google Business Profile setup](https://frontporchgrowth.com/google-profile)
+- [ReputationFlow review requests](https://frontporchgrowth.com/reputation)
+- [Lead Scout (search public business listings)](https://frontporchgrowth.com/lead-scout)
+- [AI drafting agents](https://frontporchgrowth.com/agents)
 - [Pricing](https://frontporchgrowth.com/pricing)
+- [Software prices compared, with sources](https://frontporchgrowth.com/compare)
+
+## AI answering service guides by trade
+- [Plumbers](https://frontporchgrowth.com/ava/ai-answering-service-for-plumbers)
+- [HVAC](https://frontporchgrowth.com/ava/ai-answering-service-for-hvac)
+- [Roofers](https://frontporchgrowth.com/ava/ai-answering-service-for-roofers)
+- [Electricians](https://frontporchgrowth.com/ava/ai-answering-service-for-electricians)
+- [Landscapers](https://frontporchgrowth.com/ava/ai-answering-service-for-landscapers)
+- [Lawn care](https://frontporchgrowth.com/ava/ai-answering-service-for-lawn-care)
+- [Pest control](https://frontporchgrowth.com/ava/ai-answering-service-for-pest-control)
+- [Cleaning companies](https://frontporchgrowth.com/ava/ai-answering-service-for-cleaning)
+- [Painters](https://frontporchgrowth.com/ava/ai-answering-service-for-painters)
+- [General contractors](https://frontporchgrowth.com/ava/ai-answering-service-for-general-contractors)
+- [Garage door companies](https://frontporchgrowth.com/ava/ai-answering-service-for-garage-door)
+- [Tree service](https://frontporchgrowth.com/ava/ai-answering-service-for-tree-service)
+- [Pool companies](https://frontporchgrowth.com/ava/ai-answering-service-for-pool-companies)
+- [Fencing](https://frontporchgrowth.com/ava/ai-answering-service-for-fencing)
+- [Dentists](https://frontporchgrowth.com/ava/ai-answering-service-for-dentists)
+- [Law firms](https://frontporchgrowth.com/ava/ai-answering-service-for-law-firms)
 
 ## Guides
+- [AI receptionist for small business](https://frontporchgrowth.com/ava/ai-receptionist-for-small-business)
 - [AI receptionist vs answering service](https://frontporchgrowth.com/ava/ai-receptionist-vs-answering-service)
 - [Missed call cost calculator](https://frontporchgrowth.com/ava/missed-call-cost-calculator)
+- [Missed-call answering for home services](https://frontporchgrowth.com/ava/missed-call-answering-home-services)
 - [Postcards for landscapers](https://frontporchgrowth.com/postcards/landscaping)
 - [Postcards for roofers](https://frontporchgrowth.com/postcards/roofing)
+
+## Contact
+- Website: https://frontporchgrowth.com

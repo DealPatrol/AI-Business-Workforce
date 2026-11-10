@@ -42,7 +42,7 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
     description,
     alternates: { canonical },
     robots: raw && raw !== 'hvac' ? { index: false, follow: true } : { index: true, follow: true },
-    openGraph: { title, description, url: openGraphUrl, siteName: 'Front Porch Growth', type: 'website' },
+    openGraph: { images: ['/og-default.png'], title, description, url: openGraphUrl, siteName: 'Front Porch Growth', type: 'website' },
   };
 }
 
@@ -58,7 +58,7 @@ export default async function MissedCallsPage({ searchParams }: PageProps) {
       applicationCategory: 'BusinessApplication',
       operatingSystem: 'Web',
       url: absoluteSiteUrl('/receptionist/missed-calls'),
-      description: 'AI receptionist that answers missed calls and texts the lead summary.',
+      description: 'AI receptionist that answers missed calls and emails the lead summary. Texting is available after setup.',
       offers: {
         '@type': 'Offer',
         price: (starter.monthlyCents / 100).toFixed(2),

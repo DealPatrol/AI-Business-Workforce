@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   title: metadataTitle(seo),
   description,
   alternates: { canonical: '/compare' },
-  openGraph: { title, description, url: '/compare', siteName: 'Front Porch Growth', type: 'website' },
+  openGraph: { images: ['/og-default.png'], title, description, url: '/compare', siteName: 'Front Porch Growth', type: 'website' },
 };
 
 export default function ComparePage() {

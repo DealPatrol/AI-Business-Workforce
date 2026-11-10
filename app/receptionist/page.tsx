@@ -26,7 +26,7 @@ const structured = [
     '@type': 'Product',
     name: 'Executive Receptionist',
     description:
-      'AI phone receptionist that answers calls, takes the caller name, number and reason, and texts the lead to the business.',
+      'AI phone receptionist that answers calls, takes the caller name, number and reason, and emails the lead to the business. Texting is available after setup.',
     brand: { '@type': 'Brand', name: 'Front Porch Growth' },
     offers: plans.map((plan) => ({
       '@type': 'Offer',
@@ -62,14 +62,14 @@ export async function generateMetadata(): Promise<Metadata> {
     title: metadataTitle(seo),
     description,
     alternates: { canonical },
-    openGraph: {
+    openGraph: { images: ['/og-default.png'],
       title,
       description,
       url: canonical,
       siteName: 'Executive Receptionist',
       type: 'website',
     },
-    twitter: { card: 'summary_large_image', title, description },
+    twitter: { images: ['/og-default.png'], card: 'summary_large_image', title, description },
   };
 }
 

@@ -12,14 +12,14 @@ export const metadata: Metadata = {
   description,
   alternates: { canonical: '/onboarding/ava' },
   robots: { index: false, follow: false },
-  openGraph: {
+  openGraph: { images: ['/og-default.png'],
     title,
     description,
     siteName: 'Executive Receptionist',
     type: 'website',
     url: absoluteSiteUrl('/onboarding/ava'),
   },
-  twitter: {
+  twitter: { images: ['/og-default.png'],
     card: 'summary_large_image',
     title,
     description,

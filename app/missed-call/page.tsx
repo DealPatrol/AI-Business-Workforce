@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   title: metadataTitle(seo),
   description,
   alternates: { canonical: '/missed-call' },
-  openGraph: { title, description, url: '/missed-call', siteName: 'Front Porch Growth', type: 'website' },
+  openGraph: { images: ['/og-default.png'], title, description, url: '/missed-call', siteName: 'Front Porch Growth', type: 'website' },
 };
 
 export default function MissedCallPage() {

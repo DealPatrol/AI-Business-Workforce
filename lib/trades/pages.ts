@@ -45,7 +45,7 @@ export const TRADE_PAGES: TradePage[] = [
     name: 'HVAC',
     title: 'AI tools for HVAC companies | Front Porch Growth',
     description:
-      'After-hours no-cool calls, review requests, and drafts for HVAC shops. Executive Receptionist texts the lead. It does not replace your scheduling software.',
+      'After-hours no-cool calls, review requests, and drafts for HVAC shops. Executive Receptionist emails the lead. It does not replace scheduling software.',
     h1: 'The no-cool call, for HVAC companies.',
     season: 'July and January pile up calls that all sound urgent. A two-truck shop does not have someone sitting on the dispatch board while a tech is in a crawlspace.',
     calls: ['No cooling or no heat', 'A system that is short cycling', 'A maintenance visit', 'A replacement question'],
@@ -91,7 +91,7 @@ export const TRADE_PAGES: TradePage[] = [
     name: 'Lawn care',
     title: 'AI tools for lawn care companies | Front Porch Growth',
     description:
-      'Weekly-route calls, postcard campaigns, and review requests for lawn care. You approve the mail. Executive Receptionist only texts the lead.',
+      'Weekly-route calls, postcard campaigns, and review requests for lawn care. You approve the mail. Executive Receptionist only emails the lead.',
     h1: 'The weekly route and the one-time cleanup, for lawn care.',
     season: 'Spring start-ups and the first hot week produce a burst of “can you come this week” calls. The rest of the year is route changes, skips, and the occasional cleanup.',
     calls: ['Weekly mowing', 'A one-time cleanup', 'Leaf removal', 'A customer who is already on the route'],

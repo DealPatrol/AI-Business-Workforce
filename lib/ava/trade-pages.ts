@@ -54,7 +54,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for Plumbers',
     metaTitle: 'AI Receptionist & Answering Service for Plumbers',
     description:
-      'AI Receptionist answers plumbing calls 24/7, takes the job details, and texts you the lead. Free 7-day trial, then $77/mo.',
+      'AI Receptionist answers plumbing calls 24/7, takes the job details, and emails you the lead. Free 7-day trial, then $77/mo.',
     eyebrow: 'AI answering service for plumbers',
     h1: 'Answer the leak call while you are still under the sink.',
     audience: 'plumbing companies and owner-operators',
@@ -101,7 +101,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for HVAC',
     metaTitle: 'AI Receptionist & Answering Service for HVAC Companies',
     description:
-      'AI Receptionist answers HVAC calls 24/7, takes the job details, and texts you the lead. Free 7-day trial, then $77/mo.',
+      'AI Receptionist answers HVAC calls 24/7, takes the job details, and emails you the lead. Free 7-day trial, then $77/mo.',
     eyebrow: 'AI answering service for HVAC',
     h1: 'Pick up the no-cool call while the tech is on another roof.',
     audience: 'HVAC contractors and heating and cooling teams',
@@ -148,7 +148,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for Roofers',
     metaTitle: 'AI Receptionist for Roofing Companies, from $77/mo',
     description:
-      'AI Receptionist answers roofing calls 24/7, takes the job details, and texts you the lead. Free 7-day trial, then $77/mo.',
+      'AI Receptionist answers roofing calls 24/7, takes the job details, and emails you the lead. Free 7-day trial, then $77/mo.',
     eyebrow: 'AI answering service for roofers',
     h1: 'Catch the storm calls that hit while every ladder is already up.',
     audience: 'roofing contractors and storm-response crews',
@@ -195,7 +195,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for Electricians',
     metaTitle: 'AI Receptionist & Answering Service for Electricians',
     description:
-      'AI Receptionist answers electrical calls and texts you the lead. She does not give electrical advice. Free 7-day trial, then $77/mo.',
+      'AI Receptionist answers electrical calls and emails you the lead. She does not give electrical advice. Free 7-day trial, then $77/mo.',
     eyebrow: 'AI answering service for electricians',
     h1: 'Take the panel call without stepping off the ladder.',
     audience: 'electrical contractors',
@@ -242,7 +242,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for Landscapers',
     metaTitle: 'AI Receptionist for Landscapers, 24/7, from $77/mo',
     description:
-      'AI Receptionist answers landscaping calls 24/7, takes the job details, and texts you the lead. Free 7-day trial, then $77/mo.',
+      'AI Receptionist answers landscaping calls 24/7, takes the job details, and emails you the lead. Free 7-day trial, then $77/mo.',
     eyebrow: 'AI answering service for landscapers',
     h1: 'Stay on the install. Let Executive Receptionist take the next estimate call.',
     audience: 'landscaping companies',
@@ -289,7 +289,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for Lawn Care',
     metaTitle: 'AI Receptionist for Lawn Care Companies, $77/mo',
     description:
-      'AI Receptionist answers lawn care calls 24/7, takes the job details, and texts you the lead. Free 7-day trial, then $77/mo.',
+      'AI Receptionist answers lawn care calls 24/7, takes the job details, and emails you the lead. Free 7-day trial, then $77/mo.',
     eyebrow: 'AI answering service for lawn care',
     h1: 'Take the new-route call without killing the mower.',
     audience: 'lawn care and mowing companies',
@@ -336,7 +336,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for Pest Control',
     metaTitle: 'AI Receptionist & Answering Service for Pest Control',
     description:
-      'AI Receptionist answers pest-control calls and texts you the lead. She does not recommend pesticides. Free 7-day trial, then $77/mo.',
+      'AI Receptionist answers pest-control calls and emails you the lead. She does not recommend pesticides. Free 7-day trial, then $77/mo.',
     eyebrow: 'AI answering service for pest control',
     h1: 'Get the “there are wasps in the wall” call while you are under another house.',
     audience: 'pest control companies',
@@ -383,7 +383,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for Cleaning Companies',
     metaTitle: 'AI Receptionist & Answering Service for Cleaning Companies',
     description:
-      'AI Receptionist answers cleaning-company calls 24/7, takes the job details, and texts you the lead. Free 7-day trial, then $77/mo.',
+      'AI Receptionist answers cleaning-company calls 24/7, takes the job details, and emails you the lead. Free 7-day trial, then $77/mo.',
     eyebrow: 'AI answering service for cleaning companies',
     h1: 'Book the walkthrough conversation while your team is in someone else’s house.',
     audience: 'residential and commercial cleaning companies',
@@ -430,7 +430,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for Painters',
     metaTitle: 'AI Receptionist & Answering Service for Painters',
     description:
-      'AI Receptionist answers painting calls 24/7, takes the job details, and texts you the lead. Free 7-day trial, then $77/mo.',
+      'AI Receptionist answers painting calls 24/7, takes the job details, and emails you the lead. Free 7-day trial, then $77/mo.',
     eyebrow: 'AI answering service for painters',
     h1: 'Take the estimate call without climbing down.',
     audience: 'painting contractors',
@@ -477,7 +477,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for General Contractors',
     metaTitle: 'AI Receptionist & Answering Service for General Contractors',
     description:
-      'AI Receptionist answers contractor calls and texts you the lead. She does not produce a bid on the call. Free 7-day trial, then $77/mo.',
+      'AI Receptionist answers contractor calls and emails you the lead. She does not produce a bid on the call. Free 7-day trial, then $77/mo.',
     eyebrow: 'AI answering service for general contractors',
     h1: 'Capture the remodel call while you are on a jobsite.',
     audience: 'general contractors and remodeling companies',
@@ -618,7 +618,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for Garage Door Companies',
     metaTitle: 'AI Receptionist for Garage Door Companies',
     description:
-      'AI Receptionist answers garage-door calls and texts you the lead. She does not talk anyone through a spring repair. Plans from $77/mo.',
+      'AI Receptionist answers garage-door calls and emails you the lead. She does not talk anyone through a spring repair. Plans from $77/mo.',
     eyebrow: 'AI answering service for garage door companies',
     h1: 'Answer the stuck-door call while you are on another driveway.',
     audience: 'garage door repair and installation companies',
@@ -665,7 +665,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for Tree Service',
     metaTitle: 'AI Receptionist for Tree Service Companies',
     description:
-      'AI Receptionist answers tree-service calls and texts you the address. Downed power lines stay a utility and emergency call. Plans from $77/mo.',
+      'AI Receptionist answers tree-service calls and emails you the address. Downed power lines stay a utility and emergency call. Plans from $77/mo.',
     eyebrow: 'AI answering service for tree service',
     h1: 'Take the storm-limb call while the chipper is already running.',
     audience: 'tree service and arborist companies',
@@ -712,7 +712,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for Pool Companies',
     metaTitle: 'AI Receptionist & Answering Service for Pool Companies',
     description:
-      'AI Receptionist answers pool-company calls and texts you the lead. She does not prescribe chemicals. Free 7-day trial, then $77/mo.',
+      'AI Receptionist answers pool-company calls and emails you the lead. She does not prescribe chemicals. Free 7-day trial, then $77/mo.',
     eyebrow: 'AI answering service for pool companies',
     h1: 'Answer the green-pool call while you are in someone else’s equipment pit.',
     audience: 'pool service and repair companies',
@@ -759,7 +759,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for Fencing Companies',
     metaTitle: 'AI Receptionist & Answering Service for Fencing Companies',
     description:
-      'AI Receptionist answers fencing calls 24/7, takes the job details, and texts you the lead. Free 7-day trial, then $77/mo.',
+      'AI Receptionist answers fencing calls 24/7, takes the job details, and emails you the lead. Free 7-day trial, then $77/mo.',
     eyebrow: 'AI answering service for fencing companies',
     h1: 'Log the fence estimate while the crew is setting posts.',
     audience: 'fence contractors',
@@ -807,7 +807,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Receptionist for Small Business',
     metaTitle: 'AI Receptionist for Small Business, from $77/mo',
     description:
-      'AI Receptionist for small businesses that miss calls while the owner is working. She takes a name and number, then texts you. Plans from $77/mo.',
+      'AI Receptionist for small businesses that miss calls while the owner is working. She takes a name and number and emails you the lead. From $77/mo.',
     eyebrow: 'AI receptionist for small business',
     h1: 'A front desk for the shop where the owner still answers the phone.',
     audience: 'small businesses whose owner or a single employee answers the phone',
@@ -856,7 +856,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Receptionist vs Answering Service',
     metaTitle: 'AI Receptionist vs an Answering Service',
     description:
-      'Compare voicemail, a human answering service, and an AI Receptionist that answers, qualifies, and texts you the lead. Plans from $77/mo.',
+      'Compare voicemail, a human answering service, and an AI Receptionist that answers, qualifies, and emails you the lead. Plans from $77/mo.',
     eyebrow: 'AI receptionist vs answering service',
     h1: 'Voicemail, a call center, or software that texts you the lead.',
     audience: 'owners comparing an answering service with an AI receptionist',
@@ -968,7 +968,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'Missed-Call Answering for Home Services',
     metaTitle: 'AI Receptionist for Missed Home-Service Calls',
     description:
-      'Use an AI Receptionist on calls you do not answer: after hours, overflow, and weekends. She texts you the lead. Plans from $77/mo.',
+      'Use an AI Receptionist on calls you do not answer: after hours, overflow, and weekends. She emails you the lead. Plans from $77/mo.',
     eyebrow: 'Missed-call answering for home services',
     h1: 'You do not have to give Executive Receptionist every call. Give her the ones you miss.',
     audience: 'home-service businesses that already answer some of the time',

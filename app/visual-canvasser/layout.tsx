@@ -7,7 +7,7 @@ const seo = pageSeo('/visual-canvasser');
 export const metadata: Metadata = {
   title: metadataTitle(seo),
   description: seo.description,
-  openGraph: { title: renderedTitle(seo), description: seo.description },
+  openGraph: { images: ['/og-default.png'], title: renderedTitle(seo), description: seo.description },
 };
 
 export default function VisualCanvasserLayout({ children }: { children: ReactNode }) {
