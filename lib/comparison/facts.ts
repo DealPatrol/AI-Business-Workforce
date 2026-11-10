@@ -22,7 +22,7 @@ export const COMPARISON_FACTS: ComparisonFact[] = [
       'Executive Receptionist is $0 until the first booked job, then $25 per booked job, capped at $297 a month, after a free 14-day pilot. YardMailer postcards are a $127 setup, charged once per customer, plus $3.54 per 4×6 card or $4.95 per 6×9 card. ReputationFlow, a separate site Cole operates, publishes a free starter and Professional at $20/month.',
     terms: 'Executive Receptionist trial and prices are the Stripe plans on this site. ReputationFlow says Professional is billed monthly and can be canceled in the Stripe customer portal, with no setup fee.',
     whatTheyPublish:
-      'Executive Receptionist answers forwarded calls and emails the lead. It does not book a calendar. Postcards mail only after you approve the concept, audience, and costs. Lead Scout searches public listings and does not contact them. The writing agents draft text on the page and do not send it.',
+      'Executive Receptionist answers forwarded calls and emails the lead. If the owner turns booking on, it books visits into open windows on the owner’s desk calendar; it does not sync with outside calendar apps. Postcards mail only after you approve the concept, audience, and costs. Lead Scout searches public listings and does not contact them. The writing agents draft text on the page and do not send it.',
     sourceLabel: 'frontporchgrowth.com/pricing and tryreputationflow.com/pricing',
     sourceUrl: 'https://frontporchgrowth.com/pricing',
   },

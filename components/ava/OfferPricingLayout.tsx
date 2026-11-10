@@ -146,8 +146,8 @@ export function OfferPricingLayout({
         <h1>{isPage ? 'Your after-hours front desk, priced on the jobs it helps you book.' : 'One published offer. No mystery tiers.'}</h1>
         <p className={styles.lede}>
           Executive Receptionist answers the inbound calls you cannot pick up, 24 hours a day. It writes down the
-          caller’s details and the job, then emails you the summary so you can call back and book the work. It does
-          not pretend to be a person, and it does not book the calendar for you.
+          caller’s details and the job, then emails you the summary. If you turn on booking, it offers the open windows
+          from the hours you set and puts the visit on your desk calendar. It does not pretend to be a person.
         </p>
         <div className={styles.heroActions}>
           <DemoLink className={styles.primary}>Try the live demo</DemoLink>

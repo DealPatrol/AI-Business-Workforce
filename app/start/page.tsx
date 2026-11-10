@@ -72,6 +72,9 @@ const ECOM_ESCALATES = [
 const COMPARE = [
   ['How the bill is counted', 'Per minute, per call, or per caller', 'Per booked job, with a $297 monthly cap'],
   ['Spam and wrong numbers', 'Count toward the bill on most per-call and per-minute plans', 'Never billed. Only booked jobs are'],
+  ['Booking during the call', 'Often through a connected calendar or scheduling app', 'Ava offers open windows from the hours you set on your desk and books one. Optional'],
+  ['Emergencies and “get me a person”', 'Varies by plan', 'Ava can transfer the call to your phone, if you give her a number'],
+  ['Spanish-speaking callers', 'Varies by plan', 'Ava switches to Spanish when the caller does'],
   ['Hear it before you pay', 'Often a sales demo first', 'Six sample calls, a call-in line, and a browser demo on this page'],
   ['Guarantee', 'Rare', 'No real caller lead in 14 days, you pay nothing'],
   ['Setup', 'Do it yourself', `Done with you in person in ${AVA_OFFER.setupCity}`],
@@ -263,8 +266,9 @@ export default function StartPage() {
         </div>
         <p className={styles.note}>
           Read from each company’s own pricing page on {VENDOR_PLANS_CHECKED}. Prices change, so check the linked page.
-          Several of these services book appointments on your calendar during the call; Ava takes the details and you
-          book the job. Names are trademarks of their owners; no endorsement implied.
+          Several of these services also book appointments during the call. Ava does too, on the hours you set on your
+          desk; syncing with an outside calendar or field-service app is not built yet. Names are trademarks of their
+          owners; no endorsement implied.
         </p>
       </section>
 
