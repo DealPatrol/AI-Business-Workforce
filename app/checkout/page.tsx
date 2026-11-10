@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: metadataTitle(seo),
   description: seo.description,
   robots: { index: false, follow: false },
-  openGraph: { title: renderedTitle(seo), description: seo.description, url: '/checkout' },
+  openGraph: { images: ['/og-default.png'], title: renderedTitle(seo), description: seo.description, url: '/checkout' },
 };
 
 type CheckoutPageProps = {

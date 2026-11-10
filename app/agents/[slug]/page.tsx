@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: { absolute: title },
     description: agent.blurb,
     alternates: { canonical: `/agents/${agent.id}` },
-    openGraph: { title, description: agent.blurb, url: `/agents/${agent.id}`, siteName: 'Front Porch Growth', type: 'website' },
+    openGraph: { images: ['/og-default.png'], title, description: agent.blurb, url: `/agents/${agent.id}`, siteName: 'Front Porch Growth', type: 'website' },
   };
 }
 

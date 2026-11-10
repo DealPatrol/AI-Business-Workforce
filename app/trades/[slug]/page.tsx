@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: { absolute: page.title },
     description: page.description,
     alternates: { canonical: `/trades/${page.slug}` },
-    openGraph: { title: page.title, description: page.description, url: `/trades/${page.slug}`, siteName: 'Front Porch Growth', type: 'website' },
+    openGraph: { images: ['/og-default.png'], title: page.title, description: page.description, url: `/trades/${page.slug}`, siteName: 'Front Porch Growth', type: 'website' },
   };
 }
 

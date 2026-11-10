@@ -17,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: metadataTitle(seo),
     description,
     alternates: { canonical },
-    openGraph: {
+    openGraph: { images: ['/og-default.png'],
       title,
       description,
       url: openGraphUrl,

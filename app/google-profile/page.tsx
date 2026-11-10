@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   title: metadataTitle(seo),
   description,
   alternates: { canonical: '/google-profile' },
-  openGraph: { title, description, url: '/google-profile', siteName: 'Front Porch Growth', type: 'website' },
+  openGraph: { images: ['/og-default.png'], title, description, url: '/google-profile', siteName: 'Front Porch Growth', type: 'website' },
 };
 
 export default function GoogleProfilePage() {
