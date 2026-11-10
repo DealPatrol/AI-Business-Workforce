@@ -6,7 +6,7 @@ import styles from '@/components/suite/home.module.css';
 
 /**
  * Homepage hero sample: pick a trade, hear a recorded sample call, or open the
- * live browser demo. Only five recorded demos exist (HVAC, plumbing, roofing,
+ * live browser demo. Six recorded demos exist (HVAC, plumbing, roofing, e-commerce,
  * electrical, auto repair); every other trade plays the closest one and says
  * which one it is.
  */
@@ -17,16 +17,27 @@ export const HERO_INDUSTRIES: readonly HeroIndustry[] = [
   { slug: 'plumbing', label: 'Plumbing', demo: 'plumbing' },
   { slug: 'roofing', label: 'Roofing', demo: 'roofing' },
   { slug: 'electrical', label: 'Electrical', demo: 'electrical' },
+  { slug: 'ecommerce', label: 'E-commerce / online store', demo: 'ecommerce' },
+  { slug: 'auto-repair', label: 'Auto repair', demo: 'auto-repair' },
   { slug: 'lawn-care', label: 'Lawn care', demo: 'roofing' },
   { slug: 'landscaping', label: 'Landscaping', demo: 'roofing' },
-  { slug: 'pressure-washing', label: 'Pressure washing', demo: 'roofing' },
-  { slug: 'cleaning', label: 'Cleaning', demo: 'hvac' },
   { slug: 'pest-control', label: 'Pest control', demo: 'hvac' },
+  { slug: 'cleaning', label: 'House cleaning', demo: 'hvac' },
+  { slug: 'pool-service', label: 'Pool service', demo: 'plumbing' },
+  { slug: 'garage-door', label: 'Garage door', demo: 'electrical' },
+  { slug: 'appliance-repair', label: 'Appliance repair', demo: 'electrical' },
+  { slug: 'pressure-washing', label: 'Pressure washing', demo: 'roofing' },
   { slug: 'tree-service', label: 'Tree service', demo: 'roofing' },
   { slug: 'fencing', label: 'Fencing', demo: 'roofing' },
   { slug: 'painting', label: 'Painting', demo: 'roofing' },
-  { slug: 'pool-service', label: 'Pool service', demo: 'plumbing' },
-  { slug: 'auto-repair', label: 'Auto repair', demo: 'auto-repair' },
+  { slug: 'handyman', label: 'Handyman', demo: 'plumbing' },
+  { slug: 'locksmith', label: 'Locksmith', demo: 'electrical' },
+  { slug: 'solar', label: 'Solar', demo: 'electrical' },
+  { slug: 'gutters', label: 'Gutters', demo: 'roofing' },
+  { slug: 'water-damage', label: 'Water damage restoration', demo: 'plumbing' },
+  { slug: 'septic', label: 'Septic', demo: 'plumbing' },
+  { slug: 'moving', label: 'Moving', demo: 'auto-repair' },
+  { slug: 'junk-removal', label: 'Junk removal', demo: 'auto-repair' },
 ];
 
 const ALIASES: Record<string, string> = {
@@ -60,6 +71,21 @@ const ALIASES: Record<string, string> = {
   auto: 'auto-repair',
   automotive: 'auto-repair',
   mechanic: 'auto-repair',
+  'e-commerce': 'ecommerce',
+  ecom: 'ecommerce',
+  store: 'ecommerce',
+  'online-store': 'ecommerce',
+  shopify: 'ecommerce',
+  garage: 'garage-door',
+  'garage-doors': 'garage-door',
+  appliance: 'appliance-repair',
+  appliances: 'appliance-repair',
+  locksmiths: 'locksmith',
+  'solar-panels': 'solar',
+  gutter: 'gutters',
+  restoration: 'water-damage',
+  movers: 'moving',
+  junk: 'junk-removal',
 };
 
 function resolveIndustry(raw: string | null | undefined): HeroIndustry | undefined {
@@ -79,7 +105,7 @@ function formatTime(seconds: number) {
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 }
 
-export function HeroDemoPicker() {
+export function HeroDemoPicker({ label = 'Hear it for your business' }: { label?: string } = {}) {
   const selectId = useId();
   const noteId = useId();
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -129,7 +155,7 @@ export function HeroDemoPicker() {
     <div className={styles.heroDemo} id="hear-it">
       <div className={styles.heroDemoRow}>
         <label className={styles.heroDemoLabel} htmlFor={selectId}>
-          Hear it for your trade
+          {label}
         </label>
         <select
           id={selectId}
@@ -168,7 +194,7 @@ export function HeroDemoPicker() {
           </span>
         </button>
         <a className={styles.heroDemoTalk} href={demo.talkUrl} target="_blank" rel="noopener noreferrer">
-          Talk to the receptionist
+          Talk to Ava live
           <span className={styles.srOnly}> ({demo.name} demo, opens in a new tab)</span>
         </a>
       </div>
@@ -179,7 +205,7 @@ export function HeroDemoPicker() {
 
       <p className={styles.heroDemoNote} id={noteId}>
         {isExact
-          ? `Sample call with ${demo.company}, a made-up ${tradeWord(demo.name)} shop.`
+          ? `Sample call with ${demo.company}, a made-up ${demo.slug === 'ecommerce' ? 'online store' : `${tradeWord(demo.name)} shop`}.`
           : `Sample call (${demo.name} example). A ${tradeWord(industry.label)} version is written for your business at setup.`}
         <span className={styles.heroDemoMic}> The live demo runs in your browser and asks for your microphone.</span>
       </p>

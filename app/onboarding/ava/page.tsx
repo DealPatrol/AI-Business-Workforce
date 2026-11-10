@@ -449,6 +449,11 @@ function AvaOnboardingForm() {
                 ) : null}
               </div>
             ) : null}
+            <p>
+              Ava’s leads will show up on your desk. Sign in with the email you used at checkout and we will email you a
+              link.
+            </p>
+            <Link href="/login?next=/desk">Sign in to your desk</Link>{' '}
             <Link href="/ava">Return to Executive Receptionist</Link>
           </section>
         ) : !prefillReady ? (

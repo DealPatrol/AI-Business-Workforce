@@ -116,6 +116,33 @@ export const ER_DEMO_NICHES = [
       { speaker: 'Receptionist', text: 'Thanks for calling Oak and Main Auto Repair, y’all have a good one.' },
     ],
   },
+  {
+    slug: 'ecommerce',
+    name: 'E-commerce',
+    company: 'Ridgeline Outfitters',
+    agentId: 'agent_7301m727915ke55syb59xd04s1m4',
+    talkUrl: 'https://elevenlabs.io/app/talk-to?agent_id=agent_7301m727915ke55syb59xd04s1m4',
+    audioSrc: '/voices/demos/ecommerce.mp3',
+    line: 'Where-is-my-order, shipping, returns, and sizing calls answered on the spot. Only the calls that need a person get passed to you.',
+    heroKicker: 'For online stores whose support line rings with the same five questions',
+    heroHeadline: 'Ava answers "where is my order?" so your team does not have to.',
+    heroLede:
+      'Hear a sample store call, then talk to a demo store receptionist in your browser. She answers shipping, tracking, returns, and sizing questions from your policies, and only passes damaged items, double charges, and angry customers to a person.',
+    talkLabel: 'Talk to the store receptionist now',
+    transcript: [
+      { speaker: 'Receptionist', text: 'Thanks for calling Ridgeline Outfitters customer care, this is Ava. Are you calling about an order today?' },
+      { speaker: 'Caller', text: 'Hi, yeah. I ordered hiking boots last week and I never got a tracking email. The order number is 10422.' },
+      { speaker: 'Receptionist', text: "Got it, order one zero four two two. For this demo, that order shipped yesterday by UPS and should arrive in two to three business days. The tracking link goes to your email, so it's worth checking your promotions folder too." },
+      { speaker: 'Caller', text: "Oh, okay, great. And if they don't fit, can I swap them for a different size?" },
+      { speaker: 'Receptionist', text: "Yes. Size exchanges are free within thirty days of delivery, as long as they're unworn. You'd start it on our returns page with your order number and email." },
+      { speaker: 'Caller', text: 'Perfect. Oh, one more thing. I think my card got charged twice for that order.' },
+      { speaker: 'Receptionist', text: "I'm sorry about that. A double charge needs a person, so I'll send this to our customer care team. Can I get your name and the best number to reach you?" },
+      { speaker: 'Caller', text: "Sure, it's Dana Brooks. 256-555-0177." },
+      { speaker: 'Receptionist', text: "Thanks, Dana. That's two five six, five five five, zero one seven seven. A team member will reach out during business hours about the charge. Since this is a demo, no one is actually being contacted. Anything else I can help with?" },
+      { speaker: 'Caller', text: "Nope, that's everything. Thanks so much!" },
+      { speaker: 'Receptionist', text: 'Thanks for calling Ridgeline Outfitters, have a great day.' },
+    ],
+  },
 ] as const;
 
 export type ErDemoSlug = (typeof ER_DEMO_NICHES)[number]['slug'];
@@ -135,6 +162,11 @@ export function getErDemoNiche(slug?: string | null): ErDemoNiche | undefined {
     roofer: 'roofing',
     'heating-and-air': 'hvac',
     hvactech: 'hvac',
+    'e-commerce': 'ecommerce',
+    ecom: 'ecommerce',
+    store: 'ecommerce',
+    'online-store': 'ecommerce',
+    shopify: 'ecommerce',
   };
   const mapped = aliases[normalized] ?? (normalized as ErDemoSlug);
   return ER_DEMO_NICHES.find((niche) => niche.slug === mapped);

@@ -23,11 +23,24 @@ export const ROOT_SEO: SeoSpec = {
 
 const PAGES = {
   '/': {
-    title: 'More Booked Jobs for Service Businesses | AI Receptionist',
+    title: 'Ava, the AI Receptionist for Home Services',
     description:
-      'Answer every call and mail your streets. An AI receptionist emails you the lead, plus YardMailer postcards. $25 per booked job after a 14-day pilot.',
+      'Ava answers every call, takes the job, and sends you the lead. Hear sample calls or call her now. Free 14-day pilot, then $25 per booked job, max $297/mo.',
     titleMode: 'absolute',
     receptionist: true,
+  },
+  '/start': {
+    title: 'Ava AI Receptionist: Home Services and Online Stores',
+    description:
+      'Ava answers calls for home-service shops and online stores, handles routine questions, and passes the rest to you. Free 14-day pilot, $25 per booked job.',
+    titleMode: 'absolute',
+    receptionist: true,
+  },
+  '/desk': {
+    title: 'Your desk',
+    description: 'Ava’s calls and leads, quick decisions, and every Front Porch Growth tool in one place.',
+    titleMode: 'template',
+    receptionist: false,
   },
   '/ava': {
     title: 'AI Receptionist for Home Services, $25 per Booked Job',
@@ -161,7 +174,7 @@ const PAGES = {
     receptionist: false,
   },
   '/login': {
-    title: 'Sign in',
+    title: 'Customer sign in',
     description: ROOT_DESCRIPTION,
     titleMode: 'template',
     receptionist: false,
