@@ -100,3 +100,29 @@
   .callNeed { grid-column: 1 / -1; grid-row: 2; white-space: normal; }
   .callWhen { display: none; }
 }
+
+.calendarDays { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.calendarDays > li > h3 { margin: 0 0 6px; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: #6b776f; }
+.bookings { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.bookings li { display: grid; grid-template-columns: 150px minmax(0, 1fr) auto; gap: 10px; align-items: baseline; border: 1px solid #e6ece6; border-left: 4px solid #205c39; border-radius: 10px; padding: 10px 12px; font-size: 14px; background: #fff; }
+.bookings time { font-weight: 800; color: #14201a; }
+.bookings a { color: #205c39; font-weight: 800; font-size: 13px; }
+.demoTag { margin-left: 6px; border-radius: 999px; background: #fff3d6; color: #7a4b12; padding: 2px 8px; font-size: 11px; font-weight: 800; }
+.bookingForm { display: grid; gap: 14px; margin-top: 14px; font-size: 14px; }
+.toggle { display: flex; gap: 10px; align-items: flex-start; }
+.toggle input { width: 20px; height: 20px; margin-top: 2px; }
+.toggle small { display: block; color: #5d6a61; }
+.hours { border: 1px solid #e6ece6; border-radius: 12px; padding: 10px 12px; display: grid; gap: 8px; margin: 0; }
+.hours legend { font-weight: 800; padding: 0 4px; }
+.hourRow, .blackoutRow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.hourRow label { min-width: 120px; display: flex; gap: 6px; align-items: center; }
+.hourRow input[type='time'], .blackoutRow input, .bookingGrid select, .bookingGrid input { border: 1px solid #cfd8cf; border-radius: 8px; padding: 7px 9px; font: inherit; min-height: 40px; }
+.bookingGrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.bookingGrid label { display: grid; gap: 4px; font-weight: 750; }
+@media (max-width: 700px) {
+  .bookingGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bookings li { grid-template-columns: 1fr; }
+}
+
+.settingsWrap { margin-top: 14px; border-top: 1px solid #eef1ee; padding-top: 12px; }
+.settingsWrap > summary { cursor: pointer; font-weight: 800; color: #205c39; }

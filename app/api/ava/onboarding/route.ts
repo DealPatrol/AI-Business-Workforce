@@ -5,7 +5,7 @@ import {
 } from '@/lib/ava/onboarding-store';
 import { verifyAvaCheckoutSession } from '@/lib/ava/checkout';
 import { AvaProvisioningResult } from '@/lib/ava/provisioning';
-import { parseStaffContacts, splitContact } from '@/lib/analytics/contact';
+import { parseStaffContacts, splitContact, toE164 } from '@/lib/analytics/contact';
 import {
   AVA_PHONE_RUNBOOK_PATH,
   AVA_PHONE_RUNBOOK_URL,
@@ -41,6 +41,7 @@ type OnboardingField =
   | 'staffName'
   | 'staffContact'
   | 'staffPhone'
+  | 'transferPhone'
   | 'staffEmail'
   | 'calendarPreference'
   | 'urgentCallRules'
@@ -56,6 +57,7 @@ const fieldNames: OnboardingField[] = [
   'staffName',
   'staffContact',
   'staffPhone',
+  'transferPhone',
   'staffEmail',
   'calendarPreference',
   'urgentCallRules',
@@ -161,6 +163,7 @@ export async function POST(request: NextRequest) {
         staffContact,
         staffEmail: parsedStaff.email,
         staffPhone: parsedStaff.phone,
+        transferPhone: toE164(fields.transferPhone) || '',
         preferredVoice: fields.preferredVoice,
         // Optional and unchecked by default. Only counts when a phone number was given.
         smsConsent: Boolean(parsedStaff.phone) && parseSmsConsent(body.smsConsent),

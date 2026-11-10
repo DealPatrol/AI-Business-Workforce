@@ -1,3 +1,5 @@
+import { BOOKING_PROMPT_SECTION } from '@/lib/ava/booking/agent-tools';
+
 const ELEVENLABS_API = 'https://api.elevenlabs.io/v1';
 
 export type AvaOnboardingDetails = {
@@ -11,6 +13,10 @@ export type AvaOnboardingDetails = {
   urgentCallRules: string;
   /** 'store' builds an online-store agent; anything else builds a home-service agent. */
   plan?: string | null;
+  /** When true, Ava offers real windows from the booking calendar and books them. */
+  bookingEnabled?: boolean;
+  /** Owner's forwarding number (E.164) for live transfers. Empty means no transfer. */
+  transferNumber?: string | null;
 };
 
 export type AvaProvisioningRecord = AvaOnboardingDetails & {
@@ -74,9 +80,25 @@ STAFF HANDOFF
 
 export function buildAvaAgentPrompt(details: AvaOnboardingDetails) {
   if (isStorePlan(details)) return buildAvaStorePrompt(details);
+  const booking = Boolean(details.bookingEnabled);
+  const transfer = Boolean(details.transferNumber);
   return `You are Ava, the AI phone receptionist for ${details.businessName}. If anyone asks whether you are a person, say honestly that you are an AI receptionist.
 
-Your job is to answer callers in a friendly voice, collect the caller's name, callback number, and what they need, and tell them the business will follow up (never a specific time, and never that they will get a text). Do not offer appointment times or say a visit has been arranged. Never invent availability, prices, services, policies, or emergency guidance.
+Your job is to answer callers in a friendly voice, collect the caller's name, callback number, and what they need, and tell them the business will follow up (never a specific time, and never that they will get a text). ${
+    booking
+      ? 'You may offer appointment windows only from the check_availability tool and book them only with book_appointment.'
+      : 'Do not offer appointment times or say a visit has been arranged.'
+  } Never invent availability, prices, services, policies, or emergency guidance.
+${booking ? `
+${BOOKING_PROMPT_SECTION}
+` : ''}${
+    transfer
+      ? `
+LIVE TRANSFER
+If the caller has an emergency under the urgent rules below, or clearly asks to speak to a person, first get their name and callback number, tell them you are connecting them now, then use transfer_to_number. If the transfer fails or nobody answers, apologize, confirm their details, and say the team will call back as soon as possible.
+`
+      : ''
+  }
 
 BUSINESS DETAILS
 - Business: ${details.businessName}
@@ -153,6 +175,34 @@ async function duplicateTemplateAgent(templateAgentId: string, name: string) {
   return data.agent_id;
 }
 
+/** end_call always; transfer_to_number only when the owner gave a forwarding number. */
+export function customerBuiltInTools(details: AvaOnboardingDetails) {
+  const tools: Record<string, unknown> = {
+    end_call: { type: 'system', name: 'end_call', description: '', params: { system_tool_type: 'end_call' } },
+    transfer_to_number: null,
+  };
+  const number = details.transferNumber?.trim();
+  if (number && /^\+1\d{10}$/.test(number)) {
+    tools.transfer_to_number = {
+      type: 'system',
+      name: 'transfer_to_number',
+      description: '',
+      params: {
+        system_tool_type: 'transfer_to_number',
+        enable_client_message: true,
+        transfers: [
+          {
+            transfer_destination: { type: 'phone', phone_number: number },
+            condition: 'The caller has an emergency under the urgent-call rules, or clearly asks to speak to a person.',
+            transfer_type: 'conference',
+          },
+        ],
+      },
+    };
+  }
+  return tools;
+}
+
 async function configureCustomerAgent(agentId: string, details: AvaOnboardingDetails) {
   // Voice + typed chat on the same agent for the website embed. Does not change SMS.
   await elevenLabsRequest(`/convai/agents/${encodeURIComponent(agentId)}`, {
@@ -164,6 +214,9 @@ async function configureCustomerAgent(agentId: string, details: AvaOnboardingDet
           first_message: firstMessage(details.businessName, details.plan),
           prompt: {
             prompt: buildAvaAgentPrompt(details),
+            // Start clean: never inherit the demo agent's booking tools (they point at the demo calendar).
+            tool_ids: [],
+            built_in_tools: customerBuiltInTools(details),
           },
         },
       },

@@ -10,6 +10,10 @@ import type { ErLead } from '@/lib/leads/types';
 import { metadataTitle, pageSeo } from '@/lib/seo/pages';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
+import { bookingLinks, bookingWindowLabel } from '@/lib/ava/booking/event';
+import { DEFAULT_WEEKLY_HOURS, localDateOf } from '@/lib/ava/booking/slots';
+import { calendarForOnboarding, listBookings, type BookingRow, type CalendarRow } from '@/lib/ava/booking/store';
+import { BookingSettings } from './booking-settings';
 import { LeadActions } from './lead-actions';
 import { SignOut } from './sign-out';
 import styles from './desk.module.css';
@@ -67,6 +71,27 @@ async function loadCallDetails(conversationIds: string[]) {
     console.error('Desk could not load call transcripts', error);
   }
   return details;
+}
+
+/** The owner's booking calendar and the next two weeks of bookings. Never throws. */
+async function loadBookingCalendar(onboardingId: string | null | undefined) {
+  if (!onboardingId) return { calendar: null as CalendarRow | null, bookings: [] as BookingRow[] };
+  try {
+    const calendar = await calendarForOnboarding(onboardingId);
+    if (!calendar) return { calendar: null, bookings: [] };
+    const now = new Date();
+    const until = new Date(now.getTime() + 15 * 86_400_000);
+    const bookings = await listBookings(calendar.id, new Date(now.getTime() - 86_400_000).toISOString(), until.toISOString());
+    return { calendar, bookings };
+  } catch (error) {
+    console.error('Desk could not load the booking calendar', error);
+    return { calendar: null, bookings: [] };
+  }
+}
+
+function dayHeading(date: string) {
+  const [y, m, d] = date.split('-').map(Number);
+  return new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'UTC' }).format(new Date(Date.UTC(y, m - 1, d)));
 }
 
 /** Calls the store plan bills for: excludes calls Ava itself flagged as spam or a wrong number. */
@@ -161,6 +186,13 @@ export default async function DeskPage() {
     : Math.min(bookedThisMonth * AVA_OFFER.perBookedJobCents, AVA_OFFER.monthlyCapCents) / 100;
   const recent = leads.slice(0, 8);
   const callDetails = await loadCallDetails(recent.map((lead) => lead.conversation_id || ''));
+  const booking = isStore ? { calendar: null, bookings: [] as BookingRow[] } : await loadBookingCalendar(onboarding?.id);
+  const bookingTz = booking.calendar?.timezone || 'America/Chicago';
+  const bookingDays = new Map<string, BookingRow[]>();
+  for (const row of booking.bookings) {
+    const day = localDateOf(new Date(row.start_at), bookingTz).date;
+    bookingDays.set(day, [...(bookingDays.get(day) ?? []), row]);
+  }
   const testAgentId = /^agent_[a-z0-9]+$/i.test(onboarding?.elevenlabs_agent_id || '') ? onboarding?.elevenlabs_agent_id : '';
 
   const channels = onboarding
@@ -337,6 +369,67 @@ export default async function DeskPage() {
           </ul>
         )}
       </section>
+
+      {onboarding && !isStore ? (
+        <section className={styles.panel} aria-labelledby="calendar">
+          <div className={styles.panelHead}>
+            <h2 id="calendar">Booking calendar</h2>
+            <span className={styles.badge}>{booking.calendar?.enabled ? 'Ava is booking' : 'Booking off'}</span>
+          </div>
+          {booking.bookings.length === 0 ? (
+            <p className={styles.empty}>
+              {booking.calendar?.enabled
+                ? 'No bookings in the next two weeks yet. When Ava books a caller, the visit shows up here and in your lead email with an Add to Calendar link.'
+                : 'Turn booking on below and Ava will offer callers real open windows and book them during the call.'}
+            </p>
+          ) : (
+            <ul className={styles.calendarDays}>
+              {[...bookingDays.entries()].map(([day, rows]) => (
+                <li key={day}>
+                  <h3>{dayHeading(day)}</h3>
+                  <ul className={styles.bookings}>
+                    {rows.map((row) => {
+                      const links = bookingLinks(row, booking.calendar?.label || 'Ava booking');
+                      const window = bookingWindowLabel(row, bookingTz).split(', ').slice(2).join(', ');
+                      return (
+                        <li key={row.id}>
+                          <time dateTime={row.start_at}>{window}</time>
+                          <span>
+                            <b>{row.caller_name || 'Caller'}</b>
+                            {row.is_demo ? <span className={styles.demoTag}>Demo</span> : null}
+                            {row.issue ? ` · ${row.issue}` : ''}
+                            {row.service_address ? ` · ${row.service_address}` : ''}
+                            {row.caller_phone ? (
+                              <>
+                                {' · '}
+                                <a href={`tel:${row.caller_phone.replace(/[^\d+]/g, '')}`}>{row.caller_phone}</a>
+                              </>
+                            ) : null}
+                          </span>
+                          <a href={links.googleUrl} target="_blank" rel="noopener noreferrer">Add to Google Calendar</a>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          )}
+          <details className={styles.settingsWrap}>
+            <summary>Booking settings</summary>
+            <BookingSettings
+              enabled={Boolean(booking.calendar?.enabled)}
+              isDemo={Boolean(booking.calendar?.is_demo)}
+              slotMinutes={booking.calendar?.slot_minutes ?? 120}
+              slotCapacity={booking.calendar?.slot_capacity ?? 1}
+              minNoticeMinutes={booking.calendar?.min_notice_minutes ?? 120}
+              horizonDays={booking.calendar?.horizon_days ?? 14}
+              weeklyHours={booking.calendar?.weekly_hours ?? DEFAULT_WEEKLY_HOURS}
+              blackouts={booking.calendar?.blackouts ?? []}
+            />
+          </details>
+        </section>
+      ) : null}
 
       <section className={styles.toolsWrap} aria-labelledby="tools">
         <h2 id="tools">Your tools</h2>

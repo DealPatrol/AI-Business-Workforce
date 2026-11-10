@@ -6,6 +6,8 @@ import { decidePostCallGate, planPostCallEffects } from '@/lib/ava/post-call-gat
 import { isJunkCallType, meterStoreCall } from '@/lib/ava/store-call-billing';
 import { findLeadByConversationId, insertLead } from '@/lib/leads/store';
 import { getSiteUrl } from '@/lib/site-url';
+import { bookingLinks, bookingWindowLabel } from '@/lib/ava/booking/event';
+import { bookingForConversation, getCalendar } from '@/lib/ava/booking/store';
 import { SMS_SKIPPED_NO_CONSENT, decideOwnerSms } from '@/lib/ava/sms-consent';
 
 type TranscriptTurn = {
@@ -295,8 +297,9 @@ export function deskJobType(lead: Pick<ExtractedCallLead, 'need' | 'orderNumber'
 }
 
 /** Owner-only notes saved with the Desk lead: address, urgency, and store details. */
-export function deskLeadNotes(lead: ExtractedCallLead) {
+export function deskLeadNotes(lead: ExtractedCallLead, bookedWindow = '') {
   const lines: string[] = [];
+  if (bookedWindow) lines.push(`Ava booked: ${bookedWindow}`);
   if (isJunkCallType(lead.callType)) lines.push(`Ava marked this call as ${lead.callType}.`);
   if (lead.address) lines.push(`Address: ${lead.address}`);
   if (lead.urgency) lines.push(`Urgency: ${lead.urgency}`);
@@ -305,11 +308,25 @@ export function deskLeadNotes(lead: ExtractedCallLead) {
   return lines.join('\n').slice(0, 2000);
 }
 
+/** The slot Ava booked on this call, if any. Never throws. */
+async function findCallBooking(conversationId: string, businessLabel: string) {
+  try {
+    const booking = await bookingForConversation(conversationId);
+    if (!booking) return null;
+    const calendar = await getCalendar(booking.calendar_id);
+    const window = bookingWindowLabel(booking, calendar?.timezone || 'America/Chicago');
+    return { booking, window, ...bookingLinks(booking, businessLabel) };
+  } catch (error) {
+    console.error('Unable to look up the booking for %s', conversationId, error);
+    return null;
+  }
+}
+
 /**
  * Puts the call on the customer's Desk (er_leads). Idempotent per conversation and never throws,
  * so a Desk hiccup cannot block the owner's email.
  */
-async function mirrorCallToDesk(lead: ExtractedCallLead, clientId: string | null) {
+async function mirrorCallToDesk(lead: ExtractedCallLead, clientId: string | null, bookedWindow = '') {
   if (!clientId || !lead.conversationId) return { mirrored: false as const, reason: 'no_client' };
   try {
     const existing = await findLeadByConversationId(lead.conversationId);
@@ -323,7 +340,7 @@ async function mirrorCallToDesk(lead: ExtractedCallLead, clientId: string | null
       conversationId: lead.conversationId,
       agentId: lead.agentId || undefined,
       source: 'receptionist call',
-      notes: deskLeadNotes(lead),
+      notes: deskLeadNotes(lead, bookedWindow),
       status: isJunkCallType(lead.callType) ? 'Not a fit' : 'New',
     });
     return { mirrored: true as const };
@@ -405,7 +422,8 @@ export async function savePostCallLead(lead: ExtractedCallLead) {
 
   const row = saved.data as SavedLead;
 
-  await mirrorCallToDesk(lead, target.customer?.id ?? null);
+  const booked = await findCallBooking(lead.conversationId, match?.business_name || 'Ava booking');
+  await mirrorCallToDesk(lead, target.customer?.id ?? null, booked?.window ?? '');
 
   // Online Store plan: $1 per handled call. Idempotent per conversation; never blocks the lead.
   const storeMeter = await meterStoreCall({
@@ -428,8 +446,8 @@ export async function savePostCallLead(lead: ExtractedCallLead) {
     return { skipped: false as const, duplicate: true, leadId: row.id };
   }
 
-  const subject = `New Executive Receptionist lead${lead.callerName ? ` — ${lead.callerName}` : ''}${lead.need ? ` — ${lead.need}` : ''}`;
-  const html = `<div style="font-family:Arial,sans-serif;max-width:680px;margin:auto;color:#17211b"><h1 style="font-size:22px">New Executive Receptionist lead</h1><p>Executive Receptionist finished a call for ${escapeHtml(match?.business_name || 'your business')}.</p><table style="border-collapse:collapse;width:100%"><tr><td><b>Caller</b></td><td>${escapeHtml(lead.callerName || 'Not provided')}</td></tr><tr><td><b>Phone</b></td><td>${escapeHtml(lead.callerPhone || 'Not provided')}</td></tr><tr><td><b>Need</b></td><td>${escapeHtml(lead.need || 'Not provided')}</td></tr><tr><td><b>Address</b></td><td>${escapeHtml(lead.address || 'Not provided')}</td></tr><tr><td><b>Urgency</b></td><td>${escapeHtml(lead.urgency || 'Not provided')}</td></tr>${lead.orderNumber ? `<tr><td><b>Order</b></td><td>${escapeHtml(lead.orderNumber)}</td></tr>` : ''}${lead.email ? `<tr><td><b>Email</b></td><td>${escapeHtml(lead.email)}</td></tr>` : ''}${lead.escalationReason ? `<tr><td><b>Needs a person</b></td><td>${escapeHtml(lead.escalationReason)}</td></tr>` : ''}</table><p>Transcript and recording: <a href="${escapeHtml(`${getSiteUrl()}/desk`)}">open your Desk</a>.</p><h2 style="font-size:18px">Summary</h2><p style="white-space:pre-wrap">${escapeHtml(lead.summary)}</p></div>`;
+  const subject = `${booked ? 'Booked by Ava' : 'New Executive Receptionist lead'}${lead.callerName ? ` — ${lead.callerName}` : ''}${lead.need ? ` — ${lead.need}` : ''}`;
+  const html = `<div style="font-family:Arial,sans-serif;max-width:680px;margin:auto;color:#17211b"><h1 style="font-size:22px">New Executive Receptionist lead</h1><p>Executive Receptionist finished a call for ${escapeHtml(match?.business_name || 'your business')}.</p><table style="border-collapse:collapse;width:100%"><tr><td><b>Caller</b></td><td>${escapeHtml(lead.callerName || 'Not provided')}</td></tr><tr><td><b>Phone</b></td><td>${escapeHtml(lead.callerPhone || 'Not provided')}</td></tr><tr><td><b>Need</b></td><td>${escapeHtml(lead.need || 'Not provided')}</td></tr><tr><td><b>Address</b></td><td>${escapeHtml(lead.address || 'Not provided')}</td></tr><tr><td><b>Urgency</b></td><td>${escapeHtml(lead.urgency || 'Not provided')}</td></tr>${lead.orderNumber ? `<tr><td><b>Order</b></td><td>${escapeHtml(lead.orderNumber)}</td></tr>` : ''}${lead.email ? `<tr><td><b>Email</b></td><td>${escapeHtml(lead.email)}</td></tr>` : ''}${lead.escalationReason ? `<tr><td><b>Needs a person</b></td><td>${escapeHtml(lead.escalationReason)}</td></tr>` : ''}</table>${booked ? `<p style="background:#eef5ef;padding:12px;border-radius:8px"><b>Ava booked this caller for ${escapeHtml(booked.window)}.</b><br><a href="${escapeHtml(booked.googleUrl)}">Add to Google Calendar</a>${booked.icsUrl ? ` · <a href="${escapeHtml(booked.icsUrl)}">Download .ics (Outlook, Apple)</a>` : ''}</p>` : ''}<p>Transcript and recording: <a href="${escapeHtml(`${getSiteUrl()}/desk`)}">open your Desk</a>.</p><h2 style="font-size:18px">Summary</h2><p style="white-space:pre-wrap">${escapeHtml(lead.summary)}</p></div>`;
 
   let sms: AvaLeadSmsResult = { ...SMS_SKIPPED_NO_CONSENT };
   if (effects.sendEmail) {

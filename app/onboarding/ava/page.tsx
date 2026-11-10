@@ -635,6 +635,22 @@ function AvaOnboardingForm() {
                 Add a phone, an email, or both. Lead emails go to the email address. Lead texts go to the
                 phone only if you tick the box above.
               </p>
+              {!isStoreOnboarding ? (
+                <label>
+                  Live transfer number (optional)
+                  <input
+                    name="transferPhone"
+                    inputMode="tel"
+                    autoComplete="off"
+                    placeholder="(205) 555-0199"
+                    aria-describedby="transfer-help"
+                  />
+                  <small id="transfer-help" className={styles.fieldHelp}>
+                    For emergencies and callers who ask for a person, Ava connects the call to this number. Leave it blank
+                    and she takes a message instead.
+                  </small>
+                </label>
+              ) : null}
               {sessionId ? (
                 <>
                   <p className={styles.notice}>
