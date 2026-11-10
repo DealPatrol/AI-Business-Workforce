@@ -108,6 +108,8 @@ export function slotLabel(date: string, startMin: number, endMin: number) {
   );
   const a = spokenTime(startMin);
   const b = spokenTime(endMin);
+  if (endMin === 12 * 60) return `${day}, ${a.text} to noon`;
+  if (startMin === 12 * 60) return `${day}, noon to ${b.text} ${b.suffix}`;
   return a.suffix === b.suffix ? `${day}, ${a.text} to ${b.text} ${b.suffix}` : `${day}, ${a.text} ${a.suffix} to ${b.text} ${b.suffix}`;
 }
 
