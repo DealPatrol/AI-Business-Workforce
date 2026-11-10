@@ -1,15 +1,9 @@
 import type { MetadataRoute } from 'next';
-import { absoluteSiteUrl } from '@/lib/site-url';
+import { requestHost } from '@/lib/seo/request-host';
+import { robotsForHost } from '@/lib/seo/sitemaps';
 
-export default function robots(): MetadataRoute.Robots {
-  return {
-    rules: [
-      {
-        userAgent: '*',
-        allow: ['/', '/prospector/unsubscribe'],
-        disallow: ['/api/', '/onboarding/', '/dashboard/', '/login', '/sales', '/demo', '/audit'],
-      },
-    ],
-    sitemap: absoluteSiteUrl('/sitemap.xml'),
-  };
+export const dynamic = 'force-dynamic';
+
+export default async function robots(): Promise<MetadataRoute.Robots> {
+  return robotsForHost(await requestHost());
 }

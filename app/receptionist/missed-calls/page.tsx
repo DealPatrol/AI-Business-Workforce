@@ -4,6 +4,7 @@ import { TrialSignupLink } from '@/components/dispatch/TrialSignupLink';
 import { MISSED_CALL_ADS, missedCallSeo, missedCallTrade } from '@/lib/dispatch/missed-call-ads';
 import { AVA_OFFER } from '@/lib/ava/pricing';
 import { faqNode, jsonLdGraph } from '@/lib/ava/structured-data';
+import { urlsForRequest } from '@/lib/seo/host-metadata';
 import { absoluteSiteUrl } from '@/lib/site-url';
 import styles from './missed.module.css';
 
@@ -26,6 +27,8 @@ type PageProps = {
   searchParams: Promise<{ trade?: string | string[] }>;
 };
 
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata({ searchParams }: PageProps): Promise<Metadata> {
   const params = await searchParams;
   const raw = Array.isArray(params.trade) ? params.trade[0] : params.trade;
@@ -33,12 +36,13 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   const seo = missedCallSeo(ad.trade);
   const title = seo.title;
   const description = seo.description;
+  const { canonical, openGraphUrl } = await urlsForRequest('/receptionist/missed-calls', '/receptionist/missed-calls');
   return {
     title: { absolute: title },
     description,
-    alternates: { canonical: '/receptionist/missed-calls' },
+    alternates: { canonical },
     robots: raw && raw !== 'hvac' ? { index: false, follow: true } : { index: true, follow: true },
-    openGraph: { title, description, url: '/receptionist/missed-calls', siteName: 'Front Porch Growth', type: 'website' },
+    openGraph: { title, description, url: openGraphUrl, siteName: 'Front Porch Growth', type: 'website' },
   };
 }
 

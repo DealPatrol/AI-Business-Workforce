@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { SuiteShell } from '@/components/suite/SuiteShell';
 import { OfferPricingLayout } from '@/components/ava/OfferPricingLayout';
+import { urlsForRequest } from '@/lib/seo/host-metadata';
 import {
   POSTCARD_PRICE_SUMMARY,
   POSTCARD_SETUP_LABEL,
@@ -16,23 +17,28 @@ const seo = pageSeo('/pricing');
 const title = renderedTitle(seo);
 const description = seo.description;
 
-export const metadata: Metadata = {
-  title: metadataTitle(seo),
-  description,
-  alternates: { canonical: '/pricing' },
-  openGraph: {
-    title,
+export const dynamic = 'force-dynamic';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { canonical, openGraphUrl } = await urlsForRequest('/pricing', '/pricing');
+  return {
+    title: metadataTitle(seo),
     description,
-    url: '/pricing',
-    siteName: 'Front Porch Growth',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title,
-    description,
-  },
-};
+    alternates: { canonical },
+    openGraph: {
+      title,
+      description,
+      url: openGraphUrl,
+      siteName: 'Front Porch Growth',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
+  };
+}
 
 const rows = [
   ['YardMailer setup', 'Charged once. Later orders leave it off when you are signed in and a paid setup is already on your account.', POSTCARD_SETUP_LABEL],

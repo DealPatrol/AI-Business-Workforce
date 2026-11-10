@@ -6,6 +6,7 @@ import { ArrowLeft, CheckCircle2, Loader2, Mail, Sparkles } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { CheckoutForm } from '@/components/checkout/CheckoutForm';
 import { AVA_VOICE_OPTIONS } from '@/lib/ava/voice-options';
+import { buildWebChatEmbedSnippet } from '@/lib/ava/channels';
 import {
   AVA_PLANS,
   avaPlanPriceLine,
@@ -29,7 +30,14 @@ type OnboardingResponse = {
   provisioning?: {
     status?: string;
     message?: string;
+    agentId?: string | null;
   };
+  channels?: {
+    channelVoice?: boolean;
+    channelSms?: boolean;
+    channelWebChat?: boolean;
+  };
+  webChatEmbed?: string | null;
 };
 
 type Prefill = {
@@ -99,6 +107,8 @@ function AvaOnboardingForm() {
   const qualificationId = searchParams.get('qualificationId') || '';
   const prefillToken = searchParams.get('prefillToken') || searchParams.get('token') || '';
   const [provisionNote, setProvisionNote] = useState('');
+  const [webChatEmbed, setWebChatEmbed] = useState('');
+  const [webChatAgentId, setWebChatAgentId] = useState('');
   const [status, setStatus] = useState<SubmissionStatus>('idle');
   const [error, setError] = useState('');
   const [emailFallback, setEmailFallback] = useState('');
@@ -113,6 +123,17 @@ function AvaOnboardingForm() {
   const [linkError, setLinkError] = useState('');
   const sessionId = searchParams.get('session_id') || '';
   const [editToken, setEditToken] = useState(searchParams.get('edit_token') || '');
+
+  useEffect(() => {
+    if (!document.getElementById('elevenlabs-convai-embed')) {
+      const script = document.createElement('script');
+      script.id = 'elevenlabs-convai-embed';
+      script.src = 'https://unpkg.com/@elevenlabs/convai-widget-embed';
+      script.async = true;
+      script.type = 'text/javascript';
+      document.body.appendChild(script);
+    }
+  }, []);
 
   useEffect(() => {
     if (!sessionId) {
@@ -229,11 +250,15 @@ function AvaOnboardingForm() {
       string,
       FormDataEntryValue
     >;
-    const payload: Record<string, FormDataEntryValue | string> = {
+    const payload: Record<string, FormDataEntryValue | string | boolean> = {
       ...formPayload,
       calendarPreference: String(
         formPayload.leadHandoff || 'The owner gets the details and follows up with the caller.',
       ),
+      // Explicit booleans so unchecked boxes are not treated as defaults.
+      channelVoice: formPayload.channelVoice === 'true' || formPayload.channelVoice === 'on',
+      channelSms: formPayload.channelSms === 'true' || formPayload.channelSms === 'on',
+      channelWebChat: formPayload.channelWebChat === 'true' || formPayload.channelWebChat === 'on',
     };
     const eventId = crypto.randomUUID();
     const attribution = readAttribution();
@@ -281,6 +306,18 @@ function AvaOnboardingForm() {
       setProvisionNote(
         typeof result.provisioning?.message === 'string' ? result.provisioning.message : '',
       );
+      const agentId =
+        typeof result.provisioning?.agentId === 'string' ? result.provisioning.agentId : '';
+      setWebChatAgentId(agentId);
+      if (result.channels?.channelWebChat) {
+        setWebChatEmbed(
+          typeof result.webChatEmbed === 'string' && result.webChatEmbed
+            ? result.webChatEmbed
+            : buildWebChatEmbedSnippet(agentId),
+        );
+      } else {
+        setWebChatEmbed('');
+      }
       trackOnboardingSubmitted({
         eventId: typeof result.eventId === 'string' ? result.eventId : eventId,
         email: contact.email,
@@ -383,6 +420,35 @@ function AvaOnboardingForm() {
               {provisionNote ||
                 'If automatic setup is on, Executive Receptionist’s agent is created from this form. The phone number stays pending until Cole attaches it and you pass one live test call.'}
             </p>
+            {webChatEmbed ? (
+              <div className={styles.embedBox}>
+                <h3>Website chat embed</h3>
+                <p>
+                  Paste this snippet before the closing <code>&lt;/body&gt;</code> on your site.
+                  Visitors can talk or type. Voice answering still needs Cole to attach your phone
+                  number.
+                  {webChatAgentId
+                    ? null
+                    : ' Your agent ID is filled in after Cole finishes provisioning — he also has this snippet in the setup email.'}
+                </p>
+                <pre className={styles.embedCode}>{webChatEmbed}</pre>
+                <button
+                  type="button"
+                  className={styles.secondary}
+                  onClick={() => {
+                    void navigator.clipboard?.writeText(webChatEmbed);
+                  }}
+                >
+                  Copy embed code
+                </button>
+                {webChatAgentId ? (
+                  <div className={styles.demoWidget}>
+                    <p className={styles.notice}>Preview (same agent):</p>
+                    <elevenlabs-convai agent-id={webChatAgentId}></elevenlabs-convai>
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
             <Link href="/ava">Return to Executive Receptionist</Link>
           </section>
         ) : !prefillReady ? (
@@ -469,6 +535,36 @@ function AvaOnboardingForm() {
                   placeholder="No heat is urgent. Call Sam; if no answer, text him and tell the caller we will respond in 15 minutes."
                   defaultValue={prefill.urgentCallRules}
                 />
+              </label>
+            </fieldset>
+
+
+            <fieldset className={styles.section}>
+              <legend>How customers reach you</legend>
+              <p className={styles.notice}>
+                Pick any combination. Same greeting and rules on every channel you turn on. Texting
+                is available after setup — we will not send customer texts until then.
+              </p>
+              <label className={styles.consent}>
+                <input type="checkbox" name="channelVoice" value="true" defaultChecked />
+                <span>
+                  <strong>Voice calls</strong> — answer the phone when callers ring (Cole attaches
+                  your number and you test one live call first).
+                </span>
+              </label>
+              <label className={styles.consent}>
+                <input type="checkbox" name="channelWebChat" value="true" defaultChecked={false} />
+                <span>
+                  <strong>Website chat box</strong> — paste a chat widget on your site. Callers can
+                  talk or type in the browser.
+                </span>
+              </label>
+              <label className={styles.consent}>
+                <input type="checkbox" name="channelSms" value="true" defaultChecked={false} />
+                <span>
+                  <strong>Texting (available after setup)</strong> — missed-call text-back and reply
+                  forwarding. Stored when you check this; sending stays off until setup is complete.
+                </span>
               </label>
             </fieldset>
 

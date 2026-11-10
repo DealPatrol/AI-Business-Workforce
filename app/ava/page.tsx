@@ -12,12 +12,19 @@ import { AVA_OFFER, avaTrialThenPriceCopy } from '@/lib/ava/pricing';
 import { avaProductNode, avaServiceNode, avaSoftwareNode, faqNode, jsonLdGraph } from '@/lib/ava/structured-data';
 import { LIVE_DEMO_URL } from '@/lib/ava/demo-phone';
 import { AVA_GUIDES } from '@/lib/ava/trade-pages';
+import { urlsForRequest } from '@/lib/seo/host-metadata';
 import { absoluteSiteUrl } from '@/lib/site-url';
 
-export const metadata: Metadata = {
-  alternates: { canonical: absoluteSiteUrl('/ava') },
-  openGraph: { url: absoluteSiteUrl('/ava') },
-};
+export const dynamic = 'force-dynamic';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const published = absoluteSiteUrl('/ava');
+  const { canonical, openGraphUrl } = await urlsForRequest('/ava', published, published);
+  return {
+    alternates: { canonical },
+    openGraph: { url: openGraphUrl },
+  };
+}
 
 // Self-hosted (latin subset, SIL OFL) so the build never depends on fetching
 // from Google Fonts: a failed fetch there broke the Vercel build.
@@ -68,7 +75,7 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
   const structuredData = jsonLdGraph([
     avaSoftwareNode({
       description:
-        'AI receptionist that answers calls for contractors and small businesses, qualifies the lead, and emails the owner a summary.',
+        'AI receptionist that answers calls and website chat for contractors and small businesses, qualifies the lead, and emails the owner.',
       url: canonical,
     }),
     avaServiceNode({

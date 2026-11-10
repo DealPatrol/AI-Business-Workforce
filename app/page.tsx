@@ -163,7 +163,7 @@ export default function SuiteHomePage() {
             <a className={styles.primary} href={AVA_OFFER.demoUrl} target="_blank" rel="noopener noreferrer">
               Try the live demo
             </a>
-            <a className={styles.secondary} href="#bundle">
+            <a className={styles.secondary} href="#services">
               See what you get
             </a>
           </div>
@@ -208,6 +208,52 @@ export default function SuiteHomePage() {
             {type}
           </span>
         ))}
+      </section>
+
+      <section className={styles.band} id="services">
+        <span className={styles.kicker}>Front Porch Growth services</span>
+        <h2 className={styles.h2}>Find more customers. Make every opportunity count.</h2>
+        <p className={styles.body}>
+          From a personalized postcard to the call that follows, explore ways to reach customers and keep your business moving.
+          Choose a tool below or contact us to discuss your goals.
+        </p>
+        <ul className={styles.alsoGrid}>
+          <li className={styles.also}>
+            <h3>AI Receptionists</h3>
+            <p>Answer calls and capture leads when you are busy. Executive Receptionist takes the details so you can follow up.</p>
+            <Link href="/receptionist">Explore the receptionist</Link>
+          </li>
+          <li className={styles.also}>
+            <h3>Current &amp; Future Postcards</h3>
+            <p>Show homeowners their property today alongside an AI-generated concept of what it could become. Each card can link to an estimate request.</p>
+            <Link href="/postcards">Explore postcards</Link>
+          </li>
+          <li className={styles.also}>
+            <h3>Websites &amp; Landing Pages</h3>
+            <p>Give customers a professional place to discover your business and request a quote.</p>
+            <a href="mailto:hello@frontporchgrowth.com?subject=Website%20and%20landing%20page%20inquiry">Ask about websites</a>
+          </li>
+          <li className={styles.also}>
+            <h3>Lead Generation</h3>
+            <p>Find potential customers and build a starting point for outreach. Lead Scout searches public business listings by trade and city.</p>
+            <Link href="/lead-scout">Explore Lead Scout</Link>
+          </li>
+          <li className={styles.also}>
+            <h3>Follow-Ups</h3>
+            <p>Keep opportunities moving with tools for drafting follow-up messages and a missed-call text-back option.</p>
+            <Link href="/missed-call">Explore missed-call text-back</Link>
+          </li>
+          <li className={styles.also}>
+            <h3>Social Media &amp; Content</h3>
+            <p>Discuss content that helps people discover your business and understand what you offer.</p>
+            <a href="mailto:hello@frontporchgrowth.com?subject=Social%20media%20and%20content%20inquiry">Ask about content</a>
+          </li>
+          <li className={styles.also}>
+            <h3>Growth Strategy</h3>
+            <p>Discuss a practical approach to reaching more customers and growing your business.</p>
+            <a href="mailto:hello@frontporchgrowth.com?subject=Growth%20strategy%20inquiry">Discuss your goals</a>
+          </li>
+        </ul>
       </section>
 
       <section className={styles.band} id="founder">

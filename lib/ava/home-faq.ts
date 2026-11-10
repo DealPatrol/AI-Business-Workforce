@@ -8,15 +8,19 @@ export const AVA_HOME_FAQS = [
     a: 'Yes. Play the prerecorded sample call at the top of this page, or talk to Executive Receptionist in the browser. The sample is a landscaping estimate, not a recording of your customers. The live demo uses your microphone and does not need a credit card.',
   },
   {
+    q: 'How do customers reach the receptionist — phone, chat, or text?',
+    a: 'Voice calls and a website chat box are available now (chat is a paste-in widget; phone needs Cole to attach your number and a live test). Texting is available after setup — you can request it during onboarding, but we do not send customer texts until setup is complete. Same greeting and rules on every channel you turn on.',
+  },
+  {
     q: 'How do I start the paid trial?',
     a: 'Start the 14-day pilot from checkout. Stripe collects a card and does not charge until after the pilot, and then only when a booked job is confirmed. Sending the setup form without checkout only emails Cole your notes. It does not start the subscription.',
   },
   {
     q: 'What does Executive Receptionist do on a call?',
-    a: 'It answers, asks for the caller’s name, number, and what they need, and emails that lead to the address you set. Urgent handling follows rules you write. It is an AI receptionist, and the greeting says so.',
+    a: 'She answers, asks for the caller’s name, number, and what they need, and emails that lead to you (owner text alerts only if you opt in on the setup form). Urgent handling follows rules you write. She is an AI receptionist, and the greeting says so.',
   },
   {
     q: 'Which businesses is this for?',
-    a: 'HVAC and plumbing shops first. Other home-service trades can follow. Dental offices, med spas, and law firms are on hold for a later wave. Executive Receptionist is not a HIPAA product and is not legal advice.',
+    a: 'Home-service shops are the main fit: HVAC, plumbing, roofing, lawn care, and similar trades. Dentists, law firms, and other small businesses can use the same offer if the questions you approve are appropriate. Executive Receptionist is not a HIPAA product and is not legal advice.',
   },
 ] as const;

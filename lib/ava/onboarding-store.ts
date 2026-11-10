@@ -11,6 +11,7 @@ import {
   type AvaProvisioningResult,
   provisionAvaAgent,
 } from '@/lib/ava/provisioning';
+import { type AvaChannelFlags, DEFAULT_CHANNEL_FLAGS } from '@/lib/ava/channels';
 
 export type AvaOnboardingInput = AvaOnboardingDetails & {
   sessionId: string;
@@ -22,6 +23,9 @@ export type AvaOnboardingInput = AvaOnboardingDetails & {
   smsConsent?: boolean;
   smsConsentIp?: string;
   editToken?: string;
+  channelVoice?: boolean;
+  channelSms?: boolean;
+  channelWebChat?: boolean;
 };
 
 type AvaOnboardingRow = {
@@ -35,6 +39,9 @@ type AvaOnboardingRow = {
   staff_email?: string | null;
   staff_phone?: string | null;
   sms_consent?: boolean | null;
+  channel_voice?: boolean | null;
+  channel_sms?: boolean | null;
+  channel_web_chat?: boolean | null;
   calendar_preference: string;
   urgent_call_rules: string;
   stripe_session_id: string | null;
@@ -122,6 +129,7 @@ export async function saveAvaOnboarding(input: AvaOnboardingInput) {
           Boolean(stored.sms_consent) &&
           !notificationDestinationsChanged(currentDestinations, nextDestinations),
       });
+      await saveChannelFlags(saved.id, input);
       await linkAvaCustomerToOnboarding({
         sessionId: input.sessionId,
         onboardingId: saved.id,
@@ -155,6 +163,7 @@ export async function saveAvaOnboarding(input: AvaOnboardingInput) {
   const saved = data as AvaOnboardingRow;
   await saveOptionalOnboardingFields(saved.id, input);
   await saveSmsConsent(saved.id, input, { keepExisting: false, firstSave: true });
+  await saveChannelFlags(saved.id, input);
   await linkAvaCustomerToOnboarding({
     sessionId: input.sessionId,
     onboardingId: saved.id,
@@ -224,6 +233,30 @@ async function saveSmsConsent(
     if (error) console.error('Executive Receptionist SMS consent was not saved', error.message);
   } catch (error) {
     console.error('Executive Receptionist SMS consent was not saved', error);
+  }
+}
+
+
+async function saveChannelFlags(id: string, input: AvaOnboardingInput) {
+  const flags: AvaChannelFlags = {
+    channelVoice: input.channelVoice ?? DEFAULT_CHANNEL_FLAGS.channelVoice,
+    channelSms: input.channelSms ?? DEFAULT_CHANNEL_FLAGS.channelSms,
+    channelWebChat: input.channelWebChat ?? DEFAULT_CHANNEL_FLAGS.channelWebChat,
+  };
+  try {
+    const supabase = createAdminClient();
+    const { error } = await supabase
+      .from('ava_onboardings')
+      .update({
+        channel_voice: flags.channelVoice,
+        channel_sms: flags.channelSms,
+        channel_web_chat: flags.channelWebChat,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', id);
+    if (error) console.error('Executive Receptionist channel flags were not saved', error.message);
+  } catch (error) {
+    console.error('Executive Receptionist channel flags were not saved', error);
   }
 }
 

@@ -122,5 +122,6 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/|.*\\..*).*)'],
+  // The page matcher skips paths with a dot. These two still need the www → apex redirect.
+  matcher: ['/((?!_next/|.*\\..*).*)', '/robots.txt', '/sitemap.xml'],
 };

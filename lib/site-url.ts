@@ -40,10 +40,14 @@ export function getSiteUrl() {
   );
 }
 
-export function absoluteSiteUrl(path: string) {
-  const base = getSiteUrl();
+export function absoluteUrl(origin: string, path: string) {
+  const base = origin.replace(/\/$/, '');
   if (!path || path === '/') return `${base}/`;
   return `${base}${path.startsWith('/') ? path : `/${path}`}`;
+}
+
+export function absoluteSiteUrl(path: string) {
+  return absoluteUrl(getSiteUrl(), path);
 }
 
 /**
@@ -84,6 +88,15 @@ export function executiveReceptionistWwwRedirectUrl(hostHeader: string | null | 
 /** Dedicated marketing host for the Executive Receptionist landing page. */
 export function isExecutiveReceptionistHost(hostHeader: string | null | undefined) {
   return EXECUTIVE_RECEPTIONIST_HOSTS.has(hostnameOf(hostHeader));
+}
+
+/**
+ * Origin for robots.txt, sitemap.xml, and host-specific canonicals.
+ * Executive Receptionist hosts use their apex. Every other host keeps the public site origin.
+ */
+export function publicIndexOrigin(hostHeader: string | null | undefined) {
+  if (isExecutiveReceptionistHost(hostHeader)) return EXECUTIVE_RECEPTIONIST_ORIGIN;
+  return getSiteUrl();
 }
 
 /** Page paths that should leave the legacy Vercel host. Never /api, /_next, or files. */
