@@ -6,9 +6,9 @@
 - What it does: answers your business calls 24/7 when you forward your line to it, asks the questions you approve (name, callback number, address, what they need, how urgent), and emails you the lead.
 - You keep your existing business number. Calls reach the receptionist by call forwarding from your phone.
 - Channels: phone calls and a chat box for your website, both from one AI agent. Texting is available after setup.
-- What it does not do: it does not book your calendar, quote prices you have not approved, or give technical, legal, or medical advice. You call the lead back and schedule in the system you already use.
+- What it does not do: it does not quote prices you have not approved or give technical, legal, or medical advice. Booking during the call is optional: when the owner turns it on, it offers open windows from hours the owner sets and books one.
 - Who it is for: HVAC, plumbing, roofing, electrical, lawn care, landscaping, cleaning, pest control, and other home-service shops, plus dentists, law firms, med spas, and advisors (executivereceptionist.com).
-- Try it: call the live demo line (256) 663-7007. It answers as the sample business "Front Porch Heating and Air".
+- Try it: call the live demo line (256) 952-4935. It answers as Porchlight Heating & Air, a made-up HVAC company. There is also a browser demo at https://executivereceptionist.com/receptionist.
 - Plans and the free trial are published on the pricing page: https://frontporchgrowth.com/pricing
 
 ## Key facts: YardMailer postcards
