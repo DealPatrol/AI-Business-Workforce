@@ -9,6 +9,7 @@ import {
 import { postcardSetupForCheckout } from '@/lib/postcards/setup-session';
 import {
   buildAvaCheckoutParams,
+  buildAvaStoreCheckoutParams,
   buildPostcardCheckoutParams,
   createStripeCheckoutSession,
   isAvaPlanKey,
@@ -152,6 +153,37 @@ async function avaCheckoutUrl(
   return { url: result.url };
 }
 
+async function avaStoreCheckoutUrl(req: NextRequest, qualificationId?: string) {
+  const secret = process.env.STRIPE_SECRET_KEY;
+  if (!secret) {
+    console.error('STRIPE_SECRET_KEY is not set; store checkout cannot start.');
+    return { error: 'Store checkout is not connected yet.', status: 503 as const };
+  }
+  const basePriceId = readStripePriceId(process.env.STRIPE_AVA_STORE_BASE_PRICE_ID);
+  const callPriceId = readStripePriceId(process.env.STRIPE_AVA_STORE_CALL_PRICE_ID);
+  if (!basePriceId || !callPriceId) {
+    console.error('Store price IDs are not set; refusing to start store checkout.');
+    return { error: 'Store checkout is not connected to the $119 + $1 per call prices yet.', status: 503 as const };
+  }
+  const params = buildAvaStoreCheckoutParams({
+    origin: req.nextUrl.origin,
+    basePriceId,
+    callPriceId,
+    qualificationId: sanitizeQualificationId(qualificationId),
+  });
+  const result = await createStripeCheckoutSession(secret, params);
+  if ('error' in result) {
+    console.error('Stripe store checkout error', result.error);
+    return { error: result.error || 'Could not start store checkout.', status: 500 as const };
+  }
+  try {
+    await track('checkout-started', { plan: 'store', product: 'ava' }, { headers: req.headers });
+  } catch (error) {
+    console.error('Store checkout-started analytics failed', error);
+  }
+  return { url: result.url };
+}
+
 function isPostcardRequest(offer: string, planKey: string) {
   return (
     offer === 'postcard' ||
@@ -221,6 +253,19 @@ export async function POST(req: NextRequest) {
       );
       if ('error' in result) {
         return checkoutError(req, result.error || 'Could not start postcard checkout.', 500, '/founding?checkout=error');
+      }
+      return checkoutResult(req, result.url);
+    }
+
+    if (planKey === 'store') {
+      const result = await avaStoreCheckoutUrl(req, String(body?.qualificationId || ''));
+      if ('error' in result) {
+        return checkoutError(
+          req,
+          result.error || 'Could not start store checkout.',
+          result.status ?? 500,
+          '/start?checkout=unavailable#ecommerce',
+        );
       }
       return checkoutResult(req, result.url);
     }

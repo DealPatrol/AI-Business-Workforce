@@ -122,3 +122,6 @@
   .heroActions > *, .heroActions :global(.checkout-form), .heroActions :global(.checkout-form) button { width: 100%; }
   .brand small { display: none; }
 }
+
+.storePrice { margin-top: 26px; display: grid; gap: 10px; }
+.storePrice .note, .storePrice .note a { color: inherit; opacity: 0.85; }

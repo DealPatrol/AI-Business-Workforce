@@ -4,7 +4,10 @@ import { ExclusiveAudio } from '@/components/receptionist/ExclusiveAudio';
 import { VoicePicker } from '@/components/receptionist/VoicePicker';
 import { OfferPricingLayout } from '@/components/ava/OfferPricingLayout';
 import { IndustryDemo } from '@/components/receptionist/IndustryDemo';
+import { StoreCheckoutButton, StorePricing } from '@/components/ava/StorePricing';
 import { AVA_OFFER } from '@/lib/ava/pricing';
+import { AVA_STORE_OFFER } from '@/lib/ava/store-pricing';
+import { avaStoreOfferNode, faqNode, jsonLdGraph } from '@/lib/ava/structured-data';
 import { EXAMPLE_NOTES, EXECUTIVE_FAQS, EXECUTIVE_INDUSTRIES } from '@/lib/executive-receptionist';
 import { ER_DEMO_NICHES, type ErDemoNiche } from '@/lib/er-demos';
 import { liveWidgetEnabled, realFaceEnabled } from '@/lib/live-receptionist/config';
@@ -25,6 +28,23 @@ const defaultHero = {
   lede: 'Executive Receptionist is the AI phone receptionist built first for HVAC and plumbing companies, with matching demos for roofing, electrical, and auto repair. It greets the caller in a voice you choose, takes the name, number, and what the job is, and emails you the summary so you can call back and book the work.',
 };
 
+const storeTrustPoints = [
+  'Prices published below',
+  'Free 14-day trial, $0 today',
+  '$119/month + $1 per call Ava handles',
+  'Calls during the trial are free',
+  'Try the live demo before you pay',
+];
+
+const STORE_FAQS = [
+  { q: 'What does the online store plan cost?', a: `${AVA_STORE_OFFER.priceLine}. ${AVA_STORE_OFFER.summary}` },
+  { q: 'What counts as a call Ava handles?', a: AVA_STORE_OFFER.callDefinition },
+  {
+    q: 'What does she do with calls that need a person?',
+    a: 'Damaged or wrong items, missing deliveries, double charges, and anyone who asks for a manager go to your team with the caller’s name, number, order number, and the reason. She never takes card numbers.',
+  },
+];
+
 type Props = {
   niche?: ErDemoNiche;
 };
@@ -34,9 +54,26 @@ export function ReceptionistLanding({ niche }: Props) {
   const kicker = niche?.heroKicker ?? defaultHero.kicker;
   const headline = niche?.heroHeadline ?? defaultHero.headline;
   const lede = niche?.heroLede ?? defaultHero.lede;
+  const isStore = niche?.slug === 'ecommerce';
+  const trust = isStore ? storeTrustPoints : trustPoints;
+  const storeJsonLd = isStore
+    ? jsonLdGraph([
+        {
+          '@type': 'Product',
+          name: 'Executive Receptionist - Online Store',
+          description: 'AI phone receptionist for online stores: order status, shipping, returns, and sizing calls.',
+          brand: { '@type': 'Brand', name: 'Executive Receptionist' },
+          offers: [avaStoreOfferNode('/receptionist/ecommerce')],
+        },
+        faqNode(STORE_FAQS),
+      ])
+    : null;
 
   return (
     <main className={styles.page}>
+      {storeJsonLd ? (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(storeJsonLd).replace(/</g, '\\u003c') }} />
+      ) : null}
       <nav className={styles.nav}>
         <Link href="/receptionist">Executive Receptionist</Link>
         <div>
@@ -69,7 +106,7 @@ export function ReceptionistLanding({ niche }: Props) {
           <a href={AVA_OFFER.contactPhoneHref}>{AVA_OFFER.contactPhoneDisplay}</a>.
         </p>
         <ul className={styles.trust} aria-label="What you can check before you buy">
-          {trustPoints.map((point) => (
+          {trust.map((point) => (
             <li key={point}>{point}</li>
           ))}
         </ul>
@@ -143,7 +180,15 @@ export function ReceptionistLanding({ niche }: Props) {
       </section>
 
       <section className={styles.band} id="pricing">
-        <OfferPricingLayout variant="section" showTopbar={false} />
+        {isStore ? (
+          <div className={styles.sectionHead}>
+            <p className={styles.kicker}>Online store pricing</p>
+            <h2>{AVA_STORE_OFFER.priceLine}.</h2>
+            <StorePricing />
+          </div>
+        ) : (
+          <OfferPricingLayout variant="section" showTopbar={false} />
+        )}
       </section>
 
       <section className={styles.band} id="examples">
@@ -168,7 +213,7 @@ export function ReceptionistLanding({ niche }: Props) {
           <h2>Plain answers.</h2>
         </div>
         <div className={styles.faq}>
-          {EXECUTIVE_FAQS.map((faq) => (
+          {(isStore ? [...STORE_FAQS, ...EXECUTIVE_FAQS.filter((faq) => faq.q !== 'What does it cost?')] : EXECUTIVE_FAQS).map((faq) => (
             <details key={faq.q}>
               <summary>{faq.q}</summary>
               <p>{faq.a}</p>
@@ -184,15 +229,19 @@ export function ReceptionistLanding({ niche }: Props) {
           <a className={styles.gold} href="#demo">
             Try the live demo
           </a>
-          <a
-            className={styles.quiet}
-            href={`mailto:${AVA_OFFER.contactEmail}?subject=${encodeURIComponent('Start an Executive Receptionist pilot')}`}
-          >
-            Ask Cole about a pilot
-          </a>
+          {isStore ? (
+            <StoreCheckoutButton className={styles.quiet} />
+          ) : (
+            <a
+              className={styles.quiet}
+              href={`mailto:${AVA_OFFER.contactEmail}?subject=${encodeURIComponent('Start an Executive Receptionist pilot')}`}
+            >
+              Ask Cole about a pilot
+            </a>
+          )}
         </div>
         <p className={styles.fine}>
-          {AVA_OFFER.summary} {AVA_OFFER.guarantee} Call{' '}
+          {isStore ? AVA_STORE_OFFER.summary : `${AVA_OFFER.summary} ${AVA_OFFER.guarantee}`} Call{' '}
           <a href={AVA_OFFER.contactPhoneHref}>{AVA_OFFER.contactPhoneDisplay}</a>.
         </p>
         <p className={styles.fine}>

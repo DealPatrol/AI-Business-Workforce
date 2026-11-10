@@ -11,13 +11,13 @@ const CHOICES = [
 ] as const;
 
 /** One-tap decisions on a new lead. Uses the same PATCH /api/leads/[id] as the lead page. */
-export function LeadActions({ id }: { id: string }) {
+export function LeadActions({ id, store = false }: { id: string; store?: boolean }) {
   const router = useRouter();
   const [busy, setBusy] = useState('');
   const [error, setError] = useState('');
 
   async function choose(status: string) {
-    if (status === 'Booked' && !window.confirm('Mark this as a booked job? Booked jobs are billed at $25 each, max $297 a month.')) return;
+    if (status === 'Booked' && !store && !window.confirm('Mark this as a booked job? Booked jobs are billed at $25 each, max $297 a month.')) return;
     setBusy(status);
     setError('');
     try {
@@ -49,7 +49,7 @@ export function LeadActions({ id }: { id: string }) {
           disabled={Boolean(busy)}
           onClick={() => choose(choice.status)}
         >
-          {busy === choice.status ? 'Saving…' : choice.label}
+          {busy === choice.status ? 'Saving…' : store && choice.status === 'Booked' ? 'Resolved' : choice.label}
         </button>
       ))}
       {error ? <p className={styles.actionError} role="alert">{error}</p> : null}

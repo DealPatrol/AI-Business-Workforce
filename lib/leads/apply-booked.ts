@@ -1,3 +1,4 @@
+import { STORE_PLAN_KEY } from '@/lib/ava/store-pricing';
 import { STRIPE_API_VERSION } from '@/lib/stripe-checkout';
 import { createAdminClient } from '@/lib/supabase/admin';
 import {
@@ -10,16 +11,19 @@ import type { ErLead, LeadStatus } from '@/lib/leads/types';
 
 const STRIPE_API = 'https://api.stripe.com/v1';
 
-async function stripeCustomerIdForClient(clientId: string | null) {
-  if (!clientId) return null;
+async function billingCustomerForClient(clientId: string | null) {
+  if (!clientId) return { stripeCustomerId: null, plan: null };
   const supabase = createAdminClient();
   const { data, error } = await supabase
     .from('ava_customers')
-    .select('stripe_customer_id')
+    .select('stripe_customer_id, plan')
     .eq('id', clientId)
     .maybeSingle();
   if (error) throw new Error(`Unable to load receptionist client: ${error.message}`);
-  return (data?.stripe_customer_id as string | null | undefined)?.trim() || null;
+  return {
+    stripeCustomerId: (data?.stripe_customer_id as string | null | undefined)?.trim() || null,
+    plan: ((data?.plan as string | null | undefined) || '').toLowerCase() || null,
+  };
 }
 
 async function postStripeForm(path: string, params: URLSearchParams) {
@@ -117,7 +121,19 @@ export async function applyBookedLead(lead: ErLead) {
     return { lead: updated, billing: plan };
   }
 
-  const stripeCustomerId = await stripeCustomerIdForClient(lead.client_id);
+  const billingCustomer = await billingCustomerForClient(lead.client_id);
+  // Online Store customers pay $1 per handled call (store_call meter), never $25 per booked job.
+  if (billingCustomer.plan === STORE_PLAN_KEY) {
+    const now = new Date().toISOString();
+    const updated = await updateLead(lead.id, {
+      status: 'Booked' as LeadStatus,
+      booked_at: lead.booked_at ?? now,
+      billing_skipped: true,
+      billing_skip_reason: 'store_plan',
+    });
+    return { lead: updated, billing: { type: 'store_plan' as const, action: plan.action } };
+  }
+  const stripeCustomerId = billingCustomer.stripeCustomerId;
   if (!stripeCustomerId) {
     console.info('No Stripe customer on file; booked lead %s was not metered.', lead.id);
     const now = new Date().toISOString();

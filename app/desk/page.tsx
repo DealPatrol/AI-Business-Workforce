@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { AVA_DEMO_LINE } from '@/lib/ava/demo-line';
 import { AVA_OFFER } from '@/lib/ava/pricing';
+import { AVA_STORE_OFFER, STORE_PLAN_KEY, storeMonthlyEstimateCents } from '@/lib/ava/store-pricing';
 import { DESK_TOOLS } from '@/lib/desk-tools';
 import { clientIdsForOwnerEmail, listLeadsForOwner } from '@/lib/leads/store';
 import type { ErLead } from '@/lib/leads/types';
@@ -28,6 +29,7 @@ type CustomerRow = {
   business_name: string | null;
   subscription_status: string | null;
   onboarding_id: string | null;
+  plan: string | null;
 };
 
 type OnboardingRow = {
@@ -63,7 +65,7 @@ async function loadAccount(email: string) {
   const supabase = createAdminClient();
   const { data: customers, error } = await supabase
     .from('ava_customers')
-    .select('id, business_name, subscription_status, onboarding_id, email');
+    .select('id, business_name, subscription_status, onboarding_id, email, plan');
   if (error) throw new Error(error.message);
   const needle = email.trim().toLowerCase();
   // Exact, case-insensitive match in code (an ilike pattern would treat _ and % as wildcards).
@@ -115,7 +117,14 @@ export default async function DeskPage() {
   const newLeads = leads.filter((lead) => lead.status === 'New');
   const monthStart = startOfMonthChicago();
   const bookedThisMonth = leads.filter((lead) => lead.status === 'Booked' && lead.booked_at && new Date(lead.booked_at) >= monthStart).length;
-  const billedThisMonth = Math.min(bookedThisMonth * AVA_OFFER.perBookedJobCents, AVA_OFFER.monthlyCapCents) / 100;
+  const isStore = customer?.plan === STORE_PLAN_KEY;
+  const storeTrial = isStore && customer?.subscription_status === 'trialing';
+  const callsThisMonth = leads.filter((lead) => lead.created_at && new Date(lead.created_at) >= monthStart).length;
+  const billedThisMonth = isStore
+    ? storeTrial
+      ? 0
+      : storeMonthlyEstimateCents(callsThisMonth) / 100
+    : Math.min(bookedThisMonth * AVA_OFFER.perBookedJobCents, AVA_OFFER.monthlyCapCents) / 100;
   const recent = leads.slice(0, 8);
 
   const channels = onboarding
@@ -149,7 +158,7 @@ export default async function DeskPage() {
       <section className={styles.stats} aria-label="This month">
         <article><small>New leads</small><b>{newLeads.length}</b></article>
         <article><small>Booked this month</small><b>{bookedThisMonth}</b></article>
-        <article><small>Billed this month (est.)</small><b>${billedThisMonth}</b><span>max {AVA_OFFER.monthlyCapLabel}</span></article>
+        <article><small>Billed this month (est.)</small><b>${billedThisMonth}</b><span>{isStore ? (storeTrial ? 'Free during your trial' : `${AVA_STORE_OFFER.monthlyLabel} + ${AVA_STORE_OFFER.perCallLabel} × ${callsThisMonth} calls`) : `max ${AVA_OFFER.monthlyCapLabel}`}</span></article>
         <article><small>All leads</small><b>{leads.length}</b></article>
       </section>
 
@@ -183,7 +192,7 @@ export default async function DeskPage() {
                       Call back {lead.caller_phone}
                     </a>
                   ) : null}
-                  <LeadActions id={lead.id} />
+                  <LeadActions id={lead.id} store={isStore} />
                 </li>
               ))}
             </ul>
@@ -196,7 +205,7 @@ export default async function DeskPage() {
           </div>
           {customer ? (
             <dl className={styles.status}>
-              <div><dt>Plan</dt><dd>{SUBSCRIPTION_LABELS[customer.subscription_status ?? ''] ?? humanStatus(customer.subscription_status, 'Unknown')}</dd></div>
+              <div><dt>Plan</dt><dd>{isStore ? 'Online Store · ' : ''}{SUBSCRIPTION_LABELS[customer.subscription_status ?? ''] ?? humanStatus(customer.subscription_status, 'Unknown')}</dd></div>
               <div><dt>Receptionist</dt><dd>{humanStatus(onboarding?.agent_status, 'Waiting on setup form')}</dd></div>
               <div><dt>Phone number</dt><dd>{humanStatus(onboarding?.phone_status, 'Not attached yet')}</dd></div>
               {channels.map((channel) => (

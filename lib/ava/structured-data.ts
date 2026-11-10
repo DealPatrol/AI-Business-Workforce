@@ -1,4 +1,5 @@
 import { AVA_OFFER } from '@/lib/ava/pricing';
+import { AVA_STORE_OFFER } from '@/lib/ava/store-pricing';
 import { absoluteSiteUrl } from '@/lib/site-url';
 
 type Faq = { q: string; a: string };
@@ -15,6 +16,33 @@ export function avaOfferNodes(pageUrl: string) {
       description: AVA_OFFER.summary,
     },
   ];
+}
+
+/** Online-store plan: $119/month + $1 per handled call, free 14-day trial. */
+export function avaStoreOfferNode(pageUrl: string) {
+  return {
+    '@type': 'Offer',
+    name: 'Executive Receptionist - Online Store',
+    price: (AVA_STORE_OFFER.monthlyCents / 100).toFixed(2),
+    priceCurrency: 'USD',
+    availability: 'https://schema.org/InStock',
+    url: pageUrl,
+    description: AVA_STORE_OFFER.summary,
+    priceSpecification: [
+      {
+        '@type': 'UnitPriceSpecification',
+        price: (AVA_STORE_OFFER.monthlyCents / 100).toFixed(2),
+        priceCurrency: 'USD',
+        unitText: 'month',
+      },
+      {
+        '@type': 'UnitPriceSpecification',
+        price: (AVA_STORE_OFFER.perCallCents / 100).toFixed(2),
+        priceCurrency: 'USD',
+        unitText: 'call handled',
+      },
+    ],
+  };
 }
 
 export function avaOrganization() {

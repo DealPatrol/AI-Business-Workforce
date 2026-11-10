@@ -3,6 +3,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { formatAvaLeadSmsBody, sendAvaLeadSms, type AvaLeadSmsResult } from '@/lib/ava/sms';
 import { avaOwnerEmail, escapeHtml, sendResendEmail } from '@/lib/ava/mail';
 import { decidePostCallGate, planPostCallEffects } from '@/lib/ava/post-call-gate';
+import { meterStoreCall } from '@/lib/ava/store-call-billing';
 import { SMS_SKIPPED_NO_CONSENT, decideOwnerSms } from '@/lib/ava/sms-consent';
 
 type TranscriptTurn = {
@@ -39,7 +40,11 @@ type CustomerGateRow = {
   id: string;
   product: string | null;
   subscription_status: string | null;
+  plan?: string | null;
+  stripe_customer_id?: string | null;
 };
+
+const CUSTOMER_GATE_SELECT = 'id, product, subscription_status, plan, stripe_customer_id';
 
 function asRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' ? (value as Record<string, unknown>) : {};
@@ -168,7 +173,7 @@ async function listCustomersForOnboarding(row: OnboardingMatch): Promise<Custome
   const supabase = createAdminClient();
   const byOnboarding = await supabase
     .from('ava_customers')
-    .select('id, product, subscription_status')
+    .select(CUSTOMER_GATE_SELECT)
     .eq('onboarding_id', row.id)
     .limit(5);
   if (byOnboarding.error) {
@@ -180,7 +185,7 @@ async function listCustomersForOnboarding(row: OnboardingMatch): Promise<Custome
 
   const bySession = await supabase
     .from('ava_customers')
-    .select('id, product, subscription_status')
+    .select(CUSTOMER_GATE_SELECT)
     .eq('stripe_checkout_session_id', row.stripe_session_id)
     .limit(5);
   if (bySession.error) {
@@ -209,7 +214,7 @@ async function resolvePostCallTarget(agentId: string) {
         customerProduct: customer.product,
         subscriptionStatus: customer.subscription_status,
       });
-      if (decision.process) return { decision, onboarding };
+      if (decision.process) return { decision, onboarding, customer };
     }
   }
 
@@ -221,6 +226,7 @@ async function resolvePostCallTarget(agentId: string) {
       subscriptionStatus: null,
     }),
     onboarding: null,
+    customer: null as CustomerGateRow | null,
   };
 }
 
@@ -317,6 +323,23 @@ export async function savePostCallLead(lead: ExtractedCallLead) {
   }
 
   const row = saved.data as SavedLead;
+
+  // Online Store plan: $1 per handled call. Idempotent per conversation; never blocks the lead.
+  const storeMeter = await meterStoreCall({
+    customer: target.customer
+      ? {
+          plan: target.customer.plan ?? null,
+          stripe_customer_id: target.customer.stripe_customer_id ?? null,
+          subscription_status: target.customer.subscription_status,
+        }
+      : null,
+    conversationId: lead.conversationId,
+    transcript: lead.transcript,
+  });
+  if (storeMeter.metered || storeMeter.reason !== 'not_store') {
+    console.info('Store call meter for %s: %s', lead.conversationId, storeMeter.metered ? 'sent' : storeMeter.reason);
+  }
+
   if (row.notified_at) {
     return { skipped: false as const, duplicate: true, leadId: row.id };
   }

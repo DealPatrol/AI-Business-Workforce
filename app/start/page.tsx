@@ -5,7 +5,9 @@ import { SampleCalls } from '@/components/ava-home/SampleCalls';
 import { HeroDemoPicker } from '@/components/suite/HeroDemoPicker';
 import { AVA_DEMO_LINE } from '@/lib/ava/demo-line';
 import { AVA_OFFER } from '@/lib/ava/pricing';
-import { faqNode } from '@/lib/ava/structured-data';
+import { StorePricing } from '@/components/ava/StorePricing';
+import { AVA_STORE_OFFER } from '@/lib/ava/store-pricing';
+import { avaStoreOfferNode, faqNode } from '@/lib/ava/structured-data';
 import { EXECUTIVE_INDUSTRIES } from '@/lib/executive-receptionist';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 import styles from './start.module.css';
@@ -78,7 +80,11 @@ const COMPARE = [
 const FAQS = [
   {
     q: 'What does Ava cost?',
-    a: `${AVA_OFFER.summary} ${AVA_OFFER.guarantee}`,
+    a: `Home-service shops: ${AVA_OFFER.summary} ${AVA_OFFER.guarantee} Online stores: ${AVA_STORE_OFFER.summary}`,
+  },
+  {
+    q: 'What does the online store plan cost?',
+    a: `${AVA_STORE_OFFER.priceLine}. ${AVA_STORE_OFFER.summary} ${AVA_STORE_OFFER.callDefinition}`,
   },
   {
     q: 'What counts as a booked job?',
@@ -90,7 +96,7 @@ const FAQS = [
   },
   {
     q: 'Does she work for online stores?',
-    a: 'Yes. She answers order-status, shipping, return, and sizing calls from the policies you give her, and passes the calls that need a person to your team with the caller’s name, number, order number, and the reason. She cannot see your order system unless it is connected during setup, so until then she takes a message for anything order-specific.',
+    a: 'Yes. She answers order-status, shipping, return, and sizing calls from the policies you give her, and passes the calls that need a person to your team with the caller’s name, number, order number, and the reason. She cannot see your order system unless it is connected during setup, so until then she takes a message for anything order-specific. Stores pay $119 a month plus $1 for each call she handles, after a free 14-day trial.',
   },
   {
     q: 'Is Ava a person?',
@@ -114,13 +120,16 @@ const jsonLd = {
       name: 'Ava AI receptionist',
       description: 'AI phone receptionist for home-service businesses and online stores.',
       brand: { '@type': 'Brand', name: 'Front Porch Growth' },
-      offers: {
-        '@type': 'Offer',
-        name: 'Free 14-day pilot, then $25 per booked job (max $297/month)',
-        price: '25.00',
-        priceCurrency: 'USD',
-        description: AVA_OFFER.summary,
-      },
+      offers: [
+        {
+          '@type': 'Offer',
+          name: 'Home services: free 14-day pilot, then $25 per booked job (max $297/month)',
+          price: '25.00',
+          priceCurrency: 'USD',
+          description: AVA_OFFER.summary,
+        },
+        avaStoreOfferNode('/start#ecommerce'),
+      ],
     },
     faqNode([...FAQS]),
   ],
@@ -167,6 +176,9 @@ export default function StartPage() {
           <li>{AVA_OFFER.perBookedJobLabel} per booked job, max {AVA_OFFER.monthlyCapLabel}/mo</li>
           <li>No real lead in the pilot? You pay nothing</li>
         </ul>
+        <p className={styles.fine}>
+          Online store? <a href="#ecommerce">{AVA_STORE_OFFER.priceLine}</a>, with its own free 14-day trial.
+        </p>
         <div className={styles.picker}>
           <HeroDemoPicker label="Hear Ava for your business" />
         </div>
@@ -253,9 +265,13 @@ export default function StartPage() {
           <a className={styles.callCta} href="https://elevenlabs.io/app/talk-to?agent_id=agent_7301m727915ke55syb59xd04s1m4" target="_blank" rel="noopener noreferrer">
             Talk to the store demo
           </a>
-          <a className={styles.callCta} href={AVA_OFFER.contactPhoneHref}>
-            Ask Cole about a store setup
-          </a>
+        </div>
+        <div className={styles.storePrice}>
+          <StorePricing />
+          <p className={styles.note}>
+            Questions about a store setup? Call Cole at{' '}
+            <a href={AVA_OFFER.contactPhoneHref}>{AVA_OFFER.contactPhoneDisplay}</a>.
+          </p>
         </div>
       </section>
 
@@ -282,6 +298,7 @@ export default function StartPage() {
       <section className={`${styles.section} ${styles.offer}`} id="pricing">
         <p className={styles.kicker}>The offer</p>
         <h2>Try her free for 14 days.</h2>
+        <p className={styles.note}>Home-service pricing. Online stores have their own plan: <a href="#ecommerce">{AVA_STORE_OFFER.priceLine}</a>.</p>
         <ol className={styles.offerSteps}>
           <li><b>Days 1–14:</b> free pilot. Your card is on file, nothing is charged.</li>
           <li><b>After the pilot:</b> $0 until your first booked job.</li>

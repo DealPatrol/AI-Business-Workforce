@@ -3,6 +3,7 @@ import {
   type AvaPlanKey,
   isAvaPlanKey,
 } from '@/lib/ava/pricing';
+import { AVA_STORE_OFFER, STORE_CALL_EVENT_NAME, STORE_PLAN_KEY } from '@/lib/ava/store-pricing';
 import {
   POSTCARD_SETUP_CENTS,
   POSTCARD_SIZES,
@@ -173,6 +174,56 @@ export function buildAvaCheckoutParams(input: AvaCheckoutInput) {
   params.set('subscription_data[metadata][offer]', 'booked_job');
   params.set('subscription_data[metadata][meter_event]', 'booked_job');
   params.set('subscription_data[metadata][monthly_cap_cents]', '29700');
+  if (input.qualificationId) {
+    params.set('subscription_data[metadata][qualification_id]', input.qualificationId);
+  }
+  return params;
+}
+
+type AvaStoreCheckoutInput = {
+  origin: string;
+  basePriceId?: string;
+  callPriceId?: string;
+  qualificationId?: string;
+};
+
+/**
+ * Online-store plan: $119/month licensed price + $1/call metered price (`store_call` meter).
+ * Same trial shape as the home-service pilot: 14 days free with a card on file.
+ */
+export function buildAvaStoreCheckoutParams(input: AvaStoreCheckoutInput) {
+  if (!input.basePriceId || !input.callPriceId) {
+    throw new Error('STRIPE_AVA_STORE_BASE_PRICE_ID and STRIPE_AVA_STORE_CALL_PRICE_ID must be set');
+  }
+  const params = new URLSearchParams();
+  const successParts = [
+    'session_id={CHECKOUT_SESSION_ID}',
+    'plan=store',
+    ...(input.qualificationId ? [`qualificationId=${encodeURIComponent(input.qualificationId)}`] : []),
+  ];
+  params.set('mode', 'subscription');
+  params.set('success_url', `${input.origin}/onboarding/ava?${successParts.join('&')}`);
+  params.set('cancel_url', `${input.origin}/start#ecommerce`);
+  params.set('billing_address_collection', 'auto');
+  params.set('allow_promotion_codes', 'true');
+  params.set('payment_method_collection', 'always');
+  params.set('subscription_data[trial_period_days]', String(AVA_STORE_OFFER.trialDays));
+  params.set('line_items[0][price]', input.basePriceId);
+  params.set('line_items[0][quantity]', '1');
+  // Metered prices take no quantity.
+  params.set('line_items[1][price]', input.callPriceId);
+  params.set('metadata[product]', 'ava');
+  params.set('metadata[plan]', STORE_PLAN_KEY);
+  params.set('metadata[offer]', 'store');
+  params.set('metadata[monthly_cents]', String(AVA_STORE_OFFER.monthlyCents));
+  params.set('metadata[per_call_cents]', String(AVA_STORE_OFFER.perCallCents));
+  if (input.qualificationId) params.set('metadata[qualification_id]', input.qualificationId);
+  params.set('subscription_data[metadata][product]', 'ava');
+  params.set('subscription_data[metadata][plan]', STORE_PLAN_KEY);
+  params.set('subscription_data[metadata][offer]', 'store');
+  params.set('subscription_data[metadata][meter_event]', STORE_CALL_EVENT_NAME);
+  params.set('subscription_data[metadata][monthly_cents]', String(AVA_STORE_OFFER.monthlyCents));
+  params.set('subscription_data[metadata][per_call_cents]', String(AVA_STORE_OFFER.perCallCents));
   if (input.qualificationId) {
     params.set('subscription_data[metadata][qualification_id]', input.qualificationId);
   }

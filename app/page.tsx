@@ -9,7 +9,9 @@ import { SuiteShell } from '@/components/suite/SuiteShell';
 import styles from '@/components/suite/home.module.css';
 import { AVA_DEMO_LINE } from '@/lib/ava/demo-line';
 import { AVA_OFFER } from '@/lib/ava/pricing';
-import { faqNode } from '@/lib/ava/structured-data';
+import { StorePricing } from '@/components/ava/StorePricing';
+import { AVA_STORE_OFFER } from '@/lib/ava/store-pricing';
+import { avaStoreOfferNode, faqNode } from '@/lib/ava/structured-data';
 import { DESK_TOOLS } from '@/lib/desk-tools';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 import { absoluteSiteUrl } from '@/lib/site-url';
@@ -29,7 +31,11 @@ const HOME_FAQS = [
   },
   {
     q: 'What does it cost?',
-    a: `${AVA_OFFER.summary} ${AVA_OFFER.guarantee}`,
+    a: `For home-service shops: ${AVA_OFFER.summary} ${AVA_OFFER.guarantee}`,
+  },
+  {
+    q: 'What does it cost for an online store?',
+    a: `${AVA_STORE_OFFER.priceLine}. ${AVA_STORE_OFFER.summary} ${AVA_STORE_OFFER.callDefinition}`,
   },
   {
     q: 'Do I need an account to start?',
@@ -41,7 +47,7 @@ const HOME_FAQS = [
   },
   {
     q: 'Which businesses is she for?',
-    a: 'Home-service shops first: HVAC, plumbing, roofing, electrical, lawn care, pest control, cleaning, pool, garage door, and more. Online stores can use her for order, shipping, and return calls. Dental offices, law firms, and med spas can use her too if the questions you approve are appropriate. She is not a HIPAA product and does not give legal advice.',
+    a: 'Home-service shops first: HVAC, plumbing, roofing, electrical, lawn care, pest control, cleaning, pool, garage door, and more. Online stores can use her for order, shipping, and return calls on the store plan ($119/month plus $1 per call she handles). Dental offices, law firms, and med spas can use her too if the questions you approve are appropriate. She is not a HIPAA product and does not give legal advice.',
   },
   {
     q: 'Does she call or text people on her own?',
@@ -86,6 +92,7 @@ const orgJsonLd = {
           name: 'Ava AI receptionist, free 14-day pilot, then $25 per booked job (max $297/month)',
           url: absoluteSiteUrl('/start'),
         },
+        avaStoreOfferNode(absoluteSiteUrl('/start#ecommerce')),
       ],
     },
     { '@type': 'WebSite', name: 'Front Porch Growth', url: absoluteSiteUrl('/'), publisher: { '@id': `${absoluteSiteUrl('/')}#org` } },
@@ -277,6 +284,9 @@ export default function SuiteHomePage() {
               <li>Returns, exchanges, sizing, and store hours</li>
               <li>Damaged items, double charges, and upset customers go to a person, with notes</li>
             </ul>
+            <div className={avaStyles.ecomPrice}>
+              <StorePricing compact />
+            </div>
           </div>
           <div className={styles.actions}>
             <a className={styles.primary} href="#sample-ecommerce">

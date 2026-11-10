@@ -14,8 +14,11 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const { industry } = await params;
   const niche = getErDemoNiche(industry);
   if (!niche) return {};
-  const title = `AI Receptionist for ${niche.name} Shops`;
-  const description = `Hear a sample ${niche.name} call, then talk to a demo receptionist in your browser. Free 14-day pilot, then $25 per booked job, max $297/mo.`;
+  const title = niche.slug === 'ecommerce' ? 'AI Receptionist for Online Stores' : `AI Receptionist for ${niche.name} Shops`;
+  const description =
+    niche.slug === 'ecommerce'
+      ? 'Hear a sample online-store call, then talk to the demo in your browser. $119/month + $1 per call Ava handles, after a free 14-day trial.'
+      : `Hear a sample ${niche.name} call, then talk to a demo receptionist in your browser. Free 14-day pilot, then $25 per booked job, max $297/mo.`;
   const url = `${EXECUTIVE_RECEPTIONIST_ORIGIN}/receptionist/${niche.slug}`;
   return {
     title: { absolute: title },
