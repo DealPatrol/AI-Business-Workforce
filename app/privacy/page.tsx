@@ -17,14 +17,14 @@ export async function generateMetadata(): Promise<Metadata> {
     title: metadataTitle(seo),
     description,
     alternates: { canonical },
-    openGraph: {
+    openGraph: { images: ['/og-default.png'],
       title,
       description,
       siteName: 'Front Porch Growth',
       type: 'website',
       url: openGraphUrl,
     },
-    twitter: {
+    twitter: { images: ['/og-default.png'],
       card: 'summary',
       title,
       description,

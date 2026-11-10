@@ -32,14 +32,14 @@ const PAGES = {
   '/ava': {
     title: 'AI Receptionist for Home Service Businesses, from $77',
     description:
-      'AI Receptionist for HVAC, plumbing, roofing, and other home-service shops. She takes the job details and texts you. Free 7-day trial, then $77/mo.',
+      'AI Receptionist for HVAC, plumbing, roofing, and other home-service shops. She takes the job and emails you the lead. Free 7-day trial, then $77/mo.',
     titleMode: 'absolute',
     receptionist: true,
   },
   '/receptionist': {
     title: 'AI Receptionist for Dentists and Law Firms',
     description:
-      'AI Receptionist for dentists, law firms, med spas, and advisors. Executive Receptionist answers, takes the details, and texts you the lead.',
+      'AI Receptionist for dentists, law firms, med spas, and advisors. Executive Receptionist answers, takes the details, and emails you the lead.',
     titleMode: 'absolute',
     receptionist: true,
   },
@@ -53,7 +53,7 @@ const PAGES = {
   '/hvac': {
     title: 'AI Receptionist for HVAC Companies',
     description:
-      'AI Receptionist answers HVAC calls 24/7, takes no-heat and no-cool details, and texts you. Free 7-day trial, then $77/mo.',
+      'AI Receptionist answers HVAC calls 24/7, takes no-heat and no-cool details, and emails you the lead. Free 7-day trial, then $77/mo.',
     titleMode: 'absolute',
     receptionist: true,
   },
@@ -102,7 +102,7 @@ const PAGES = {
   '/missed-call': {
     title: 'Missed-Call Text-Back, $39/month | Front Porch Growth',
     description:
-      'When you miss a call, the caller gets a text from your business within seconds, so the job does not go to the next company. $39 a month.',
+      'Missed-call text-back: when you miss a call, the caller gets a text from your business, so the job stays yours. Texting available after setup. $39/mo.',
     titleMode: 'absolute',
     receptionist: false,
   },
@@ -123,7 +123,7 @@ const PAGES = {
   '/onboarding/ava': {
     title: 'AI Receptionist setup',
     description:
-      'Tell us about your business so Executive Receptionist can be set up. The AI Receptionist answers calls and texts you the lead. Trial, then $77/mo.',
+      'Tell us about your business so Executive Receptionist can be set up. The AI Receptionist answers calls and emails you the lead. Trial, then $77/mo.',
     titleMode: 'absolute',
     receptionist: true,
   },

@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   title: metadataTitle(seo),
   description,
   alternates: { canonical: '/lead-scout' },
-  openGraph: { title, description, url: '/lead-scout', siteName: 'Front Porch Growth', type: 'website' },
+  openGraph: { images: ['/og-default.png'], title, description, url: '/lead-scout', siteName: 'Front Porch Growth', type: 'website' },
 };
 
 export default function LeadScoutPage() {

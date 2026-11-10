@@ -22,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const { canonical, openGraphUrl } = await urlsForRequest('/ava', published, published);
   return {
     alternates: { canonical },
-    openGraph: { url: openGraphUrl },
+    openGraph: { images: ['/og-default.png'], url: openGraphUrl },
   };
 }
 
@@ -82,7 +82,7 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
     avaServiceNode({
       name: 'Executive Receptionist AI answering service',
       description:
-        '24/7 call answering for home-service businesses and other small teams. Executive Receptionist captures the job and texts you the lead.',
+        '24/7 call answering for home-service businesses and other small teams. Executive Receptionist captures the job and emails you the lead. Texting is available after setup.',
       url: canonical,
       audience: 'contractors and small businesses',
       serviceType: 'AI answering service',

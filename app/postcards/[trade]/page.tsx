@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ trade: st
   const title = seo.title;
   const description = seo.description;
   const url = absoluteSiteUrl(`/postcards/${t.slug}`);
-  return { title: { absolute: title }, description, alternates: { canonical: url }, openGraph: { title, description, url, type: 'website' } };
+  return { title: { absolute: title }, description, alternates: { canonical: url }, openGraph: { images: ['/og-default.png'], title, description, url, type: 'website' } };
 }
 
 const wrap = { maxWidth: 820, margin: '0 auto', padding: '48px 20px', fontFamily: 'system-ui, sans-serif', lineHeight: 1.6, color: '#1f2a24' } as const;

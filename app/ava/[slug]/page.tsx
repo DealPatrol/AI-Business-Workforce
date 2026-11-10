@@ -25,14 +25,14 @@ export async function generateMetadata({
     title: { absolute: page.metaTitle },
     description: page.description,
     alternates: { canonical },
-    openGraph: {
+    openGraph: { images: ['/og-default.png'],
       title: page.metaTitle,
       description: page.description,
       url: openGraphUrl,
       siteName: 'Executive Receptionist',
       type: 'website',
     },
-    twitter: {
+    twitter: { images: ['/og-default.png'],
       card: 'summary_large_image',
       title: page.metaTitle,
       description: page.description,

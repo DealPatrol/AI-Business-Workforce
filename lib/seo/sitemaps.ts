@@ -77,12 +77,40 @@ export function sitemapForHost(hostHeader: string | null | undefined, now = new 
   return frontPorchGrowthSitemap(origin, now);
 }
 
+const ROBOT_ALLOW = ['/', '/prospector/unsubscribe'];
+const ROBOT_DISALLOW = ['/api/', '/onboarding/', '/dashboard/', '/login', '/sales', '/demo', '/audit'];
+
+/**
+ * Search and AI answer-engine crawlers, named so it is explicit that they may read public pages.
+ * A named group replaces the * group for that crawler, so it repeats the same allow and disallow lists.
+ */
+export const NAMED_CRAWLERS = [
+  'Googlebot',
+  'Bingbot',
+  'Google-Extended',
+  'GPTBot',
+  'OAI-SearchBot',
+  'ChatGPT-User',
+  'ClaudeBot',
+  'Claude-SearchBot',
+  'Claude-User',
+  'anthropic-ai',
+  'PerplexityBot',
+  'Perplexity-User',
+  'Applebot',
+  'Applebot-Extended',
+  'DuckAssistBot',
+  'Amazonbot',
+  'meta-externalagent',
+  'MistralAI-User',
+  'cohere-ai',
+  'YouBot',
+  'CCBot',
+];
+
 const ROBOT_RULES: NonNullable<MetadataRoute.Robots['rules']> = [
-  {
-    userAgent: '*',
-    allow: ['/', '/prospector/unsubscribe'],
-    disallow: ['/api/', '/onboarding/', '/dashboard/', '/login', '/sales', '/demo', '/audit'],
-  },
+  { userAgent: '*', allow: ROBOT_ALLOW, disallow: ROBOT_DISALLOW },
+  { userAgent: NAMED_CRAWLERS, allow: ROBOT_ALLOW, disallow: ROBOT_DISALLOW },
 ];
 
 export function robotsForHost(hostHeader: string | null | undefined): MetadataRoute.Robots {
