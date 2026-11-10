@@ -53,12 +53,12 @@
 .trust { list-style: none; margin: 22px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
 .trust li { border-radius: 999px; background: var(--mint); color: var(--green); padding: 7px 12px; font-size: 14px; font-weight: 700; }
 .picker { margin-top: 26px; max-width: 640px; }
-.fine { margin: 14px 0 0; font-size: 13.5px; color: #6b776f; max-width: 46em; line-height: 1.5; }
+.fine { margin: 14px 0 0; font-size: 13.5px; color: #58635b; max-width: 46em; line-height: 1.5; }
 
 .section { padding: 46px 0 10px; }
 .section h2 { margin: 0 0 18px; font: 600 clamp(28px, 4.4vw, 42px)/1.1 Georgia, serif; letter-spacing: -0.02em; }
 .section h3 { margin: 0 0 10px; font-size: 18px; }
-.note { margin: 12px 0 0; font-size: 13.5px; color: #6b776f; line-height: 1.5; }
+.note { margin: 12px 0 0; font-size: 13.5px; color: #58635b; line-height: 1.5; }
 
 .tableWrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 16px; background: #fff; }
 .table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 560px; }

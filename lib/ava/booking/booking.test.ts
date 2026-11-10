@@ -36,7 +36,7 @@ describe('time zones', () => {
   it('reads a window aloud', () => {
     assert.equal(slotLabel('2026-11-10', 8 * 60, 10 * 60), 'Tuesday, November 10, 8 to 10 AM');
     assert.equal(slotLabel('2026-11-10', 11 * 60, 13 * 60), 'Tuesday, November 10, 11 AM to 1 PM');
-    assert.equal(slotLabel('2026-11-10', 10 * 60, 12 * 60), 'Tuesday, November 10, 10 to noon');
+    assert.equal(slotLabel('2026-11-10', 10 * 60, 12 * 60), 'Tuesday, November 10, 10 AM to noon');
     assert.equal(slotLabel('2026-11-10', 12 * 60, 14 * 60), 'Tuesday, November 10, noon to 2 PM');
     assert.equal(
       bookingWindowLabel({ start_at: '2026-11-10T14:00:00.000Z', end_at: '2026-11-10T16:00:00.000Z' }, 'America/Chicago'),

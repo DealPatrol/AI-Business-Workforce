@@ -37,7 +37,9 @@ export function IndustryDemo({ initialSlug, syncUrl = true }: Props) {
     setLiveOpen(false);
   }, [niche.slug]);
 
-  useEffect(() => {
+  // Load the ~470 KB voice widget only when someone is about to talk to Ava, not on page load.
+  function loadWidget() {
+    if (typeof document === 'undefined') return;
     if (!document.getElementById('elevenlabs-convai-embed')) {
       const script = document.createElement('script');
       script.id = 'elevenlabs-convai-embed';
@@ -46,7 +48,11 @@ export function IndustryDemo({ initialSlug, syncUrl = true }: Props) {
       script.type = 'text/javascript';
       document.body.appendChild(script);
     }
-  }, []);
+  }
+
+  useEffect(() => {
+    if (liveOpen) loadWidget();
+  }, [liveOpen]);
 
   function selectNiche(next: ErDemoSlug) {
     setSlug(next);
@@ -111,7 +117,13 @@ export function IndustryDemo({ initialSlug, syncUrl = true }: Props) {
             No extra phone number is used. Your browser will ask for microphone permission.
           </p>
           <div className={styles.demoActions}>
-            <button type="button" className={styles.gold} onClick={() => setLiveOpen(true)}>
+            <button
+              type="button"
+              className={styles.gold}
+              onPointerEnter={loadWidget}
+              onFocus={loadWidget}
+              onClick={() => setLiveOpen(true)}
+            >
               {niche.talkLabel}
             </button>
             <a className={styles.quiet} href={niche.talkUrl} target="_blank" rel="noopener noreferrer">

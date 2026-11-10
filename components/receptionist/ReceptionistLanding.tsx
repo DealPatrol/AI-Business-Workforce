@@ -184,8 +184,10 @@ export function ReceptionistLanding({ niche }: Props) {
           <div className={styles.sectionHead}>
             <p className={styles.kicker}>Online store pricing</p>
             <h2>{AVA_STORE_OFFER.priceLine}.</h2>
-            <StorePricing />
           </div>
+        ) : null}
+        {isStore ? (
+          <StorePricing />
         ) : (
           <OfferPricingLayout variant="section" showTopbar={false} />
         )}
