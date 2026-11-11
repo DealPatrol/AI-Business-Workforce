@@ -77,8 +77,8 @@ export default function HvacPage() {
         <h1>Never miss another no-heat call.</h1>
         <p className="hvac-lede">
           When the furnace quits at 9 PM, homeowners call the next company on the list if nobody picks up. Ava, your
-          AI receptionist, answers every call day or night, captures the job details, books routine visits on your schedule
-          during the call, and emails you every lead.
+          AI receptionist, answers every call day or night, captures the job details, and emails you every lead. Once your
+          calendar is set up in the Desk, she books routine visits into your Desk calendar during the call.
         </p>
         <div className="hvac-cta-row">
           <TrackedCheckoutLink className="hvac-btn hvac-btn-primary" href="/api/checkout?plan=pilot" plan="pilot">
@@ -109,8 +109,9 @@ export default function HvacPage() {
         </div>
         <ul>
           <li>
-            <Check size={18} /> <span><b>Tune-ups and routine work:</b> offers real open windows from your schedule and books
-            one during the call, so your office doesn&apos;t have to play phone tag.</span>
+            <Check size={18} /> <span><b>Tune-ups and routine work:</b> once your hours are set in the Desk and booking is on,
+            Ava offers real open windows and books one into your Desk calendar during the call. Until then, she takes
+            the details so your office can call back.</span>
           </li>
           <li>
             <Check size={18} /> <span><b>Pricing questions:</b> gives only the service-call fee you set and never makes up a

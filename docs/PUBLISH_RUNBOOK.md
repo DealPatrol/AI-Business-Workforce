@@ -95,7 +95,17 @@ Then by hand (5 minutes):
    (`update ava_bookings set status='canceled' where id='…'`).
 3. Optional: say "¿Hablas español?" on the demo line. Ava should switch to Spanish.
 
-## 8. Rollback
+## 8. Per-customer go-live: calendar step (required)
+Publishing doesn't turn booking on for anyone. For each new customer, before go-live (full steps in
+`docs/AVA_PHONE_SETUP_RUNBOOK.md`, step 6):
+1. Desk → Booking calendar: set hours and availability, check **Let Ava book jobs on calls**, save, and confirm the Desk says
+   "Ava can now book open windows on calls."
+2. Connect Google Calendar once it's available (the Desk shows the button only when `GOOGLE_CALENDAR_CLIENT_ID/SECRET` are set).
+3. One real test booking on the customer's line, confirmed in the Desk calendar, then cancelled.
+
+Marketing copy must match: booking is "once your calendar is set up in the Desk", never "out of the box".
+
+## 9. Rollback
 Vercel → Deployments → `dpl_5dGUzGc5DTVeNmBffHYbYS5Hjgpk` → **Promote to Production** (instant).
 Then run `scripts/publish-check --only=tools --retarget-tools --url=<preview URL>` to point the demo tools back at the preview.
 The database changes are additive, so they don't need a rollback.
