@@ -90,6 +90,11 @@ export function ReceptionistLanding({ niche }: Props) {
         <p className={styles.kicker}>{kicker}</p>
         <h1>{headline}</h1>
         <p className={styles.lede}>{lede}</p>
+        {!niche ? (
+          <p className={styles.lede}>
+            Run a heating &amp; air shop? <Link href="/hvac">See Executive Receptionist for HVAC companies →</Link>
+          </p>
+        ) : null}
         <div className={styles.heroActions}>
           <a className={styles.gold} href="#demo">
             {niche ? niche.talkLabel.replace(' now', '') : 'Hear the demo'}
