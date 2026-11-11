@@ -18,6 +18,8 @@ export type AvaOnboardingInput = AvaOnboardingDetails & {
   plan: string;
   staffEmail?: string;
   staffPhone?: string;
+  /** Owner's forwarding number for live transfers, E.164. */
+  transferPhone?: string;
   preferredVoice?: string;
   /** Optional SMS lead-alert consent for staffPhone. Absent or false means no texts. */
   smsConsent?: boolean;
@@ -38,6 +40,7 @@ type AvaOnboardingRow = {
   staff_contact: string;
   staff_email?: string | null;
   staff_phone?: string | null;
+  transfer_phone?: string | null;
   sms_consent?: boolean | null;
   channel_voice?: boolean | null;
   channel_sms?: boolean | null;
@@ -63,6 +66,8 @@ function toProvisioningRecord(row: AvaOnboardingRow) {
     staffContact: row.staff_contact,
     calendarPreference: row.calendar_preference,
     urgentCallRules: row.urgent_call_rules,
+    plan: row.selected_plan,
+    transferNumber: row.transfer_phone ?? null,
     elevenlabsAgentId: row.elevenlabs_agent_id,
   };
 }
@@ -186,6 +191,7 @@ async function saveOptionalOnboardingFields(
     if (input.staffPhone) fields.staff_phone = input.staffPhone;
   }
   if (input.preferredVoice) fields.preferred_voice = input.preferredVoice;
+  if (input.transferPhone !== undefined) fields.transfer_phone = input.transferPhone.trim() || null;
   if (Object.keys(fields).length === 0) return;
 
   try {

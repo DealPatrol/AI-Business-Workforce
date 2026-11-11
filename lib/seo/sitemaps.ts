@@ -21,6 +21,7 @@ type IndexEntry = {
  */
 export const EXECUTIVE_RECEPTIONIST_INDEX: IndexEntry[] = [
   { path: '/', changeFrequency: 'weekly', priority: 1 },
+  { path: '/start', changeFrequency: 'weekly', priority: 0.95 },
   { path: '/receptionist-demo', changeFrequency: 'weekly', priority: 0.8 },
   { path: '/pricing', changeFrequency: 'monthly', priority: 0.8 },
   { path: '/ava', changeFrequency: 'weekly', priority: 0.95 },
@@ -42,6 +43,7 @@ function entry(origin: string, path: string, now: Date, changeFrequency: ChangeF
 export function frontPorchGrowthSitemap(origin: string, now: Date): MetadataRoute.Sitemap {
   return [
     entry(origin, '/', now, 'weekly', 1),
+    entry(origin, '/start', now, 'weekly', 0.97),
     entry(origin, '/postcards', now, 'weekly', 0.9),
     entry(origin, '/pricing', now, 'monthly', 0.8),
     entry(origin, '/compare', now, 'monthly', 0.8),

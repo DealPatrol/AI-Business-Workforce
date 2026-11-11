@@ -17,6 +17,7 @@ import {
   escapeHtml,
   sendResendEmail,
 } from '@/lib/ava/mail';
+import { AVA_STORE_OFFER, STORE_PLAN_KEY } from '@/lib/ava/store-pricing';
 import { recordPostcardOrder } from '@/lib/postcards/orders';
 import { postcardSetupWasCharged } from '@/lib/postcards/setup-fee';
 import { isPostcardCheckoutProduct, STRIPE_API_VERSION } from '@/lib/stripe-checkout';
@@ -108,15 +109,16 @@ async function notifyCheckout(customer: AvaCustomerRecord, sessionId: string) {
   const planKey = customer.plan && isAvaPlanKey(customer.plan) ? customer.plan : null;
   const plan = planKey ? AVA_PLANS[planKey] : null;
   const link = avaOnboardingUrl(sessionId, customer.plan || undefined);
-  const planLabel = plan?.label || customer.plan || 'Executive Receptionist';
-  const priceLabel = plan?.monthlyLabel || '';
+  const isStore = customer.plan === STORE_PLAN_KEY;
+  const planLabel = isStore ? 'Online Store' : plan?.label || customer.plan || 'Executive Receptionist';
+  const priceLabel = isStore ? AVA_STORE_OFFER.monthlyLabel : plan?.monthlyLabel || '';
   const minutes = customer.included_minutes ?? plan?.minutes;
 
   if (customer.email && !customer.buyer_onboarding_email_sent_at) {
     await sendResendEmail({
       to: customer.email,
       subject: `Finish setting up Executive Receptionist ${planLabel}`,
-      html: `<div style="font-family:Arial,sans-serif;max-width:640px;margin:auto;color:#17211b"><h1>Your Executive Receptionist trial is started</h1><p>Thanks for starting Executive Receptionist ${escapeHtml(planLabel)}${priceLabel ? ` (${escapeHtml(priceLabel)}/mo after the 7-day trial)` : ''}. Setup fee is $0.</p><p><a href="${escapeHtml(link)}">Finish setup</a> so we can build your receptionist from your hours, services, and call rules.</p><p>Cole attaches the phone number after you submit the form. Executive Receptionist is not answering your business line until that number is connected and you pass a test call.</p></div>`,
+      html: `<div style="font-family:Arial,sans-serif;max-width:640px;margin:auto;color:#17211b"><h1>Your Executive Receptionist trial is started</h1><p>Thanks for starting Executive Receptionist ${escapeHtml(planLabel)}${isStore ? ` (${escapeHtml(AVA_STORE_OFFER.priceLine)} after the 14-day trial)` : priceLabel ? ` (${escapeHtml(priceLabel)}/mo after the 14-day pilot)` : ''}. Setup fee is $0.</p><p><a href="${escapeHtml(link)}">Finish setup</a> so we can build your receptionist from your hours, services, and call rules.</p><p>Cole attaches the phone number after you submit the form. Executive Receptionist is not answering your business line until that number is connected and you pass a test call.</p></div>`,
     });
     await markAvaCustomerNotified(customer.id, 'buyer_onboarding_email_sent_at');
     customer.buyer_onboarding_email_sent_at = new Date().toISOString();

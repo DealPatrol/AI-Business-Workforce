@@ -46,7 +46,13 @@ export default function TermsPage() {
         </p>
         <h2>Executive Receptionist</h2>
         <p>
-          Executive Receptionist plans are Starter $77/month, Growth $168/month, and Pro $324/month, each with a 7-day Stripe trial and $0 setup. Those prices are Executive Receptionist’s. They are not the postcard prices. A phone number is attached by a person after setup. The browser demo is not a live business line.
+          Executive Receptionist is a free 14-day pilot, then $0 until your first booked job, then $25 per booked job, capped at $297 a month. If the receptionist does not capture a single real caller lead during the pilot, you pay nothing. Those prices are Executive Receptionist’s. They are not the postcard prices. A phone number is attached by a person after setup. The browser demo is not a live business line.
+        </p>
+        <h2>SMS missed-call callbacks</h2>
+        <p>
+          Caller callback texts are sent as Executive Receptionist on behalf of a participating client business. Full
+          program terms, including who receives texts, frequency, STOP/HELP, and contact at (256) 595-3354, are on the{' '}
+          <Link href="/sms">SMS terms</Link> page.
         </p>
         <h2>SMS lead alerts</h2>
         <p>

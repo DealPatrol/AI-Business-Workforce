@@ -1,8 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { LiveVideoReceptionist } from './LiveVideoReceptionist';
+import dynamic from 'next/dynamic';
 import styles from './live.module.css';
+
+// The voice/video SDK (LiveKit) is ~300 KB; load it only when someone opens the panel.
+const LiveVideoReceptionist = dynamic(
+  () => import('./LiveVideoReceptionist').then((m) => m.LiveVideoReceptionist),
+  { ssr: false },
+);
 
 /**
  * Floating "Talk to us face to face" launcher. Not mounted anywhere by default;

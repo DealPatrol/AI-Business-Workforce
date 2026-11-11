@@ -170,7 +170,7 @@
 }
 
 .bubbleMine .bubbleLabel {
-  color: #2e8b57;
+  color: #1f6b43;
 }
 
 .phoneFoot {
@@ -194,7 +194,7 @@
 
 .stripLabel {
   margin-right: 6px;
-  color: #2e8b57;
+  color: #1f6b43;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.13em;
@@ -226,7 +226,7 @@
 
 .kicker {
   display: block;
-  color: #2e8b57;
+  color: #1f6b43;
   font-size: 11.5px;
   font-weight: 800;
   letter-spacing: 0.14em;
@@ -296,7 +296,7 @@
 
 .founderRole {
   display: block;
-  color: #2e8b57;
+  color: #1f6b43;
   font-size: 11.5px;
   font-weight: 800;
   letter-spacing: 0.14em;
@@ -478,7 +478,7 @@
 
 .stepNum {
   display: block;
-  color: #2e8b57;
+  color: #1f6b43;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.14em;
@@ -552,7 +552,7 @@
 }
 
 .fit:hover {
-  border-color: #2e8b57;
+  border-color: #1f6b43;
   background: #fbfdfb;
 }
 
@@ -726,6 +726,199 @@
   color: #dbe9df;
   font-weight: 700;
   text-decoration: none;
+}
+
+/* Hero sample-call picker, sits under the H1. */
+.heroDemo {
+  margin: 0 0 20px;
+  max-width: 34em;
+  border: 1px solid #cfe0d2;
+  background: #f6faf6;
+  border-radius: 14px;
+  padding: 14px 16px 12px;
+}
+
+.heroDemoRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+.heroDemoLabel {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #205c39;
+}
+
+.heroDemoSelect {
+  flex: 1 1 180px;
+  min-height: 44px;
+  border: 1px solid #bfd2c3;
+  border-radius: 10px;
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23205c39' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding: 0 40px 0 14px;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  color: #14201a;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+.heroDemoSelect:focus-visible,
+.heroDemoPlay:focus-visible,
+.heroDemoTalk:focus-visible {
+  outline: 3px solid #8cc19e;
+  outline-offset: 2px;
+}
+
+.heroDemoActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.heroDemoPlay,
+.heroDemoTalk {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 780;
+  line-height: 1.15;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.heroDemoPlay {
+  border: 1px solid #205c39;
+  background: #fff;
+  color: #205c39;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.heroDemoPlay:hover {
+  background: #eef5ef;
+}
+
+.heroDemoIcon {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: #205c39;
+  color: #fff;
+}
+
+.heroDemoPlayText {
+  display: flex;
+  flex-direction: column;
+}
+
+.heroDemoPlayText small {
+  font-size: 12px;
+  font-weight: 600;
+  color: #5c6b60;
+}
+
+.heroDemoTalk {
+  text-align: center;
+  border: 0;
+  background: #205c39;
+  color: #fff;
+  box-shadow: 0 10px 22px rgba(32, 92, 57, 0.16);
+}
+
+.heroDemoTalk:hover {
+  background: #1a4c2f;
+}
+
+.heroDemoBar {
+  height: 3px;
+  margin-top: 10px;
+  border-radius: 999px;
+  background: #dfe9e1;
+  overflow: hidden;
+}
+
+.heroDemoBar span {
+  display: block;
+  height: 100%;
+  background: #205c39;
+  transition: width 0.2s linear;
+}
+
+.heroDemoNote {
+  margin: 8px 0 0;
+  color: #6a756c;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 700px) {
+  .heroDemo {
+    padding: 12px 12px 10px;
+    margin-bottom: 16px;
+  }
+
+  .heroDemoActions {
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .heroDemoPlay,
+  .heroDemoTalk {
+    font-size: 14px;
+    padding: 8px 10px;
+    gap: 8px;
+  }
+
+  .heroDemoIcon {
+    width: 26px;
+    height: 26px;
+  }
+
+  .heroDemoMic {
+    display: none;
+  }
+
+  .heroDemoPlayText small {
+    font-size: 11.5px;
+  }
+}
+
+@media (max-width: 330px) {
+  .heroDemoActions {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 980px) {

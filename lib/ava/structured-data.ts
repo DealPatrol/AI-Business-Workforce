@@ -1,21 +1,48 @@
-import { AVA_PLANS, type AvaPlanKey } from '@/lib/ava/pricing';
+import { AVA_OFFER } from '@/lib/ava/pricing';
+import { AVA_STORE_OFFER } from '@/lib/ava/store-pricing';
 import { absoluteSiteUrl } from '@/lib/site-url';
 
 type Faq = { q: string; a: string };
 
 export function avaOfferNodes(pageUrl: string) {
-  return (Object.keys(AVA_PLANS) as AvaPlanKey[]).map((key) => {
-    const plan = AVA_PLANS[key];
-    return {
+  return [
+    {
       '@type': 'Offer',
-      name: plan.productName,
-      price: (plan.monthlyCents / 100).toFixed(2),
+      name: 'Executive Receptionist - Booked Job',
+      price: (AVA_OFFER.perBookedJobCents / 100).toFixed(2),
       priceCurrency: 'USD',
       availability: 'https://schema.org/InStock',
       url: pageUrl,
-      description: `Free 7-day trial, then ${plan.monthlyLabel} per month. ${plan.minutes} included voice minutes. ${plan.overageLabel}. $0 setup fee.`,
-    };
-  });
+      description: AVA_OFFER.summary,
+    },
+  ];
+}
+
+/** Online-store plan: $119/month + $1 per handled call, free 14-day trial. */
+export function avaStoreOfferNode(pageUrl: string) {
+  return {
+    '@type': 'Offer',
+    name: 'Executive Receptionist - Online Store',
+    price: (AVA_STORE_OFFER.monthlyCents / 100).toFixed(2),
+    priceCurrency: 'USD',
+    availability: 'https://schema.org/InStock',
+    url: pageUrl,
+    description: AVA_STORE_OFFER.summary,
+    priceSpecification: [
+      {
+        '@type': 'UnitPriceSpecification',
+        price: (AVA_STORE_OFFER.monthlyCents / 100).toFixed(2),
+        priceCurrency: 'USD',
+        unitText: 'month',
+      },
+      {
+        '@type': 'UnitPriceSpecification',
+        price: (AVA_STORE_OFFER.perCallCents / 100).toFixed(2),
+        priceCurrency: 'USD',
+        unitText: 'call handled',
+      },
+    ],
+  };
 }
 
 export function avaOrganization() {

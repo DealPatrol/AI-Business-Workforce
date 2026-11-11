@@ -23,44 +23,57 @@ export const ROOT_SEO: SeoSpec = {
 
 const PAGES = {
   '/': {
-    title: 'More Booked Jobs for Service Businesses | AI Receptionist',
+    title: 'Ava, the AI Receptionist for Home Services',
     description:
-      'Answer every call and mail your best streets. AI Receptionist takes the job and sends you the lead, plus YardMailer postcards. $77/mo after trial.',
+      'Ava answers every call, takes the job, and sends you the lead. Hear sample calls or call her now. Free 14-day pilot, then $25 per booked job, max $297/mo.',
     titleMode: 'absolute',
     receptionist: true,
   },
-  '/ava': {
-    title: 'AI Receptionist for Home Service Businesses, from $77',
+  '/start': {
+    title: 'Ava AI Receptionist: Home Services and Online Stores',
     description:
-      'AI Receptionist for HVAC, plumbing, roofing, and other home-service shops. She takes the job and emails you the lead. Free 7-day trial, then $77/mo.',
+      'Ava answers calls for home-service shops and online stores, handles routine questions, and passes the rest to you. Free 14-day pilot, $25 per booked job.',
+    titleMode: 'absolute',
+    receptionist: true,
+  },
+  '/desk': {
+    title: 'Your desk',
+    description: 'Ava’s calls and leads, quick decisions, and every Front Porch Growth tool in one place.',
+    titleMode: 'template',
+    receptionist: false,
+  },
+  '/ava': {
+    title: 'AI Receptionist for Home Services, $25 per Booked Job',
+    description:
+      'AI Receptionist for HVAC and plumbing. It takes the job details and emails you a summary. Free 14-day pilot, then $25 per booked job, max $297/mo.',
     titleMode: 'absolute',
     receptionist: true,
   },
   '/receptionist': {
-    title: 'AI Receptionist for Dentists and Law Firms',
+    title: 'AI Receptionist for HVAC and Plumbing',
     description:
-      'AI Receptionist for dentists, law firms, med spas, and advisors. Executive Receptionist answers, takes the details, and emails you the lead.',
+      'AI Receptionist for HVAC and plumbing. It answers 24/7, takes the job details, and emails you a summary. $25 per booked job after a 14-day pilot.',
     titleMode: 'absolute',
     receptionist: true,
   },
   '/receptionist-demo': {
     title: 'Try the AI Receptionist Demo',
     description:
-      'Hear a prerecorded AI Receptionist call or talk in the browser, then start a free 7-day trial. Plans are $77, $168, and $324 a month.',
+      'Hear a prerecorded AI Receptionist call or talk in the browser, then start a free 14-day pilot. After that: $25 per booked job, capped at $297 a month.',
     titleMode: 'absolute',
     receptionist: true,
   },
   '/hvac': {
     title: 'AI Receptionist for HVAC Companies',
     description:
-      'AI Receptionist answers HVAC calls 24/7, takes no-heat and no-cool details, and emails you the lead. Free 7-day trial, then $77/mo.',
+      'AI Receptionist answers HVAC calls 24/7, takes no-heat and no-cool details, and emails you a summary. Free 14-day pilot, then $25 per booked job.',
     titleMode: 'absolute',
     receptionist: true,
   },
   '/pricing': {
     title: 'Pricing | Front Porch Growth',
     description:
-      'Postcard prices and AI Receptionist plans: $3.54 or $4.95 a card after $127 setup, and $77, $168, or $324 a month after a 7-day trial.',
+      'YardMailer postcard prices plus Executive Receptionist: $25 per booked job, max $297 a month, after a free 14-day pilot.',
     titleMode: 'absolute',
     receptionist: false,
   },
@@ -100,9 +113,16 @@ const PAGES = {
     receptionist: false,
   },
   '/missed-call': {
-    title: 'Missed-Call Text-Back, $39/month | Front Porch Growth',
+    title: 'Missed-Call Text-Back waitlist | Front Porch Growth',
     description:
-      'Missed-call text-back: when you miss a call, the caller gets a text from your business, so the job stays yours. Texting available after setup. $39/mo.',
+      'Waitlist for missed-call callback texts from Executive Receptionist, sent on behalf of your business after carrier verification.',
+    titleMode: 'absolute',
+    receptionist: false,
+  },
+  '/sms': {
+    title: 'SMS terms | Front Porch Growth',
+    description:
+      'Executive Receptionist missed-call callback texts: who receives them, frequency, STOP and HELP, and how mobile numbers are handled.',
     titleMode: 'absolute',
     receptionist: false,
   },
@@ -116,14 +136,14 @@ const PAGES = {
   '/privacy': {
     title: 'Privacy | Front Porch Growth',
     description:
-      'What Front Porch Growth collects: setup details, call and lead data, and advertising cookies when measurement tags are turned on.',
+      'What we collect: setup details, call and lead data, caller numbers for missed-call callback texts, and ad cookies when tags are on.',
     titleMode: 'absolute',
     receptionist: false,
   },
   '/onboarding/ava': {
     title: 'AI Receptionist setup',
     description:
-      'Tell us about your business so Executive Receptionist can be set up. The AI Receptionist answers calls and emails you the lead. Trial, then $77/mo.',
+      'Tell us about your business so Executive Receptionist can be set up. It answers calls and emails you the lead. Free 14-day pilot, then $25 per booked job.',
     titleMode: 'absolute',
     receptionist: true,
   },
@@ -154,9 +174,39 @@ const PAGES = {
     receptionist: false,
   },
   '/login': {
-    title: 'Sign in',
+    title: 'Customer sign in',
     description: ROOT_DESCRIPTION,
     titleMode: 'template',
+    receptionist: false,
+  },
+  '/dashboard/leads': {
+    title: 'Leads',
+    description: 'Caller leads captured by Executive Receptionist, plus web forms, texts, and online bookings.',
+    titleMode: 'template',
+    receptionist: false,
+  },
+  '/dashboard/leads/[id]': {
+    title: 'Lead details',
+    description: 'Review one captured lead, add notes, and update its status.',
+    titleMode: 'template',
+    receptionist: false,
+  },
+  '/dashboard/bookings': {
+    title: 'Booking calendar',
+    description: 'Set services, hours, and blackout dates, then share a public page where customers pay a deposit to book.',
+    titleMode: 'template',
+    receptionist: false,
+  },
+  '/book/[slug]': {
+    title: 'Book an appointment | Front Porch Growth',
+    description: 'Pick a service and time, then pay a deposit to confirm the appointment.',
+    titleMode: 'absolute',
+    receptionist: false,
+  },
+  '/book/[slug]/confirmed': {
+    title: 'Booking confirmed | Front Porch Growth',
+    description: 'Your deposit was submitted. The business will see the confirmed appointment.',
+    titleMode: 'absolute',
     receptionist: false,
   },
   '/dashboard/prospector': {

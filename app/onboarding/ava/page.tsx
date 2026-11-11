@@ -6,6 +6,7 @@ import { ArrowLeft, CheckCircle2, Loader2, Mail, Sparkles } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { CheckoutForm } from '@/components/checkout/CheckoutForm';
 import { AVA_VOICE_OPTIONS } from '@/lib/ava/voice-options';
+import { AVA_STORE_OFFER } from '@/lib/ava/store-pricing';
 import { buildWebChatEmbedSnippet } from '@/lib/ava/channels';
 import {
   AVA_PLANS,
@@ -336,6 +337,7 @@ function AvaOnboardingForm() {
 
   const selectedPlanRaw = (prefill.plan || searchParams.get('plan') || 'starter').toLowerCase();
   const selectedPlan: AvaPlanKey = isAvaPlanKey(selectedPlanRaw) ? selectedPlanRaw : 'starter';
+  const isStoreOnboarding = selectedPlanRaw === 'store';
 
   return (
     <main className={styles.page}>
@@ -362,8 +364,10 @@ function AvaOnboardingForm() {
           </h1>
           <p>
               {searchParams.get('session_id')
-              ? 'Checkout is confirmed — you are paid or on the 7-day trial. Submit this form and Executive Receptionist’s agent is created from your answers. The phone number stays pending until Cole attaches it.'
-              : `Stripe creates the 7-day trial for ${AVA_PLANS[selectedPlan].label}, then ${avaPlanPriceLine(selectedPlan)}. $0 setup. This form emails Cole. It does not start billing by itself.`}
+              ? 'Checkout is confirmed — you are paid or on the 14-day pilot. Submit this form and Executive Receptionist’s agent is created from your answers. The phone number stays pending until Cole attaches it.'
+              : isStoreOnboarding
+                ? `Stripe starts the free 14-day store trial and collects a card. After that it is ${AVA_STORE_OFFER.priceLine}. $0 setup. This form emails Cole. It does not start billing by itself.`
+                : `Stripe creates the 14-day pilot and collects a card. After that you pay $0 until the first booked job, then ${avaPlanPriceLine()}. $0 setup. This form emails Cole. It does not start billing by itself.`}
           </p>
           {prefillNote ? <p className={styles.notice}>{prefillNote}</p> : null}
         </header>
@@ -449,6 +453,11 @@ function AvaOnboardingForm() {
                 ) : null}
               </div>
             ) : null}
+            <p>
+              Ava’s leads will show up on your desk. Sign in with the email you used at checkout and we will email you a
+              link.
+            </p>
+            <Link href="/login?next=/desk">Sign in to your desk</Link>{' '}
             <Link href="/ava">Return to Executive Receptionist</Link>
           </section>
         ) : !prefillReady ? (
@@ -459,17 +468,19 @@ function AvaOnboardingForm() {
             <section className={styles.paywall}>
               <h2>The free trial starts at Stripe.</h2>
               <p>
-                {AVA_PLANS[selectedPlan].label} is {avaPlanPriceLine(selectedPlan)} after 7 days. Checkout
-                returns you here with the session attached.
+                {isStoreOnboarding
+                  ? `After the free 14-day trial it is ${AVA_STORE_OFFER.priceLine}. Calls during the trial are free.`
+                  : `After the 14-day pilot you pay $0 until the first booked job, then ${avaPlanPriceLine()}.`}{' '}
+                Checkout returns you here with the session attached.
               </p>
               <TrackedCheckoutLink
                 className={styles.checkout}
-                href={`/api/checkout?plan=${selectedPlan}${
+                href={`/api/checkout?plan=${isStoreOnboarding ? 'store' : 'pilot'}${
                   qualificationId ? `&qualificationId=${encodeURIComponent(qualificationId)}` : ''
                 }${prefillToken ? `&prefillToken=${encodeURIComponent(prefillToken)}` : ''}`}
-                plan={selectedPlan}
+                plan={isStoreOnboarding ? 'store' : 'pilot'}
               >
-                Start free 7-day trial
+                {isStoreOnboarding ? AVA_STORE_OFFER.ctaLabel : 'Start your free 14-day pilot'}
               </TrackedCheckoutLink>
             </section>
           ) : null}
@@ -503,12 +514,16 @@ function AvaOnboardingForm() {
                 </label>
               </div>
               <label>
-                Services
+                {isStoreOnboarding ? 'What you sell, plus your shipping, return, exchange and sizing policies' : 'Services'}
                 <textarea
                   name="services"
                   required
-                  rows={3}
-                  placeholder="HVAC repair and installation in Birmingham"
+                  rows={isStoreOnboarding ? 6 : 3}
+                  placeholder={
+                    isStoreOnboarding
+                      ? 'Outdoor apparel. Ships in 1–2 business days; standard 3–5 days, free over $75. Returns within 30 days, unworn with tags; refunds in 5–7 days. Sizes run true to size.'
+                      : 'HVAC repair and installation in Birmingham'
+                  }
                   defaultValue={prefill.services}
                 />
               </label>
@@ -532,7 +547,11 @@ function AvaOnboardingForm() {
                   name="urgentCallRules"
                   required
                   rows={3}
-                  placeholder="No heat is urgent. Call Sam; if no answer, text him and tell the caller we will respond in 15 minutes."
+                  placeholder={
+                    isStoreOnboarding
+                      ? 'Damaged items, missing packages, double charges, and anyone asking for a manager go to Sam.'
+                      : 'No heat is urgent. Call Sam; if no answer, text him and tell the caller we will respond in 15 minutes.'
+                  }
                   defaultValue={prefill.urgentCallRules}
                 />
               </label>
@@ -616,6 +635,22 @@ function AvaOnboardingForm() {
                 Add a phone, an email, or both. Lead emails go to the email address. Lead texts go to the
                 phone only if you tick the box above.
               </p>
+              {!isStoreOnboarding ? (
+                <label>
+                  Live transfer number (optional)
+                  <input
+                    name="transferPhone"
+                    inputMode="tel"
+                    autoComplete="off"
+                    placeholder="(205) 555-0199"
+                    aria-describedby="transfer-help"
+                  />
+                  <small id="transfer-help" className={styles.fieldHelp}>
+                    For emergencies and callers who ask for a person, Ava connects the call to this number. Leave it blank
+                    and she takes a message instead.
+                  </small>
+                </label>
+              ) : null}
               {sessionId ? (
                 <>
                   <p className={styles.notice}>
@@ -676,8 +711,9 @@ function AvaOnboardingForm() {
             <input type="hidden" name="plan" value={prefill.plan || searchParams.get('plan') || ''} />
             <input type="hidden" name="qualificationId" value={qualificationId} />
             <p className={styles.notice}>
-              Selected plan: {AVA_PLANS[selectedPlan].label} · {AVA_PLANS[selectedPlan].monthlyLabel}
-              /mo after trial · {AVA_PLANS[selectedPlan].minutes} included minutes
+              {isStoreOnboarding
+                ? `Offer: ${AVA_STORE_OFFER.priceLine} after a free 14-day trial.`
+                : `Offer: ${avaPlanPriceLine()} after a free 14-day pilot. $0 until the first booked job.`}
             </p>
             <label className={styles.honeypot} aria-hidden="true">
               Company website
@@ -727,11 +763,11 @@ function OnboardingFallback() {
           <span className={styles.eyebrow}>CHECKOUT STARTS THE TRIAL</span>
           <h1>Start the trial in Stripe, then send setup notes.</h1>
           <p>
-            The 7-day trial is created at checkout. Starter is $77 a month after that, with $0 setup.
+            After the free 14-day pilot it is $25 per booked job, capped at $297 a month.
             The setup form loads on this page next.
           </p>
           <CheckoutForm className={styles.checkout} href="/api/checkout?plan=starter">
-            Start free 7-day trial
+            Start your free 14-day pilot
           </CheckoutForm>
         </header>
       </div>

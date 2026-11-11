@@ -3,14 +3,14 @@ import type { ReactNode } from 'react';
 import styles from './suite.module.css';
 
 const NAV = [
+  { href: '/#samples', label: 'Hear Ava' },
+  { href: '/start', label: 'Ava for your business' },
   { href: '/postcards', label: 'Postcards' },
-  { href: '/receptionist', label: 'Executive Receptionist' },
-  { href: '/reputation', label: 'Reviews' },
   { href: '/lead-scout', label: 'Leads' },
   { href: '/agents', label: 'Agents' },
   { href: '/compare', label: 'Compare' },
-  { href: '/dashboard/prospector', label: 'Lead Finder' },
   { href: '/pricing', label: 'Pricing' },
+  { href: '/login?next=/desk', label: 'Sign in' },
 ];
 
 export function SuiteShell({ children }: { children: ReactNode }) {
@@ -34,8 +34,8 @@ export function SuiteShell({ children }: { children: ReactNode }) {
             </Link>
           ))}
         </div>
-        <Link className={styles.navCta} href="/pricing">
-          See pricing
+        <Link className={styles.navCta} href="/#pricing">
+          Start free pilot
         </Link>
       </nav>
       {children}
@@ -47,6 +47,7 @@ export function SuiteShell({ children }: { children: ReactNode }) {
           <Link href="/pricing">Pricing</Link>
           <Link href="/terms">Terms</Link>
           <Link href="/privacy">Privacy</Link>
+          <Link href="/sms">SMS terms</Link>
         </nav>
       </footer>
     </div>

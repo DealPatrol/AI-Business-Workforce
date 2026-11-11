@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { LiveVideoReceptionist } from '@/components/receptionist/live/LiveVideoReceptionist';
 import { realFaceEnabled } from '@/lib/live-receptionist/config';
-import { AVA_PLANS } from '@/lib/ava/pricing';
+import { AVA_OFFER } from '@/lib/ava/pricing';
 import styles from './live.module.css';
 
 // Prototype: keep it out of search until it is approved.
@@ -31,8 +31,8 @@ export default function LiveReceptionistPage() {
             <li>Rather use the phone? The call button rings the same AI line</li>
           </ul>
           <p className={styles.pricing}>
-            Executive Receptionist plans: {AVA_PLANS.starter.monthlyLabel}, {AVA_PLANS.growth.monthlyLabel}, or{' '}
-            {AVA_PLANS.pro.monthlyLabel} per month. <Link href="/receptionist">See plans</Link>
+            Executive Receptionist: {AVA_OFFER.perBookedJobLabel} per booked job, capped at {AVA_OFFER.monthlyCapLabel}/month after a free 14-day pilot.{' '}
+            <Link href="/receptionist">See the offer</Link>
           </p>
         </div>
         <LiveVideoReceptionist realFace={realFaceEnabled()} />

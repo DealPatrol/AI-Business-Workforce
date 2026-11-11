@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Leaf } from 'lucide-react';
 import { metadataTitle, pageSeo } from '@/lib/seo/pages';
+import { safeReturnPath } from '@/lib/auth/return-path';
 import LoginForm from './login-form';
 import styles from './login.module.css';
 
@@ -14,38 +15,29 @@ export const metadata: Metadata = {
 };
 
 type LoginPageProps = {
-  searchParams: Promise<{ next?: string }>;
+  searchParams: Promise<{ next?: string; error?: string }>;
 };
 
-const ALLOWED_RETURN_PATHS = new Set([
-  '/dashboard',
-  '/dashboard/campaigns',
-  '/dashboard/prospector',
-  '/dashboard/prospector/settings',
-]);
-
-function returnPath(next: string | undefined) {
-  if (!next) return '/dashboard/campaigns';
-  if (ALLOWED_RETURN_PATHS.has(next)) return next;
-  if (next === '/sales' || /^\/demo\/[a-z0-9-]+$/.test(next)) return next;
-  return '/dashboard/campaigns';
-}
-
 export default async function LoginPage({ searchParams }: LoginPageProps) {
-  const { next } = await searchParams;
-  const returnTo = returnPath(next);
+  const { next, error } = await searchParams;
+  const returnTo = safeReturnPath(next);
 
   return (
     <main className={styles.page}>
       <section className={styles.card}>
         <Link href="/" className={styles.brand}>
           <span><Leaf size={18} /></span>
-          Workforce<b>AI</b>
+          Front Porch<b>Growth</b>
         </Link>
-        <span className={styles.eyebrow}>CONTRACTOR ACCESS</span>
-        <h1>Campaign inbox</h1>
-        <p>Sign in with the Supabase user assigned to your campaigns.</p>
+        <span className={styles.eyebrow}>CUSTOMER SIGN IN</span>
+        <h1>Your desk</h1>
+        <p>Use the email you checked out with. We can email you a sign-in link, or use your password if you set one.</p>
+        {error ? <p className={styles.error} role="alert">That sign-in link expired or was already used. Request a new one.</p> : null}
         <LoginForm returnTo={returnTo} />
+        <p className={styles.after}>
+          Not a customer yet? You do not need an account to buy.{' '}
+          <Link href="/#pricing">Start the free 14-day pilot</Link>.
+        </p>
       </section>
     </main>
   );

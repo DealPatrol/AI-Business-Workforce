@@ -55,6 +55,7 @@ type SendEmailInput = {
   subject: string;
   html: string;
   replyTo?: string;
+  from?: string;
 };
 
 export async function sendResendEmail(input: SendEmailInput) {
@@ -75,7 +76,7 @@ export async function sendResendEmail(input: SendEmailInput) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      from: avaFromAddress(),
+      from: input.from || avaFromAddress(),
       to,
       subject: input.subject,
       html: input.html,

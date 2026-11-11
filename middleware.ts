@@ -92,7 +92,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.rewrite(url);
   }
 
-  if (!pathname.startsWith('/dashboard') && pathname !== '/login') {
+  if (!pathname.startsWith('/dashboard') && pathname !== '/login' && pathname !== '/desk') {
     return NextResponse.next();
   }
 

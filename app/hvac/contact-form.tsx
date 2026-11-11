@@ -1,7 +1,6 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
-import { AVA_PLAN_KEYS, AVA_PLANS } from '@/lib/ava/pricing';
 
 const CONTACT_EMAIL = 'colecollins763@gmail.com';
 
@@ -88,16 +87,9 @@ export default function HvacContactForm() {
       </label>
       <label>
         Plan you&apos;re interested in
-        <select name="interest" defaultValue="Executive Receptionist Growth — $168/mo" required>
-          {AVA_PLAN_KEYS.map((key) => {
-            const plan = AVA_PLANS[key];
-            const label = `Executive Receptionist ${plan.label} — ${plan.monthlyLabel}/mo`;
-            return (
-              <option key={plan.key} value={label}>
-                {label}
-              </option>
-            );
-          })}
+        <select name="interest" defaultValue="Executive Receptionist 14-day pilot" required>
+          <option value="Executive Receptionist 14-day pilot">Executive Receptionist 14-day pilot</option>
+          <option value="Executive Receptionist — $25 per booked job">Executive Receptionist — $25 per booked job</option>
           <option value="Not sure yet">Not sure yet</option>
         </select>
       </label>

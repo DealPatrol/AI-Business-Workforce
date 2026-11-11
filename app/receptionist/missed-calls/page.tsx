@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { TrialSignupLink } from '@/components/dispatch/TrialSignupLink';
 import { MISSED_CALL_ADS, missedCallSeo, missedCallTrade } from '@/lib/dispatch/missed-call-ads';
-import { AVA_PLANS } from '@/lib/ava/pricing';
+import { AVA_OFFER } from '@/lib/ava/pricing';
 import { faqNode, jsonLdGraph } from '@/lib/ava/structured-data';
 import { urlsForRequest } from '@/lib/seo/host-metadata';
 import { absoluteSiteUrl } from '@/lib/site-url';
@@ -11,11 +11,11 @@ import styles from './missed.module.css';
 const FAQS = [
   {
     q: 'What does Executive Receptionist actually do on the call?',
-    a: 'It answers calls that reach it, including after-hours and unanswered calls you forward. It asks for the caller’s name, number, and what they need, then texts that lead to you. It does not book the job on your calendar.',
+    a: 'It answers calls that reach it, including after-hours and unanswered calls you forward. It asks for the caller’s name, number, and what they need, then emails that lead to you. It does not book the job on your calendar.',
   },
   {
     q: 'What does the free trial cost?',
-    a: `The trial is 7 days. After that, Starter is ${AVA_PLANS.starter.monthlyLabel} a month, Growth is ${AVA_PLANS.growth.monthlyLabel}, and Pro is ${AVA_PLANS.pro.monthlyLabel}. Setup is $0. Those are the prices on the pricing page.`,
+    a: `The pilot is 14 days with a card on file. After that you pay $0 until the first booked job, then ${AVA_OFFER.perBookedJobLabel} per booked job, capped at ${AVA_OFFER.monthlyCapLabel} a month. Setup is in person in Gadsden.`
   },
   {
     q: 'Does the browser demo become my business line?',
@@ -50,7 +50,6 @@ export default async function MissedCallsPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const raw = Array.isArray(params.trade) ? params.trade[0] : params.trade;
   const ad = MISSED_CALL_ADS[missedCallTrade(raw)];
-  const starter = AVA_PLANS.starter;
   const structured = jsonLdGraph([
     {
       '@type': 'SoftwareApplication',
@@ -61,9 +60,9 @@ export default async function MissedCallsPage({ searchParams }: PageProps) {
       description: 'AI receptionist that answers missed calls and emails the lead summary. Texting is available after setup.',
       offers: {
         '@type': 'Offer',
-        price: (starter.monthlyCents / 100).toFixed(2),
+        price: (AVA_OFFER.perBookedJobCents / 100).toFixed(2),
         priceCurrency: 'USD',
-        description: `Free 7-day trial, then ${starter.monthlyLabel} per month.`,
+        description: AVA_OFFER.summary,
         url: absoluteSiteUrl('/receptionist/missed-calls'),
       },
     },
@@ -83,15 +82,14 @@ export default async function MissedCallsPage({ searchParams }: PageProps) {
         <p className={styles.morning}>{ad.morning}</p>
         <section className={styles.offer} aria-label="Price and trial">
           <p className={styles.price}>
-            {starter.monthlyLabel}
-            <span> /month after a 7-day free trial</span>
+            {AVA_OFFER.perBookedJobLabel}
+            <span> per booked job after a free 14-day pilot</span>
           </p>
-          <TrialSignupLink className={styles.cta} href="/api/checkout?plan=starter" plan="starter">
-            Start the 7-day free trial
+          <TrialSignupLink className={styles.cta} href="/api/checkout?plan=pilot" plan="pilot">
+            Start your free 14-day pilot
           </TrialSignupLink>
           <p className={styles.fine}>
-            Starter includes {starter.minutes} minutes, then {starter.overageLabel}. Growth is {AVA_PLANS.growth.monthlyLabel}. Pro is{' '}
-            {AVA_PLANS.pro.monthlyLabel}. $0 setup. The checkout is Stripe. This page does not start a charge by itself.
+            {AVA_OFFER.summary} The checkout is Stripe. This page does not start a charge by itself.
           </p>
         </section>
         <section className={styles.story}>
@@ -104,7 +102,7 @@ export default async function MissedCallsPage({ searchParams }: PageProps) {
           <ul>
             <li>It answers the calls you send it, including nights and weekends.</li>
             <li>It takes the name, the number, and what is wrong.</li>
-            <li>It texts you that lead so you can call back and book the job.</li>
+            <li>It emails you that lead so you can call back and book the job.</li>
           </ul>
           <p>
             It does not book the appointment on your calendar, and this page does not claim a pickup in under a minute. You still

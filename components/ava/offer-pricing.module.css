@@ -1,0 +1,501 @@
+.wrap {
+  --ink: #14110e;
+  --muted: #5c5348;
+  --line: #e4d9c8;
+  --paper: #fbf7f0;
+  --card: #ffffff;
+  --gold: #b8924f;
+  --gold-deep: #8c6a2e;
+  --navy: #1c1915;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.wrap :where(h1, h2, h3, p, ul, ol, table, blockquote) {
+  margin: 0;
+}
+
+.pageWrap,
+.sectionWrap {
+  color: var(--ink);
+}
+
+.pageWrap {
+  min-height: 100vh;
+}
+
+.sectionWrap {
+  border-radius: 28px;
+  padding-bottom: 28px;
+  overflow: hidden;
+}
+
+.topbar,
+.hero,
+.plans,
+.underPlans,
+.billing,
+.calculator,
+.guarantee,
+.features,
+.trust,
+.faq,
+.closing,
+.footer,
+.other {
+  width: min(1120px, calc(100% - 40px));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  min-height: 76px;
+}
+
+.brand {
+  font-size: 22px;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.topbar nav {
+  display: flex;
+  gap: 18px;
+  margin-left: auto;
+}
+
+.topbar nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.topCta,
+.primary,
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.topCta,
+.primary {
+  background: linear-gradient(180deg, #e7d3a8, #b8924f);
+  color: #1a140c;
+}
+
+.secondary {
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  background: transparent;
+}
+
+.hero {
+  padding: 56px 0 24px;
+}
+
+.kicker {
+  font-family: "Segoe UI", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  margin-bottom: 12px !important;
+}
+
+.hero h1,
+.billing h2,
+.calculator h2,
+.features h2,
+.trust h2,
+.faq h2,
+.closing h2,
+.calcHead h2 {
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.hero h1 {
+  max-width: 18ch;
+  font-size: clamp(36px, 5vw, 62px);
+}
+
+.lede,
+.fine,
+.cardPitch,
+.underPlans,
+.billing p,
+.calcHead p,
+.calcResult p,
+.guarantee p,
+.trust li,
+.faq p,
+.footer {
+  font-family: "Segoe UI", sans-serif;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.lede {
+  max-width: 62ch;
+  margin-top: 18px !important;
+  font-size: 18px;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 28px 0 16px;
+}
+
+.fine a,
+.underPlans a,
+.footer a {
+  color: var(--ink);
+}
+
+.plans {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  padding: 12px 0 8px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 16px 40px rgba(20, 17, 14, 0.04);
+}
+
+.featured {
+  border-color: #d9c196;
+  background: linear-gradient(180deg, #fffaf2, #ffffff);
+  box-shadow: 0 18px 50px rgba(140, 106, 46, 0.12);
+}
+
+.cardEyebrow {
+  font-family: "Segoe UI", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+}
+
+.card h2 {
+  font-size: 28px;
+}
+
+.price {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.price strong {
+  font-size: 56px;
+  font-weight: 500;
+}
+
+.price span,
+.card ul {
+  font-family: "Segoe UI", sans-serif;
+}
+
+.card ul {
+  padding-left: 18px;
+  color: var(--muted);
+  line-height: 1.7;
+  flex: 1;
+}
+
+.underPlans {
+  padding: 8px 0 36px;
+}
+
+.billing {
+  padding: 12px 0 36px;
+}
+
+.billing ol {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  list-style: none;
+  padding: 24px 0 0;
+}
+
+.billing li {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 14px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 18px;
+}
+
+.billing li span {
+  font-size: 22px;
+  color: var(--gold-deep);
+}
+
+.billing h3 {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.calculator {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  padding: 28px;
+  margin-bottom: 28px;
+}
+
+.calcHead h2 {
+  font-size: 32px;
+  max-width: 20ch;
+}
+
+.calcHead p {
+  max-width: 62ch;
+  margin-top: 10px !important;
+}
+
+.sliderLabel {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin: 24px 0 10px;
+  font-family: "Segoe UI", sans-serif;
+  font-weight: 650;
+}
+
+.sliderLabel strong {
+  font-size: 28px;
+  font-family: Georgia, serif;
+}
+
+.slider {
+  width: 100%;
+  accent-color: var(--gold-deep);
+}
+
+.calcResult {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 24px;
+  align-items: center;
+  margin-top: 22px;
+}
+
+.calcResult span {
+  display: block;
+  font-family: "Segoe UI", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 12px;
+  color: var(--gold-deep);
+}
+
+.calcResult strong {
+  font-size: 48px;
+}
+
+.guarantee {
+  background: #1c1915;
+  color: #f6f1e8;
+  border-radius: 28px;
+  padding: 32px;
+  margin-bottom: 36px;
+}
+
+.guarantee .kicker {
+  color: #e7d3a8;
+}
+
+.guarantee blockquote {
+  font-size: clamp(26px, 3vw, 40px);
+  line-height: 1.25;
+  margin: 8px 0 16px !important;
+}
+
+.guarantee p {
+  color: #ddd2c4;
+}
+
+.features {
+  padding-bottom: 28px;
+}
+
+.features h2,
+.trust h2,
+.faq h2 {
+  font-size: 36px;
+  margin-bottom: 22px;
+}
+
+.tableBlock {
+  margin-top: 18px;
+}
+
+.tableBlock h3 {
+  font-family: "Segoe UI", sans-serif;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.tableBlock table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--card);
+  font-family: "Segoe UI", sans-serif;
+}
+
+.tableBlock th,
+.tableBlock td {
+  text-align: left;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.tableBlock th {
+  color: var(--muted);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tableBlock td[data-included='yes'] {
+  color: #2d6a3a;
+  font-weight: 650;
+}
+
+.tableBlock td[data-included='no'] {
+  color: #8a5a32;
+  font-weight: 650;
+}
+
+.trust ul {
+  display: grid;
+  gap: 14px;
+  padding: 0;
+  list-style: none;
+}
+
+.trust li {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 18px 20px;
+}
+
+.faq {
+  padding: 36px 0;
+  display: grid;
+  gap: 10px;
+}
+
+.faq details {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px 18px;
+}
+
+.faq summary {
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.faq p {
+  margin-top: 10px !important;
+}
+
+.other {
+  padding: 12px 0 28px;
+}
+
+.other table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--card);
+  font-family: "Segoe UI", sans-serif;
+}
+
+.other th,
+.other td {
+  text-align: left;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.closing {
+  text-align: center;
+  padding: 48px 0 24px;
+}
+
+.closing h2 {
+  font-size: 40px;
+  max-width: 16ch;
+  margin: 0 auto;
+}
+
+.closing .heroActions {
+  justify-content: center;
+}
+
+.footer {
+  padding: 12px 0 48px;
+  text-align: center;
+  font-size: 14px;
+}
+
+@media (max-width: 800px) {
+  .topbar nav {
+    display: none;
+  }
+
+  .plans,
+  .billing ol,
+  .calcResult {
+    grid-template-columns: 1fr;
+  }
+
+  .hero h1,
+  .closing h2 {
+    max-width: none;
+  }
+
+  .heroActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .price strong,
+  .calcResult strong {
+    font-size: 40px;
+  }
+}

@@ -4,17 +4,31 @@ import { SuiteShell } from '@/components/suite/SuiteShell';
 import styles from '@/components/suite/suite.module.css';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 
-const CHECKOUT_URL = 'https://buy.stripe.com/cNi9ATaHAeX5fdrfakebu02';
 const seo = pageSeo('/missed-call');
 const title = renderedTitle(seo);
 const description = seo.description;
 
 const FAQS = [
-  { q: 'Do I need a new phone number?', a: 'No. You keep your number. We set up conditional forwarding so only calls you do not answer go to the text-back line. Customers still call the same number they always have.' },
-  { q: 'What does the text say?', a: 'Something like: "Hey, this is Mike with Ace Lawn. Sorry we missed you, we are on a job. What can we help with?" We write it with you and you can change it anytime.' },
-  { q: 'How fast is setup?', a: 'Usually within 1 business day of checkout. Cole texts you, you dial one forwarding code from your phone, and we place a test call together.' },
-  { q: 'How is this different from Executive Receptionist?', a: 'Text-back sends a text. Executive Receptionist answers the call with a voice receptionist, books the job, and sends you the details. Text-back is the entry tier; you can upgrade anytime.' },
-  { q: 'Can I cancel?', a: 'Yes. It is month to month with no contract.' },
+  {
+    q: 'Is this live today?',
+    a: 'No. This page is a waitlist. Automatic missed-call texts cannot be sent until carrier verification is approved. Cole will email you when it can legally run.',
+  },
+  {
+    q: 'Who will the text come from?',
+    a: 'Executive Receptionist, on behalf of your business. The message will say Executive Receptionist and name your shop. It will not pretend to be a personal text from you.',
+  },
+  {
+    q: 'Who would get a text?',
+    a: 'Only people who called your business line and did not reach anyone. One transactional callback text per missed call. No marketing texts and no texts to purchased lists.',
+  },
+  {
+    q: 'Do I need a new phone number?',
+    a: 'No. You keep your number. When the program launches, unanswered calls can be forwarded so a missed caller can receive that one callback text.',
+  },
+  {
+    q: 'How is this different from Executive Receptionist?',
+    a: 'Text-back would send a text after an unanswered call. Executive Receptionist answers the call with a voice receptionist, captures the details, and emails you the summary. Text-back stays on the waitlist until carrier verification is approved.',
+  },
 ] as const;
 
 export const metadata: Metadata = {
@@ -28,29 +42,40 @@ export default function MissedCallPage() {
   return (
     <SuiteShell>
       <section className={styles.section}>
-        <span className={styles.eyebrow}>MISSED-CALL TEXT-BACK</span>
-        <h1>Missed the call? They get a text before they call your competitor.</h1>
+        <span className={styles.eyebrow}>WAITLIST</span>
+        <h1>Missed-call text-back is on a waitlist.</h1>
         <p>
-          You are on a roof, under a sink, or behind a mower. The phone rings and you cannot grab it. Most callers will not leave a voicemail. They call the next company. Text-back sends them a friendly text from your business right away, so the conversation keeps going and you can reply when your hands are free.
+          This product is not live. After carrier texting verification is approved, Executive Receptionist will be able
+          to send one transactional callback text, as Executive Receptionist on behalf of your business, to a person who
+          called your line and did not reach anyone.
         </p>
         <div className={styles.grid}>
           <article className={styles.card}>
-            <h2>How it works</h2>
-            <p>1. A call to your business number goes unanswered.</p>
-            <p>2. The caller gets a text from your business within seconds.</p>
-            <p>3. Their reply lands with you, and you pick up the job.</p>
+            <h2>How it is designed to work</h2>
+            <p>1. Someone calls your published business number and no one answers.</p>
+            <p>2. They may receive one text from Executive Receptionist on behalf of your business.</p>
+            <p>3. They can reply or call back. Reply STOP to opt out, HELP for help.</p>
           </article>
           <article className={styles.card}>
-            <h2>Missed-Call Text-Back</h2>
-            <p>Keep your number. Custom message. Setup done for you. Month to month.</p>
-            <p className={styles.price}>$39/month</p>
-            <a className={styles.button} href={CHECKOUT_URL}>
-              Start text-back
+            <h2>Join the waitlist</h2>
+            <p>Planned price after launch: $39/month. There is no live checkout and no texts are being sent from this page.</p>
+            <p>
+              Service can start only after carrier registration is approved. Join the waitlist and Cole will email you when
+              it can legally run.
+            </p>
+            <a className={styles.button} href={`mailto:colecollins763@gmail.com?subject=${encodeURIComponent('Missed-Call Text-Back waitlist')}`}>
+              Join the waitlist
             </a>
           </article>
         </div>
         <p>
-          Want the call answered, not just texted? <Link href="/receptionist">Executive Receptionist</Link> answers with a voice receptionist and books the job. Plans are $77, $168, and $324 a month.
+          SMS program details: <Link href="/sms">SMS terms</Link>. How we handle caller numbers:{' '}
+          <Link href="/privacy">Privacy</Link>.
+        </p>
+        <p>
+          Want the call answered, not just a later callback text? <Link href="/receptionist">Executive Receptionist</Link>{' '}
+          answers with a voice receptionist and emails you the summary. Pricing: $25 per booked job, capped at $297 a
+          month, after a free 14-day pilot.
         </p>
         <section className={styles.faq}>
           {FAQS.map((faq) => (

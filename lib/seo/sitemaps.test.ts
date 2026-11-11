@@ -9,6 +9,7 @@ const FRONT_PORCH = 'https://frontporchgrowth.com';
 
 const FRONT_PORCH_PATHS = [
   '/',
+  '/start',
   '/postcards',
   '/pricing',
   '/compare',
@@ -61,7 +62,7 @@ describe('host sitemaps', () => {
   it('keeps the Front Porch Growth sitemap on its own host', () => {
     const published = frontPorchGrowthSitemap(FRONT_PORCH, new Date('2026-11-08T00:00:00.000Z')).map((item) => item.url);
     assert.deepEqual(published.map(pathOf), FRONT_PORCH_PATHS);
-    assert.equal(published.length, 57);
+    assert.equal(published.length, 58);
     assert.ok(published.every((url) => url.startsWith(`${FRONT_PORCH}/`)));
 
     const origin = getSiteUrl();

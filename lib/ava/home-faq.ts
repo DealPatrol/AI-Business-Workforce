@@ -1,7 +1,7 @@
 export const AVA_HOME_FAQS = [
   {
     q: 'How much does Executive Receptionist cost?',
-    a: 'Free 14-day pilot, then $0 until your first booked job, then $25 per booked job, capped at $297/month. Setup is in person in Gadsden. Older Starter/Growth/Pro minute tiers may still appear in Stripe checkout; the offer we sell is the booked-job model.',
+    a: 'A free 14-day pilot with a card on file, then $0 until your first booked job, then $25 per booked job, capped at $297 a month. Set up in person in Gadsden. If the receptionist doesn\'t capture a single real caller lead during your 14-day pilot, you pay nothing.',
   },
   {
     q: 'Can I hear Executive Receptionist before I pay?',
@@ -13,7 +13,7 @@ export const AVA_HOME_FAQS = [
   },
   {
     q: 'How do I start the paid trial?',
-    a: 'Choose a plan or start the pilot. Stripe Checkout creates the trial. When it finishes, you land on the setup form with that session attached. Sending the form without checkout only emails Cole your notes. It does not start the subscription.',
+    a: 'Start the 14-day pilot from checkout. Stripe collects a card and does not charge until after the pilot, and then only when a booked job is confirmed. Sending the setup form without checkout only emails Cole your notes. It does not start the subscription.',
   },
   {
     q: 'What does Executive Receptionist do on a call?',

@@ -101,18 +101,18 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
           <span className="kicker">{guide.eyebrow}</span>
           <h1>{guide.h1}</h1>
           <p>{guide.lede}</p>
-          <p className="trial-line">Free 7-day trial, then $77, $168, or $324 a month. $0 setup.</p>
+          <p className="trial-line">Free 14-day pilot, then $25 per booked job, max $297/month. $0 until your first booked job.</p>
           <div className="hero-actions">
             <Link className="sales-btn" href={demoHref}>
               <PhoneCall size={18} /> Hear a demo call
             </Link>
             <TrackedCheckoutLink className="sales-btn secondary" href="/api/checkout?plan=starter" plan="starter">
-              Start free 7-day trial <ArrowRight size={18} />
+              Start your free 14-day pilot <ArrowRight size={18} />
             </TrackedCheckoutLink>
           </div>
           <div className="trust-row">
             <span>
-              <Check /> Texts you the lead
+              <Check /> Emails you the lead
             </span>
             <span>
               <Check /> 24/7 if you forward the line
@@ -193,7 +193,7 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
       <section className="pricing" id="pricing">
         <div className="section-title">
           <span className="kicker">PRICING</span>
-          <h2>Free 7-day trial. $0 setup.</h2>
+          <h2>Free 14-day pilot. $0 setup.</h2>
           <p>
             Checkout is Stripe. After the trial, the plan you picked bills monthly. Included minutes
             reset each month. Overage uses the rate on the card.
@@ -245,14 +245,14 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
         <h2>Try the demo, then start the trial in Stripe.</h2>
         <p>
           The sample call is a landscaping estimate. The live demo is in the browser. Checkout opens
-          Stripe for the plan you pick. Starter is $77 a month after the trial.
+          Stripe for the plan you pick. After the pilot it is $25 per booked job, capped at $297 a month.
         </p>
         <div>
           <Link className="sales-btn light" href={liveHref}>
             <PhoneCall size={18} /> Try the live demo
           </Link>
           <TrackedCheckoutLink className="sales-btn outline" href="/api/checkout?plan=starter" plan="starter">
-            Start free 7-day trial
+            Start your free 14-day pilot
           </TrackedCheckoutLink>
         </div>
       </section>

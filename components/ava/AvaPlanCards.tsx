@@ -1,36 +1,29 @@
 import { Check } from 'lucide-react';
-import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
-import { AVA_PLANS, type AvaPlanKey } from '@/lib/ava/pricing';
+import { AVA_OFFER } from '@/lib/ava/pricing';
 
 export function AvaPlanCards() {
-  const plans = (Object.keys(AVA_PLANS) as AvaPlanKey[]).map((key) => AVA_PLANS[key]);
-
   return (
     <div className="plan-grid">
-      {plans.map((plan) => (
-        <article className={plan.featured ? 'plan featured' : 'plan'} key={plan.key}>
-          <h3>{plan.label}</h3>
-          <p>{plan.description}</p>
-          <div className="price">
-            <strong>{plan.monthlyLabel}</strong>
-            <span>/mo after trial</span>
-          </div>
-          <small>
-            {plan.minutes.toLocaleString('en-US')} minutes · {plan.overageLabel}
-          </small>
-          <ul>
-            {plan.features.map((feature) => (
-              <li key={feature}>
-                <Check />
-                {feature}
-              </li>
-            ))}
-          </ul>
-          <TrackedCheckoutLink className="plan-btn" href={`/api/checkout?plan=${plan.key}`} plan={plan.key}>
-            Start 7-day trial
-          </TrackedCheckoutLink>
-        </article>
-      ))}
+      <article className="plan featured">
+        <h3>Free 14-day pilot</h3>
+        <p>Pay only when it books you work. Set up in person in Gadsden.</p>
+        <div className="price">
+          <strong>{AVA_OFFER.perBookedJobLabel}</strong>
+          <span>/booked job · $0 until your first one</span>
+        </div>
+        <small>Never more than {AVA_OFFER.monthlyCapLabel}/month</small>
+        <ul>
+          <li><Check />24/7 answering on your own number</li>
+          <li><Check />Lead summaries emailed within minutes</li>
+          <li><Check />{AVA_OFFER.guarantee}</li>
+        </ul>
+        <a className="plan-btn" href={AVA_OFFER.demoUrl} target="_blank" rel="noopener noreferrer">
+          Try the live demo
+        </a>
+        <a className="plan-btn" href="tel:+12565953354">
+          Call Cole to set up your pilot
+        </a>
+      </article>
     </div>
   );
 }
