@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Check, Phone, MessageSquare, PhoneCall } from 'lucide-react';
+import { Check, Phone, PhoneCall, Snowflake, Flame, Moon } from 'lucide-react';
 import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
-import { AVA_OFFER, avaTrialThenPriceCopy } from '@/lib/ava/pricing';
+import { AVA_OFFER } from '@/lib/ava/pricing';
 import { urlsForRequest } from '@/lib/seo/host-metadata';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 import HvacContactForm from './contact-form';
@@ -11,9 +11,8 @@ import './hvac.css';
 const seo = pageSeo('/hvac');
 const title = renderedTitle(seo);
 
-const DEMO_LINK = 'https://elevenlabs.io/app/talk-to?agent_id=agent_0301m4sb6c5sfdqrkthv80xt7na6';
-const COLE_TEL = 'tel:+12565953354';
-const COLE_SMS = 'sms:+12565953354';
+/** Gadsden HVAC demo agent (same one AVA_OFFER.demoUrl points to). */
+const DEMO_LINK = AVA_OFFER.demoUrl;
 
 export const dynamic = 'force-dynamic';
 
@@ -23,143 +22,135 @@ export async function generateMetadata(): Promise<Metadata> {
     title: metadataTitle(seo),
     description: seo.description,
     alternates: { canonical },
-    openGraph: { images: ['/og-default.png'],
+    openGraph: {
+      images: ['/og-home.png'],
       title,
       description: seo.description,
       url: openGraphUrl,
-      siteName: 'Front Porch Growth',
+      siteName: 'Executive Receptionist',
       type: 'website',
     },
+    twitter: { card: 'summary_large_image', title, description: seo.description, images: ['/og-home.png'] },
   };
 }
 
+const CALLS = [
+  {
+    icon: Flame,
+    title: 'No heat',
+    caller: '“It’s 28 degrees and the furnace is blowing cold air.”',
+    ava: 'Ava gets the name, callback number, address, and what the system is doing, asks if anyone at home is elderly, a baby, or has a medical need, and emails it to you as an urgent lead.',
+  },
+  {
+    icon: Snowflake,
+    title: 'No AC',
+    caller: '“The upstairs unit quit and it’s 94 in here.”',
+    ava: 'Ava treats it as urgent, captures the job details, and emails you the lead right away. She never promises an arrival time.',
+  },
+  {
+    icon: Moon,
+    title: 'After-hours emergency',
+    caller: '“I smell gas by the furnace.” (11 PM)',
+    ava: 'Ava tells everyone to leave the house and call 911 or the gas company from outside, before anything else. Once they are safe, she takes a name and number and sends it to you as an emergency.',
+  },
+];
 
 export default function HvacPage() {
   return (
     <main className="hvac-page">
       <nav className="hvac-nav">
         <Link href="/" className="hvac-brand">
-          Front Porch Growth
+          Executive Receptionist
         </Link>
         <div>
-          <a href="#plans">Plans</a>
+          <a href="#calls">Calls</a>
+          <a href="#pricing">Pricing</a>
           <a href="#contact">Contact</a>
-          <a className="hvac-nav-call" href={COLE_TEL}>
-            <Phone size={16} /> 256-595-3354
+          <a className="hvac-nav-call" href={AVA_OFFER.contactPhoneHref}>
+            <Phone size={16} /> {AVA_OFFER.contactPhoneDisplay}
           </a>
         </div>
       </nav>
 
       <section className="hvac-hero">
-        <p className="hvac-eyebrow">For north Alabama heating &amp; air shops</p>
+        <p className="hvac-eyebrow">AI receptionist for heating &amp; air companies</p>
         <h1>Never miss another no-heat call.</h1>
         <p className="hvac-lede">
-          When it&apos;s 28 degrees out and the furnace quits, folks call the next company on the list
-          if nobody picks up. Executive Receptionist answers every call, day or night, gets the name, address, and
-          what&apos;s wrong, and sends the urgent ones straight to your on-call tech.
+          When the furnace quits at 9 PM, homeowners call the next company on the list if nobody picks up. Ava, your
+          AI receptionist, answers every call day or night, captures the job details, books routine visits on your schedule
+          during the call, and emails you every lead.
         </p>
         <div className="hvac-cta-row">
-          <a className="hvac-btn hvac-btn-primary" href={DEMO_LINK} target="_blank" rel="noopener noreferrer">
-            <PhoneCall size={18} /> Talk to Executive Receptionist
-          </a>
-          <a className="hvac-btn hvac-btn-ghost" href={COLE_TEL}>
-            <Phone size={18} /> Call Cole
-          </a>
-          <a className="hvac-btn hvac-btn-ghost" href={COLE_SMS}>
-            <MessageSquare size={18} /> Text Cole
+          <TrackedCheckoutLink className="hvac-btn hvac-btn-primary" href="/api/checkout?plan=pilot" plan="pilot">
+            Start the free 14-day pilot
+          </TrackedCheckoutLink>
+          <a className="hvac-btn hvac-btn-ghost" href={DEMO_LINK} target="_blank" rel="noopener noreferrer">
+            <PhoneCall size={18} /> Talk to the HVAC demo
           </a>
         </div>
         <p className="hvac-small">
-          The demo plays Executive Receptionist answering for &quot;Front Porch Heating &amp; Air,&quot; a made-up shop.
-          Try a no-heat emergency, a tune-up, or ask what a new unit costs. Works in your browser; allow
-          the microphone.
+          The demo is Ava answering for a made-up shop, &quot;Demo Heating &amp; Air.&quot; Try a no-heat call, a broken
+          AC, or ask what a service call costs. It runs in your browser; allow the microphone.
         </p>
       </section>
 
-      <section className="hvac-stats">
-        <div>
-          <strong>27%</strong>
-          <span>of calls to home-service businesses go unanswered.</span>
-          <a href="https://www.invoca.com/blog/how-much-missed-sales-calls-cost-home-services-businesses" target="_blank" rel="noopener noreferrer">
-            Source: Invoca
-          </a>
+      <section className="hvac-how" id="calls">
+        <h2>The calls Ava handles for you</h2>
+        <div className="hvac-calls">
+          {CALLS.map(({ icon: Icon, title: t, caller, ava }) => (
+            <article key={t} className="hvac-call">
+              <h3>
+                <Icon size={20} /> {t}
+              </h3>
+              <p className="hvac-caller">{caller}</p>
+              <p>{ava}</p>
+            </article>
+          ))}
         </div>
-        <div>
-          <strong>$385</strong>
-          <span>average HVAC service repair ticket.</span>
-          <a href="https://servicegrid.app/blog/average-ticket-by-trade-2026" target="_blank" rel="noopener noreferrer">
-            Source: ServiceGrid
-          </a>
-        </div>
-        <div>
-          <strong>3 calls</strong>
-          <span>
-            caught a month at $385 is about $1,155 in repairs. That covers even the biggest plan.
-          </span>
-        </div>
-      </section>
-
-      <section className="hvac-how">
-        <h2>What Executive Receptionist does on your line</h2>
         <ul>
           <li>
-            <Check size={18} /> <b>No heat / no cool:</b> takes name, address, callback number, the
-            problem, and how urgent it is, then tells the caller a tech will call back shortly.
+            <Check size={18} /> <span><b>Tune-ups and routine work:</b> offers real open windows from your schedule and books
+            one during the call, so your office doesn&apos;t have to play phone tag.</span>
           </li>
           <li>
-            <Check size={18} /> <b>Tune-ups and routine work:</b> collects the details and the times
-            that suit them, so your office can confirm.
+            <Check size={18} /> <span><b>Pricing questions:</b> gives only the service-call fee you set and never makes up a
+            price. Everything else waits on your tech.</span>
           </li>
           <li>
-            <Check size={18} /> <b>Pricing questions:</b> gives only the diagnostic fee you set and
-            never makes up a price. Everything else waits on your tech.
+            <Check size={18} /> <span><b>Every lead in your inbox:</b> name, number, address, the problem, and how urgent it
+            is, emailed to you right after the call.</span>
           </li>
           <li>
-            <Check size={18} /> <b>After hours:</b> emergencies go to your on-call phone, everything
-            else waits for the morning.
-          </li>
-          <li>
-            <Check size={18} /> <b>Upset callers or billing issues:</b> takes a message and sends it to
-            you or your manager.
+            <Check size={18} /> <span><b>Spanish callers:</b> Ava switches to Spanish when the caller does.</span>
           </li>
         </ul>
       </section>
 
-      <section className="hvac-plans" id="plans">
-        <h2>Plans</h2>
+      <section className="hvac-plans" id="pricing">
+        <h2>Pilot pricing for home-service shops</h2>
         <div className="hvac-plan-grid">
           <article className="hvac-plan featured">
-            <span className="hvac-badge">Published offer</span>
+            <span className="hvac-badge">Free 14-day pilot</span>
             <h3>Executive Receptionist</h3>
             <p className="hvac-price">
               {AVA_OFFER.perBookedJobLabel}
-              <small>per booked job</small>
+              <small> per booked job</small>
             </p>
-            <p className="hvac-setup">{AVA_OFFER.summary}</p>
             <ul>
-              <li><Check size={16} /> Answers HVAC calls 24/7</li>
-              <li><Check size={16} /> Takes no-heat and no-cool details</li>
-              <li><Check size={16} /> Emails you each lead summary</li>
-              <li><Check size={16} /> {AVA_OFFER.guarantee}</li>
+              <li><Check size={16} /> Free 14-day pilot with a card on file</li>
+              <li><Check size={16} /> $0 until your first booked job</li>
+              <li><Check size={16} /> Then {AVA_OFFER.perBookedJobLabel} per booked job, capped at {AVA_OFFER.monthlyCapLabel}/month</li>
+              <li><Check size={16} /> Answers your HVAC calls 24/7</li>
+              <li><Check size={16} /> Cancel anytime, month to month</li>
             </ul>
-            <TrackedCheckoutLink
-              className="hvac-btn hvac-btn-primary"
-              href="/api/checkout?plan=pilot"
-              plan="pilot"
-            >
-              Start free 14-day pilot
+            <TrackedCheckoutLink className="hvac-btn hvac-btn-primary" href="/api/checkout?plan=pilot" plan="pilot">
+              Start the free 14-day pilot
             </TrackedCheckoutLink>
           </article>
         </div>
         <div className="hvac-trial">
-          <h3>Free 14-day pilot</h3>
-          <p>
-            {avaTrialThenPriceCopy()} Cancel anytime. There is no per-minute overage on this offer.
-          </p>
-          <p>
-            Same terms as the Executive Receptionist rate card. Special telephony or integration requirements are
-            quoted before launch. Month-to-month after the trial, and you keep your phone number.
-          </p>
+          <h3>The guarantee</h3>
+          <p>No real caller lead during your pilot means no charge. You pay nothing.</p>
         </div>
       </section>
 
@@ -167,19 +158,19 @@ export default function HvacPage() {
         <div>
           <h2>Talk to a real person</h2>
           <p>
-            I&apos;m Cole Collins, based in Hanceville. Call or text me at{' '}
-            <a href={COLE_TEL}>256-595-3354</a> and I&apos;ll set Executive Receptionist up on your line myself, or leave
-            your info here and I&apos;ll call you back.
+            I&apos;m Cole Collins. Call or text me at <a href={AVA_OFFER.contactPhoneHref}>{AVA_OFFER.contactPhoneDisplay}</a>{' '}
+            and I&apos;ll set Ava up on your line, or leave your info here and I&apos;ll call you back.
           </p>
           <a className="hvac-btn hvac-btn-primary" href={DEMO_LINK} target="_blank" rel="noopener noreferrer">
-            <PhoneCall size={18} /> Talk to Executive Receptionist
+            <PhoneCall size={18} /> Talk to the HVAC demo
           </a>
         </div>
         <HvacContactForm />
       </section>
 
       <footer className="hvac-footer">
-        <span>Front Porch Growth, Hanceville, AL</span>
+        <span>Executive Receptionist</span>
+        <Link href="/">Home</Link>
         <Link href="/privacy">Privacy</Link>
         <Link href="/terms">Terms</Link>
       </footer>

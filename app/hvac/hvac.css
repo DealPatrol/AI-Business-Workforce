@@ -44,3 +44,8 @@
 .hvac-hp{position:absolute!important;left:-9999px!important;width:1px;height:1px;opacity:0}
 .hvac-error{color:var(--hv-red);margin:0}
 .hvac-footer{display:flex;gap:1.2rem;flex-wrap:wrap;color:#666;font-size:.9rem;border-top:1px solid var(--hv-line)}
+.hvac-calls{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-bottom:1.5rem}
+.hvac-call{background:#fff;border:1px solid var(--hv-line);border-radius:14px;padding:1.3rem}
+.hvac-call h3{display:flex;gap:.5rem;align-items:center;margin:0 0 .5rem;font-size:1.2rem;color:var(--hv-red)}
+.hvac-caller{font-style:italic;font-weight:600;margin:0 0 .5rem}
+.hvac-call p{margin:.3rem 0}

@@ -135,6 +135,9 @@ export default function SuiteHomePage() {
             Ava picks up every call, asks the right questions, and sends you the lead so you can call back and book the
             job. Listen to her, then call her yourself.
           </p>
+          <p className={styles.lede} style={{ marginTop: 0 }}>
+            Run a heating &amp; air shop? <Link href="/hvac">See Ava for HVAC companies →</Link>
+          </p>
           <HeroDemoPicker label="Hear Ava for your business" />
           <div className={styles.actions}>
             <TrackedCheckoutLink className={styles.primary} href="/api/checkout?plan=pilot" plan="pilot">
@@ -181,11 +184,17 @@ export default function SuiteHomePage() {
 
       <section className={styles.strip} aria-label="Business types Ava answers for">
         <span className={styles.stripLabel}>Ava answers for</span>
-        {BUSINESS_TYPES.map((type) => (
-          <span key={type} className={styles.chip}>
-            {type}
-          </span>
-        ))}
+        {BUSINESS_TYPES.map((type) =>
+          type === 'HVAC' ? (
+            <Link key={type} href="/hvac" className={styles.chip}>
+              {type}
+            </Link>
+          ) : (
+            <span key={type} className={styles.chip}>
+              {type}
+            </span>
+          ),
+        )}
       </section>
 
       <section className={styles.band} id="samples">
