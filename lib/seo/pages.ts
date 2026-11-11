@@ -64,9 +64,9 @@ const PAGES = {
     receptionist: true,
   },
   '/hvac': {
-    title: 'AI Receptionist for HVAC Companies',
+    title: 'AI Receptionist for HVAC Companies | Executive Receptionist',
     description:
-      'AI Receptionist answers HVAC calls 24/7, takes no-heat and no-cool details, and emails you a summary. Free 14-day pilot, then $25 per booked job.',
+      'Ava answers HVAC calls 24/7: no heat, no AC, after-hours emergencies, and emails you every lead. Free 14-day pilot, then $25 per booked job, max $297/mo.',
     titleMode: 'absolute',
     receptionist: true,
   },
