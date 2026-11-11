@@ -21,8 +21,16 @@ Never use the shared founding Payment Link for this handoff. Visual Canvasser al
 3. Attach a phone number in ElevenLabs. If Twilio is the source, buy/select the number in Twilio and import it into ElevenLabs.
 4. Give the customer the Executive Receptionist number, or have the customer/carrier forward the existing business line to it.
 5. Confirm lead summaries reach the intended email/inbox. `AVA_LEAD_NOTIFICATION_EMAIL` controls the existing Executive Receptionist lead email destination. Optional Twilio SMS alerts (`TWILIO_*` + `AVA_LEAD_SMS_TO`) are additive when configured — they are not live until those env vars are set and tested.
-6. Make a live test call with the customer. Test normal, booking, out-of-hours, urgent, and staff-handoff cases.
-7. Launch only after the test passes. Do not describe phone, SMS, calendar writes, or transfers as live until each is configured and tested.
+6. **Calendar and in-call booking (required before go-live).** New signups do not get booking automatically: provisioning
+   attaches no booking tools and booking stays off. In the Desk (`/desk` → Booking calendar), set the bookable hours,
+   window length, jobs per window, notice, horizon and blackout dates, check **Let Ava book jobs on calls**, and save. The
+   Desk must say "Ava can now book open windows on calls." (that save attaches `check_availability` and `book_appointment`
+   to the customer's agent). Google Calendar is optional and only once the Desk shows **Connect Google Calendar**
+   (see `docs/GOOGLE_CALENDAR_SETUP.md`). Then make **one real test booking** on the customer's line and confirm it shows
+   in the Desk calendar (and on Google, if connected) before go-live; cancel it afterwards. If the customer doesn't want
+   booking, leave it off and never tell them Ava books visits.
+7. Make a live test call with the customer. Test normal, booking, out-of-hours, urgent, and staff-handoff cases.
+8. Launch only after the test passes. Do not describe phone, SMS, calendar writes, or transfers as live until each is configured and tested.
 
 ## Provisioning slice in this repo
 

@@ -72,7 +72,7 @@ const ECOM_ESCALATES = [
 const COMPARE = [
   ['How the bill is counted', 'Per minute, per call, or per caller', 'Per booked job, with a $297 monthly cap'],
   ['Spam and wrong numbers', 'Count toward the bill on most per-call and per-minute plans', 'Never billed. Only booked jobs are'],
-  ['Booking during the call', 'Often through a connected calendar or scheduling app', 'Ava offers open windows from the hours you set on your desk and books one. Optional'],
+  ['Booking during the call', 'Often through a connected calendar or scheduling app', 'Once you set your hours in the Desk and turn booking on, Ava books into your Desk calendar during the call. Optional'],
   ['Emergencies and “get me a person”', 'Varies by plan', 'Ava can transfer the call to your phone, if you give her a number'],
   ['Spanish-speaking callers', 'Varies by plan', 'Ava switches to Spanish when the caller does'],
   ['Hear it before you pay', 'Often a sales demo first', 'Six sample calls, a call-in line, and a browser demo on this page'],
@@ -266,8 +266,9 @@ export default function StartPage() {
         </div>
         <p className={styles.note}>
           Read from each company’s own pricing page on {VENDOR_PLANS_CHECKED}. Prices change, so check the linked page.
-          Several of these services also book appointments during the call. Ava does too, on the hours you set on your
-          desk; syncing with an outside calendar or field-service app is not built yet. Names are trademarks of their
+          Several of these services also book appointments during the call. Ava does too, into your Desk calendar on the
+          hours you set there, once booking is turned on. Google Calendar sync is not switched on yet, and field-service
+          apps are not supported. Names are trademarks of their
           owners; no endorsement implied.
         </p>
       </section>
