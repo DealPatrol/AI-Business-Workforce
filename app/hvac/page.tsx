@@ -109,19 +109,19 @@ export default function HvacPage() {
         </div>
         <ul>
           <li>
-            <Check size={18} /> <b>Tune-ups and routine work:</b> offers real open windows from your schedule and books
-            one during the call, so your office doesn&apos;t have to play phone tag.
+            <Check size={18} /> <span><b>Tune-ups and routine work:</b> offers real open windows from your schedule and books
+            one during the call, so your office doesn&apos;t have to play phone tag.</span>
           </li>
           <li>
-            <Check size={18} /> <b>Pricing questions:</b> gives only the service-call fee you set and never makes up a
-            price. Everything else waits on your tech.
+            <Check size={18} /> <span><b>Pricing questions:</b> gives only the service-call fee you set and never makes up a
+            price. Everything else waits on your tech.</span>
           </li>
           <li>
-            <Check size={18} /> <b>Every lead in your inbox:</b> name, number, address, the problem, and how urgent it
-            is, emailed to you right after the call.
+            <Check size={18} /> <span><b>Every lead in your inbox:</b> name, number, address, the problem, and how urgent it
+            is, emailed to you right after the call.</span>
           </li>
           <li>
-            <Check size={18} /> <b>Spanish callers:</b> Ava switches to Spanish when the caller does.
+            <Check size={18} /> <span><b>Spanish callers:</b> Ava switches to Spanish when the caller does.</span>
           </li>
         </ul>
       </section>
