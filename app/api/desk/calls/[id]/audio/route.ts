@@ -11,7 +11,7 @@ type RouteContext = { params: Promise<{ id: string }> };
 const CONVERSATION_ID = /^[A-Za-z0-9_-]{6,120}$/;
 
 /**
- * Streams a call recording to the signed-in owner of the lead. The browser never sees the
+ * Streams a call recording to the signed-in owner of the lead or call (er_leads or ava_call_leads id). The browser never sees the
  * ElevenLabs key or the conversation id lookup; anyone else gets a 404.
  */
 export async function GET(_request: NextRequest, context: RouteContext) {
@@ -25,10 +25,15 @@ export async function GET(_request: NextRequest, context: RouteContext) {
 
   try {
     const [lead, clientIds] = await Promise.all([getLead(id), clientIdsForOwnerEmail(user.email ?? '')]);
-    if (!lead || !ownerCanAccessLead(lead, user.id, clientIds)) {
-      return NextResponse.json({ error: 'Not found.' }, { status: 404 });
+    let conversationId = '';
+    if (lead && ownerCanAccessLead(lead, user.id, clientIds)) {
+      conversationId = lead.conversation_id?.trim() || '';
+    } else {
+      // Call-history rows: row-level security returns the call only to its owner.
+      const { data: call } = await supabase.from('ava_call_leads').select('conversation_id').eq('id', id).maybeSingle();
+      if (!call) return NextResponse.json({ error: 'Not found.' }, { status: 404 });
+      conversationId = String(call.conversation_id ?? '').trim();
     }
-    const conversationId = lead.conversation_id?.trim() || '';
     if (!CONVERSATION_ID.test(conversationId)) {
       return NextResponse.json({ error: 'No recording for this call.' }, { status: 404 });
     }

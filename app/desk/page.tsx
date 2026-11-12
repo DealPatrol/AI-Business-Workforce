@@ -2,30 +2,31 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { AVA_DEMO_LINE } from '@/lib/ava/demo-line';
-import { AVA_OFFER, AVA_PLANS, isAvaPlanKey } from '@/lib/ava/pricing';
-import { AVA_STORE_OFFER, STORE_PLAN_KEY, storeMonthlyEstimateCents } from '@/lib/ava/store-pricing';
-import { DESK_TOOLS } from '@/lib/desk-tools';
-import { clientIdsForOwnerEmail, listLeadsForOwner } from '@/lib/leads/store';
-import type { ErLead } from '@/lib/leads/types';
-import { metadataTitle, pageSeo } from '@/lib/seo/pages';
-import { createAdminClient } from '@/lib/supabase/admin';
-import { createClient } from '@/lib/supabase/server';
+import { AVA_OFFER, AVA_PLANS } from '@/lib/ava/pricing';
+import { avaPlanForPriceId } from '@/lib/ava/plan-checkout';
 import { bookingLinks, bookingWindowLabel } from '@/lib/ava/booking/event';
 import { DEFAULT_WEEKLY_HOURS, localDateOf } from '@/lib/ava/booking/slots';
-import { calendarForOnboarding, listBookings, type BookingRow, type CalendarRow } from '@/lib/ava/booking/store';
+import { googleCalendarConfig } from '@/lib/ava/booking/google';
+import {
+  loadDeskAccount,
+  loadDeskCalendar,
+  loadDeskCalls,
+  loadDeskLeads,
+  loadUsageSeconds,
+  type DeskBooking,
+  type DeskCalendar,
+  type DeskCall,
+} from '@/lib/desk/data';
+import { readAgentGreeting } from '@/lib/desk/eleven';
+import { isEditableAgent, LEAD_STATUS_LABEL } from '@/lib/desk/settings';
+import { loadDeskSubscription, type DeskSubscription } from '@/lib/desk/stripe';
+import { deskUsage, minutesFromSeconds, usageWindow } from '@/lib/desk/usage';
+import { DESK_TOOLS } from '@/lib/desk-tools';
+import type { ErLead } from '@/lib/leads/types';
+import { metadataTitle, pageSeo } from '@/lib/seo/pages';
+import { createClient } from '@/lib/supabase/server';
 import { BookingSettings } from './booking-settings';
-import { googleCalendarConfig, isGoogleLinked } from '@/lib/ava/booking/google';
-
-const GOOGLE_STATUS: Record<string, string> = {
-  connected: 'Google Calendar connected. Ava now skips your busy times and adds each booking to your calendar.',
-  disconnected: 'Google Calendar disconnected. Bookings already on it stay there.',
-  declined: 'Google Calendar was not connected.',
-  expired: 'That Google sign-in link expired. Try Connect Google Calendar again.',
-  scopes: 'Google did not grant calendar access. Try again and allow both calendar permissions.',
-  setup: 'Finish setup before connecting a calendar.',
-  store: 'Calendar sync is for home-service plans.',
-  failed: 'Google Calendar could not be connected right now. Try again in a minute.',
-};
+import { DeskSettings } from './desk-settings';
 import { LeadActions } from './lead-actions';
 import { SignOut } from './sign-out';
 import styles from './desk.module.css';
@@ -40,76 +41,20 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-type CustomerRow = {
-  id: string;
-  business_name: string | null;
-  subscription_status: string | null;
-  onboarding_id: string | null;
-  plan: string | null;
+const TZ = 'America/Chicago';
+const CALLS_PAGE = 25;
+const CALLS_ALL = 200;
+
+const GOOGLE_STATUS: Record<string, string> = {
+  connected: 'Google Calendar connected. Ava now skips your busy times and adds each booking to your calendar.',
+  disconnected: 'Google Calendar disconnected. Bookings already on it stay there.',
+  declined: 'Google Calendar was not connected.',
+  expired: 'That Google sign-in link expired. Try Connect Google Calendar again.',
+  scopes: 'Google did not grant calendar access. Try again and allow both calendar permissions.',
+  setup: 'Finish setup before connecting a calendar.',
+  store: 'Calendar sync is for home-service plans.',
+  failed: 'Google Calendar could not be connected right now. Try again in a minute.',
 };
-
-type OnboardingRow = {
-  id: string;
-  business_name: string | null;
-  agent_status: string | null;
-  phone_status: string | null;
-  channel_voice: boolean | null;
-  channel_sms: boolean | null;
-  channel_web_chat: boolean | null;
-  elevenlabs_agent_id: string | null;
-};
-
-type CallDetail = {
-  conversation_id: string;
-  property_address: string | null;
-  intent_urgency: string | null;
-  transcript: Array<{ role?: string; message?: string }> | null;
-};
-
-/** Transcripts saved by the post-call webhook, keyed by conversation id. Never throws. */
-async function loadCallDetails(conversationIds: string[]) {
-  const ids = conversationIds.filter(Boolean);
-  const details = new Map<string, CallDetail>();
-  if (!ids.length) return details;
-  try {
-    const supabase = createAdminClient();
-    const { data, error } = await supabase
-      .from('ava_call_leads')
-      .select('conversation_id, property_address, intent_urgency, transcript')
-      .in('conversation_id', ids);
-    if (error) throw new Error(error.message);
-    for (const row of (data ?? []) as CallDetail[]) details.set(row.conversation_id, row);
-  } catch (error) {
-    console.error('Desk could not load call transcripts', error);
-  }
-  return details;
-}
-
-/** The owner's booking calendar and the next two weeks of bookings. Never throws. */
-async function loadBookingCalendar(onboardingId: string | null | undefined) {
-  if (!onboardingId) return { calendar: null as CalendarRow | null, bookings: [] as BookingRow[] };
-  try {
-    const calendar = await calendarForOnboarding(onboardingId);
-    if (!calendar) return { calendar: null, bookings: [] };
-    const now = new Date();
-    const until = new Date(now.getTime() + 15 * 86_400_000);
-    const bookings = await listBookings(calendar.id, new Date(now.getTime() - 86_400_000).toISOString(), until.toISOString());
-    return { calendar, bookings };
-  } catch (error) {
-    console.error('Desk could not load the booking calendar', error);
-    return { calendar: null, bookings: [] };
-  }
-}
-
-function dayHeading(date: string) {
-  const [y, m, d] = date.split('-').map(Number);
-  return new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'UTC' }).format(new Date(Date.UTC(y, m - 1, d)));
-}
-
-/** Calls the store plan bills for: excludes calls Ava itself flagged as spam or a wrong number. */
-function isBillableStoreCall(lead: ErLead) {
-  return Boolean(lead.conversation_id) && !lead.notes?.startsWith('Ava marked this call as');
-}
 
 const SUBSCRIPTION_LABELS: Record<string, string> = {
   trialing: 'Trial running',
@@ -120,9 +65,29 @@ const SUBSCRIPTION_LABELS: Record<string, string> = {
   unpaid: 'Unpaid',
 };
 
-function formatTime(value: string | null) {
+const LEAD_FILTERS = [
+  { key: 'all', label: 'All' },
+  { key: 'New', label: 'New' },
+  { key: 'Contacted', label: 'Contacted' },
+  { key: 'Booked', label: 'Won' },
+  { key: 'Not a fit', label: 'Not a fit' },
+] as const;
+
+function formatTime(value: string | null | undefined) {
   if (!value) return '';
-  return new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'America/Chicago' }).format(new Date(value));
+  return new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'short', timeZone: TZ }).format(new Date(value));
+}
+
+function formatDate(value: Date | null) {
+  if (!value) return '';
+  return new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: TZ }).format(value);
+}
+
+function formatDuration(secs: number | null) {
+  if (secs === null || secs === undefined) return '';
+  const m = Math.floor(secs / 60);
+  const s = secs % 60;
+  return m ? `${m}m ${String(s).padStart(2, '0')}s` : `${s}s`;
 }
 
 function humanStatus(value: string | null | undefined, fallback: string) {
@@ -130,36 +95,23 @@ function humanStatus(value: string | null | undefined, fallback: string) {
   return value.replace(/_/g, ' ').replace(/^\w/, (c) => c.toUpperCase());
 }
 
-async function loadAccount(email: string) {
-  const supabase = createAdminClient();
-  const { data: customers, error } = await supabase
-    .from('ava_customers')
-    .select('id, business_name, subscription_status, onboarding_id, email, plan');
-  if (error) throw new Error(error.message);
-  const needle = email.trim().toLowerCase();
-  // Exact, case-insensitive match in code (an ilike pattern would treat _ and % as wildcards).
-  const rows = ((customers ?? []) as Array<CustomerRow & { email: string | null }>).filter(
-    (row) => Boolean(needle) && String(row.email ?? '').trim().toLowerCase() === needle,
+function dayHeading(date: string) {
+  const [y, m, d] = date.split('-').map(Number);
+  return new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'UTC' }).format(
+    new Date(Date.UTC(y, m - 1, d)),
   );
-  const onboardingIds = rows.map((row) => row.onboarding_id).filter((id): id is string => Boolean(id));
-  let onboardings: OnboardingRow[] = [];
-  if (onboardingIds.length) {
-    const { data, error: onboardingError } = await supabase
-      .from('ava_onboardings')
-      .select('id, business_name, agent_status, phone_status, channel_voice, channel_sms, channel_web_chat, elevenlabs_agent_id')
-      .in('id', onboardingIds);
-    if (onboardingError) throw new Error(onboardingError.message);
-    onboardings = (data ?? []) as OnboardingRow[];
-  }
-  return { customer: (rows[0] ?? null) as CustomerRow | null, onboarding: (onboardings[0] ?? null) as OnboardingRow | null };
 }
 
-function startOfMonthChicago() {
-  const now = new Date();
-  const parts = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Chicago', year: 'numeric', month: '2-digit' }).formatToParts(now);
-  const year = parts.find((p) => p.type === 'year')?.value;
-  const month = parts.find((p) => p.type === 'month')?.value;
-  return new Date(`${year}-${month}-01T06:00:00Z`);
+function telHref(phone: string) {
+  return `tel:${phone.replace(/[^\d+]/g, '')}`;
+}
+
+function renewalLine(sub: DeskSubscription | null, status: string | null | undefined) {
+  if (!sub?.currentPeriodEnd) return '';
+  const when = formatDate(new Date(sub.currentPeriodEnd * 1000));
+  if (sub.cancelAtPeriodEnd || sub.cancelAt) return `Ends ${when}`;
+  if ((sub.status || status) === 'trialing') return `Trial ends ${when}`;
+  return `Renews ${when}`;
 }
 
 export default async function DeskPage({
@@ -169,67 +121,104 @@ export default async function DeskPage({
 }) {
   const query = (await searchParams) ?? {};
   const googleStatus = typeof query.google === 'string' ? GOOGLE_STATUS[query.google] ?? '' : '';
+  const showAllCalls = query.calls === 'all';
+  const leadFilter =
+    typeof query.leads === 'string' && LEAD_FILTERS.some((f) => f.key === query.leads) ? query.leads : 'all';
   const googleSyncAvailable = Boolean(googleCalendarConfig());
+
   const supabase = await createClient();
   const { data: authData } = await supabase.auth.getUser();
   const user = authData.user;
   if (!user) redirect('/login?next=/desk');
   const email = user.email ?? '';
 
-  let loadError = '';
-  let leads: ErLead[] = [];
-  let account: { customer: CustomerRow | null; onboarding: OnboardingRow | null } = { customer: null, onboarding: null };
-  try {
-    const [clientIds, accountData] = await Promise.all([clientIdsForOwnerEmail(email), loadAccount(email)]);
-    account = accountData;
-    leads = await listLeadsForOwner({ ownerId: user.id, clientIds });
-  } catch (error) {
-    console.error('Desk could not load', error);
-    loadError = 'Some of your desk could not load just now. Refresh in a minute, or call Cole if it keeps happening.';
-  }
+  const problems: string[] = [];
+  const note = (what: string) => (error: unknown) => {
+    console.error(`Desk could not load ${what}`, error);
+    problems.push(what);
+  };
 
+  const account = await loadDeskAccount(supabase).catch((error) => {
+    note('your account')(error);
+    return { customer: null, onboarding: null };
+  });
   const { customer, onboarding } = account;
+
+  const now = new Date();
+  const subscription = await loadDeskSubscription(customer?.stripe_subscription_id);
+  const planKey = avaPlanForPriceId(subscription?.priceId) || customer?.plan || onboarding?.selected_plan || null;
+  const usagePeriod = usageWindow(
+    subscription ? { start: subscription.currentPeriodStart, end: subscription.currentPeriodEnd } : null,
+    TZ,
+    now,
+  );
+
+  const agentId = onboarding?.elevenlabs_agent_id?.trim() || '';
+  const greetingEditable = isEditableAgent(agentId);
+  const isStore = customer?.plan === 'store';
+
+  const [leads, callData, usageData, booking, greeting] = await Promise.all([
+    loadDeskLeads(supabase).catch((error) => {
+      note('leads')(error);
+      return [] as ErLead[];
+    }),
+    onboarding
+      ? loadDeskCalls(supabase, onboarding.id, showAllCalls ? CALLS_ALL : CALLS_PAGE).catch((error) => {
+          note('call history')(error);
+          return { calls: [] as DeskCall[], total: 0 };
+        })
+      : Promise.resolve({ calls: [] as DeskCall[], total: 0 }),
+    onboarding
+      ? loadUsageSeconds(supabase, onboarding.id, usagePeriod.start).catch((error) => {
+          note('minutes used')(error);
+          return { seconds: [] as Array<number | null>, calls: 0, unknown: 0 };
+        })
+      : Promise.resolve({ seconds: [] as Array<number | null>, calls: 0, unknown: 0 }),
+    onboarding && !isStore
+      ? loadDeskCalendar(
+          supabase,
+          onboarding.id,
+          new Date(now.getTime() - 86_400_000).toISOString(),
+          new Date(now.getTime() + 15 * 86_400_000).toISOString(),
+        ).catch((error) => {
+          note('the calendar')(error);
+          return { calendar: null as DeskCalendar | null, bookings: [] as DeskBooking[] };
+        })
+      : Promise.resolve({ calendar: null as DeskCalendar | null, bookings: [] as DeskBooking[] }),
+    greetingEditable ? readAgentGreeting(agentId) : Promise.resolve(''),
+  ]);
+
+  const usage = deskUsage(planKey, minutesFromSeconds(usageData.seconds));
+  const plan = usage.planKey ? AVA_PLANS[usage.planKey] : null;
   const businessName = onboarding?.business_name || customer?.business_name || '';
   const newLeads = leads.filter((lead) => lead.status === 'New');
-  const monthStart = startOfMonthChicago();
-  const bookedThisMonth = leads.filter((lead) => lead.status === 'Booked' && lead.booked_at && new Date(lead.booked_at) >= monthStart).length;
-  const isStore = customer?.plan === STORE_PLAN_KEY;
-  const flatPlan = customer?.plan && isAvaPlanKey(customer.plan) ? AVA_PLANS[customer.plan] : null;
-  const storeTrial = isStore && customer?.subscription_status === 'trialing';
-  const callsThisMonth = leads.filter(
-    (lead) => isBillableStoreCall(lead) && lead.created_at && new Date(lead.created_at) >= monthStart,
-  ).length;
-  const billedThisMonth = isStore
-    ? storeTrial
-      ? 0
-      : storeMonthlyEstimateCents(callsThisMonth) / 100
-    : flatPlan
-      ? flatPlan.monthlyCents / 100
-      : 0;
-  const recent = leads.slice(0, 8);
-  const callDetails = await loadCallDetails(recent.map((lead) => lead.conversation_id || ''));
-  const booking = isStore ? { calendar: null, bookings: [] as BookingRow[] } : await loadBookingCalendar(onboarding?.id);
-  const bookingTz = booking.calendar?.timezone || 'America/Chicago';
-  const bookingDays = new Map<string, BookingRow[]>();
+  const monthStart = usageWindow(null, TZ, now).start;
+  const wonThisMonth = leads.filter((lead) => lead.status === 'Booked' && lead.booked_at && new Date(lead.booked_at) >= monthStart).length;
+  const leadByConversation = new Map(leads.filter((l) => l.conversation_id).map((l) => [l.conversation_id as string, l]));
+  const shownLeads = leadFilter === 'all' ? leads : leads.filter((lead) => lead.status === leadFilter);
+  const leadCounts = Object.fromEntries(
+    LEAD_FILTERS.map((f) => [f.key, f.key === 'all' ? leads.length : leads.filter((l) => l.status === f.key).length]),
+  );
+
+  const bookingTz = booking.calendar?.timezone || TZ;
+  const bookingDays = new Map<string, DeskBooking[]>();
   for (const row of booking.bookings) {
     const day = localDateOf(new Date(row.start_at), bookingTz).date;
     bookingDays.set(day, [...(bookingDays.get(day) ?? []), row]);
   }
-  const testAgentId = /^agent_[a-z0-9]+$/i.test(onboarding?.elevenlabs_agent_id || '') ? onboarding?.elevenlabs_agent_id : '';
 
-  const channels = onboarding
-    ? [
-        { label: 'Phone calls', on: onboarding.channel_voice !== false },
-        { label: 'Website chat', on: Boolean(onboarding.channel_web_chat) },
-        { label: 'Texting', on: Boolean(onboarding.channel_sms) },
-      ]
-    : [];
+  const subscriptionStatus = subscription?.status || customer?.subscription_status || '';
+  const renewal = renewalLine(subscription, customer?.subscription_status);
+  const windowLabel =
+    usagePeriod.source === 'billing'
+      ? `This billing period (${formatDate(usagePeriod.start)} – ${formatDate(usagePeriod.end)})`
+      : `This month (since ${formatDate(usagePeriod.start)})`;
 
   return (
     <main className={styles.page}>
       <header className={styles.top}>
-        <Link className={styles.brand} href="/">
-          <span aria-hidden="true">A</span> Your desk
+        <Link className={styles.brand} href="/desk">
+          <span aria-hidden="true">A</span> Ava Desk
         </Link>
         <div className={styles.topRight}>
           <span className={styles.who}>{email}</span>
@@ -237,26 +226,60 @@ export default async function DeskPage({
         </div>
       </header>
 
-      <section className={styles.hello}>
-        <p className={styles.kicker}>{businessName || 'Front Porch Growth'}</p>
-        <h1>{newLeads.length ? `${newLeads.length} new ${newLeads.length === 1 ? 'caller needs' : 'callers need'} a decision.` : 'You are all caught up.'}</h1>
-        <p>Ava’s calls land here. Decide what happened with each caller, then jump into any tool below.</p>
+      <nav className={styles.sectionNav} aria-label="Desk sections">
+        <a href="#overview">Overview</a>
+        <a href="#calls">Calls</a>
+        <a href="#leads">Leads</a>
+        {onboarding && !isStore ? <a href="#calendar">Calendar</a> : null}
+        <a href="#billing">Plan &amp; billing</a>
+        <a href="#settings">Settings</a>
+        <a href="#texts">Texts</a>
+      </nav>
+
+      <section id="overview" className={styles.hello}>
+        <p className={styles.kicker}>{businessName || 'Executive Receptionist'}</p>
+        <h1>
+          {newLeads.length
+            ? `${newLeads.length} new ${newLeads.length === 1 ? 'caller needs' : 'callers need'} a decision.`
+            : 'You are all caught up.'}
+        </h1>
+        <p>Every call Ava answers lands here with the summary, transcript, and recording.</p>
       </section>
 
-      {loadError ? <p className={styles.alert}>{loadError}</p> : null}
+      {problems.length ? (
+        <p className={styles.alert}>
+          Some of your Desk could not load just now ({problems.join(', ')}). Refresh in a minute, or call{' '}
+          {AVA_OFFER.contactPhoneDisplay} if it keeps happening.
+        </p>
+      ) : null}
 
-      <section className={styles.stats} aria-label="This month">
-        <article><small>New leads</small><b>{newLeads.length}</b></article>
-        <article><small>Booked this month</small><b>{bookedThisMonth}</b></article>
-        <article><small>Billed this month (est.)</small><b>${billedThisMonth}</b><span>{isStore ? (storeTrial ? 'Free during your trial' : `${AVA_STORE_OFFER.monthlyLabel} + ${AVA_STORE_OFFER.perCallLabel} × ${callsThisMonth} calls`) : flatPlan ? `${flatPlan.label}: ${flatPlan.minutesLabel}/month` : 'No plan yet'}</span></article>
-        <article><small>All leads</small><b>{leads.length}</b></article>
+      <section className={styles.stats} aria-label="At a glance">
+        <article>
+          <small>New leads</small>
+          <b>{newLeads.length}</b>
+          <span>{leads.length} leads in all</span>
+        </article>
+        <article>
+          <small>Won this month</small>
+          <b>{wonThisMonth}</b>
+        </article>
+        <article>
+          <small>Calls answered</small>
+          <b>{usageData.calls}</b>
+          <span>{usagePeriod.source === 'billing' ? 'This billing period' : 'This month'}</span>
+        </article>
+        <article>
+          <small>Minutes used</small>
+          <b>{usage.used}</b>
+          <span>{plan ? `of ${plan.minutes.toLocaleString('en-US')} on ${plan.label}` : 'No plan yet'}</span>
+        </article>
       </section>
 
       <div className={styles.grid}>
         <section className={styles.panel} aria-labelledby="decide">
           <div className={styles.panelHead}>
             <h2 id="decide">Needs a decision</h2>
-            <Link href="/dashboard/leads?status=New">All new leads →</Link>
+            <a href="?leads=New#leads">All new leads →</a>
           </div>
           {newLeads.length === 0 ? (
             <p className={styles.empty}>
@@ -265,7 +288,7 @@ export default async function DeskPage({
             </p>
           ) : (
             <ul className={styles.leads}>
-              {newLeads.slice(0, 8).map((lead) => (
+              {newLeads.slice(0, 5).map((lead) => (
                 <li key={lead.id}>
                   <div className={styles.leadTop}>
                     <Link href={`/dashboard/leads/${lead.id}`}>
@@ -278,11 +301,11 @@ export default async function DeskPage({
                     {lead.summary}
                   </p>
                   {lead.caller_phone ? (
-                    <a className={styles.callBack} href={`tel:${lead.caller_phone.replace(/[^\d+]/g, '')}`}>
+                    <a className={styles.callBack} href={telHref(lead.caller_phone)}>
                       Call back {lead.caller_phone}
                     </a>
                   ) : null}
-                  <LeadActions id={lead.id} store={isStore} />
+                  <LeadActions id={lead.id} current={lead.status} />
                 </li>
               ))}
             </ul>
@@ -295,30 +318,48 @@ export default async function DeskPage({
           </div>
           {customer ? (
             <dl className={styles.status}>
-              <div><dt>Plan</dt><dd>{isStore ? 'Online Store · ' : ''}{SUBSCRIPTION_LABELS[customer.subscription_status ?? ''] ?? humanStatus(customer.subscription_status, 'Unknown')}</dd></div>
-              <div><dt>Receptionist</dt><dd>{humanStatus(onboarding?.agent_status, 'Waiting on setup form')}</dd></div>
-              <div><dt>Phone number</dt><dd>{humanStatus(onboarding?.phone_status, 'Not attached yet')}</dd></div>
-              {channels.map((channel) => (
-                <div key={channel.label}><dt>{channel.label}</dt><dd>{channel.on ? 'On' : 'Off'}</dd></div>
-              ))}
+              <div>
+                <dt>Plan</dt>
+                <dd>{plan ? plan.label : humanStatus(planKey, 'None')}</dd>
+              </div>
+              <div>
+                <dt>Billing</dt>
+                <dd>{SUBSCRIPTION_LABELS[subscriptionStatus] ?? humanStatus(subscriptionStatus, 'Unknown')}</dd>
+              </div>
+              <div>
+                <dt>Receptionist</dt>
+                <dd>{humanStatus(onboarding?.agent_status, 'Waiting on setup form')}</dd>
+              </div>
+              <div>
+                <dt>Phone number</dt>
+                <dd>{humanStatus(onboarding?.phone_status, 'Not attached yet')}</dd>
+              </div>
+              <div>
+                <dt>Phone calls</dt>
+                <dd>{onboarding?.channel_voice === false ? 'Off' : 'On'}</dd>
+              </div>
+              <div>
+                <dt>Website chat</dt>
+                <dd>{onboarding?.channel_web_chat ? 'On' : 'Off'}</dd>
+              </div>
+              <div>
+                <dt>Texts</dt>
+                <dd>Coming soon</dd>
+              </div>
             </dl>
           ) : (
             <div className={styles.empty}>
               <p>We do not see a plan for {email || 'this email'} yet.</p>
-              <p>
-                Pick a plan (Starter&apos;s first month is $1), or if you checked out with a different email, sign in with that one.
-              </p>
-              <Link className={styles.button} href="/pricing#plans">See plans</Link>
+              <p>Pick a plan (Starter&apos;s first month is $1), or if you checked out with a different email, sign in with that one.</p>
+              <Link className={styles.button} href="/pricing#plans">
+                See plans
+              </Link>
             </div>
           )}
-          <p className={styles.help}>
-            Want to change Ava’s greeting, questions, hours, or channels? Call or text Cole at{' '}
-            <a href={AVA_OFFER.contactPhoneHref}>{AVA_OFFER.contactPhoneDisplay}</a>.
-          </p>
-          {testAgentId ? (
+          {greetingEditable ? (
             <p className={styles.help}>
               Test your own Ava in the browser:{' '}
-              <a href={`https://elevenlabs.io/app/talk-to?agent_id=${testAgentId}`} target="_blank" rel="noopener noreferrer">
+              <a href={`https://elevenlabs.io/app/talk-to?agent_id=${agentId}`} target="_blank" rel="noopener noreferrer">
                 talk to your receptionist
               </a>
               . Test calls show up below like real ones.
@@ -327,62 +368,100 @@ export default async function DeskPage({
           <p className={styles.help}>
             Hear how Ava sounds: call the demo line at <a href={AVA_DEMO_LINE.href}>{AVA_DEMO_LINE.display}</a>.
           </p>
+          <p className={styles.help}>
+            Need a hand? Call or text Cole at <a href={AVA_OFFER.contactPhoneHref}>{AVA_OFFER.contactPhoneDisplay}</a>.
+          </p>
         </aside>
       </div>
 
-      <section className={styles.panel} aria-labelledby="recent">
+      <section id="calls" className={styles.panel} aria-labelledby="calls-title">
         <div className={styles.panelHead}>
-          <h2 id="recent">Recent calls</h2>
-          <Link href="/dashboard/leads">Open the CRM →</Link>
+          <h2 id="calls-title">Call history</h2>
+          <span className={styles.muted}>
+            {callData.total} {callData.total === 1 ? 'call' : 'calls'}
+          </span>
         </div>
-        {recent.length === 0 ? (
-          <p className={styles.empty}>No calls yet. Your first caller will appear here with a summary, the transcript, and the recording.</p>
+        {callData.calls.length === 0 ? (
+          <p className={styles.empty}>
+            No calls yet. Each call Ava answers appears here with Ava’s summary, the transcript, and the recording.
+          </p>
         ) : (
           <ul className={styles.calls}>
-            {recent.map((lead) => {
-              const detail = lead.conversation_id ? callDetails.get(lead.conversation_id) : undefined;
-              const turns = (detail?.transcript ?? []).filter((turn) => turn?.message?.trim());
+            {callData.calls.map((call) => {
+              const turns = (Array.isArray(call.transcript) ? call.transcript : []).filter((turn) => turn?.message?.trim());
+              const lead = call.conversation_id ? leadByConversation.get(call.conversation_id) : undefined;
+              const hasRecording = Boolean(call.conversation_id && /^conv_/.test(call.conversation_id));
               return (
-                <li key={lead.id}>
+                <li key={call.id}>
                   <details>
                     <summary>
-                      <span className={styles.callWho}>{lead.caller_name || 'Unknown caller'}</span>
-                      <span className={styles.callNeed}>{lead.job_type || lead.summary.slice(0, 70)}</span>
-                      <span className={styles.callWhen}>{formatTime(lead.called_at)}</span>
-                      <span className={styles.badge}>{lead.status}</span>
+                      <span className={styles.callWho}>{call.caller_name || 'Unknown caller'}</span>
+                      <span className={styles.callNeed}>{call.service_job_type || (call.summary || '').slice(0, 70)}</span>
+                      <span className={styles.callWhen}>
+                        {formatTime(call.created_at)}
+                        {call.call_duration_secs !== null ? ` · ${formatDuration(call.call_duration_secs)}` : ''}
+                      </span>
+                      <span className={styles.badge}>{lead ? LEAD_STATUS_LABEL[lead.status] ?? lead.status : 'Call'}</span>
                     </summary>
                     <div className={styles.callBody}>
-                      <p>{lead.summary}</p>
+                      <h3 className={styles.subhead}>Ava’s summary</h3>
+                      <p>{call.summary || 'No summary saved for this call.'}</p>
                       <dl className={styles.callFacts}>
-                        {lead.caller_phone ? (
-                          <div><dt>Phone</dt><dd><a href={`tel:${lead.caller_phone.replace(/[^\d+]/g, '')}`}>{lead.caller_phone}</a></dd></div>
+                        {call.caller_phone ? (
+                          <div>
+                            <dt>Phone</dt>
+                            <dd>
+                              <a href={telHref(call.caller_phone)}>{call.caller_phone}</a>
+                            </dd>
+                          </div>
                         ) : null}
-                        {detail?.property_address ? <div><dt>Address</dt><dd>{detail.property_address}</dd></div> : null}
-                        {detail?.intent_urgency ? <div><dt>Urgency</dt><dd>{detail.intent_urgency}</dd></div> : null}
+                        {call.property_address ? (
+                          <div>
+                            <dt>Address</dt>
+                            <dd>{call.property_address}</dd>
+                          </div>
+                        ) : null}
+                        {call.intent_urgency ? (
+                          <div>
+                            <dt>Urgency</dt>
+                            <dd>{call.intent_urgency}</dd>
+                          </div>
+                        ) : null}
+                        {call.call_duration_secs !== null ? (
+                          <div>
+                            <dt>Length</dt>
+                            <dd>{formatDuration(call.call_duration_secs)}</dd>
+                          </div>
+                        ) : null}
                       </dl>
-                      {lead.conversation_id && /^conv_/.test(lead.conversation_id) ? (
+                      {hasRecording ? (
                         <div className={styles.recording}>
                           <span>Recording</span>
-                          <audio controls preload="none" src={`/api/desk/calls/${lead.id}/audio`}>
-                            <a href={`/api/desk/calls/${lead.id}/audio`}>Download the recording</a>
+                          <audio controls preload="none" src={`/api/desk/calls/${call.id}/audio`}>
+                            <a href={`/api/desk/calls/${call.id}/audio`}>Download the recording</a>
                           </audio>
                         </div>
                       ) : null}
                       {turns.length ? (
-                        <ol className={styles.transcript} aria-label="Transcript">
-                          {turns.map((turn, index) => (
-                            <li key={index} className={turn.role === 'user' ? styles.turnCaller : styles.turnAva}>
-                              <b>{turn.role === 'user' ? 'Caller' : 'Ava'}</b> {turn.message}
-                            </li>
-                          ))}
-                        </ol>
+                        <details className={styles.transcriptWrap}>
+                          <summary>Transcript ({turns.length} turns)</summary>
+                          <ol className={styles.transcript} aria-label="Transcript">
+                            {turns.map((turn, index) => (
+                              <li key={index} className={turn.role === 'user' ? styles.turnCaller : styles.turnAva}>
+                                <b>{turn.role === 'user' ? 'Caller' : 'Ava'}</b> {turn.message}
+                              </li>
+                            ))}
+                          </ol>
+                        </details>
                       ) : (
-                        <p className={styles.muted}>No transcript saved for this lead.</p>
+                        <p className={styles.muted}>No transcript saved for this call.</p>
                       )}
-                      <div className={styles.callFoot}>
-                        {lead.status === 'New' ? <LeadActions id={lead.id} store={isStore} /> : null}
-                        <Link href={`/dashboard/leads/${lead.id}`}>Notes and history →</Link>
-                      </div>
+                      {lead ? (
+                        <div className={styles.callFoot}>
+                          <LeadActions id={lead.id} current={lead.status} />
+                          <Link href={`/dashboard/leads/${lead.id}`}>Notes and history →</Link>
+                        </div>
+                      ) : null}
                     </div>
                   </details>
                 </li>
@@ -390,19 +469,75 @@ export default async function DeskPage({
             })}
           </ul>
         )}
+        {callData.total > callData.calls.length && !showAllCalls ? (
+          <p className={styles.more}>
+            <a href="?calls=all#calls">Show all {Math.min(callData.total, CALLS_ALL)} calls →</a>
+          </p>
+        ) : null}
+      </section>
+
+      <section id="leads" className={styles.panel} aria-labelledby="leads-title">
+        <div className={styles.panelHead}>
+          <h2 id="leads-title">Leads</h2>
+          <Link href="/dashboard/leads">Open the full CRM →</Link>
+        </div>
+        <div className={styles.filters} role="tablist" aria-label="Lead status">
+          {LEAD_FILTERS.map((f) => (
+            <a
+              key={f.key}
+              role="tab"
+              aria-selected={leadFilter === f.key}
+              className={leadFilter === f.key ? styles.filterOn : styles.filter}
+              href={f.key === 'all' ? '?#leads' : `?leads=${encodeURIComponent(f.key)}#leads`}
+            >
+              {f.label} <span>{leadCounts[f.key]}</span>
+            </a>
+          ))}
+        </div>
+        {shownLeads.length === 0 ? (
+          <p className={styles.empty}>No leads here yet.</p>
+        ) : (
+          <ul className={styles.leadList}>
+            {shownLeads.slice(0, 100).map((lead) => (
+              <li key={lead.id}>
+                <div className={styles.leadRow}>
+                  <div>
+                    <Link href={`/dashboard/leads/${lead.id}`}>
+                      <b>{lead.caller_name || 'Unknown caller'}</b>
+                    </Link>
+                    <span className={styles.muted}> · {formatTime(lead.called_at)}</span>
+                    <p>
+                      {lead.job_type ? <em>{lead.job_type}. </em> : null}
+                      {lead.summary.slice(0, 220)}
+                    </p>
+                    {lead.caller_phone ? (
+                      <a className={styles.callBack} href={telHref(lead.caller_phone)}>
+                        {lead.caller_phone}
+                      </a>
+                    ) : null}
+                  </div>
+                  <span className={lead.status === 'Booked' ? styles.badgeWon : styles.badge}>
+                    {LEAD_STATUS_LABEL[lead.status] ?? lead.status}
+                  </span>
+                </div>
+                <LeadActions id={lead.id} current={lead.status} />
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
 
       {onboarding && !isStore ? (
-        <section className={styles.panel} aria-labelledby="calendar">
+        <section id="calendar" className={styles.panel} aria-labelledby="calendar-title">
           <div className={styles.panelHead}>
-            <h2 id="calendar">Booking calendar</h2>
+            <h2 id="calendar-title">Calendar and bookings</h2>
             <span className={styles.badge}>{booking.calendar?.enabled ? 'Ava is booking' : 'Booking off'}</span>
           </div>
           {booking.bookings.length === 0 ? (
             <p className={styles.empty}>
               {booking.calendar?.enabled
                 ? 'No bookings in the next two weeks yet. When Ava books a caller, the visit shows up here and in your lead email with an Add to Calendar link.'
-                : 'Turn booking on below and Ava will offer callers real open windows and book them during the call.'}
+                : 'Turn booking on in Settings and Ava will offer callers real open windows and book them during the call.'}
             </p>
           ) : (
             <ul className={styles.calendarDays}>
@@ -412,10 +547,10 @@ export default async function DeskPage({
                   <ul className={styles.bookings}>
                     {rows.map((row) => {
                       const links = bookingLinks(row, booking.calendar?.label || 'Ava booking');
-                      const window = bookingWindowLabel(row, bookingTz).split(', ').slice(2).join(', ');
+                      const windowText = bookingWindowLabel(row, bookingTz).split(', ').slice(2).join(', ');
                       return (
                         <li key={row.id}>
-                          <time dateTime={row.start_at}>{window}</time>
+                          <time dateTime={row.start_at}>{windowText}</time>
                           <span>
                             <b>{row.caller_name || 'Caller'}</b>
                             {row.is_demo ? <span className={styles.demoTag}>Demo</span> : null}
@@ -425,11 +560,13 @@ export default async function DeskPage({
                             {row.caller_phone ? (
                               <>
                                 {' · '}
-                                <a href={`tel:${row.caller_phone.replace(/[^\d+]/g, '')}`}>{row.caller_phone}</a>
+                                <a href={telHref(row.caller_phone)}>{row.caller_phone}</a>
                               </>
                             ) : null}
                           </span>
-                          <a href={links.googleUrl} target="_blank" rel="noopener noreferrer">Add to Google Calendar</a>
+                          <a href={links.googleUrl} target="_blank" rel="noopener noreferrer">
+                            Add to Google Calendar
+                          </a>
                         </li>
                       );
                     })}
@@ -443,9 +580,9 @@ export default async function DeskPage({
               {googleStatus}
             </p>
           ) : null}
-          {googleSyncAvailable && !booking.calendar?.is_demo ? (
+          {googleSyncAvailable && booking.calendar && !booking.calendar.is_demo ? (
             <div className={styles.googleSync}>
-              {isGoogleLinked(booking.calendar) ? (
+              {booking.calendar.google_connected_at ? (
                 <>
                   <p>
                     <b>Google Calendar connected.</b> Ava skips your busy times when she offers windows, and each booking
@@ -458,29 +595,127 @@ export default async function DeskPage({
               ) : (
                 <>
                   <p>
-                    <b>Sync with Google Calendar.</b> Ava will skip times you are busy and add each booking to your
-                    calendar. You can disconnect any time.
+                    <b>Sync with Google Calendar.</b> Ava will skip times you are busy and add each booking to your calendar.
+                    You can disconnect any time.
                   </p>
                   <a href="/api/desk/google/connect">Connect Google Calendar</a>
                 </>
               )}
             </div>
           ) : null}
-          <details className={styles.settingsWrap}>
-            <summary>Booking settings</summary>
-            <BookingSettings
-              enabled={Boolean(booking.calendar?.enabled)}
-              isDemo={Boolean(booking.calendar?.is_demo)}
-              slotMinutes={booking.calendar?.slot_minutes ?? 120}
-              slotCapacity={booking.calendar?.slot_capacity ?? 1}
-              minNoticeMinutes={booking.calendar?.min_notice_minutes ?? 120}
-              horizonDays={booking.calendar?.horizon_days ?? 14}
-              weeklyHours={booking.calendar?.weekly_hours ?? DEFAULT_WEEKLY_HOURS}
-              blackouts={booking.calendar?.blackouts ?? []}
-            />
-          </details>
         </section>
       ) : null}
+
+      <section id="billing" className={styles.panel} aria-labelledby="billing-title">
+        <div className={styles.panelHead}>
+          <h2 id="billing-title">Plan and billing</h2>
+          {subscriptionStatus ? (
+            <span className={styles.badge}>{SUBSCRIPTION_LABELS[subscriptionStatus] ?? humanStatus(subscriptionStatus, '')}</span>
+          ) : null}
+        </div>
+        <div className={styles.billingGrid}>
+          <div>
+            <p className={styles.planName}>
+              {plan ? (
+                <>
+                  <b>{plan.label}</b> · {plan.monthlyLabel}/month · {plan.minutesLabel}
+                </>
+              ) : (
+                <b>No plan yet</b>
+              )}
+            </p>
+            {renewal ? <p className={styles.muted}>{renewal}</p> : null}
+            <div className={styles.meter} aria-label="Minutes used">
+              <div className={styles.meterHead}>
+                <span>
+                  <b>{usage.used.toLocaleString('en-US')}</b> of {usage.included.toLocaleString('en-US')} minutes used
+                </span>
+                <span>{usage.percent}%</span>
+              </div>
+              <div
+                className={styles.meterBar}
+                role="progressbar"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={usage.percent}
+              >
+                <i style={{ width: `${usage.percent}%` }} className={usage.over ? styles.meterOver : undefined} />
+              </div>
+              <small>
+                {windowLabel}. {usageData.calls} {usageData.calls === 1 ? 'call' : 'calls'}, counted from real call lengths
+                {usageData.unknown ? ` (${usageData.unknown} without a recorded length yet)` : ''}.
+                {usage.over ? ' You are past your included minutes; Ava keeps answering and we will reach out about a bigger plan.' : ''}
+              </small>
+            </div>
+          </div>
+          <div className={styles.billingActions}>
+            {customer?.stripe_customer_id ? (
+              <form method="post" action="/api/desk/billing/portal">
+                <button type="submit" className={styles.button}>
+                  Manage billing
+                </button>
+                <small>Change plan, update your card, or download invoices in Stripe’s secure portal.</small>
+              </form>
+            ) : (
+              <>
+                <Link className={styles.button} href="/pricing#plans">
+                  {customer ? 'See plans' : 'Pick a plan'}
+                </Link>
+                <small>
+                  {customer
+                    ? 'Billing management opens here once your plan is billed through Stripe. To change plans now, call '
+                    : 'Starter’s first month is $1. Questions? Call '}
+                  <a href={AVA_OFFER.contactPhoneHref}>{AVA_OFFER.contactPhoneDisplay}</a>.
+                </small>
+              </>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <section id="settings" className={styles.panel} aria-labelledby="settings-title">
+        <div className={styles.panelHead}>
+          <h2 id="settings-title">Settings</h2>
+        </div>
+        {onboarding ? (
+          <>
+            <DeskSettings
+              greeting={greeting}
+              greetingEditable={greetingEditable}
+              notificationEmail={onboarding.staff_email || email}
+              businessHours={onboarding.business_hours || ''}
+            />
+            {!isStore ? (
+              <details className={styles.settingsWrap} id="booking-settings">
+                <summary>Booking: {booking.calendar?.enabled ? 'on' : 'off'}. Change booking settings</summary>
+                <BookingSettings
+                  enabled={Boolean(booking.calendar?.enabled)}
+                  isDemo={Boolean(booking.calendar?.is_demo)}
+                  slotMinutes={booking.calendar?.slot_minutes ?? 120}
+                  slotCapacity={booking.calendar?.slot_capacity ?? 1}
+                  minNoticeMinutes={booking.calendar?.min_notice_minutes ?? 120}
+                  horizonDays={booking.calendar?.horizon_days ?? 14}
+                  weeklyHours={booking.calendar?.weekly_hours ?? DEFAULT_WEEKLY_HOURS}
+                  blackouts={booking.calendar?.blackouts ?? []}
+                />
+              </details>
+            ) : null}
+          </>
+        ) : (
+          <p className={styles.empty}>Settings open once your receptionist setup form is in.</p>
+        )}
+      </section>
+
+      <section id="texts" className={styles.panel} aria-labelledby="texts-title">
+        <div className={styles.panelHead}>
+          <h2 id="texts-title">Texts</h2>
+          <span className={styles.badgeSoon}>Coming soon</span>
+        </div>
+        <p className={styles.empty}>
+          Texting with callers is coming soon. We are waiting on carrier approval for business texting, and nothing is
+          sent by text until it is approved. Calls, leads, and email alerts work today.
+        </p>
+      </section>
 
       <section className={styles.toolsWrap} aria-labelledby="tools">
         <h2 id="tools">Your tools</h2>

@@ -11,6 +11,16 @@ export function avaPlanPriceId(planKey: AvaPlanKey, env: NodeJS.ProcessEnv = pro
   return readStripePriceId(env[AVA_PLANS[planKey].priceEnv]);
 }
 
+/** Which monthly plan a Stripe price belongs to (from the STRIPE_AVA_<PLAN>_PRICE_ID env vars). */
+export function avaPlanForPriceId(priceId: string | null | undefined, env: NodeJS.ProcessEnv = process.env): AvaPlanKey | null {
+  const id = String(priceId || '').trim();
+  if (!id) return null;
+  for (const key of Object.keys(AVA_PLANS) as AvaPlanKey[]) {
+    if (avaPlanPriceId(key, env) === id) return key;
+  }
+  return null;
+}
+
 /** Starter's once-only first-month coupon from env. */
 export function avaFirstMonthCouponId(planKey: AvaPlanKey, env: NodeJS.ProcessEnv = process.env) {
   const name = AVA_PLANS[planKey].couponEnv;

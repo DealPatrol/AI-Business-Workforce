@@ -5,19 +5,19 @@ import { useState } from 'react';
 import styles from './desk.module.css';
 
 const CHOICES = [
-  { status: 'Contacted', label: 'I called them' },
-  { status: 'Booked', label: 'Booked the job' },
+  { status: 'Contacted', label: 'Contacted' },
+  { status: 'Booked', label: 'Won' },
   { status: 'Not a fit', label: 'Not a fit' },
 ] as const;
 
-/** One-tap decisions on a new lead. Uses the same PATCH /api/leads/[id] as the lead page. */
-export function LeadActions({ id, store = false }: { id: string; store?: boolean }) {
+/** One-tap decisions on a lead. Uses the same PATCH /api/leads/[id] as the lead page. "Won" saves as Booked. */
+export function LeadActions({ id, store = false, current = 'New' }: { id: string; store?: boolean; current?: string }) {
   const router = useRouter();
   const [busy, setBusy] = useState('');
   const [error, setError] = useState('');
 
   async function choose(status: string) {
-    if (status === 'Booked' && !store && !window.confirm('Mark this as a booked job? This only updates the lead status.')) return;
+    if (status === 'Booked' && !store && !window.confirm('Mark this lead as won (job booked)? This only updates the lead status.')) return;
     setBusy(status);
     setError('');
     try {
@@ -41,7 +41,7 @@ export function LeadActions({ id, store = false }: { id: string; store?: boolean
 
   return (
     <div className={styles.actions}>
-      {CHOICES.map((choice) => (
+      {CHOICES.filter((choice) => choice.status !== current).map((choice) => (
         <button
           key={choice.status}
           type="button"

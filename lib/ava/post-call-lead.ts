@@ -30,6 +30,8 @@ export type ExtractedCallLead = {
   email: string;
   escalationReason: string;
   transcript: TranscriptTurn[];
+  /** Call length from ElevenLabs metadata; null when not reported. */
+  callDurationSecs?: number | null;
 };
 
 type OnboardingMatch = {
@@ -175,6 +177,10 @@ export function extractPostCallLead(event: unknown): ExtractedCallLead | null {
     email: pickCollected(collected, 'caller_email', 'email').slice(0, 200),
     escalationReason: pickCollected(collected, 'escalation_reason').slice(0, 500),
     transcript,
+    callDurationSecs:
+      typeof metadata.call_duration_secs === 'number' && Number.isFinite(metadata.call_duration_secs) && metadata.call_duration_secs >= 0
+        ? Math.round(metadata.call_duration_secs)
+        : null,
   };
 }
 
@@ -386,6 +392,7 @@ export async function savePostCallLead(lead: ExtractedCallLead) {
     transcript: lead.transcript,
     elevenlabs_agent_id: lead.agentId || null,
     onboarding_id: match?.id || null,
+    ...(typeof lead.callDurationSecs === 'number' ? { call_duration_secs: lead.callDurationSecs } : {}),
   };
 
   let saved = await supabase

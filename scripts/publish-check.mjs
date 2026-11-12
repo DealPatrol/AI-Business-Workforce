@@ -204,6 +204,20 @@ async function smoke() {
   }
   const desk = await get('/desk');
   [302, 303, 307].includes(desk.status) && desk.location.includes('/login') ? ok('/desk redirects to sign-in') : bad(`/desk → ${desk.status}`);
+  const manifest = await get('/desk.webmanifest');
+  let manifestJson = {};
+  try { manifestJson = JSON.parse(manifest.text); } catch {}
+  manifest.status === 200 && manifestJson.display === 'standalone' && manifestJson.scope === '/desk'
+    ? ok('/desk.webmanifest serves an installable Desk app')
+    : bad(`/desk.webmanifest → ${manifest.status}`);
+  const sw = await get('/desk-sw.js');
+  sw.status === 200 && !/caches\./.test(sw.text) ? ok('/desk-sw.js is live and caches nothing private') : bad(`/desk-sw.js → ${sw.status}`);
+  const portal = await get('/api/desk/billing/portal', target, { method: 'POST' });
+  [302, 303, 307].includes(portal.status) && portal.location.includes('/login')
+    ? ok('billing portal requires sign-in')
+    : bad(`/api/desk/billing/portal signed out → ${portal.status} ${portal.location}`);
+  const settings = await get('/api/desk/settings', target, { method: 'PUT', headers: { 'content-type': 'application/json' }, body: '{}' });
+  settings.status === 401 ? ok('Desk settings require sign-in (401)') : bad(`/api/desk/settings signed out → ${settings.status}`);
   const tool = await get('/api/ava/availability', target, { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' });
   tool.status === 404 ? ok('booking tool rejects calls without a secret (404)') : bad(`/api/ava/availability without secret → ${tool.status}`);
   const gcal = await get('/api/desk/google/connect');

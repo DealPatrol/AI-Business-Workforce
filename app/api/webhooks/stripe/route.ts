@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createHmac, timingSafeEqual } from 'crypto';
 import { resolveInvoiceSubscriptionStatus } from '@/lib/ava/billing-status';
 import { AVA_PLANS, avaPlanBillingLine, isAvaPlanKey } from '@/lib/ava/pricing';
+import { avaPlanForPriceId } from '@/lib/ava/plan-checkout';
 import {
   markAvaCustomerNotified,
   recordWebhookEvent,
@@ -224,11 +225,15 @@ async function handleSubscriptionChange(object: Record<string, unknown>, deleted
   const customerId = stripeId(object.customer);
   if (!subscriptionId && !customerId) return { skipped: true as const };
 
+  // A plan switch in the Stripe customer portal changes the price but not the metadata, so the price wins.
+  const items = asRecord(object.items).data;
+  const priceId = asString(asRecord(asRecord(Array.isArray(items) ? items[0] : undefined).price).id);
+  const planFromPrice = avaPlanForPriceId(priceId);
   const write = {
     stripeCustomerId: customerId,
     stripeSubscriptionId: subscriptionId,
-    plan: metadata.plan,
-    includedMinutes: readCount(metadata.included_minutes),
+    plan: planFromPrice || metadata.plan,
+    includedMinutes: planFromPrice ? AVA_PLANS[planFromPrice].minutes : readCount(metadata.included_minutes),
     overageCents: readCount(metadata.overage_cents),
     subscriptionStatus: deleted ? 'canceled' : asString(object.status) || 'incomplete',
     product: 'ava' as const,
