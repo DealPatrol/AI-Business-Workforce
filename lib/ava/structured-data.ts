@@ -1,49 +1,31 @@
-import { AVA_OFFER } from '@/lib/ava/pricing';
-import { AVA_STORE_OFFER } from '@/lib/ava/store-pricing';
+import { AVA_OFFER, AVA_PLAN_KEYS, AVA_PLANS } from '@/lib/ava/pricing';
 import { absoluteSiteUrl } from '@/lib/site-url';
 
 type Faq = { q: string; a: string };
 
+/** One Offer per monthly plan. Starter's $1 first month is a once-only discount, so the listed price is the monthly price. */
 export function avaOfferNodes(pageUrl: string) {
-  return [
-    {
+  return AVA_PLAN_KEYS.map((key) => {
+    const plan = AVA_PLANS[key];
+    return {
       '@type': 'Offer',
-      name: 'Executive Receptionist - Booked Job',
-      price: (AVA_OFFER.perBookedJobCents / 100).toFixed(2),
+      name: `Executive Receptionist - ${plan.label} (${plan.minutesLabel}/month)`,
+      price: (plan.monthlyCents / 100).toFixed(2),
       priceCurrency: 'USD',
       availability: 'https://schema.org/InStock',
       url: pageUrl,
-      description: AVA_OFFER.summary,
-    },
-  ];
-}
-
-/** Online-store plan: $119/month + $1 per handled call, free 14-day trial. */
-export function avaStoreOfferNode(pageUrl: string) {
-  return {
-    '@type': 'Offer',
-    name: 'Executive Receptionist - Online Store',
-    price: (AVA_STORE_OFFER.monthlyCents / 100).toFixed(2),
-    priceCurrency: 'USD',
-    availability: 'https://schema.org/InStock',
-    url: pageUrl,
-    description: AVA_STORE_OFFER.summary,
-    priceSpecification: [
-      {
+      description: plan.firstMonthLabel ? `${plan.description} ${AVA_OFFER.starterIntro}` : plan.description,
+      priceSpecification: {
         '@type': 'UnitPriceSpecification',
-        price: (AVA_STORE_OFFER.monthlyCents / 100).toFixed(2),
+        price: (plan.monthlyCents / 100).toFixed(2),
         priceCurrency: 'USD',
         unitText: 'month',
       },
-      {
-        '@type': 'UnitPriceSpecification',
-        price: (AVA_STORE_OFFER.perCallCents / 100).toFixed(2),
-        priceCurrency: 'USD',
-        unitText: 'call handled',
-      },
-    ],
-  };
+    };
+  });
 }
+
+export const avaPlanOfferNodes = avaOfferNodes;
 
 export function avaOrganization() {
   return {

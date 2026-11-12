@@ -56,7 +56,7 @@ export default function PrivacyPage() {
 
         <h2>Setup form</h2>
         <p>
-          If you start a trial or send the setup form, we collect the business details you type in:
+          If you buy a plan or send the setup form, we collect the business details you type in:
           business name, hours, services, how calls should be handled, staff name, a phone number or
           email, and any notes you add about urgent calls. We use that to set Executive Receptionist up for your business.
         </p>
@@ -118,8 +118,8 @@ export default function PrivacyPage() {
         <p>
           When advertising measurement is turned on, this site may load a Google tag (Google Ads and,
           if configured, Google Analytics) and a Meta Pixel. Those tools set cookies and record page
-          visits and events such as starting a demo conversation, starting a free trial, starting checkout, and submitting the
-          setup form. The trial button can send a Lead event and a StartTrial event. Each one uses its own event id in the browser and, when the server token is set, the same id again from the server so the two copies are not counted twice. If you submit the setup form, we may send the email address or phone number from that
+          visits and events such as starting a demo conversation, starting checkout, and submitting the
+          setup form. The buy button can send a Lead event and a StartTrial event. Each one uses its own event id in the browser and, when the server token is set, the same id again from the server so the two copies are not counted twice. If you submit the setup form, we may send the email address or phone number from that
           form to Google and Meta so they can tell whether an ad led to the form. They may hash that
           email address or phone number. The same form submission can also be sent from our server to Meta, using
           a shared event id, so a browser event and a server event are not counted twice.

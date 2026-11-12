@@ -255,9 +255,12 @@ function SalesAvaQualifyContent() {
 
   const planKey = (qualification?.planInterest || 'growth').toLowerCase().includes('starter')
     ? 'starter'
-    : (qualification?.planInterest || '').toLowerCase().includes('pro')
-      ? 'pro'
-      : 'growth';
+    : (qualification?.planInterest || '').toLowerCase().includes('elite')
+      ? 'elite'
+      : (qualification?.planInterest || '').toLowerCase().includes('pro')
+        ? 'pro'
+        : 'growth';
+  const checkoutLabel = planKey === 'starter' ? 'Start Starter for $1' : `Get ${planKey[0].toUpperCase()}${planKey.slice(1)}`;
   const prefillQs = qualification
     ? [
         `qualificationId=${encodeURIComponent(qualification.id)}`,
@@ -346,7 +349,7 @@ function SalesAvaQualifyContent() {
               </p>
             </div>
             <TrackedCheckoutLink className="talk-btn" href={checkoutHref} plan={planKey}>
-              Start your free 14-day pilot <ArrowRight size={16} />
+              {checkoutLabel} <ArrowRight size={16} />
             </TrackedCheckoutLink>
             <Link
               className="text-next"
@@ -439,7 +442,7 @@ function SalesAvaQualifyContent() {
                     <Mic2 size={14} /> Enable mic &amp; try the live demo
                   </button>
                   <TrackedCheckoutLink className="text-next" href={checkoutHref} plan={planKey}>
-                    Start your free 14-day pilot <ArrowRight size={14} />
+                    {checkoutLabel} <ArrowRight size={14} />
                   </TrackedCheckoutLink>
                 </div>
               </div>

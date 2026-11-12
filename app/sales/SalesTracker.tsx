@@ -162,8 +162,8 @@ export default function SalesTracker({
   return (
     <main className="sales-tracker">
       <nav>
-        <Link href="/ava-pilot">
-          <ArrowLeft size={16} /> Executive Receptionist pilot
+        <Link href="/pricing">
+          <ArrowLeft size={16} /> Executive Receptionist pricing
         </Link>
         <b>
           <Sparkles size={16} /> Sales week tracker

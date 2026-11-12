@@ -35,7 +35,7 @@ export function SuiteShell({ children }: { children: ReactNode }) {
           ))}
         </div>
         <Link className={styles.navCta} href="/#pricing">
-          Start free pilot
+          Start for $1
         </Link>
       </nav>
       {children}

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Check, Phone, PhoneCall, Snowflake, Flame, Moon } from 'lucide-react';
-import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
+import { MonthlyPlans, PlanCheckoutButton } from '@/components/ava/MonthlyPlans';
 import { AVA_OFFER } from '@/lib/ava/pricing';
 import { urlsForRequest } from '@/lib/seo/host-metadata';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
@@ -81,13 +81,14 @@ export default function HvacPage() {
           calendar is set up in the Desk, she books routine visits into your Desk calendar during the call.
         </p>
         <div className="hvac-cta-row">
-          <TrackedCheckoutLink className="hvac-btn hvac-btn-primary" href="/api/checkout?plan=pilot" plan="pilot">
-            Start the free 14-day pilot
-          </TrackedCheckoutLink>
+          <PlanCheckoutButton plan="starter" className="hvac-btn hvac-btn-primary">
+            Start for $1
+          </PlanCheckoutButton>
           <a className="hvac-btn hvac-btn-ghost" href={DEMO_LINK} target="_blank" rel="noopener noreferrer">
             <PhoneCall size={18} /> Talk to the HVAC demo
           </a>
         </div>
+        <p className="hvac-small">{AVA_OFFER.starterIntro}</p>
         <p className="hvac-small">
           The demo is Ava answering for a made-up shop, &quot;Demo Heating &amp; Air.&quot; Try a no-heat call, a broken
           AC, or ask what a service call costs. It runs in your browser; allow the microphone.
@@ -128,31 +129,7 @@ export default function HvacPage() {
       </section>
 
       <section className="hvac-plans" id="pricing">
-        <h2>Pilot pricing for home-service shops</h2>
-        <div className="hvac-plan-grid">
-          <article className="hvac-plan featured">
-            <span className="hvac-badge">Free 14-day pilot</span>
-            <h3>Executive Receptionist</h3>
-            <p className="hvac-price">
-              {AVA_OFFER.perBookedJobLabel}
-              <small> per booked job</small>
-            </p>
-            <ul>
-              <li><Check size={16} /> Free 14-day pilot with a card on file</li>
-              <li><Check size={16} /> $0 until your first booked job</li>
-              <li><Check size={16} /> Then {AVA_OFFER.perBookedJobLabel} per booked job, capped at {AVA_OFFER.monthlyCapLabel}/month</li>
-              <li><Check size={16} /> Answers your HVAC calls 24/7</li>
-              <li><Check size={16} /> Cancel anytime, month to month</li>
-            </ul>
-            <TrackedCheckoutLink className="hvac-btn hvac-btn-primary" href="/api/checkout?plan=pilot" plan="pilot">
-              Start the free 14-day pilot
-            </TrackedCheckoutLink>
-          </article>
-        </div>
-        <div className="hvac-trial">
-          <h3>The guarantee</h3>
-          <p>No real caller lead during your pilot means no charge. You pay nothing.</p>
-        </div>
+        <MonthlyPlans />
       </section>
 
       <section className="hvac-contact" id="contact">

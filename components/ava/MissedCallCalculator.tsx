@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { formatUsd, missedCallExample } from '@/lib/ava/missed-call-math';
-import { AVA_OFFER } from '@/lib/ava/pricing';
+import { AVA_PLANS } from '@/lib/ava/pricing';
 import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
 
 export function MissedCallCalculator() {
@@ -60,12 +60,12 @@ export function MissedCallCalculator() {
         <code>{result.formula}</code>
       </div>
       <p className="missed-calc-note">
-        Executive Receptionist is {AVA_OFFER.perBookedJobLabel} per booked job after the 14-day pilot, capped at{' '}
-        {AVA_OFFER.monthlyCapLabel} a month. The calculator does not
+        Executive Receptionist plans run from {AVA_PLANS.starter.monthlyLabel} a month (Starter, first month{' '}
+        {AVA_PLANS.starter.firstMonthLabel}) to {AVA_PLANS.elite.monthlyLabel} a month. The calculator does not
         subtract the plan, so you can compare the two figures yourself.
       </p>
       <TrackedCheckoutLink className="sales-btn" href="/api/checkout?plan=starter" plan="starter">
-        Start your free 14-day pilot
+        Start for $1
       </TrackedCheckoutLink>
     </form>
   );

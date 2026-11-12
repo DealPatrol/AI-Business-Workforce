@@ -87,9 +87,11 @@ export default function HvacContactForm() {
       </label>
       <label>
         Plan you&apos;re interested in
-        <select name="interest" defaultValue="Executive Receptionist 14-day pilot" required>
-          <option value="Executive Receptionist 14-day pilot">Executive Receptionist 14-day pilot</option>
-          <option value="Executive Receptionist — $25 per booked job">Executive Receptionist — $25 per booked job</option>
+        <select name="interest" defaultValue="Executive Receptionist Pro ($397/mo, 1,200 minutes)" required>
+          <option value="Executive Receptionist Starter ($79/mo, first month $1)">Starter: $79/mo, 100 minutes (first month $1)</option>
+          <option value="Executive Receptionist Growth ($197/mo, 300 minutes)">Growth: $197/mo, 300 minutes</option>
+          <option value="Executive Receptionist Pro ($397/mo, 1,200 minutes)">Pro: $397/mo, 1,200 minutes (best value)</option>
+          <option value="Executive Receptionist Elite ($789/mo, 2,000 minutes)">Elite: $789/mo, 2,000 minutes</option>
           <option value="Not sure yet">Not sure yet</option>
         </select>
       </label>

@@ -30,9 +30,15 @@ Add with `vercel env add <NAME> production` (prompts for the value; nothing is e
 
 | Name | Value |
 |---|---|
-| `STRIPE_AVA_BOOKED_JOB_PRICE_ID` | same live price ID as Preview ($25 per booked job, metered) |
-| `STRIPE_AVA_STORE_BASE_PRICE_ID` | same as Preview (`$119/mo`, `price_1UaABQ…`; see docs/AVA_STORE_BILLING.md) |
-| `STRIPE_AVA_STORE_CALL_PRICE_ID` | same as Preview (`$1/call`, `price_1UaABR…`) |
+| `STRIPE_AVA_STARTER_PRICE_ID` | `price_1Ub3uoRJZZUpaweBFGtwF5QC` (Starter $79/mo, 100 minutes) |
+| `STRIPE_AVA_GROWTH_PRICE_ID` | `price_1Ub3utRJZZUpaweBJEvsIUis` (Growth $197/mo, 300 minutes) |
+| `STRIPE_AVA_PRO_PRICE_ID` | `price_1Ub3uwRJZZUpaweBIdSj9aCa` (Pro $397/mo, 1,200 minutes, featured) |
+| `STRIPE_AVA_ELITE_PRICE_ID` | `price_1Ub3uzRJZZUpaweBtRWSPglF` (Elite $789/mo, 2,000 minutes) |
+| `STRIPE_AVA_STARTER_FIRST_MONTH_COUPON_ID` | `ED3W0r22` ($78 off once, Starter product only, so the first month is $1) |
+
+The free 14-day pilot, the $25-per-booked-job meter, and the $119 + $1/call store plan were retired on Nov 12, 2026.
+`STRIPE_AVA_BOOKED_JOB_PRICE_ID` and the `STRIPE_AVA_STORE_*` vars are no longer used by checkout; monthly-plan
+customers are never metered per booked job.
 | `AVA_BOOKING_LINK_SECRET` | new random value: `openssl rand -base64 48`. Signs the .ics links in lead emails. |
 
 **Required, already set in production** (the script verifies these):
@@ -85,7 +91,8 @@ secret header as is), or ask Grok Bot to do it. Customer agents get production U
 - `/`, `/start`, `/pricing`, `/receptionist`, `/receptionist/hvac`, `/receptionist/ecommerce`, `/onboarding/ava`, `/login`,
   `/privacy`, `/terms`, `/robots.txt`, `/sitemap.xml`, `/llms.txt` return 200 with no banned number; frontporchgrowth.com returns 200.
 - `/desk` redirects to sign-in. The booking tool rejects unsigned calls (404). Google connect is hidden (404) or live (redirect).
-- Pilot and store Checkout reach `checkout.stripe.com`, and both sessions are expired right away.
+- Checkout for all four plans reaches `checkout.stripe.com` with the right amount due today (Starter $1.00, Growth $197, Pro $397, Elite $789), and each session is expired right away.
+- `/buy/starter` redirects to Stripe Checkout (the shareable $1 link).
 
 Then by hand (5 minutes):
 1. Call the demo line **(256) 952-4935**. Say the furnace is blowing cold air, not an emergency, and accept a window.
@@ -109,3 +116,12 @@ Marketing copy must match: booking is "once your calendar is set up in the Desk"
 Vercel → Deployments → `dpl_5dGUzGc5DTVeNmBffHYbYS5Hjgpk` → **Promote to Production** (instant).
 Then run `scripts/publish-check --only=tools --retarget-tools --url=<preview URL>` to point the demo tools back at the preview.
 The database changes are additive, so they don't need a rollback.
+
+
+## 10. Monthly plans (Nov 12, 2026)
+
+- Plans live in `lib/ava/pricing.ts` (`AVA_PLANS`). Copy across the site reads from there or from `components/ava/MonthlyPlans.tsx`.
+- Checkout: `POST /api/checkout` with `plan=starter|growth|pro|elite` (old `plan=pilot` forms start Starter). Shareable links: `/buy/starter`, `/buy/growth`, `/buy/pro`, `/buy/elite`. Each makes a fresh Checkout Session branded "Executive Receptionist".
+- Only Starter gets the coupon. Growth, Pro and Elite never get a discount, even if a coupon is configured.
+- No metered overage. If a customer runs past their minutes, Ava keeps answering and Cole reaches out about a bigger plan.
+- Stripe Payment Links for Growth/Pro/Elite exist as a backup (their header shows the Stripe account name). The Starter Payment Link is deactivated because a payment link cannot apply the first-month coupon; use `/buy/starter`.

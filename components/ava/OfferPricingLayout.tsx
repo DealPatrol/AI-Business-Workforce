@@ -1,8 +1,7 @@
 import type { ReactNode } from 'react';
 import Link from 'next/link';
-import { AVA_OFFER } from '@/lib/ava/pricing';
-import { BookedJobCalculator } from '@/components/ava/BookedJobCalculator';
-import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
+import { AVA_OFFER, AVA_PLANS } from '@/lib/ava/pricing';
+import { MonthlyPlans, PlanCheckoutButton } from '@/components/ava/MonthlyPlans';
 import styles from './offer-pricing.module.css';
 
 const FEATURE_GROUPS: Array<{
@@ -23,16 +22,17 @@ const FEATURE_GROUPS: Array<{
   {
     heading: 'How you are billed',
     rows: [
-      { feature: 'Free 14-day pilot, with a card on file', value: 'Included', included: true },
-      { feature: 'After the pilot, $0 until the first booked job', value: 'Included', included: true },
-      { feature: '$25 per booked job after that', value: AVA_OFFER.perBookedJobLabel, included: true },
-      { feature: 'Monthly cap', value: AVA_OFFER.monthlyCapLabel, included: true },
+      { feature: 'Starter: 100 minutes a month', value: '$79/mo (first month $1)', included: true },
+      { feature: 'Growth: 300 minutes a month', value: '$197/mo', included: true },
+      { feature: 'Pro: 1,200 minutes a month (best value)', value: '$397/mo', included: true },
+      { feature: 'Elite: 2,000 minutes a month, priority setup', value: '$789/mo', included: true },
+      { feature: 'Contract', value: 'Month to month', included: true },
     ],
   },
   {
     heading: 'What this does not do yet',
     rows: [
-      { feature: 'Live calendar booking', value: 'Not included', included: false },
+      { feature: 'Booking without your hours set up in the Desk', value: 'Not until set up', included: false },
       { feature: 'CRM sync', value: 'Not included', included: false },
       { feature: 'Text messages to you or the caller', value: 'Not included yet', included: false },
       { feature: 'Outbound calling', value: 'Not included', included: false },
@@ -42,57 +42,56 @@ const FEATURE_GROUPS: Array<{
 
 const BILLING_STEPS = [
   {
-    title: 'Set up in person',
-    detail:
-      'Cole meets you in Gadsden, writes the greeting and questions for your shop, and puts a card on file. Nothing is charged to start the pilot.',
+    title: 'Pick a plan',
+    detail: `Choose your minutes. Starter's first month is ${AVA_PLANS.starter.firstMonthLabel}, then ${AVA_PLANS.starter.monthlyLabel}/month. Growth, Pro and Elite are billed at their monthly price from the first month.`,
   },
   {
-    title: 'Run the 14-day pilot',
+    title: 'Set up your line',
     detail:
-      'The receptionist answers your inbound calls around the clock, captures the caller’s details and the job, and emails you each summary.',
+      'Cole writes the greeting and questions for your shop, and you forward your calls to Ava. Setup is included on every plan.',
   },
   {
-    title: 'Stay at $0 until work is booked',
+    title: 'Ava answers',
     detail:
-      'When the pilot ends you still pay nothing until a call it handled turns into a booked job.',
+      'She answers your inbound calls around the clock, captures the caller’s details and the job, and emails you each summary.',
   },
   {
-    title: 'Then $25 a job, never more than $297',
-    detail: `After that first booked job, each booked job is ${AVA_OFFER.perBookedJobLabel}. The month stops at ${AVA_OFFER.monthlyCapLabel}, even if more jobs come in.`,
+    title: 'Renews monthly',
+    detail: `Your plan renews each month at its listed price until you cancel. ${AVA_OFFER.overageNote}`,
   },
 ];
 
 const FAQS = [
   {
-    q: 'What happens during the 14-day pilot?',
-    a: `The receptionist answers inbound calls on your line, takes the caller’s name, number, and what they need, and emails you the summary. A card stays on file. ${AVA_OFFER.guarantee}`,
+    q: 'What does each plan cost?',
+    a: 'Starter is $79/month with 100 minutes, and your first month is $1. Growth is $197/month with 300 minutes. Pro is $397/month with 1,200 minutes. Elite is $789/month with 2,000 minutes and priority setup.',
   },
   {
-    q: 'When do I start paying?',
-    a: 'After the pilot you pay $0 until the first booked job. Then each booked job is $25, and the month never goes above $297.',
+    q: 'Is there a free trial?',
+    a: 'No. Starter’s first month is $1, then $79/month. Growth, Pro and Elite are charged their full monthly price from the first month.',
   },
   {
-    q: 'What counts as a booked job?',
-    a: 'A booked job is work you put on the calendar that started from a caller the receptionist already handled. Hang-ups, wrong numbers, and calls that do not become work are not billed as booked jobs.',
+    q: 'What counts as a minute?',
+    a: 'Minutes are the time Ava spends on calls she answers for you. Every plan includes the same receptionist; plans differ by how many minutes are included each month.',
+  },
+  {
+    q: 'What if I run past my minutes?',
+    a: AVA_OFFER.overageNote,
   },
   {
     q: 'Do I have to sign a long contract?',
-    a: 'No. This is month-to-month after the pilot. Setup is in person in Gadsden so the greeting matches your shop; it is not a multi-year agreement.',
+    a: 'No. Every plan is month to month and renews automatically. Cancel anytime.',
   },
   {
     q: 'Does it book the appointment on my calendar?',
-    a: 'No. It captures the lead and emails you the summary. You call the customer back and book the job yourself. It does not sync to a CRM.',
+    a: 'Once your hours are set up in your Desk, Ava can offer open times and put the visit on your Desk calendar. Until then, she captures the lead and emails you the summary, and you call the customer back. It does not sync to a CRM.',
   },
   {
     q: 'Will it text me or text the caller?',
-    a: 'Not yet. Lead summaries go out by email. Texting is not part of this offer until messaging registration is finished.',
+    a: 'Not yet. Lead summaries go out by email. Texting is not part of the plans until messaging registration is finished.',
   },
   {
-    q: 'Who is this for right now?',
-    a: 'HVAC and plumbing shops first — the trades where a missed after-hours call is often a real repair. The same inbound answering can be written for other service businesses after that.',
-  },
-  {
-    q: 'How do I hear it before we meet?',
+    q: 'How do I hear it before I buy?',
     a: 'Use the live demo button on this page. It opens a browser conversation with the receptionist. That demo is a sample, not your business line.',
   },
 ];
@@ -102,14 +101,6 @@ function DemoLink({ className, children }: { className: string; children: ReactN
     <a className={className} href={AVA_OFFER.demoUrl} target="_blank" rel="noopener noreferrer">
       {children}
     </a>
-  );
-}
-
-function PilotLink({ className, children }: { className: string; children: ReactNode }) {
-  return (
-    <TrackedCheckoutLink className={className} href="/api/checkout?plan=pilot" plan="pilot">
-      {children}
-    </TrackedCheckoutLink>
   );
 }
 
@@ -143,7 +134,7 @@ export function OfferPricingLayout({
 
       <section className={styles.hero} id={isPage ? 'top' : undefined}>
         <p className={styles.kicker}>For HVAC and plumbing shops that cannot miss the next repair call</p>
-        <h1>{isPage ? 'Your after-hours front desk, priced on the jobs it helps you book.' : 'One published offer. No mystery tiers.'}</h1>
+        <h1>{isPage ? 'Your 24/7 front desk. Four simple monthly plans.' : 'Four plans. Pick your minutes.'}</h1>
         <p className={styles.lede}>
           Executive Receptionist answers the inbound calls you cannot pick up, 24 hours a day. It writes down the
           caller’s details and the job, then emails you the summary. If you turn on booking, it offers the open windows
@@ -151,50 +142,16 @@ export function OfferPricingLayout({
         </p>
         <div className={styles.heroActions}>
           <DemoLink className={styles.primary}>Try the live demo</DemoLink>
-          <PilotLink className={styles.secondary}>Ask Cole to start your 14-day pilot</PilotLink>
+          <PlanCheckoutButton plan="starter" className={styles.secondary}>Start Starter for $1</PlanCheckoutButton>
         </div>
         <p className={styles.fine}>
-          {AVA_OFFER.summary} Prefer to talk it through? Call{' '}
+          {AVA_OFFER.starterIntro} Prefer to talk it through? Call{' '}
           <a href={AVA_OFFER.contactPhoneHref}>{AVA_OFFER.contactPhoneDisplay}</a>.
         </p>
       </section>
 
-      <section className={styles.plans} id="plans">
-        <article className={styles.card}>
-          <p className={styles.cardEyebrow}>Pilot</p>
-          <h2>14 days to hear it on your line</h2>
-          <p className={styles.price}>
-            <strong>$0</strong>
-            <span>during the pilot</span>
-          </p>
-          <p className={styles.cardPitch}>Card on file. Set up in person in {AVA_OFFER.setupCity}.</p>
-          <ul>
-            <li>Answers inbound calls day and night</li>
-            <li>Captures the name, number, and job</li>
-            <li>Emails you each summary</li>
-            <li>{AVA_OFFER.guarantee}</li>
-          </ul>
-          <PilotLink className={styles.primary}>Start the conversation</PilotLink>
-        </article>
-
-        <article className={`${styles.card} ${styles.featured}`}>
-          <p className={styles.cardEyebrow}>After the first booked job</p>
-          <h2>Pay when the phone turns into work</h2>
-          <p className={styles.price}>
-            <strong>{AVA_OFFER.perBookedJobLabel}</strong>
-            <span>per booked job</span>
-          </p>
-          <p className={styles.cardPitch}>
-            $0 until that first booked job. Never more than {AVA_OFFER.monthlyCapLabel} in a month.
-          </p>
-          <ul>
-            <li>Same 24/7 inbound answering</li>
-            <li>Same emailed lead summaries</li>
-            <li>Greeting written for HVAC or plumbing first</li>
-            <li>Month-to-month after the pilot</li>
-          </ul>
-          <DemoLink className={styles.primary}>Hear it before you pay</DemoLink>
-        </article>
+      <section className={styles.plans} style={{ display: 'block' }}>
+        <MonthlyPlans />
       </section>
 
       <p className={styles.underPlans}>
@@ -202,7 +159,7 @@ export function OfferPricingLayout({
         <a href={AVA_OFFER.contactPhoneHref}>Call Cole at {AVA_OFFER.contactPhoneDisplay}</a>
         {' or '}
         <a href={`mailto:${AVA_OFFER.contactEmail}`}>{AVA_OFFER.contactEmail}</a>.
-        Online checkout collects a card for the 14-day pilot and bills $25 per booked job after that, capped at $297 a month.
+        {AVA_OFFER.renewalNote}
       </p>
 
       <section className={styles.billing} id="billing">
@@ -221,20 +178,9 @@ export function OfferPricingLayout({
         </ol>
       </section>
 
-      <BookedJobCalculator />
-
-      <aside className={styles.guarantee} id="guarantee">
-        <p className={styles.kicker}>The pilot guarantee</p>
-        <blockquote>{AVA_OFFER.guarantee}</blockquote>
-        <p>
-          That is the whole promise. It is not a claim about how many jobs a shop will book, and it is not a review from
-          another customer.
-        </p>
-      </aside>
-
       <section className={styles.features} id="features">
         <p className={styles.kicker}>A closer look at what is included</p>
-        <h2>One offer, written out so you can audit it.</h2>
+        <h2>Everything included, written out so you can audit it.</h2>
         {FEATURE_GROUPS.map((group) => (
           <div key={group.heading} className={styles.tableBlock}>
             <h3>{group.heading}</h3>
@@ -242,7 +188,7 @@ export function OfferPricingLayout({
               <thead>
                 <tr>
                   <th>Feature</th>
-                  <th>This offer</th>
+                  <th>Plans</th>
                 </tr>
               </thead>
               <tbody>
@@ -263,7 +209,7 @@ export function OfferPricingLayout({
         <h2>A local shop owner, not a wall of unverified reviews.</h2>
         <ul>
           <li>
-            Built by Cole Collins, who also runs Collins Lawncare. Setup is in person in Gadsden so the greeting matches
+            Built by Cole Collins, who also runs Collins Lawncare. Cole sets up the greeting himself so it matches
             how your HVAC or plumbing company actually talks.
           </li>
           <li>
@@ -294,10 +240,10 @@ export function OfferPricingLayout({
 
           <section className={styles.closing} id="talk">
             <p className={styles.kicker}>Ready to hear it?</p>
-            <h2>Try the demo, then set a time to put it on your line.</h2>
+            <h2>Try the demo, then pick your plan.</h2>
             <div className={styles.heroActions}>
               <DemoLink className={styles.primary}>Try the live demo</DemoLink>
-              <PilotLink className={styles.secondary}>Email Cole about a pilot</PilotLink>
+              <PlanCheckoutButton plan="pro" className={styles.secondary}>Get Pro, best value</PlanCheckoutButton>
             </div>
           </section>
 

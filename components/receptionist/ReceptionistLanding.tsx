@@ -4,10 +4,9 @@ import { ExclusiveAudio } from '@/components/receptionist/ExclusiveAudio';
 import { VoicePicker } from '@/components/receptionist/VoicePicker';
 import { OfferPricingLayout } from '@/components/ava/OfferPricingLayout';
 import { IndustryDemo } from '@/components/receptionist/IndustryDemo';
-import { StoreCheckoutButton, StorePricing } from '@/components/ava/StorePricing';
+import { PlanCheckoutButton } from '@/components/ava/MonthlyPlans';
 import { AVA_OFFER } from '@/lib/ava/pricing';
-import { AVA_STORE_OFFER } from '@/lib/ava/store-pricing';
-import { avaStoreOfferNode, faqNode, jsonLdGraph } from '@/lib/ava/structured-data';
+import { avaPlanOfferNodes, faqNode, jsonLdGraph } from '@/lib/ava/structured-data';
 import { EXAMPLE_NOTES, EXECUTIVE_FAQS, EXECUTIVE_INDUSTRIES } from '@/lib/executive-receptionist';
 import { ER_DEMO_NICHES, type ErDemoNiche } from '@/lib/er-demos';
 import { liveWidgetEnabled, realFaceEnabled } from '@/lib/live-receptionist/config';
@@ -16,9 +15,8 @@ import styles from '@/app/receptionist/receptionist.module.css';
 
 const trustPoints = [
   'Prices published below',
-  'Free 14-day pilot',
-  '$0 until the first booked job',
-  '$25 per booked job, capped at $297/month',
+  'Starter: first month $1, then $79/mo',
+  'Pro: 1,200 minutes, best value',
   'Try the live demo before you pay',
 ];
 
@@ -30,15 +28,13 @@ const defaultHero = {
 
 const storeTrustPoints = [
   'Prices published below',
-  'Free 14-day trial, $0 today',
-  '$119/month + $1 per call Ava handles',
-  'Calls during the trial are free',
+  'Starter: first month $1, then $79/mo',
+  'Same four monthly plans as every business',
   'Try the live demo before you pay',
 ];
 
 const STORE_FAQS = [
-  { q: 'What does the online store plan cost?', a: `${AVA_STORE_OFFER.priceLine}. ${AVA_STORE_OFFER.summary}` },
-  { q: 'What counts as a call Ava handles?', a: AVA_STORE_OFFER.callDefinition },
+  { q: 'What does it cost for an online store?', a: `Stores use the same monthly plans. ${AVA_OFFER.summary}` },
   {
     q: 'What does she do with calls that need a person?',
     a: 'Damaged or wrong items, missing deliveries, double charges, and anyone who asks for a manager go to your team with the caller’s name, number, order number, and the reason. She never takes card numbers.',
@@ -63,7 +59,7 @@ export function ReceptionistLanding({ niche }: Props) {
           name: 'Executive Receptionist - Online Store',
           description: 'AI phone receptionist for online stores: order status, shipping, returns, and sizing calls.',
           brand: { '@type': 'Brand', name: 'Executive Receptionist' },
-          offers: [avaStoreOfferNode('/receptionist/ecommerce')],
+          offers: avaPlanOfferNodes('/receptionist/ecommerce#pricing'),
         },
         faqNode(STORE_FAQS),
       ])
@@ -185,17 +181,7 @@ export function ReceptionistLanding({ niche }: Props) {
       </section>
 
       <section className={styles.band} id="pricing">
-        {isStore ? (
-          <div className={styles.sectionHead}>
-            <p className={styles.kicker}>Online store pricing</p>
-            <h2>{AVA_STORE_OFFER.priceLine}.</h2>
-          </div>
-        ) : null}
-        {isStore ? (
-          <StorePricing />
-        ) : (
-          <OfferPricingLayout variant="section" showTopbar={false} />
-        )}
+        <OfferPricingLayout variant="section" showTopbar={false} />
       </section>
 
       <section className={styles.band} id="examples">
@@ -236,19 +222,12 @@ export function ReceptionistLanding({ niche }: Props) {
           <a className={styles.gold} href="#demo">
             Try the live demo
           </a>
-          {isStore ? (
-            <StoreCheckoutButton className={styles.quiet} />
-          ) : (
-            <a
-              className={styles.quiet}
-              href={`mailto:${AVA_OFFER.contactEmail}?subject=${encodeURIComponent('Start an Executive Receptionist pilot')}`}
-            >
-              Ask Cole about a pilot
-            </a>
-          )}
+          <PlanCheckoutButton plan="starter" className={styles.quiet}>
+            Start for $1
+          </PlanCheckoutButton>
         </div>
         <p className={styles.fine}>
-          {isStore ? AVA_STORE_OFFER.summary : `${AVA_OFFER.summary} ${AVA_OFFER.guarantee}`} Call{' '}
+          {AVA_OFFER.summary} Call{' '}
           <a href={AVA_OFFER.contactPhoneHref}>{AVA_OFFER.contactPhoneDisplay}</a>.
         </p>
         <p className={styles.fine}>

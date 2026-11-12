@@ -8,7 +8,8 @@ import { JsonLd } from '@/components/ava/JsonLd';
 import { SampleCall } from '@/components/ava/SampleCall';
 import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
 import { AVA_HOME_FAQS } from '@/lib/ava/home-faq';
-import { AVA_OFFER, avaTrialThenPriceCopy } from '@/lib/ava/pricing';
+import { AVA_OFFER } from '@/lib/ava/pricing';
+import { MonthlyPlans } from '@/components/ava/MonthlyPlans';
 import { avaProductNode, avaServiceNode, avaSoftwareNode, faqNode, jsonLdGraph } from '@/lib/ava/structured-data';
 import { LIVE_DEMO_URL } from '@/lib/ava/demo-phone';
 import { AVA_GUIDES } from '@/lib/ava/trade-pages';
@@ -69,8 +70,8 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
   const checkoutUnavailable =
     (Array.isArray(checkoutParam) ? checkoutParam[0] : checkoutParam) === 'unavailable';
   const heroNext = SETUP_CALL_URL
-    ? 'She’ll ask the setup questions. After that you can request a short setup call with Cole, or start the free trial.'
-    : 'She’ll ask the setup questions, then you can start the free trial with answers prefilled.';
+    ? 'She’ll ask the setup questions. After that you can request a short setup call with Cole, or pick a plan.'
+    : 'She’ll ask the setup questions, then you can pick a plan with answers prefilled.';
   const canonical = absoluteSiteUrl('/ava');
   const structuredData = jsonLdGraph([
     avaSoftwareNode({
@@ -111,8 +112,8 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
           <a href="#how">How it works</a>
           <a href="#pricing">Rate card</a>
         </nav>
-        <TrackedCheckoutLink className="btn btn-ink" href="/api/checkout?plan=pilot" plan="pilot">
-          Start free trial
+        <TrackedCheckoutLink className="btn btn-ink" href="/api/checkout?plan=starter" plan="starter">
+          Start for $1
         </TrackedCheckoutLink>
       </header>
 
@@ -134,8 +135,8 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
             <a className="btn btn-outline" href={LIVE_DEMO_URL} target="_blank" rel="noopener noreferrer">
               Try the live demo
             </a>
-            <TrackedCheckoutLink className="btn btn-outline" href="/api/checkout?plan=pilot" plan="pilot">
-              Start your free 14-day pilot <ArrowRight size={17} />
+            <TrackedCheckoutLink className="btn btn-outline" href="/api/checkout?plan=starter" plan="starter">
+              Start for $1 <ArrowRight size={17} />
             </TrackedCheckoutLink>
           </div>
           <SampleCall
@@ -144,13 +145,13 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
             surface="ava-home"
           />
           <p className="hero-prices">
-            <a href="#pricing">$25 per booked job</a>
+            <a href="#pricing">Starter $79/mo, first month $1</a>
             <span aria-hidden="true">·</span>
-            capped at $297/month
+            Pro 1,200 minutes $397/mo
             <span aria-hidden="true">·</span>
-            14-day pilot · $0 until the first booked job
+            Month to month
           </p>
-          <p className="hero-fine">{avaTrialThenPriceCopy('starter')} Cancel anytime.</p>
+          <p className="hero-fine">{AVA_OFFER.starterIntro}</p>
         </div>
 
         <aside className="call-log" aria-label="Sample of calls Executive Receptionist answered tonight">
@@ -165,7 +166,7 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
                 <span className="cl-from">{call.from}</span>
                 <span className="cl-note">{call.note}</span>
                 <span className="cl-done">
-                  <Check size={13} /> lead texted
+                  <Check size={13} /> lead emailed
                 </span>
               </li>
             ))}
@@ -236,42 +237,16 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
         <h2>
           The <em>rate card.</em>
         </h2>
-        <p className="ratecard-sub">
-          {avaTrialThenPriceCopy()}. Set up in person in Gadsden.
-        </p>
+        <p className="ratecard-sub">{AVA_OFFER.summary}</p>
         {checkoutUnavailable && (
           <p className="ratecard-alert">
             Checkout couldn&apos;t open a Stripe payment page just now. Email colecollins763@gmail.com and Cole can
             start the plan with you directly.
           </p>
         )}
-        <div className="ratecard-list">
-          <article className="plan featured">
-            <div className="plan-main">
-              <div className="plan-head">
-                <h3>Executive Receptionist</h3>
-              </div>
-              <p className="plan-desc">{AVA_OFFER.summary}</p>
-              <ul className="plan-features">
-                <li><Check size={14} /> Answers inbound calls 24/7</li>
-                <li><Check size={14} /> Captures the name, number, and job</li>
-                <li><Check size={14} /> Emails you each lead summary</li>
-                <li><Check size={14} /> {AVA_OFFER.guarantee}</li>
-              </ul>
-            </div>
-            <div className="plan-side">
-              <p className="plan-price">
-                <strong>{AVA_OFFER.perBookedJobLabel}</strong>
-                <span>per booked job</span>
-              </p>
-              <TrackedCheckoutLink className="btn btn-signal" href="/api/checkout?plan=pilot" plan="pilot">
-                Start free 14-day pilot
-              </TrackedCheckoutLink>
-            </div>
-          </article>
-        </div>
+        <MonthlyPlans heading={false} />
         <p className="ratecard-fine">
-          Special telephony or integration requirements are quoted before launch. Cancel anytime. $0 setup.
+          Special telephony or integration requirements are quoted before launch. Cancel anytime. $0 setup. {AVA_OFFER.overageNote}
         </p>
       </section>
 
@@ -324,17 +299,17 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
 
       {/* ── Final CTA ────────────────────────────────────────── */}
       <section className="finale">
-        <p className="stamp stamp-light">Free 14-day pilot · $0 setup</p>
+        <p className="stamp stamp-light">Starter: first month $1 · $0 setup</p>
         <h2>
           Put Executive Receptionist on the <em>phones.</em>
         </h2>
         <p>
-          Talk to her above, then start the 14-day pilot. After that you pay $0 until the first booked job, then $25
-          per booked job, capped at $297 a month. Tomorrow&apos;s after-hours calls answer themselves.
+          Talk to her above, then pick a plan. Starter&apos;s first month is $1, then $79 a month. Pro gives you 1,200
+          minutes for $397 a month, the best value per minute. Tomorrow&apos;s after-hours calls answer themselves.
         </p>
         <div className="hero-ctas">
-          <TrackedCheckoutLink className="btn btn-paper" href="/api/checkout?plan=pilot" plan="pilot">
-            Start your free 14-day pilot <ArrowRight size={17} />
+          <TrackedCheckoutLink className="btn btn-paper" href="/api/checkout?plan=starter" plan="starter">
+            Start for $1 <ArrowRight size={17} />
           </TrackedCheckoutLink>
           <a className="btn btn-ghostlight" href="#talk-to-ava">
             Talk to Executive Receptionist first

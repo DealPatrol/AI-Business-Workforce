@@ -25,14 +25,14 @@ const PAGES = {
   '/': {
     title: 'Ava, the AI Receptionist for Home Services',
     description:
-      'Ava answers every call, takes the job, and sends you the lead. Hear sample calls or call her now. Free 14-day pilot, then $25 per booked job, max $297/mo.',
+      'Ava answers every call, takes the job, and sends you the lead. Hear sample calls or call her now. From $79/mo, first month $1.',
     titleMode: 'absolute',
     receptionist: true,
   },
   '/start': {
     title: 'Ava AI Receptionist: Home Services and Online Stores',
     description:
-      'Ava answers calls for home-service shops and online stores, handles routine questions, and passes the rest to you. Free 14-day pilot, $25 per booked job.',
+      'Ava answers calls for home-service shops and online stores, handles routine questions, and passes the rest to you. From $79/mo, first month $1.',
     titleMode: 'absolute',
     receptionist: true,
   },
@@ -43,37 +43,37 @@ const PAGES = {
     receptionist: false,
   },
   '/ava': {
-    title: 'AI Receptionist for Home Services, $25 per Booked Job',
+    title: 'AI Receptionist for Home Services, Plans from $79/mo',
     description:
-      'AI Receptionist for HVAC and plumbing. It takes the job details and emails you a summary. Free 14-day pilot, then $25 per booked job, max $297/mo.',
+      'AI Receptionist for HVAC and plumbing. It takes the job details and emails you a summary. From $79/mo, first month $1.',
     titleMode: 'absolute',
     receptionist: true,
   },
   '/receptionist': {
     title: 'AI Receptionist for HVAC and Plumbing',
     description:
-      'AI Receptionist for HVAC and plumbing. It answers 24/7, takes the job details, and emails you a summary. $25 per booked job after a 14-day pilot.',
+      'AI Receptionist for HVAC and plumbing. It answers 24/7, takes the job details, and emails you a summary. From $79/mo, first month $1.',
     titleMode: 'absolute',
     receptionist: true,
   },
   '/receptionist-demo': {
     title: 'Try the AI Receptionist Demo',
     description:
-      'Hear a prerecorded AI Receptionist call or talk in the browser, then start a free 14-day pilot. After that: $25 per booked job, capped at $297 a month.',
+      'Hear a prerecorded AI Receptionist call or talk in the browser, then pick a plan. Starter’s first month is $1, then $79 a month.',
     titleMode: 'absolute',
     receptionist: true,
   },
   '/hvac': {
     title: 'AI Receptionist for HVAC Companies | Executive Receptionist',
     description:
-      'Ava answers HVAC calls 24/7: no heat, no AC, after-hours emergencies, and emails you every lead. Free 14-day pilot, then $25 per booked job, max $297/mo.',
+      'Ava answers HVAC calls 24/7: no heat, no AC, after-hours emergencies, and emails you every lead. From $79/mo, first month $1.',
     titleMode: 'absolute',
     receptionist: true,
   },
   '/pricing': {
     title: 'Pricing | Front Porch Growth',
     description:
-      'YardMailer postcard prices plus Executive Receptionist: $25 per booked job, max $297 a month, after a free 14-day pilot.',
+      'YardMailer postcard prices plus Executive Receptionist plans from $79 to $789 a month.',
     titleMode: 'absolute',
     receptionist: false,
   },
@@ -143,7 +143,7 @@ const PAGES = {
   '/onboarding/ava': {
     title: 'AI Receptionist setup',
     description:
-      'Tell us about your business so Executive Receptionist can be set up. It answers calls and emails you the lead. Free 14-day pilot, then $25 per booked job.',
+      'Tell us about your business so Executive Receptionist can be set up. It answers calls and emails you the lead. From $79/mo, first month $1.',
     titleMode: 'absolute',
     receptionist: true,
   },

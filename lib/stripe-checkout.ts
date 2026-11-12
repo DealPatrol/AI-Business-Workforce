@@ -54,8 +54,10 @@ type PostcardCheckoutInput = {
 
 type AvaCheckoutInput = {
   origin: string;
-  planKey?: string;
+  planKey: AvaPlanKey;
   priceId?: string;
+  /** Once-only coupon that makes the first month $1 (Starter only). */
+  firstMonthCouponId?: string;
   qualificationId?: string;
   prefillToken?: string;
 };
@@ -143,12 +145,28 @@ export function buildPostcardCheckoutParams(input: PostcardCheckoutInput) {
   return params;
 }
 
+export const AVA_CHECKOUT_DISPLAY_NAME = 'Executive Receptionist';
+
+export function readStripeCouponId(value: string | undefined) {
+  const id = value?.trim() ?? '';
+  return /^[A-Za-z0-9_-]{2,64}$/.test(id) ? id : '';
+}
+
+/**
+ * Monthly plan checkout. Starter gets the once-only first-month coupon ($79 - $78 = $1 today, then $79/mo).
+ * Growth, Pro and Elite charge the full monthly price today. No trial on any plan.
+ */
 export function buildAvaCheckoutParams(input: AvaCheckoutInput) {
+  const plan = AVA_PLANS[input.planKey];
+  if (!plan) throw new Error(`Unknown plan ${input.planKey}`);
+  if (!input.priceId) throw new Error(`${plan.priceEnv} is not set`);
+  const introCoupon = plan.firstMonthCents != null ? input.firstMonthCouponId || '' : '';
+  if (plan.firstMonthCents != null && !introCoupon) throw new Error(`${plan.couponEnv} is not set`);
+
   const params = new URLSearchParams();
-  const planKey = input.planKey || 'pilot';
   const successParts = [
     'session_id={CHECKOUT_SESSION_ID}',
-    `plan=${planKey}`,
+    `plan=${plan.key}`,
     ...(input.qualificationId ? [`qualificationId=${encodeURIComponent(input.qualificationId)}`] : []),
     ...(input.prefillToken ? [`prefillToken=${encodeURIComponent(input.prefillToken)}`] : []),
   ];
@@ -156,26 +174,27 @@ export function buildAvaCheckoutParams(input: AvaCheckoutInput) {
   params.set('success_url', `${input.origin}/onboarding/ava?${successParts.join('&')}`);
   params.set('cancel_url', `${input.origin}/pricing#plans`);
   params.set('billing_address_collection', 'auto');
-  params.set('allow_promotion_codes', 'true');
   params.set('payment_method_collection', 'always');
-  params.set('subscription_data[trial_period_days]', '14');
-  // Metered prices cannot be created inline. The booked-job price ID must be set.
-  if (!input.priceId) {
-    throw new Error('STRIPE_AVA_BOOKED_JOB_PRICE_ID is not set');
-  }
+  params.set('branding_settings[display_name]', AVA_CHECKOUT_DISPLAY_NAME);
   params.set('line_items[0][price]', input.priceId);
-  params.set('metadata[product]', 'ava');
-  params.set('metadata[plan]', 'pilot');
-  params.set('metadata[offer]', 'booked_job');
-  params.set('metadata[monthly_cap_cents]', '29700');
-  if (input.qualificationId) params.set('metadata[qualification_id]', input.qualificationId);
-  params.set('subscription_data[metadata][product]', 'ava');
-  params.set('subscription_data[metadata][plan]', 'pilot');
-  params.set('subscription_data[metadata][offer]', 'booked_job');
-  params.set('subscription_data[metadata][meter_event]', 'booked_job');
-  params.set('subscription_data[metadata][monthly_cap_cents]', '29700');
-  if (input.qualificationId) {
-    params.set('subscription_data[metadata][qualification_id]', input.qualificationId);
+  params.set('line_items[0][quantity]', '1');
+  if (introCoupon) params.set('discounts[0][coupon]', introCoupon);
+  const renewal = `${plan.monthlyLabel}/month, renews automatically each month. ${plan.minutesLabel} included per month. Cancel anytime.`;
+  params.set(
+    'custom_text[submit][message]',
+    plan.firstMonthLabel ? `Today: ${plan.firstMonthLabel} for your first month. Then ${renewal}` : `Today: ${plan.monthlyLabel} for your first month. Then ${renewal}`,
+  );
+  const meta: Record<string, string> = {
+    product: 'ava',
+    plan: plan.key,
+    offer: plan.firstMonthLabel ? 'first_month_1' : 'monthly',
+    included_minutes: String(plan.minutes),
+    monthly_cents: String(plan.monthlyCents),
+  };
+  if (input.qualificationId) meta.qualification_id = input.qualificationId;
+  for (const [key, value] of Object.entries(meta)) {
+    params.set(`metadata[${key}]`, value);
+    params.set(`subscription_data[metadata][${key}]`, value);
   }
   return params;
 }

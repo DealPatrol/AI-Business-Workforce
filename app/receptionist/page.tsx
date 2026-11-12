@@ -22,7 +22,7 @@ const structured = [
     offers: [
       {
         '@type': 'Offer',
-        name: 'Executive Receptionist, $25 per booked job after a free 14-day pilot',
+        name: 'Executive Receptionist monthly plans from $79 (Starter first month $1)',
         price: '25.00',
         priceCurrency: 'USD',
         availability: 'https://schema.org/InStock',

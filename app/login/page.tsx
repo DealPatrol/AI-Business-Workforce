@@ -36,7 +36,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         <LoginForm returnTo={returnTo} />
         <p className={styles.after}>
           Not a customer yet? You do not need an account to buy.{' '}
-          <Link href="/#pricing">Start the free 14-day pilot</Link>.
+          <Link href="/#pricing">See plans</Link> (Starter is $1 for the first month).
         </p>
       </section>
     </main>

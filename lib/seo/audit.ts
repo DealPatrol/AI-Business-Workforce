@@ -96,7 +96,7 @@ export function resolveRouteSeo(route: string, companyNames: string[]): Resolved
       absolute(
         `/receptionist/${niche.slug}`,
         `AI Receptionist for ${niche.name} Shops`,
-        `Hear a sample ${niche.name} call, then talk to a demo receptionist in your browser. Free 14-day pilot, then $25 per booked job, max $297/mo.`,
+        `Hear a sample ${niche.name} call, then talk to a demo receptionist in your browser. From $79/mo, first month $1.`,
         true,
       ),
     );
