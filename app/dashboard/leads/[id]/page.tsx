@@ -55,7 +55,7 @@ export default async function LeadDetailPage({ params }: PageProps) {
         <header>
           <span className={styles.eyebrow}>LEAD</span>
           <h1 className={styles.title}>{lead.caller_name || 'Unknown caller'}</h1>
-          <p className={styles.lede}>Update the status when you reach this caller. Booked counts toward the $25 job total once billing is connected.</p>
+          <p className={styles.lede}>Update the status when you reach this caller. Booked marks the job as won.</p>
         </header>
         <LeadDetail lead={lead} />
       </section>

@@ -10,6 +10,7 @@ import { AVA_STORE_OFFER } from '@/lib/ava/store-pricing';
 import { buildWebChatEmbedSnippet } from '@/lib/ava/channels';
 import {
   AVA_PLANS,
+  avaPlanBillingLine,
   avaPlanPriceLine,
   isAvaPlanKey,
   type AvaPlanKey,
@@ -72,7 +73,7 @@ function buildEmailFallback(
 ) {
   const data = new FormData(form);
   const subject = encodeURIComponent(
-    `Executive Receptionist paid pilot setup — ${String(data.get('businessName') || 'New business')}`,
+    `Executive Receptionist setup — ${String(data.get('businessName') || 'New business')}`,
   );
   const body = encodeURIComponent(
     [
@@ -355,19 +356,17 @@ function AvaOnboardingForm() {
       <div className={styles.content}>
         <header className={styles.intro}>
           <span className={styles.eyebrow}>
-            {searchParams.get('session_id') ? 'Executive Receptionist SETUP' : 'CHECKOUT STARTS THE TRIAL'}
+            {searchParams.get('session_id') ? 'Executive Receptionist SETUP' : 'CHECKOUT STARTS YOUR PLAN'}
           </span>
           <h1>
             {searchParams.get('session_id')
               ? "You're in. Let's get Executive Receptionist ready."
-              : 'Start the trial in Stripe, then send setup notes.'}
+              : 'Start your plan in Stripe, then send setup notes.'}
           </h1>
           <p>
               {searchParams.get('session_id')
-              ? 'Checkout is confirmed — you are paid or on the 14-day pilot. Submit this form and Executive Receptionist’s agent is created from your answers. The phone number stays pending until Cole attaches it.'
-              : isStoreOnboarding
-                ? `Stripe starts the free 14-day store trial and collects a card. After that it is ${AVA_STORE_OFFER.priceLine}. $0 setup. This form emails Cole. It does not start billing by itself.`
-                : `Stripe creates the 14-day pilot and collects a card. After that you pay $0 until the first booked job, then ${avaPlanPriceLine()}. $0 setup. This form emails Cole. It does not start billing by itself.`}
+              ? 'Checkout is confirmed and your plan is active. Submit this form and Executive Receptionist’s agent is created from your answers. The phone number stays pending until Cole attaches it.'
+              : `${avaPlanPriceLine(selectedPlan)}. ${avaPlanBillingLine(selectedPlan)} $0 setup. This form emails Cole. It does not start billing by itself.`}
           </p>
           {prefillNote ? <p className={styles.notice}>{prefillNote}</p> : null}
         </header>
@@ -466,21 +465,19 @@ function AvaOnboardingForm() {
           <>
           {!sessionId ? (
             <section className={styles.paywall}>
-              <h2>The free trial starts at Stripe.</h2>
+              <h2>Your plan starts at Stripe.</h2>
               <p>
-                {isStoreOnboarding
-                  ? `After the free 14-day trial it is ${AVA_STORE_OFFER.priceLine}. Calls during the trial are free.`
-                  : `After the 14-day pilot you pay $0 until the first booked job, then ${avaPlanPriceLine()}.`}{' '}
+                {`${avaPlanPriceLine(selectedPlan)}. ${avaPlanBillingLine(selectedPlan)}`}{' '}
                 Checkout returns you here with the session attached.
               </p>
               <TrackedCheckoutLink
                 className={styles.checkout}
-                href={`/api/checkout?plan=${isStoreOnboarding ? 'store' : 'pilot'}${
+                href={`/api/checkout?plan=${selectedPlan}${
                   qualificationId ? `&qualificationId=${encodeURIComponent(qualificationId)}` : ''
                 }${prefillToken ? `&prefillToken=${encodeURIComponent(prefillToken)}` : ''}`}
-                plan={isStoreOnboarding ? 'store' : 'pilot'}
+                plan={selectedPlan}
               >
-                {isStoreOnboarding ? AVA_STORE_OFFER.ctaLabel : 'Start your free 14-day pilot'}
+                {AVA_PLANS[selectedPlan].firstMonthLabel ? `Start ${AVA_PLANS[selectedPlan].label} for ${AVA_PLANS[selectedPlan].firstMonthLabel}` : `Get ${AVA_PLANS[selectedPlan].label}`}
               </TrackedCheckoutLink>
             </section>
           ) : null}
@@ -712,8 +709,8 @@ function AvaOnboardingForm() {
             <input type="hidden" name="qualificationId" value={qualificationId} />
             <p className={styles.notice}>
               {isStoreOnboarding
-                ? `Offer: ${AVA_STORE_OFFER.priceLine} after a free 14-day trial.`
-                : `Offer: ${avaPlanPriceLine()} after a free 14-day pilot. $0 until the first booked job.`}
+                ? `Plan: ${AVA_STORE_OFFER.priceLine}.`
+                : `Plan: ${avaPlanPriceLine(selectedPlan)}. ${avaPlanBillingLine(selectedPlan)}`}
             </p>
             <label className={styles.honeypot} aria-hidden="true">
               Company website
@@ -760,14 +757,14 @@ function OnboardingFallback() {
     <main className={styles.page}>
       <div className={styles.content}>
         <header className={styles.intro}>
-          <span className={styles.eyebrow}>CHECKOUT STARTS THE TRIAL</span>
-          <h1>Start the trial in Stripe, then send setup notes.</h1>
+          <span className={styles.eyebrow}>CHECKOUT STARTS YOUR PLAN</span>
+          <h1>Start your plan in Stripe, then send setup notes.</h1>
           <p>
-            After the free 14-day pilot it is $25 per booked job, capped at $297 a month.
+            Starter&apos;s first month is $1, then $79 a month. Plans run up to $789 a month.
             The setup form loads on this page next.
           </p>
           <CheckoutForm className={styles.checkout} href="/api/checkout?plan=starter">
-            Start your free 14-day pilot
+            Start for $1
           </CheckoutForm>
         </header>
       </div>

@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { TrialSignupLink } from '@/components/dispatch/TrialSignupLink';
 import { MISSED_CALL_ADS, missedCallSeo, missedCallTrade } from '@/lib/dispatch/missed-call-ads';
-import { AVA_OFFER } from '@/lib/ava/pricing';
-import { faqNode, jsonLdGraph } from '@/lib/ava/structured-data';
+import { AVA_OFFER, AVA_PLANS } from '@/lib/ava/pricing';
+import { avaPlanOfferNodes, faqNode, jsonLdGraph } from '@/lib/ava/structured-data';
 import { urlsForRequest } from '@/lib/seo/host-metadata';
 import { absoluteSiteUrl } from '@/lib/site-url';
 import styles from './missed.module.css';
@@ -14,12 +14,12 @@ const FAQS = [
     a: 'It answers calls that reach it, including after-hours and unanswered calls you forward. It asks for the caller’s name, number, and what they need, then emails that lead to you. It does not book the job on your calendar.',
   },
   {
-    q: 'What does the free trial cost?',
-    a: `The pilot is 14 days with a card on file. After that you pay $0 until the first booked job, then ${AVA_OFFER.perBookedJobLabel} per booked job, capped at ${AVA_OFFER.monthlyCapLabel} a month. Setup is in person in Gadsden.`
+    q: 'What does it cost to start?',
+    a: `${AVA_OFFER.starterIntro} Bigger plans are $197, $397 and $789 a month and are billed at full price from the first month. Setup is done with you by Cole.`
   },
   {
     q: 'Does the browser demo become my business line?',
-    a: 'No. Stripe starts the trial. A person attaches the phone number after setup. The sample call on the product page is prerecorded.',
+    a: 'No. Stripe starts your plan. A person attaches the phone number after setup. The sample call on the product page is prerecorded.',
   },
 ] as const;
 
@@ -57,14 +57,8 @@ export default async function MissedCallsPage({ searchParams }: PageProps) {
       applicationCategory: 'BusinessApplication',
       operatingSystem: 'Web',
       url: absoluteSiteUrl('/receptionist/missed-calls'),
-      description: 'AI receptionist that answers missed calls and emails the lead summary. Texting is available after setup.',
-      offers: {
-        '@type': 'Offer',
-        price: (AVA_OFFER.perBookedJobCents / 100).toFixed(2),
-        priceCurrency: 'USD',
-        description: AVA_OFFER.summary,
-        url: absoluteSiteUrl('/receptionist/missed-calls'),
-      },
+      description: 'AI receptionist that answers missed calls and emails the lead summary.',
+      offers: avaPlanOfferNodes(absoluteSiteUrl('/receptionist/missed-calls')),
     },
     faqNode([...FAQS]),
   ]);
@@ -82,11 +76,11 @@ export default async function MissedCallsPage({ searchParams }: PageProps) {
         <p className={styles.morning}>{ad.morning}</p>
         <section className={styles.offer} aria-label="Price and trial">
           <p className={styles.price}>
-            {AVA_OFFER.perBookedJobLabel}
-            <span> per booked job after a free 14-day pilot</span>
+            {AVA_PLANS.starter.firstMonthLabel}
+            <span> first month on Starter, then {AVA_PLANS.starter.monthlyLabel}/month</span>
           </p>
-          <TrialSignupLink className={styles.cta} href="/api/checkout?plan=pilot" plan="pilot">
-            Start your free 14-day pilot
+          <TrialSignupLink className={styles.cta} href="/api/checkout?plan=starter" plan="starter">
+            Start for $1
           </TrialSignupLink>
           <p className={styles.fine}>
             {AVA_OFFER.summary} The checkout is Stripe. This page does not start a charge by itself.
@@ -115,7 +109,7 @@ export default async function MissedCallsPage({ searchParams }: PageProps) {
           </p>
         </section>
         <p className={styles.note}>
-          Plans and the trial length are the same prices published on <Link href="/pricing">the pricing page</Link>. Checked against
+          Plans are the same prices published on <Link href="/pricing">the pricing page</Link>. Checked against
           this site on October 13, 2026.
         </p>
       </main>

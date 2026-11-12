@@ -18,8 +18,9 @@ describe('comparison facts', () => {
     assert.match(ours.publishedPrice, /\$127/);
     assert.match(ours.publishedPrice, /\$3\.54/);
     assert.match(ours.publishedPrice, /\$4\.95/);
-    assert.match(ours.publishedPrice, /\$25/);
-    assert.match(ours.publishedPrice, /\$297/);
+    assert.match(ours.publishedPrice, /\$79/);
+    assert.match(ours.publishedPrice, /\$789/);
+    assert.equal(/\$297|booked job/i.test(ours.publishedPrice), false);
     assert.equal(/demo blast/i.test(ours.publishedPrice), false);
     assert.equal(ours.publishedPrice.includes('$64'), false);
   });

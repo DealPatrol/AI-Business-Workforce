@@ -1,3 +1,4 @@
+import { isAvaPlanKey } from '@/lib/ava/pricing';
 import { STORE_PLAN_KEY } from '@/lib/ava/store-pricing';
 import { STRIPE_API_VERSION } from '@/lib/stripe-checkout';
 import { createAdminClient } from '@/lib/supabase/admin';
@@ -122,16 +123,17 @@ export async function applyBookedLead(lead: ErLead) {
   }
 
   const billingCustomer = await billingCustomerForClient(lead.client_id);
-  // Online Store customers pay $1 per handled call (store_call meter), never $25 per booked job.
-  if (billingCustomer.plan === STORE_PLAN_KEY) {
+  // Monthly plans (starter/growth/pro/elite) and the legacy store plan are never billed per booked job.
+  const flatPlan = Boolean(billingCustomer.plan && isAvaPlanKey(billingCustomer.plan));
+  if (billingCustomer.plan === STORE_PLAN_KEY || flatPlan) {
     const now = new Date().toISOString();
     const updated = await updateLead(lead.id, {
       status: 'Booked' as LeadStatus,
       booked_at: lead.booked_at ?? now,
       billing_skipped: true,
-      billing_skip_reason: 'store_plan',
+      billing_skip_reason: flatPlan ? 'monthly_plan' : 'store_plan',
     });
-    return { lead: updated, billing: { type: 'store_plan' as const, action: plan.action } };
+    return { lead: updated, billing: { type: flatPlan ? ('monthly_plan' as const) : ('store_plan' as const), action: plan.action } };
   }
   const stripeCustomerId = billingCustomer.stripeCustomerId;
   if (!stripeCustomerId) {

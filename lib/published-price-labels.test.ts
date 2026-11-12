@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, it } from 'node:test';
 import { fileURLToPath } from 'node:url';
-import { AVA_ASSISTED_LAUNCH, AVA_PLANS, avaPricingSummaryCopy, avaTrialThenPriceCopy } from '@/lib/ava/pricing';
+import { AVA_OFFER, AVA_PLANS, avaPlanBillingLine, avaPricingSummaryCopy } from '@/lib/ava/pricing';
 import {
   POSTCARD_PRICE_SUMMARY,
   POSTCARD_SETUP_LABEL,
@@ -42,10 +42,10 @@ describe('published price labels', () => {
 
     for (const plan of Object.values(AVA_PLANS)) {
       assertSingleDollarPrice(plan.monthlyLabel, `${plan.key} monthlyLabel`);
-      assertSingleDollarPrice(plan.overageLabel, `${plan.key} overageLabel`);
+      assertSingleDollarPrice(plan.perMinuteLabel, `${plan.key} perMinuteLabel`);
+      assertSingleDollarPrice(avaPlanBillingLine(plan.key), `${plan.key} billing line`);
     }
-    assertSingleDollarPrice(AVA_ASSISTED_LAUNCH.oneTimeLabel, 'assisted launch');
-    assertSingleDollarPrice(avaTrialThenPriceCopy('starter'), 'trial copy');
+    assertSingleDollarPrice(AVA_OFFER.starterIntro, 'starter intro');
     assertSingleDollarPrice(avaPricingSummaryCopy(), 'pricing summary');
   });
 

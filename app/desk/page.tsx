@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { AVA_DEMO_LINE } from '@/lib/ava/demo-line';
-import { AVA_OFFER } from '@/lib/ava/pricing';
+import { AVA_OFFER, AVA_PLANS, isAvaPlanKey } from '@/lib/ava/pricing';
 import { AVA_STORE_OFFER, STORE_PLAN_KEY, storeMonthlyEstimateCents } from '@/lib/ava/store-pricing';
 import { DESK_TOOLS } from '@/lib/desk-tools';
 import { clientIdsForOwnerEmail, listLeadsForOwner } from '@/lib/leads/store';
@@ -112,7 +112,7 @@ function isBillableStoreCall(lead: ErLead) {
 }
 
 const SUBSCRIPTION_LABELS: Record<string, string> = {
-  trialing: 'Pilot running',
+  trialing: 'Trial running',
   active: 'Active',
   past_due: 'Payment past due',
   canceled: 'Canceled',
@@ -194,6 +194,7 @@ export default async function DeskPage({
   const monthStart = startOfMonthChicago();
   const bookedThisMonth = leads.filter((lead) => lead.status === 'Booked' && lead.booked_at && new Date(lead.booked_at) >= monthStart).length;
   const isStore = customer?.plan === STORE_PLAN_KEY;
+  const flatPlan = customer?.plan && isAvaPlanKey(customer.plan) ? AVA_PLANS[customer.plan] : null;
   const storeTrial = isStore && customer?.subscription_status === 'trialing';
   const callsThisMonth = leads.filter(
     (lead) => isBillableStoreCall(lead) && lead.created_at && new Date(lead.created_at) >= monthStart,
@@ -202,7 +203,9 @@ export default async function DeskPage({
     ? storeTrial
       ? 0
       : storeMonthlyEstimateCents(callsThisMonth) / 100
-    : Math.min(bookedThisMonth * AVA_OFFER.perBookedJobCents, AVA_OFFER.monthlyCapCents) / 100;
+    : flatPlan
+      ? flatPlan.monthlyCents / 100
+      : 0;
   const recent = leads.slice(0, 8);
   const callDetails = await loadCallDetails(recent.map((lead) => lead.conversation_id || ''));
   const booking = isStore ? { calendar: null, bookings: [] as BookingRow[] } : await loadBookingCalendar(onboarding?.id);
@@ -245,7 +248,7 @@ export default async function DeskPage({
       <section className={styles.stats} aria-label="This month">
         <article><small>New leads</small><b>{newLeads.length}</b></article>
         <article><small>Booked this month</small><b>{bookedThisMonth}</b></article>
-        <article><small>Billed this month (est.)</small><b>${billedThisMonth}</b><span>{isStore ? (storeTrial ? 'Free during your trial' : `${AVA_STORE_OFFER.monthlyLabel} + ${AVA_STORE_OFFER.perCallLabel} × ${callsThisMonth} calls`) : `max ${AVA_OFFER.monthlyCapLabel}`}</span></article>
+        <article><small>Billed this month (est.)</small><b>${billedThisMonth}</b><span>{isStore ? (storeTrial ? 'Free during your trial' : `${AVA_STORE_OFFER.monthlyLabel} + ${AVA_STORE_OFFER.perCallLabel} × ${callsThisMonth} calls`) : flatPlan ? `${flatPlan.label}: ${flatPlan.minutesLabel}/month` : 'No plan yet'}</span></article>
         <article><small>All leads</small><b>{leads.length}</b></article>
       </section>
 
@@ -301,11 +304,11 @@ export default async function DeskPage({
             </dl>
           ) : (
             <div className={styles.empty}>
-              <p>We do not see a pilot for {email || 'this email'} yet.</p>
+              <p>We do not see a plan for {email || 'this email'} yet.</p>
               <p>
-                Start the free 14-day pilot, or if you checked out with a different email, sign in with that one.
+                Pick a plan (Starter&apos;s first month is $1), or if you checked out with a different email, sign in with that one.
               </p>
-              <Link className={styles.button} href="/#pricing">Start the free pilot</Link>
+              <Link className={styles.button} href="/pricing#plans">See plans</Link>
             </div>
           )}
           <p className={styles.help}>

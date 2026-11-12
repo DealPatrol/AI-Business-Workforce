@@ -36,7 +36,7 @@ export const TRADE_PAGES: TradePage[] = [
       },
       {
         q: 'Which plan answers after hours?',
-        a: '$0 until your first booked job, then $25 per booked job, capped at $297 a month, after a free 14-day pilot. That is the same price as the pricing page.',
+        a: 'Plans from $79 a month; Starter’s first month is $1. That is the same price as the pricing page.',
       },
     ],
   },

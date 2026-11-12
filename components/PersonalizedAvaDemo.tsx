@@ -511,7 +511,7 @@ function PersonalizedDemoContent({ prospect }: { prospect: Prospect }) {
 
       <section className="demo-pilot">
         <div>
-          <span className="demo-kicker">14-DAY PAID PILOT</span>
+          <span className="demo-kicker">STARTER: FIRST MONTH $1</span>
           <h2>Try Executive Receptionist for {prospect.companyName}</h2>
           <p>
             {AVA_OFFER.summary} · 
@@ -522,7 +522,7 @@ function PersonalizedDemoContent({ prospect }: { prospect: Prospect }) {
               <Check size={14} /> Customized for {prospect.industry} call flows
             </li>
             <li>
-              <Check size={14} /> Lead summaries to your phone and email
+              <Check size={14} /> Lead summaries to your email
             </li>
             <li>
               <ShieldCheck size={14} /> Cancel anytime — no contract
@@ -537,8 +537,8 @@ function PersonalizedDemoContent({ prospect }: { prospect: Prospect }) {
           >
             <Calendar size={16} /> {AVA_PILOT_OFFER.ctaPrimary}
           </a>
-          <Link className="demo-btn secondary" href="/video">
-            Watch the 60-second overview <ArrowRight size={16} />
+          <Link className="demo-btn secondary" href="/pricing#plans">
+            See all four plans <ArrowRight size={16} />
           </Link>
         </div>
       </section>

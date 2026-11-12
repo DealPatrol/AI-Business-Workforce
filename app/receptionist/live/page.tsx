@@ -31,8 +31,8 @@ export default function LiveReceptionistPage() {
             <li>Rather use the phone? The call button rings the same AI line</li>
           </ul>
           <p className={styles.pricing}>
-            Executive Receptionist: {AVA_OFFER.perBookedJobLabel} per booked job, capped at {AVA_OFFER.monthlyCapLabel}/month after a free 14-day pilot.{' '}
-            <Link href="/receptionist">See the offer</Link>
+            Executive Receptionist: {AVA_OFFER.starterIntro}{' '}
+            <Link href="/pricing#plans">See all plans</Link>
           </p>
         </div>
         <LiveVideoReceptionist realFace={realFaceEnabled()} />

@@ -278,7 +278,7 @@ export async function POST(request: NextRequest) {
         from: avaFromAddress(),
         to: [avaOwnerEmail()],
         ...(replyTo ? { reply_to: replyTo } : {}),
-        subject: `Executive Receptionist paid pilot setup — ${fields.businessName}`,
+        subject: `Executive Receptionist setup — ${fields.businessName}`,
         html: `<div style="font-family:Arial,sans-serif;max-width:760px;margin:auto;color:#17211b"><h1>New Executive Receptionist setup</h1><p>The phone number stays <b>pending_manual</b>. Attach one using <a href="${AVA_PHONE_RUNBOOK_URL}">${AVA_PHONE_RUNBOOK_PATH}</a>, then run one live test call before launch.</p><table style="border-collapse:collapse;width:100%">${htmlRows}</table>${
           channelFlags.channelWebChat
             ? `<h2 style="margin-top:24px">Website chat embed</h2><p>Paste this on the customer&apos;s site after the agent ID is ready (Voice + text widget).</p><pre style="background:#f3f4f6;padding:12px;border-radius:8px;white-space:pre-wrap">${escapeHtml(

@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og';
 
-export const alt = 'Ava, the AI receptionist: every call answered, $25 per booked job after a free 14-day pilot';
+export const alt = 'Ava, the AI receptionist: every call answered. Plans from $79/month, Starter first month $1';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -43,7 +43,7 @@ export default function OpengraphImage() {
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 24, color: '#cfd8d1' }}>
           <span>Home services · Online stores</span>
-          <span>Free 14-day pilot · $25 per booked job · max $297/mo</span>
+          <span>Start for $1 · then $79/mo · Pro 1,200 min $397/mo</span>
         </div>
       </div>
     ),

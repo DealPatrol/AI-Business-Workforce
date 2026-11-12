@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
 import { SampleCalls } from '@/components/ava-home/SampleCalls';
 import avaStyles from '@/components/ava-home/ava-home.module.css';
 import { HeroDemoPicker } from '@/components/suite/HeroDemoPicker';
@@ -9,9 +8,8 @@ import { SuiteShell } from '@/components/suite/SuiteShell';
 import styles from '@/components/suite/home.module.css';
 import { AVA_DEMO_LINE } from '@/lib/ava/demo-line';
 import { AVA_OFFER } from '@/lib/ava/pricing';
-import { StorePricing } from '@/components/ava/StorePricing';
-import { AVA_STORE_OFFER } from '@/lib/ava/store-pricing';
-import { avaStoreOfferNode, faqNode } from '@/lib/ava/structured-data';
+import { MonthlyPlans, PlanCheckoutButton } from '@/components/ava/MonthlyPlans';
+import { avaPlanOfferNodes, faqNode } from '@/lib/ava/structured-data';
 import { DESK_TOOLS } from '@/lib/desk-tools';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 import { absoluteSiteUrl } from '@/lib/site-url';
@@ -31,23 +29,23 @@ const HOME_FAQS = [
   },
   {
     q: 'What does it cost?',
-    a: `For home-service shops: ${AVA_OFFER.summary} ${AVA_OFFER.guarantee}`,
+    a: `${AVA_OFFER.summary} ${AVA_OFFER.overageNote}`,
   },
   {
-    q: 'What does it cost for an online store?',
-    a: `${AVA_STORE_OFFER.priceLine}. ${AVA_STORE_OFFER.summary} ${AVA_STORE_OFFER.callDefinition}`,
+    q: 'Is there a free trial?',
+    a: 'No free plan or trial. Starter’s first month is $1, then $79/month. Growth, Pro and Elite are billed at their monthly price from the first month. All plans renew monthly; cancel anytime.',
   },
   {
     q: 'Do I need an account to start?',
-    a: 'No. Start the pilot from checkout without signing in. After setup you can sign in to your desk to see Ava’s leads and the rest of the tools.',
+    a: 'No. Pick a plan and check out without signing in. After setup you can sign in to your desk to see Ava’s leads and the rest of the tools.',
   },
   {
     q: 'Does she book the job for me?',
-    a: 'She captures the lead and sends it to you, and can note a preferred time. You confirm the time and book the work. She never invents a price or promises an arrival time you have not offered.',
+    a: 'Once your hours are set up in your Desk, she can offer open times and put the visit on your Desk calendar. Until then she captures the lead and sends it to you, and you book the work. She never invents a price or promises an arrival time you have not offered.',
   },
   {
     q: 'Which businesses is she for?',
-    a: 'Home-service shops first: HVAC, plumbing, roofing, electrical, lawn care, pest control, cleaning, pool, garage door, and more. Online stores can use her for order, shipping, and return calls on the store plan ($119/month plus $1 per call she handles). Dental offices, law firms, and med spas can use her too if the questions you approve are appropriate. She is not a HIPAA product and does not give legal advice.',
+    a: 'Home-service shops first: HVAC, plumbing, roofing, electrical, lawn care, pest control, cleaning, pool, garage door, and more. Online stores can use her for order, shipping, and return calls on the same monthly plans. Dental offices, law firms, and med spas can use her too if the questions you approve are appropriate. She is not a HIPAA product and does not give legal advice.',
   },
   {
     q: 'Does she call or text people on her own?',
@@ -87,12 +85,7 @@ const orgJsonLd = {
       description: 'Ava, an AI phone receptionist, plus lead generation and postcard tools for home-service businesses.',
       email: 'hello@frontporchgrowth.com',
       makesOffer: [
-        {
-          '@type': 'Offer',
-          name: 'Ava AI receptionist, free 14-day pilot, then $25 per booked job (max $297/month)',
-          url: absoluteSiteUrl('/start'),
-        },
-        avaStoreOfferNode(absoluteSiteUrl('/start#ecommerce')),
+        ...avaPlanOfferNodes(absoluteSiteUrl('/pricing#plans')),
       ],
     },
     { '@type': 'WebSite', name: 'Front Porch Growth', url: absoluteSiteUrl('/'), publisher: { '@id': `${absoluteSiteUrl('/')}#org` } },
@@ -140,16 +133,15 @@ export default function SuiteHomePage() {
           </p>
           <HeroDemoPicker label="Hear Ava for your business" />
           <div className={styles.actions}>
-            <TrackedCheckoutLink className={styles.primary} href="/api/checkout?plan=pilot" plan="pilot">
-              Start the free 14-day pilot
-            </TrackedCheckoutLink>
+            <PlanCheckoutButton plan="starter" className={styles.primary}>
+              Start for $1
+            </PlanCheckoutButton>
             <a className={styles.secondary} href={AVA_DEMO_LINE.href}>
               Call Ava: {AVA_DEMO_LINE.display}
             </a>
           </div>
           <p className={styles.fine}>
-            Free 14-day pilot with a card on file, then $0 until your first booked job, then {AVA_OFFER.perBookedJobLabel} per
-            booked job, capped at {AVA_OFFER.monthlyCapLabel} a month. {AVA_OFFER.guarantee} No account needed to start.
+            {AVA_OFFER.starterIntro} Bigger plans from $197/month. <a href="#pricing">See all plans</a>. No account needed to start.
           </p>
         </div>
 
@@ -222,30 +214,7 @@ export default function SuiteHomePage() {
       </section>
 
       <section className={styles.band} id="pricing">
-        <span className={styles.kicker}>One price, published</span>
-        <h2 className={styles.h2}>You pay when Ava’s call turns into a booked job.</h2>
-        <div className={avaStyles.offer}>
-          <div>
-            <ul className={avaStyles.priceRows}>
-              <li>First 14 days (card on file) <b>$0</b></li>
-              <li>Until your first booked job <b>$0</b></li>
-              <li>Each booked job <b>{AVA_OFFER.perBookedJobLabel}</b></li>
-              <li>Most you will pay in a month <b>{AVA_OFFER.monthlyCapLabel}</b></li>
-            </ul>
-            <p className={avaStyles.compareNote}>
-              Most AI receptionists bill by the minute, the call, or the caller, so spam, wrong numbers, and tire kickers
-              all cost you. Ava’s bill only moves when a call becomes work on your calendar. Setup is done with you in
-              person in {AVA_OFFER.setupCity}.
-            </p>
-          </div>
-          <div className={avaStyles.guarantee}>
-            <h3>The pilot guarantee</h3>
-            <p>{AVA_OFFER.guarantee}</p>
-            <TrackedCheckoutLink className={styles.primary} href="/api/checkout?plan=pilot" plan="pilot">
-              Start the free pilot
-            </TrackedCheckoutLink>
-          </div>
-        </div>
+        <MonthlyPlans />
       </section>
 
       <section className={styles.band} id="desk">
@@ -293,9 +262,7 @@ export default function SuiteHomePage() {
               <li>Returns, exchanges, sizing, and store hours</li>
               <li>Damaged items, double charges, and upset customers go to a person, with notes</li>
             </ul>
-            <div className={avaStyles.ecomPrice}>
-              <StorePricing compact />
-            </div>
+            <p className={avaStyles.compareNote}>Stores use the same monthly plans as everyone else. <a href="#pricing">See plans</a>.</p>
           </div>
           <div className={styles.actions}>
             <a className={styles.primary} href="#sample-ecommerce">
@@ -323,13 +290,12 @@ export default function SuiteHomePage() {
         <span className={styles.kicker}>Start with the phone</span>
         <h2>The next call is the one that pays for this.</h2>
         <p>
-          Run Ava for 14 days on your own line and see what she catches. If she does not capture a single real caller
-          lead, you pay nothing.
+          Put Ava on your line for $1 with Starter, or go straight to Pro for the best value per minute.
         </p>
         <div className={styles.actions}>
-          <TrackedCheckoutLink className={styles.primary} href="/api/checkout?plan=pilot" plan="pilot">
-            Start the free 14-day pilot
-          </TrackedCheckoutLink>
+          <PlanCheckoutButton plan="starter" className={styles.primary}>
+            Start for $1
+          </PlanCheckoutButton>
           <a className={styles.secondary} href={AVA_DEMO_LINE.href}>
             Call Ava: {AVA_DEMO_LINE.display}
           </a>

@@ -5,7 +5,7 @@
  *   scripts/publish-check                       # env + Stripe webhook + demo tools + smoke tests on production
  *   scripts/publish-check --only=env            # one section: env | stripe | tools | smoke
  *   scripts/publish-check --url=https://…       # smoke-test another host (e.g. the preview URL)
- *   scripts/publish-check --checkout            # also start pilot + store Checkout and expire both sessions
+ *   scripts/publish-check --checkout            # also start Checkout for all four plans, check the amount due today, expire them
  *   scripts/publish-check --retarget-tools      # point the demo booking tools at the production URL (writes!)
  *
  * Reads tokens from the shell env only and never prints a secret value. Env vars it uses:
@@ -37,11 +37,13 @@ const DEMO_BOOKING_TOOLS = {
   book_appointment: 'tool_2701m72afksgefabkz18ytakv58x',
 };
 const BANNED = [/663-?7007/, /6637007/];
+/** Copy from the retired free-pilot offer (replaced Nov 12, 2026 by four monthly plans). */
+const RETIRED_OFFER = [/14-day pilot/i, /per booked job/i, /\$297/, /first booked job/i];
 
 /** Production env vars by feature. Names only; values are never read. */
 export const REQUIRED_ENV = {
   'Site + auth': ['NEXT_PUBLIC_SITE_URL', 'NEXT_PUBLIC_APP_URL', 'NEXT_PUBLIC_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY', 'SUPABASE_SERVICE_ROLE_KEY'],
-  'Stripe (Workspace account, live)': ['STRIPE_SECRET_KEY', 'STRIPE_WEBHOOK_SECRET', 'STRIPE_AVA_BOOKED_JOB_PRICE_ID', 'STRIPE_AVA_STORE_BASE_PRICE_ID', 'STRIPE_AVA_STORE_CALL_PRICE_ID'],
+  'Stripe (Workspace account, live)': ['STRIPE_SECRET_KEY', 'STRIPE_WEBHOOK_SECRET', 'STRIPE_AVA_STARTER_PRICE_ID', 'STRIPE_AVA_GROWTH_PRICE_ID', 'STRIPE_AVA_PRO_PRICE_ID', 'STRIPE_AVA_ELITE_PRICE_ID', 'STRIPE_AVA_STARTER_FIRST_MONTH_COUPON_ID'],
   'Ava voice (ElevenLabs)': ['ELEVENLABS_API_KEY', 'ELEVENLABS_AGENT_ID', 'ELEVENLABS_WEBHOOK_SECRET', 'AVA_PROVISIONING_SECRET'],
   'Lead + owner email (Resend)': ['RESEND_API_KEY', 'AVA_FROM_EMAIL', 'AVA_LEAD_NOTIFICATION_EMAIL'],
   'Booking': ['AVA_BOOKING_LINK_SECRET'],
@@ -167,13 +169,23 @@ async function get(path, host = target, opts = {}) {
 
 async function smoke() {
   console.log(`\n[smoke] ${target}`);
-  const pages = ['/', '/start', '/pricing', '/receptionist', '/receptionist/hvac', '/receptionist/ecommerce', '/onboarding/ava', '/login', '/privacy', '/terms', '/robots.txt', '/sitemap.xml', '/llms.txt'];
+  const pages = ['/', '/start', '/pricing', '/hvac', '/receptionist', '/receptionist/hvac', '/receptionist/ecommerce', '/onboarding/ava', '/login', '/privacy', '/terms', '/robots.txt', '/sitemap.xml', '/llms.txt'];
   for (const path of pages) {
     const r = await get(path);
     if (r.status !== 200) bad(`${path} → ${r.status}`);
     else if (BANNED.some((re) => re.test(r.text))) bad(`${path} shows a banned phone number`);
+    else if (RETIRED_OFFER.some((re) => re.test(r.text))) bad(`${path} still shows the retired free-pilot / per-booked-job offer`);
     else ok(`${path} 200`);
   }
+  const pricing = await get('/pricing');
+  const missingPrices = ['$79', '$197', '$397', '$789', '100 minutes', '300 minutes', '1,200 minutes', '2,000 minutes'].filter((t) => !pricing.text.includes(t));
+  missingPrices.length ? bad(`/pricing is missing ${missingPrices.join(', ')}`) : ok('/pricing shows all four plans');
+  const buy = await get('/buy/starter', target, { headers: { 'user-agent': 'Mozilla/5.0 publish-check' } });
+  const buySession = (buy.location.match(/cs_(?:live|test)_[A-Za-z0-9]+/) || [])[0];
+  if (buy.status === 303 && buy.location.includes('checkout.stripe.com')) {
+    ok('/buy/starter redirects to Stripe Checkout');
+    if (buySession && stripeKey()) await stripe('POST', `/checkout/sessions/${buySession}/expire`);
+  } else bad(`/buy/starter → ${buy.status} ${buy.location.slice(0, 60)}`);
   for (const host of OTHER_PROD_HOSTS) {
     if (host === target) continue;
     const r = await get('/', host);
@@ -190,7 +202,8 @@ async function smoke() {
 
   if (!args.checkout) return warn('Checkout not exercised (add --checkout; needs a Stripe key here to expire the sessions).');
   if (!stripeKey()) return bad('--checkout needs STRIPE_SECRET_KEY/STRIPE_WORKSPACE_SECRET_KEY so the test sessions can be expired.');
-  for (const plan of ['pilot', 'store']) {
+  const dueToday = { starter: 100, growth: 19700, pro: 39700, elite: 78900 };
+  for (const plan of Object.keys(dueToday)) {
     const r = await get('/api/checkout', target, {
       method: 'POST',
       headers: { 'content-type': 'application/json', 'user-agent': 'Mozilla/5.0 publish-check' },
@@ -201,8 +214,12 @@ async function smoke() {
       bad(`checkout plan=${plan} → ${r.status} ${r.text.slice(0, 80)}`);
       continue;
     }
+    const info = await stripe('GET', `/checkout/sessions/${session}`);
     const expired = await stripe('POST', `/checkout/sessions/${session}/expire`);
-    expired.status === 'expired' ? ok(`checkout plan=${plan} reaches Stripe (${session.slice(0, 8)}…, expired)`) : bad(`checkout plan=${plan}: could not expire session`);
+    if (info.amount_total !== dueToday[plan]) bad(`checkout plan=${plan}: due today ${info.amount_total} cents, expected ${dueToday[plan]}`);
+    else if (info.metadata?.plan !== plan) bad(`checkout plan=${plan}: session metadata plan is ${info.metadata?.plan}`);
+    else if (expired.status === 'expired') ok(`checkout plan=${plan} reaches Stripe, $${(dueToday[plan] / 100).toFixed(2)} due today (${session.slice(0, 8)}…, expired)`);
+    else bad(`checkout plan=${plan}: could not expire session`);
   }
 }
 

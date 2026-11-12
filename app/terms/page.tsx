@@ -46,7 +46,7 @@ export default function TermsPage() {
         </p>
         <h2>Executive Receptionist</h2>
         <p>
-          Executive Receptionist is a free 14-day pilot, then $0 until your first booked job, then $25 per booked job, capped at $297 a month. If the receptionist does not capture a single real caller lead during the pilot, you pay nothing. Those prices are Executive Receptionist’s. They are not the postcard prices. A phone number is attached by a person after setup. The browser demo is not a live business line.
+          Executive Receptionist is sold as monthly subscriptions: Starter $79 a month (100 minutes), Growth $197 a month (300 minutes), Pro $397 a month (1,200 minutes), and Elite $789 a month (2,000 minutes). Starter’s first month is $1, a one-time discount; after that it is billed at $79 a month. Growth, Pro, and Elite are billed at their full monthly price from the first month. Every plan renews automatically each month until you cancel, and you can cancel anytime; cancellation stops future renewals. There is no free plan or free trial. If you run past your included minutes, the receptionist keeps answering and we contact you about moving to a larger plan; there are no per-minute overage charges. Those prices are Executive Receptionist’s. They are not the postcard prices. A phone number is attached by a person after setup. The browser demo is not a live business line.
         </p>
         <h2>SMS missed-call callbacks</h2>
         <p>

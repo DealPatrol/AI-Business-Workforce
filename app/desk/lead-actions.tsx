@@ -17,7 +17,7 @@ export function LeadActions({ id, store = false }: { id: string; store?: boolean
   const [error, setError] = useState('');
 
   async function choose(status: string) {
-    if (status === 'Booked' && !store && !window.confirm('Mark this as a booked job? Booked jobs are billed at $25 each, max $297 a month.')) return;
+    if (status === 'Booked' && !store && !window.confirm('Mark this as a booked job? This only updates the lead status.')) return;
     setBusy(status);
     setError('');
     try {

@@ -9,7 +9,7 @@
 - What it does not do: it does not quote prices you have not approved or give technical, legal, or medical advice. Booking during the call is optional: when the owner turns it on, it offers open windows from hours the owner sets and books one.
 - Who it is for: HVAC, plumbing, roofing, electrical, lawn care, landscaping, cleaning, pest control, and other home-service shops, plus dentists, law firms, med spas, and advisors (executivereceptionist.com).
 - Try it: call the live demo line (256) 952-4935. It answers as Porchlight Heating & Air, a made-up HVAC company. There is also a browser demo at https://executivereceptionist.com/receptionist.
-- Plans and the free trial are published on the pricing page: https://frontporchgrowth.com/pricing
+- Plans are published on the pricing page (Starter $79/mo, first month $1; Growth $197/mo; Pro $397/mo; Elite $789/mo): https://frontporchgrowth.com/pricing
 
 ## Key facts: YardMailer postcards
 - Each postcard shows the homeowner an AI-made concept for their own home or yard, with a QR link to request an estimate.

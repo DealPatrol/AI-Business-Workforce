@@ -63,7 +63,7 @@ export default async function CheckoutPage({ searchParams }: CheckoutPageProps) 
   return (
     <main className="wrap" style={{ padding: '72px 0' }}>
       <h1>Continue to checkout</h1>
-      <p>Submitting this form opens Stripe. The 14-day pilot is $0 today.</p>
+      <p>Submitting this form opens Stripe. Starter is $1 today for the first month, then $79/month.</p>
       <form className="checkout-form" method="POST" action="/api/checkout">
         <input type="hidden" name="plan" value={plan} />
         <button className="button" type="submit">
