@@ -1,5 +1,6 @@
 import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
 import { AVA_OFFER, AVA_PLAN_INCLUDES, AVA_PLAN_KEYS, AVA_PLANS, type AvaPlanKey } from '@/lib/ava/pricing';
+import { TalkToAvaButton } from '@/components/ava/TalkToAvaButton';
 import styles from './monthly-plans.module.css';
 
 export function PlanCheckoutButton({
@@ -61,6 +62,7 @@ export function MonthlyPlans({ heading = true, includes = true }: { heading?: bo
                   ? `${plan.firstMonthLabel} today for your first month, then ${plan.monthlyLabel}/month. Renews automatically. Cancel anytime.`
                   : `${plan.monthlyLabel} today, then ${plan.monthlyLabel}/month. Renews monthly. Cancel anytime.`}
               </p>
+              <TalkToAvaButton plan={key} />
             </article>
           );
         })}
