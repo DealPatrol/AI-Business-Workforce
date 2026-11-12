@@ -132,8 +132,8 @@ Every plan card (`MonthlyPlans`: /pricing, /, /start, /hvac, /ava, /receptionist
 
 - Tap → mic permission → `GET /api/ava/talk` (signed URL, 4 per visitor per 10 min) → live browser conversation over WebSocket with the ElevenLabs agent **Ava - Website Talk to Ava (public demo)** `agent_8101m78w0ks0fv5vzwysbdr9s6z8` (override with `ELEVENLABS_TALK_AGENT_ID`).
 - Agent limits (set in ElevenLabs): signed URL required, origin allowlist (executivereceptionist.com, frontporchgrowth.com, www variants, ai-business-workforce.vercel.app), 180 s max duration (browser also hangs up at 3:00), 25 s silence ends the call, 150 conversations/day, 5 at once, no bursting, no tools except end_call.
-- Voice: ElevenLabs "Sarah" `EXAVITQu4vr4xnSDxMaL` (same as the demo line).
-- No mic / permission denied / demo busy → plays `public/voices/ava-greeting.mp3` (17 s, Sarah, eleven_v4) with a transcript, plus the demo line (256) 952-4935.
+- Voice: ElevenLabs "Jen - Calm, Confident, and Conversational" `QLAlOeRuLwKX0skeTR7R` (same as the demo line; was "Sarah" `EXAVITQu4vr4xnSDxMaL` until Nov 12, 2026).
+- No mic / permission denied / demo busy → plays `public/voices/ava-greeting.mp3` (Jen, eleven_v4) with a transcript, plus the demo line (256) 952-4935.
 - Preview deployments are not in the agent's origin allowlist, so the live conversation only connects on the production hosts (the fallback still works).
 - The post-call webhook ignores this agent (unknown agent id), so demo conversations never create leads.
 
@@ -148,3 +148,10 @@ Every plan card (`MonthlyPlans`: /pricing, /, /start, /hvac, /ava, /receptionist
 - **Settings.** `PUT /api/desk/settings`: greeting (ElevenLabs first message), notification email (`ava_onboardings.staff_email`, where lead alerts go), business hours (saved and pushed into Ava's prompt). Shared demo agents (`SHARED_AGENT_IDS` in `lib/desk/settings.ts`, including the public demo line) are never edited from a Desk; the booking route uses the same guard.
 - **Texts.** Shown as "coming soon, waiting on carrier approval". Nothing in the Desk turns SMS on; `AVA_OPERATOR_SMS_CONSENT` stays unset.
 - **Phone app.** `public/desk.webmanifest` (scope `/desk`), icons in `public/desk-app/`, and `public/desk-sw.js` (network only, offline notice, caches nothing). On Android, Chrome offers Install; on iPhone, Safari → Share → Add to Home Screen.
+
+## 13. Ava's voice (Nov 12, 2026)
+
+- Every Ava agent speaks with **Jen** (`QLAlOeRuLwKX0skeTR7R`), set in `lib/ava/voice.ts`. New customer agents get it in `configureCustomerAgent` (provisioning), whatever voice the template agent has.
+- Jen must stay in the ElevenLabs workspace's "My voices"; agents reject library voices that are not added.
+- TTS models were kept per agent (eleven_v4_turbo on all Ava agents; the old "Ava" example agent stays on eleven_v3_conversational).
+- To switch back: set each agent's voice to Sarah `EXAVITQu4vr4xnSDxMaL` (ElevenLabs → Agent → Voice), change `AVA_VOICE.id`, and restore `public/voices/ava-greeting.mp3` from git history.

@@ -3,6 +3,7 @@ import { existsSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { describe, it } from 'node:test';
 import { fileURLToPath } from 'node:url';
+import { AVA_VOICE, PREVIOUS_AVA_VOICE_ID } from '@/lib/ava/voice';
 import {
   AVA_GREETING_SRC,
   AVA_GREETING_TRANSCRIPT,
@@ -66,5 +67,21 @@ describe('Talk to Ava', () => {
     assert.match(route, /signedUrl: data\.signed_url/);
     assert.doesNotMatch(route, /apiKey[^)]*NextResponse|json\(\{[^}]*apiKey/);
     assert.match(route, /no-store/);
+  });
+});
+
+describe('Ava voice (Jen)', () => {
+  it('uses Jen for every new customer agent', () => {
+    assert.equal(AVA_VOICE.id, 'QLAlOeRuLwKX0skeTR7R');
+    assert.notEqual(AVA_VOICE.id, PREVIOUS_AVA_VOICE_ID);
+    const provisioning = read('lib/ava/provisioning.ts');
+    assert.match(provisioning, /tts: \{ voice_id: AVA_VOICE\.id \}/);
+    assert.doesNotMatch(provisioning, /EXAVITQu4vr4xnSDxMaL/);
+  });
+
+  it('ships the fallback greeting recorded in Jen\'s voice', () => {
+    const size = statSync(path.join(root, 'public', AVA_GREETING_SRC)).size;
+    assert.ok(size > 60_000 && size < 400_000, `greeting size ${size}`);
+    assert.match(read('lib/ava/talk-to-ava.ts'), /"Jen"/);
   });
 });

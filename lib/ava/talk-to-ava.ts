@@ -17,7 +17,7 @@ export function talkAgentId() {
 /** Mirrors the agent's max_duration_seconds; the browser also hangs up at this mark. */
 export const TALK_MAX_SECONDS = 180;
 
-/** Pre-recorded greeting in Ava's current voice (ElevenLabs "Sarah"), played when there is no mic. */
+/** Pre-recorded greeting in Ava's current voice (ElevenLabs "Jen", lib/ava/voice.ts), played when there is no mic. */
 export const AVA_GREETING_SRC = '/voices/ava-greeting.mp3';
 export const AVA_GREETING_TRANSCRIPT =
   "Hi, I'm Ava, the AI receptionist from Executive Receptionist. When a customer calls your shop and you can't pick up, I answer. I get their name, their number, and what they need, and I send you the details right after the call. Thanks for listening, and y'all have a good one.";

@@ -1,4 +1,5 @@
 import { BOOKING_PROMPT_SECTION } from '@/lib/ava/booking/agent-tools';
+import { AVA_VOICE } from '@/lib/ava/voice';
 
 const ELEVENLABS_API = 'https://api.elevenlabs.io/v1';
 
@@ -237,6 +238,8 @@ async function configureCustomerAgent(agentId: string, details: AvaOnboardingDet
             built_in_tools: customerBuiltInTools(details),
           },
         },
+        // Every new customer speaks with Ava's current voice, whatever the template agent uses.
+        tts: { voice_id: AVA_VOICE.id },
         // Replace the template's demo Spanish greeting with this business's.
         language_presets: {
           es: { overrides: { agent: { first_message: spanishFirstMessage(details.businessName, details.plan) } } },
