@@ -125,3 +125,14 @@ The database changes are additive, so they don't need a rollback.
 - Only Starter gets the coupon. Growth, Pro and Elite never get a discount, even if a coupon is configured.
 - No metered overage. If a customer runs past their minutes, Ava keeps answering and Cole reaches out about a bigger plan.
 - Stripe Payment Links for Growth/Pro/Elite exist as a backup (their header shows the Stripe account name). The Starter Payment Link is deactivated because a payment link cannot apply the first-month coupon; use `/buy/starter`.
+
+## 11. Talk to Ava buttons (Nov 12, 2026)
+
+Every plan card (`MonthlyPlans`: /pricing, /, /start, /hvac, /ava, /receptionist-demo) has a **Talk to Ava** button.
+
+- Tap → mic permission → `GET /api/ava/talk` (signed URL, 4 per visitor per 10 min) → live browser conversation over WebSocket with the ElevenLabs agent **Ava - Website Talk to Ava (public demo)** `agent_8101m78w0ks0fv5vzwysbdr9s6z8` (override with `ELEVENLABS_TALK_AGENT_ID`).
+- Agent limits (set in ElevenLabs): signed URL required, origin allowlist (executivereceptionist.com, frontporchgrowth.com, www variants, ai-business-workforce.vercel.app), 180 s max duration (browser also hangs up at 3:00), 25 s silence ends the call, 150 conversations/day, 5 at once, no bursting, no tools except end_call.
+- Voice: ElevenLabs "Sarah" `EXAVITQu4vr4xnSDxMaL` (same as the demo line).
+- No mic / permission denied / demo busy → plays `public/voices/ava-greeting.mp3` (17 s, Sarah, eleven_v4) with a transcript, plus the demo line (256) 952-4935.
+- Preview deployments are not in the agent's origin allowlist, so the live conversation only connects on the production hosts (the fallback still works).
+- The post-call webhook ignores this agent (unknown agent id), so demo conversations never create leads.

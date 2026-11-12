@@ -180,6 +180,17 @@ async function smoke() {
   const pricing = await get('/pricing');
   const missingPrices = ['$79', '$197', '$397', '$789', '100 minutes', '300 minutes', '1,200 minutes', '2,000 minutes'].filter((t) => !pricing.text.includes(t));
   missingPrices.length ? bad(`/pricing is missing ${missingPrices.join(', ')}`) : ok('/pricing shows all four plans');
+  const talkButtons = (pricing.text.match(/Talk to Ava/g) || []).length;
+  talkButtons >= 4 ? ok(`/pricing shows Talk to Ava under the plans (${talkButtons})`) : bad(`/pricing shows ${talkButtons} Talk to Ava buttons (want 4)`);
+  const greeting = await get('/voices/ava-greeting.mp3');
+  greeting.status === 200 ? ok('Ava greeting fallback clip is served') : bad(`/voices/ava-greeting.mp3 → ${greeting.status}`);
+  // Mints a signed URL only; no conversation starts and nothing is billed until a browser connects.
+  const talk = await get('/api/ava/talk');
+  let talkJson = {};
+  try { talkJson = JSON.parse(talk.text); } catch {}
+  talk.status === 200 && String(talkJson.signedUrl || '').startsWith('wss://')
+    ? ok('/api/ava/talk returns a signed ElevenLabs URL')
+    : bad(`/api/ava/talk → ${talk.status} ${talkJson.error || ''}`);
   const buy = await get('/buy/starter', target, { headers: { 'user-agent': 'Mozilla/5.0 publish-check' } });
   const buySession = (buy.location.match(/cs_(?:live|test)_[A-Za-z0-9]+/) || [])[0];
   if (buy.status === 303 && buy.location.includes('checkout.stripe.com')) {
