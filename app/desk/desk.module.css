@@ -243,3 +243,9 @@ button.button { border: 0; cursor: pointer; font: inherit; font-weight: 850; }
   .leadRow { flex-direction: column-reverse; }
   .action, .actionBooked { padding: 10px 14px; min-height: 44px; }
 }
+@media (max-width: 560px) {
+  .calls summary .callWhen { display: block; grid-column: 1 / -1; grid-row: 3; font-size: 12.5px; }
+}
+@media (min-width: 901px) {
+  .install { display: none; }
+}
