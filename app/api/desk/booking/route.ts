@@ -5,6 +5,7 @@ import { hashToolSecret, newToolSecret } from '@/lib/ava/booking/secret';
 import { cleanSettingsInput } from '@/lib/ava/booking/slots';
 import { calendarForOnboarding, saveCalendarForOnboarding } from '@/lib/ava/booking/store';
 import { buildAvaAgentPrompt } from '@/lib/ava/provisioning';
+import { isEditableAgent } from '@/lib/desk/settings';
 import { createClient } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
@@ -56,7 +57,9 @@ export async function PUT(request: NextRequest) {
     };
 
     let agentNote = '';
-    const agentId = onboarding.elevenlabs_agent_id?.trim() || '';
+    const rawAgentId = onboarding.elevenlabs_agent_id?.trim() || '';
+    // Shared demo agents (public demo line, website) are never rewired from a customer Desk.
+    const agentId = isEditableAgent(rawAgentId) ? rawAgentId : '';
     const isDemo = Boolean(current?.is_demo);
     const hadTools = (current?.elevenlabs_tool_ids ?? []).length > 0;
 

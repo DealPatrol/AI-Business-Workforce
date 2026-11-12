@@ -136,3 +136,15 @@ Every plan card (`MonthlyPlans`: /pricing, /, /start, /hvac, /ava, /receptionist
 - No mic / permission denied / demo busy → plays `public/voices/ava-greeting.mp3` (17 s, Sarah, eleven_v4) with a transcript, plus the demo line (256) 952-4935.
 - Preview deployments are not in the agent's origin allowlist, so the live conversation only connects on the production hosts (the fallback still works).
 - The post-call webhook ignores this agent (unknown agent id), so demo conversations never create leads.
+
+## 12. Customer Desk dashboard (Nov 12, 2026)
+
+`/desk` (executivereceptionist.com/desk) is the signed-in owner's dashboard. Sections: Overview, Calls, Leads, Calendar, Plan & billing, Settings, Texts.
+
+- **Privacy.** Every Desk read uses the owner's own Supabase session. Row-level security (`supabase/migrations/20261112220000_desk_rls.sql`) limits `ava_customers`, `ava_onboardings`, `ava_call_leads`, `ava_calendars`, `ava_bookings` and `er_leads` to rows tied to the signed-in email. Secret columns (calendar tool secret, Google token, staff phone, transfer number) are not granted to signed-in users, so Desk queries list columns explicitly; `select *` as a user fails on purpose.
+- **Calls.** Call history comes from `ava_call_leads` (summary, transcript, length). Recordings stream through `/api/desk/calls/<id>/audio` from ElevenLabs; the key never reaches the browser.
+- **Minutes.** The post-call webhook now saves `call_duration_secs`. Older calls are looked up from ElevenLabs on Desk load (25 per load) and written back. The meter counts the Stripe billing period when the customer has a subscription, otherwise the calendar month in Chicago. Included minutes come from `AVA_PLANS` (Starter 100, Growth 300, Pro 1,200, Elite 2,000).
+- **Billing.** "Manage billing" → `POST /api/desk/billing/portal` → Stripe customer portal (default live configuration `bpc_1Ub6SNRJZZUpaweByxT1x3ww`, or `STRIPE_PORTAL_CONFIGURATION_ID`). Customers without a `stripe_customer_id` see "See plans" (/pricing). Plan switches made in the portal update `ava_customers.plan`/`included_minutes` from the price id in the Stripe webhook.
+- **Settings.** `PUT /api/desk/settings`: greeting (ElevenLabs first message), notification email (`ava_onboardings.staff_email`, where lead alerts go), business hours (saved and pushed into Ava's prompt). Shared demo agents (`SHARED_AGENT_IDS` in `lib/desk/settings.ts`, including the public demo line) are never edited from a Desk; the booking route uses the same guard.
+- **Texts.** Shown as "coming soon, waiting on carrier approval". Nothing in the Desk turns SMS on; `AVA_OPERATOR_SMS_CONSENT` stays unset.
+- **Phone app.** `public/desk.webmanifest` (scope `/desk`), icons in `public/desk-app/`, and `public/desk-sw.js` (network only, offline notice, caches nothing). On Android, Chrome offers Install; on iPhone, Safari → Share → Add to Home Screen.
