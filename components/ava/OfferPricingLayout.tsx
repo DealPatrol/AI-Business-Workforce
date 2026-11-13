@@ -134,7 +134,7 @@ export function OfferPricingLayout({
 
       <section className={styles.hero} id={isPage ? 'top' : undefined}>
         <p className={styles.kicker}>For HVAC and plumbing shops that cannot miss the next repair call</p>
-        <h1>{isPage ? 'Your 24/7 front desk. Four simple monthly plans.' : 'Four plans. Pick your minutes.'}</h1>
+        {isPage ? <h1>Your 24/7 front desk. Four simple monthly plans.</h1> : <h2>Four plans. Pick your minutes.</h2>}
         <p className={styles.lede}>
           Executive Receptionist answers the inbound calls you cannot pick up, 24 hours a day. It writes down the
           caller’s details and the job, then emails you the summary. If you turn on booking, it offers the open windows

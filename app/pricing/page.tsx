@@ -3,6 +3,7 @@ import { headers } from 'next/headers';
 import { SuiteShell } from '@/components/suite/SuiteShell';
 import { OfferPricingLayout } from '@/components/ava/OfferPricingLayout';
 import { urlsForRequest } from '@/lib/seo/host-metadata';
+import { requestHost } from '@/lib/seo/request-host';
 import {
   POSTCARD_PRICE_SUMMARY,
   POSTCARD_SETUP_LABEL,
@@ -16,25 +17,30 @@ import styles from '@/components/ava/offer-pricing.module.css';
 const seo = pageSeo('/pricing');
 const title = renderedTitle(seo);
 const description = seo.description;
+const EXECUTIVE_PRICING_TITLE = 'AI Receptionist Pricing | Executive Receptionist';
 
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata(): Promise<Metadata> {
   const { canonical, openGraphUrl } = await urlsForRequest('/pricing', '/pricing');
+  // On executivereceptionist.com this page is the receptionist price list, so it carries that brand.
+  const executiveHost = isExecutiveReceptionistHost(await requestHost());
+  const siteName = executiveHost ? 'Executive Receptionist' : 'Front Porch Growth';
+  const pageTitle = executiveHost ? EXECUTIVE_PRICING_TITLE : title;
   return {
-    title: metadataTitle(seo),
+    title: executiveHost ? { absolute: EXECUTIVE_PRICING_TITLE } : metadataTitle(seo),
     description,
     alternates: { canonical },
     openGraph: { images: ['/og-default.png'],
-      title,
+      title: pageTitle,
       description,
       url: openGraphUrl,
-      siteName: 'Front Porch Growth',
+      siteName,
       type: 'website',
     },
     twitter: { images: ['/og-default.png'],
       card: 'summary_large_image',
-      title,
+      title: pageTitle,
       description,
     },
   };
