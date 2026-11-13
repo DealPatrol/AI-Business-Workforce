@@ -126,6 +126,13 @@ const PAGES = {
     titleMode: 'absolute',
     receptionist: false,
   },
+  '/sms-consent': {
+    title: 'SMS verbal consent script | Executive Receptionist',
+    description:
+      'The script Ava uses to ask callers for consent before Executive Receptionist sends missed-call or booking texts, plus STOP, HELP, and how consent is kept.',
+    titleMode: 'absolute',
+    receptionist: false,
+  },
   '/google-profile': {
     title: 'Google Business Profile setup, $99 | Front Porch Growth',
     description:

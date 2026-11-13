@@ -43,6 +43,13 @@ export default function SmsTermsPage() {
         <h2>Program name</h2>
         <p>Executive Receptionist missed-call callbacks.</p>
 
+        <h2>How consent works</h2>
+        <p>
+          Callers give consent out loud on the phone with Ava, the virtual receptionist, before any text
+          is sent. The exact script, a sample conversation, the confirmation text, and how consent is
+          stored are on our <Link href="/sms-consent">SMS verbal consent</Link> page. Consent is optional.
+        </p>
+
         <h2>Who receives texts</h2>
         <p>
           Texts go only to callers who dialed a participating client&apos;s business phone line and did not reach anyone

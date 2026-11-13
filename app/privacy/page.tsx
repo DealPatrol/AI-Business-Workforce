@@ -101,7 +101,7 @@ export default function PrivacyPage() {
           message about that missed call so you can reply or call back. These texts are sent as Executive Receptionist
           on behalf of the client business you called. They are transactional only. We do not send marketing texts to
           callers. Message frequency is at most one automated text per missed call. Message and data rates may apply.
-          Reply STOP to opt out, HELP for help. SMS program details are on our <Link href="/sms">SMS terms</Link> page.
+          Reply STOP to opt out, HELP for help. SMS program details are on our <Link href="/sms">SMS terms</Link> page. The verbal consent script Ava uses on the call is on our <Link href="/sms-consent">SMS verbal consent</Link> page.
           Support: colecollins763@gmail.com or (256) 595-3354.
         </p>
         <p>
