@@ -24,6 +24,8 @@ const FRONT_PORCH_PATHS = [
   '/missed-call',
   '/google-profile',
   '/privacy',
+  '/sms',
+  '/sms-consent',
   '/receptionist-demo',
   '/postcards/landscaping',
   '/postcards/lawn-care',
@@ -62,7 +64,7 @@ describe('host sitemaps', () => {
   it('keeps the Front Porch Growth sitemap on its own host', () => {
     const published = frontPorchGrowthSitemap(FRONT_PORCH, new Date('2026-11-08T00:00:00.000Z')).map((item) => item.url);
     assert.deepEqual(published.map(pathOf), FRONT_PORCH_PATHS);
-    assert.equal(published.length, 58);
+    assert.equal(published.length, 60);
     assert.ok(published.every((url) => url.startsWith(`${FRONT_PORCH}/`)));
 
     const origin = getSiteUrl();
@@ -80,7 +82,7 @@ describe('host sitemaps', () => {
     assert.deepEqual(locations, urls('www.executivereceptionist.com'));
     assert.ok(locations.every((url) => url.startsWith(`${EXECUTIVE_RECEPTIONIST_ORIGIN}/`)));
     assert.deepEqual(paths.slice(0, EXECUTIVE_RECEPTIONIST_INDEX.length), EXECUTIVE_RECEPTIONIST_INDEX.map((page) => page.path));
-    for (const path of ['/', '/pricing', '/receptionist-demo', '/privacy', '/terms', '/ava', '/hvac', '/receptionist/missed-calls']) {
+    for (const path of ['/', '/pricing', '/receptionist-demo', '/privacy', '/terms', '/sms', '/sms-consent', '/ava', '/hvac', '/receptionist/missed-calls']) {
       assert.ok(paths.includes(path), path);
     }
     for (const slug of avaGuideSlugs()) assert.ok(paths.includes(`/ava/${slug}`));

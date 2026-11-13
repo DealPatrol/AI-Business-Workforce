@@ -29,6 +29,8 @@ export const EXECUTIVE_RECEPTIONIST_INDEX: IndexEntry[] = [
   { path: '/receptionist/missed-calls', changeFrequency: 'weekly', priority: 0.9 },
   { path: '/terms', changeFrequency: 'yearly', priority: 0.3 },
   { path: '/privacy', changeFrequency: 'yearly', priority: 0.3 },
+  { path: '/sms', changeFrequency: 'yearly', priority: 0.3 },
+  { path: '/sms-consent', changeFrequency: 'yearly', priority: 0.3 },
 ];
 
 function entry(origin: string, path: string, now: Date, changeFrequency: ChangeFrequency, priority: number): MetadataRoute.Sitemap[number] {
@@ -58,6 +60,8 @@ export function frontPorchGrowthSitemap(origin: string, now: Date): MetadataRout
     entry(origin, '/missed-call', now, 'weekly', 0.8),
     entry(origin, '/google-profile', now, 'weekly', 0.8),
     entry(origin, '/privacy', now, 'yearly', 0.3),
+    entry(origin, '/sms', now, 'yearly', 0.3),
+    entry(origin, '/sms-consent', now, 'yearly', 0.3),
     entry(origin, '/receptionist-demo', now, 'weekly', 0.8),
     ...POSTCARD_TRADES.map((trade) => entry(origin, `/postcards/${trade.slug}`, now, 'monthly', 0.8)),
     ...avaGuideSlugs().map((slug) => entry(origin, `/ava/${slug}`, now, 'weekly', 0.88)),

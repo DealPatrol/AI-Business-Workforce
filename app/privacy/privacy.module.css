@@ -48,3 +48,14 @@
   color: #205c39;
   font-weight: 750;
 }
+
+.article pre {
+  white-space: pre-wrap;
+  background: #e8eee8;
+  border: 1px solid #dfe5df;
+  padding: 16px 18px;
+  border-radius: 8px;
+  font: 16px/1.55 Georgia, serif;
+  color: #17201a;
+  margin: 0 0 16px;
+}
