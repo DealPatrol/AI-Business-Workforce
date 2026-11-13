@@ -118,7 +118,7 @@
   margin-bottom: 12px !important;
 }
 
-.hero h1,
+.hero :is(h1, h2),
 .billing h2,
 .calculator h2,
 .features h2,
@@ -131,7 +131,7 @@
   line-height: 1.15;
 }
 
-.hero h1 {
+.hero :is(h1, h2) {
   max-width: 18ch;
   font-size: clamp(36px, 5vw, 62px);
 }
@@ -484,7 +484,7 @@
     grid-template-columns: 1fr;
   }
 
-  .hero h1,
+  .hero :is(h1, h2),
   .closing h2 {
     max-width: none;
   }

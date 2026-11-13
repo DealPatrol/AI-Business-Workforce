@@ -5,6 +5,7 @@ import { MonthlyPlans, PlanCheckoutButton } from '@/components/ava/MonthlyPlans'
 import { AVA_OFFER } from '@/lib/ava/pricing';
 import { urlsForRequest } from '@/lib/seo/host-metadata';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
+import { EXECUTIVE_RECEPTIONIST_ORIGIN } from '@/lib/site-url';
 import HvacContactForm from './contact-form';
 import './hvac.css';
 
@@ -55,9 +56,36 @@ const CALLS = [
   },
 ];
 
+const PAGE_URL = `${EXECUTIVE_RECEPTIONIST_ORIGIN}/hvac`;
+
+const structured = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Service',
+      '@id': `${PAGE_URL}#service`,
+      name: title,
+      description: seo.description,
+      url: PAGE_URL,
+      serviceType: 'AI phone receptionist for HVAC companies',
+      audience: { '@type': 'BusinessAudience', name: 'HVAC companies' },
+      areaServed: { '@type': 'Country', name: 'United States' },
+      provider: { '@type': 'Organization', name: 'Executive Receptionist', url: EXECUTIVE_RECEPTIONIST_ORIGIN },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Executive Receptionist', item: `${EXECUTIVE_RECEPTIONIST_ORIGIN}/` },
+        { '@type': 'ListItem', position: 2, name: 'HVAC', item: PAGE_URL },
+      ],
+    },
+  ],
+};
+
 export default function HvacPage() {
   return (
     <main className="hvac-page">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structured).replace(/</g, '\\u003c') }} />
       <nav className="hvac-nav">
         <Link href="/" className="hvac-brand">
           Executive Receptionist
