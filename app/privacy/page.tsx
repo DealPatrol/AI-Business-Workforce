@@ -78,6 +78,7 @@ export default function PrivacyPage() {
           Receptionist will text that number when it takes a new lead for your business. These texts are lead
           notifications only. We do not send marketing or promotional texts. Message frequency varies with your
           call volume. Message and data rates may apply. Reply STOP at any time to opt out, or HELP for help.
+          The exact checkbox and wording are shown on our <Link href="/sms-consent">SMS consent</Link> page.
         </p>
         <p>
           <strong>

@@ -127,9 +127,9 @@ const PAGES = {
     receptionist: false,
   },
   '/sms-consent': {
-    title: 'SMS verbal consent script | Executive Receptionist',
+    title: 'SMS consent | Executive Receptionist',
     description:
-      'The script Ava uses to ask callers for consent before Executive Receptionist sends missed-call or booking texts, plus STOP, HELP, and how consent is kept.',
+      'How Executive Receptionist gets consent before texting: Ava’s verbal script on calls and the written checkbox opt-in on the website form.',
     titleMode: 'absolute',
     receptionist: false,
   },
