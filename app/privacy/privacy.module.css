@@ -59,3 +59,32 @@
   color: #17201a;
   margin: 0 0 16px;
 }
+
+.optinExample {
+  background: #fff;
+  border: 1px solid #dfe5df;
+  border-radius: 8px;
+  padding: 18px;
+  margin: 0 0 8px;
+}
+
+.optinExample label {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 16px;
+  line-height: 1.55;
+  color: #17201a;
+}
+
+.optinExample input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  margin-top: 3px;
+  flex-shrink: 0;
+  accent-color: #205c39;
+}
+
+.optinCaption {
+  font-size: 14px !important;
+}

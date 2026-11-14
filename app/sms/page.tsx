@@ -47,7 +47,10 @@ export default function SmsTermsPage() {
         <p>
           Callers give consent out loud on the phone with Ava, the virtual receptionist, before any text
           is sent. The exact script, a sample conversation, the confirmation text, and how consent is
-          stored are on our <Link href="/sms-consent">SMS verbal consent</Link> page. Consent is optional.
+          stored are on our <Link href="/sms-consent">SMS consent</Link> page. Consent is optional.
+          Business owners can also agree in writing: the setup form has a checkbox, unchecked by
+          default, for lead-alert texts to their own mobile number. The exact checkbox and wording are
+          shown on the same <Link href="/sms-consent">SMS consent</Link> page.
         </p>
 
         <h2>Who receives texts</h2>
