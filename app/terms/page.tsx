@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { SuiteShell } from '@/components/suite/SuiteShell';
 import styles from '@/components/suite/suite.module.css';
 import { urlsForRequest } from '@/lib/seo/host-metadata';
+import { requestHost } from '@/lib/seo/request-host';
+import { isExecutiveReceptionistHost } from '@/lib/site-url';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 
 const seo = pageSeo('/terms');
@@ -13,20 +15,25 @@ export const dynamic = 'force-dynamic';
 
 export async function generateMetadata(): Promise<Metadata> {
   const { canonical, openGraphUrl } = await urlsForRequest('/terms', '/terms');
+  // On executivereceptionist.com the legal pages carry that brand instead of the Front Porch Growth suffix.
+  const executiveHost = isExecutiveReceptionistHost(await requestHost());
+  const siteName = executiveHost ? 'Executive Receptionist' : 'Front Porch Growth';
+  const executiveTitle = 'Terms | Executive Receptionist';
+  const pageTitle = executiveHost ? executiveTitle : title;
   return {
-    title: metadataTitle(seo),
+    title: executiveHost ? { absolute: executiveTitle } : metadataTitle(seo),
     description,
     alternates: { canonical },
     openGraph: { images: ['/og-default.png'],
-      title,
+      title: pageTitle,
       description,
       url: openGraphUrl,
-      siteName: 'Front Porch Growth',
+      siteName,
       type: 'website',
     },
     twitter: { images: ['/og-default.png'],
       card: 'summary_large_image',
-      title,
+      title: pageTitle,
       description,
     },
   };

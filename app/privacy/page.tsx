@@ -2,7 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { urlsForRequest } from '@/lib/seo/host-metadata';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
-import { absoluteSiteUrl } from '@/lib/site-url';
+import { absoluteSiteUrl, isExecutiveReceptionistHost } from '@/lib/site-url';
+import { requestHost } from '@/lib/seo/request-host';
 import styles from './privacy.module.css';
 
 const seo = pageSeo('/privacy');
@@ -13,20 +14,25 @@ export const dynamic = 'force-dynamic';
 
 export async function generateMetadata(): Promise<Metadata> {
   const { canonical, openGraphUrl } = await urlsForRequest('/privacy', '/privacy', absoluteSiteUrl('/privacy'));
+  // On executivereceptionist.com the legal pages carry that brand instead of the Front Porch Growth suffix.
+  const executiveHost = isExecutiveReceptionistHost(await requestHost());
+  const siteName = executiveHost ? 'Executive Receptionist' : 'Front Porch Growth';
+  const executiveTitle = 'Privacy | Executive Receptionist';
+  const pageTitle = executiveHost ? executiveTitle : title;
   return {
-    title: metadataTitle(seo),
+    title: executiveHost ? { absolute: executiveTitle } : metadataTitle(seo),
     description,
     alternates: { canonical },
     openGraph: { images: ['/og-default.png'],
-      title,
+      title: pageTitle,
       description,
-      siteName: 'Front Porch Growth',
+      siteName,
       type: 'website',
       url: openGraphUrl,
     },
     twitter: { images: ['/og-default.png'],
       card: 'summary',
-      title,
+      title: pageTitle,
       description,
     },
   };
