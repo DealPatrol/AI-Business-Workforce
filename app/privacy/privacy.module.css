@@ -88,3 +88,129 @@
 .optinCaption {
   font-size: 14px !important;
 }
+
+.reviewerList {
+  margin: 0 0 24px;
+  padding-left: 22px;
+}
+
+.reviewerList li {
+  margin: 0 0 6px;
+}
+
+.storeList {
+  margin: 0 0 16px;
+  padding-left: 22px;
+}
+
+.storeList li {
+  margin: 0 0 8px;
+}
+
+.formPreview {
+  background: #fff;
+  border: 1px solid #dfe5df;
+  border-radius: 12px;
+  padding: 22px 22px 20px;
+  margin: 0 0 8px;
+}
+
+.formPreviewHeader h3 {
+  font: 500 22px/1.25 Georgia, serif;
+  margin: 0 0 6px;
+  color: #17201a;
+}
+
+.formPreviewHeader p,
+.formPreviewNotice {
+  margin: 0 0 16px;
+  font-size: 14px !important;
+  color: #657168 !important;
+}
+
+.formPreview fieldset {
+  border: 0;
+  margin: 0 0 18px;
+  padding: 0;
+}
+
+.formPreview legend {
+  font-weight: 700;
+  font-size: 15px;
+  margin: 0 0 10px;
+  color: #17201a;
+  padding: 0;
+}
+
+.formPreviewRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 640px) {
+  .formPreviewRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.formPreview label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #17201a;
+  margin: 0 0 10px;
+}
+
+.formPreview input[type='text'],
+.formPreview input[type='email'],
+.formPreview input[type='tel'],
+.formPreview textarea {
+  font: 16px/1.4 system-ui, sans-serif;
+  font-weight: 400;
+  border: 1px solid #cfd6cf;
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: #f7f9f7;
+  color: #17201a;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.formPreview textarea {
+  min-height: 72px;
+  resize: none;
+}
+
+.formPreviewCheckbox {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-start;
+  gap: 10px;
+  font-weight: 400 !important;
+  font-size: 16px !important;
+  line-height: 1.55;
+  margin: 8px 0 12px !important;
+}
+
+.formPreviewCheckbox input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  margin-top: 3px;
+  flex-shrink: 0;
+  accent-color: #205c39;
+}
+
+.formPreviewButton {
+  display: inline-block;
+  background: #205c39;
+  color: #fff;
+  border: 0;
+  border-radius: 8px;
+  padding: 12px 18px;
+  font: 600 15px/1 system-ui, sans-serif;
+  opacity: 0.85;
+  cursor: not-allowed;
+}
