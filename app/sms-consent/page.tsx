@@ -60,8 +60,31 @@ export default function SmsConsentPage() {
           Privacy details are in our <Link href="/privacy">Privacy Policy</Link>, and the service terms
           are on our <Link href="/terms">Terms</Link> page.
         </p>
+        <p>This public page shows, with no login required:</p>
+        <ul className={styles.reviewerList}>
+          <li>
+            <a href="#verbal-script">Ava&apos;s exact verbal consent script</a>
+          </li>
+          <li>
+            <a href="#sample-conversation">A sample conversation</a>
+          </li>
+          <li>
+            <a href="#how-consent-is-stored">
+              How consent is stored (call log / transcript, timestamp, and caller number)
+            </a>
+          </li>
+          <li>
+            <a href="#caller-opt-out">How a caller opts out (STOP / HELP)</a>
+          </li>
+          <li>
+            <a href="#owner-operator-opt-out">How a business owner or operator opts out</a>
+          </li>
+          <li>
+            <a href="#web-form-opt-in">A full view of the website form opt-in</a>
+          </li>
+        </ul>
 
-        <h2>Verbal consent script (Ava or the opening greeting)</h2>
+        <h2 id="verbal-script">Verbal consent script (Ava or the opening greeting)</h2>
         <p>
           Ava, the virtual receptionist, says the following before any text is sent. &quot;[Business]&quot; is
           the client business the person called.
@@ -79,7 +102,7 @@ export default function SmsConsentPage() {
           {`You've reached [Business]. This is Executive Receptionist, the virtual receptionist for this shop. If you'd like, we can text the number you're calling from about this visit — for example, one callback text if we miss you, or a booking confirmation if we schedule an appointment. A few texts about this visit at most. Message and data rates may apply. You can reply STOP at any time to opt out, or HELP for help. This is optional, and we can still take your call if you say no. Do you agree to these texts? Please say yes or press 1 for yes. Say no or press 2 if you don't want texts.`}
         </pre>
 
-        <h2>Simulated conversation</h2>
+        <h2 id="sample-conversation">Sample conversation</h2>
         <pre>
           {`Ava: Thank you for calling Maple Ridge Heating and Air, this is Ava, the AI receptionist with Executive Receptionist. How can I help you today?
 Caller: My heat went out this morning. I need someone to come look at it.
@@ -111,45 +134,185 @@ Ava: Thanks, Jordan. What's the best callback number, and is that the same numbe
           {`Executive Receptionist: You're booked with [Business] for [window]. The team will confirm before the visit. Msg & data rates may apply. Reply HELP for help, STOP to opt out.`}
         </pre>
 
-        <h2>How to opt out or get help after consent</h2>
+        <h2 id="caller-opt-out">How a caller opts out or gets help after consent</h2>
         <p>
-          Reply <strong>STOP</strong> to opt out of further automated texts from this program. Reply{' '}
-          <strong>HELP</strong> for help. Message and data rates may apply. Carriers are not liable for
-          delayed or undelivered messages. Help is also available at{' '}
+          A caller who agreed to texts on the call can opt out or get help by replying to any program
+          text:
+        </p>
+        <ul className={styles.storeList}>
+          <li>
+            Reply <strong>STOP</strong> to opt out of further automated texts from this program. The
+            caller receives one confirmation text, and no further missed-call or booking texts are sent
+            to that number.
+          </li>
+          <li>
+            Reply <strong>HELP</strong> for help. The help reply identifies the program and how to
+            contact us.
+          </li>
+        </ul>
+        <p>
+          Message and data rates may apply. Carriers are not liable for delayed or undelivered messages.
+          Help is also available at{' '}
           <a href="mailto:colecollins763@gmail.com">colecollins763@gmail.com</a> or (256) 595-3354.
         </p>
 
-        <h2>How verbal consent is recorded and stored</h2>
+        <h2 id="how-consent-is-stored">How verbal consent is recorded and stored</h2>
         <p>
           Calls may be recorded and transcribed. When a caller says yes or no to the script above, we
-          keep a consent record with the phone number, the date and time, the call identifier, that
-          consent was verbal, the script version, and the caller&apos;s yes or no. We use that record
-          only to send the texts the caller agreed to and to show consent if asked. We do not sell,
-          rent, or share mobile phone numbers or text-messaging opt-in data or consent with third
-          parties or affiliates for marketing or promotional purposes. Mobile numbers are used only to
-          deliver these texts through our messaging provider, Twilio, which processes them only to send
-          the messages for us.
+          keep a consent record tied to that call. The record includes:
+        </p>
+        <ul className={styles.storeList}>
+          <li>
+            <strong>Call log and transcript.</strong> The call is logged, and the recording and
+            transcript are kept so we can show the exact words used to ask for consent and the
+            caller&apos;s yes or no.
+          </li>
+          <li>
+            <strong>Timestamp.</strong> The date and time the caller said yes or no.
+          </li>
+          <li>
+            <strong>Caller number.</strong> The phone number the person called from (the number that
+            would be texted).
+          </li>
+          <li>
+            <strong>Call identifier.</strong> The call SID or other call identifier that ties the
+            consent record to that call log and transcript.
+          </li>
+          <li>
+            <strong>Method, script version, and answer.</strong> That consent was verbal, which version
+            of the script was used, and the caller&apos;s yes or no.
+          </li>
+        </ul>
+        <p>
+          We use that record only to send the texts the caller agreed to and to show consent if asked.
+          We do not sell, rent, or share mobile phone numbers or text-messaging opt-in data or consent
+          with third parties or affiliates for marketing or promotional purposes. Mobile numbers are
+          used only to deliver these texts through our messaging provider, Twilio, which processes them
+          only to send the messages for us.
         </p>
 
-        <h2>Written opt-in (website form)</h2>
+        <h2 id="web-form-opt-in">Full view of the website form opt-in</h2>
         <p>
-          A business owner can also agree in writing on the Executive Receptionist setup form. The box
-          below is the exact opt-in control from that form, shown as it appears there. The box starts
-          unchecked. Ticking it is optional and is not a condition of buying or using the service. The
-          wording beside it is the exact consent language from the form:
+          A business owner can also agree in writing on the Executive Receptionist setup form (the form
+          shown after checkout, at <Link href="/onboarding/ava">/onboarding/ava</Link>). The live form
+          itself sits behind checkout, so the complete opt-in is shown here on this public page, with no
+          login. The view below is a static example of that form. The fields are disabled and empty.
+          Nothing entered here is submitted or stored. The SMS checkbox starts unchecked, just as it
+          does on the live form. Ticking it is optional and is not a condition of buying or using the
+          service.
         </p>
-        <div className={styles.optinExample}>
-          <label>
-            <input type="checkbox" disabled defaultChecked={false} aria-label="Example SMS opt-in checkbox, unchecked" />
-            <span>
-              {consentLead}See our <Link href="/privacy">Privacy Policy</Link> and{' '}
-              <Link href="/terms">Terms</Link>.
-            </span>
-          </label>
+        <div className={styles.formPreview}>
+          <form aria-label="Static example of the Executive Receptionist setup form. This example does not submit.">
+            <header className={styles.formPreviewHeader}>
+              <h3>How should Executive Receptionist handle your calls?</h3>
+              <p>Short answers are fine. Cole will confirm the details during your live test.</p>
+            </header>
+
+            <fieldset>
+              <legend>Business</legend>
+              <div className={styles.formPreviewRow}>
+                <label>
+                  Business name
+                  <input type="text" autoComplete="off" disabled />
+                </label>
+                <label>
+                  Hours
+                  <input type="text" placeholder="Mon–Fri, 7am–5pm CT" disabled />
+                </label>
+              </div>
+              <label>
+                Services
+                <textarea placeholder="HVAC repair and installation in Birmingham" disabled />
+              </label>
+            </fieldset>
+
+            <fieldset>
+              <legend>Call flow</legend>
+              <label>
+                What should Executive Receptionist do?
+                <textarea placeholder="Ask what they need, collect their name and number, and send you the lead." disabled />
+              </label>
+              <label>
+                What counts as urgent?
+                <textarea placeholder="No heat is urgent. Call Sam; if no answer, text him and tell the caller we will respond in 15 minutes." disabled />
+              </label>
+            </fieldset>
+
+            <fieldset>
+              <legend>How customers reach you</legend>
+              <p className={styles.formPreviewNotice}>
+                Pick any combination. Same greeting and rules on every channel you turn on. Texting is
+                available after setup — we will not send customer texts until then.
+              </p>
+              <label className={styles.formPreviewCheckbox}>
+                <input type="checkbox" defaultChecked disabled aria-label="Voice calls, checked by default on the live form" />
+                <span>
+                  <strong>Voice calls</strong> — answer the phone when callers ring (Cole attaches your
+                  number and you test one live call first).
+                </span>
+              </label>
+              <label className={styles.formPreviewCheckbox}>
+                <input type="checkbox" disabled aria-label="Website chat box, unchecked by default" />
+                <span>
+                  <strong>Website chat box</strong> — paste a chat widget on your site. Callers can talk
+                  or type in the browser.
+                </span>
+              </label>
+              <label className={styles.formPreviewCheckbox}>
+                <input type="checkbox" disabled aria-label="Texting channel, unchecked by default" />
+                <span>
+                  <strong>Texting (available after setup)</strong> — missed-call text-back and reply
+                  forwarding. Stored when you check this; sending stays off until setup is complete.
+                </span>
+              </label>
+            </fieldset>
+
+            <fieldset>
+              <legend>Staff contact</legend>
+              <div className={styles.formPreviewRow}>
+                <label>
+                  Name
+                  <input type="text" autoComplete="off" disabled />
+                </label>
+                <label>
+                  Phone for lead texts
+                  <input type="tel" placeholder="(205) 555-0123" disabled />
+                </label>
+              </div>
+              <label>
+                Email for lead alerts
+                <input type="email" placeholder="sam@example.com" disabled />
+              </label>
+              <label className={styles.formPreviewCheckbox}>
+                <input
+                  type="checkbox"
+                  disabled
+                  defaultChecked={false}
+                  aria-label="Example SMS opt-in checkbox, unchecked"
+                />
+                <span>
+                  {consentLead}See our <Link href="/privacy">Privacy Policy</Link> and{' '}
+                  <Link href="/terms">Terms</Link>.
+                </span>
+              </label>
+              <p className={styles.formPreviewNotice}>
+                Add a phone, an email, or both. Lead emails go to the email address. Lead texts go to the
+                phone only if you tick the box above.
+              </p>
+            </fieldset>
+
+            <button type="button" className={styles.formPreviewButton} disabled>
+              Send Setup Details
+            </button>
+          </form>
         </div>
         <p className={styles.optinCaption}>
-          Example of the opt-in control on our setup form. The box starts unchecked; nothing is agreed
-          to until the owner ticks it and submits the form with a mobile number.
+          Full view of the setup form opt-in, including the Staff contact fields and the SMS checkbox.
+          The box starts unchecked. Nothing is agreed to until the owner ticks that box and submits the
+          live form with a mobile number. The &quot;Voice calls&quot; and &quot;Texting (available after
+          setup)&quot; boxes above are channel choices, not SMS consent. Only the box with the
+          message-frequency, rates, STOP/HELP, and &quot;not a condition of purchase&quot; language is
+          the written opt-in.
         </p>
         <p>
           This written opt-in covers lead-alert texts to the owner&apos;s own mobile number: a text when
@@ -175,23 +338,58 @@ Ava: Thanks, Jordan. What's the best callback number, and is that the same numbe
         </p>
 
         <h2>How written consent is recorded and stored</h2>
+        <p>When the setup form is submitted with the box ticked, we keep a consent record with:</p>
+        <ul className={styles.storeList}>
+          <li>
+            <strong>Owner number.</strong> The mobile number entered on the form (the number that would
+            be texted).
+          </li>
+          <li>
+            <strong>Timestamp.</strong> The date and time the owner agreed.
+          </li>
+          <li>
+            <strong>Exact wording and source.</strong> The consent language shown on the form (the text
+            beside the checkbox above) and the page URL.
+          </li>
+          <li>
+            <strong>Submission record.</strong> The IP address the form was submitted from.
+          </li>
+        </ul>
         <p>
-          When the setup form is submitted with the box ticked, we keep a consent record with the mobile
-          number, the date and time it was agreed, the exact wording shown (the text above), and the IP
-          address the form was submitted from. We use that record only to send the lead-alert texts the
-          owner agreed to and to show consent if asked. We do not sell, rent, or share mobile phone
-          numbers or text-messaging opt-in data or consent with third parties or affiliates for
-          marketing or promotional purposes. Mobile numbers are used only to deliver these texts through
-          our messaging provider, Twilio, which processes them only to send the messages for us.
+          We use that record only to send the lead-alert texts the owner agreed to and to show consent
+          if asked. We do not sell, rent, or share mobile phone numbers or text-messaging opt-in data or
+          consent with third parties or affiliates for marketing or promotional purposes. Mobile numbers
+          are used only to deliver these texts through our messaging provider, Twilio, which processes
+          them only to send the messages for us.
         </p>
 
-        <h2>How to opt out after a written opt-in</h2>
+        <h2 id="owner-operator-opt-out">How a business owner or operator opts out</h2>
         <p>
-          Reply <strong>STOP</strong> to opt out of further lead-alert texts. Reply{' '}
-          <strong>START</strong> to turn them back on. Reply <strong>HELP</strong> for help. Message
-          and data rates may apply. Carriers are not liable for delayed or undelivered messages. Help is
-          also available at <a href="mailto:colecollins763@gmail.com">colecollins763@gmail.com</a> or
-          (256) 595-3354.
+          This is separate from caller opt-out. It covers lead-alert texts to a subscribing business
+          owner or designated staff, and any operator (Cole Collins / Executive Receptionist) alerts to
+          an internal number.
+        </p>
+        <ul className={styles.storeList}>
+          <li>
+            <strong>Business owner or designated staff</strong> who opted in on the setup form: reply{' '}
+            <strong>STOP</strong> to any lead-alert text. One automatic confirmation text is sent, and
+            no further lead texts are sent to that number. Lead alerts continue by email. Reply{' '}
+            <strong>START</strong> to turn lead texts back on. Reply <strong>HELP</strong> for help.
+            The owner can also email{' '}
+            <a href="mailto:colecollins763@gmail.com">colecollins763@gmail.com</a> or call (256) 595-3354
+            and ask to be removed from lead texts.
+          </li>
+          <li>
+            <strong>Operator</strong> (Cole Collins or Executive Receptionist staff receiving internal
+            alerts on an operator number): the same <strong>STOP</strong>, <strong>HELP</strong>, and{' '}
+            <strong>START</strong> keywords work on that number. Operator texts are off unless the
+            operator has explicitly opted in. The operator can also turn those alerts off by asking
+            that the operator opt-in be removed, or by emailing{' '}
+            <a href="mailto:colecollins763@gmail.com">colecollins763@gmail.com</a>.
+          </li>
+        </ul>
+        <p>
+          Message and data rates may apply. Carriers are not liable for delayed or undelivered messages.
         </p>
 
         <h2>Contact</h2>
