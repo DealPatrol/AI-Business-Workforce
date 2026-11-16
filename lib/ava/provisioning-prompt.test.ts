@@ -18,12 +18,16 @@ describe('agent prompt lead handoff', () => {
 
   it('says the owner gets details by email, and by text only if opted in', () => {
     assert.ok(prompt.includes("The owner gets the caller's details by email right away"));
-    assert.ok(prompt.includes('by text only if they have opted in'));
+    assert.ok(prompt.includes('by text only if the owner has opted in to lead-alert texts'));
     assert.ok(!/owner gets the lead by text/i.test(prompt));
   });
 
-  it('never lets the agent promise a text or a callback time', () => {
-    assert.ok(prompt.includes('Never promise the caller a text message'));
-    assert.ok(prompt.includes('never promise a callback time'));
+  it('requires the verbal SMS consent script and never promises a callback time', () => {
+    assert.ok(prompt.includes('VERBAL SMS CONSENT'));
+    assert.ok(prompt.includes("This is Ava with Executive Receptionist, helping [Business]. Would you like me to text you at the number you're calling from about this call?"));
+    assert.ok(prompt.includes('Message and data rates may apply'));
+    assert.ok(prompt.includes('You can reply STOP anytime to opt out, or HELP for help'));
+    assert.ok(prompt.includes('Would you like to receive these texts? Please say yes or no.'));
+    assert.ok(prompt.includes('Never promise a callback time'));
   });
 });

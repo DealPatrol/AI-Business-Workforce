@@ -103,7 +103,8 @@ describe('provisioned agent prompts', () => {
   it('home-service agents disclose they are AI and keep the handoff rules', () => {
     const prompt = buildAvaAgentPrompt(base);
     assert.match(prompt, /You are Ava, the AI phone receptionist/);
-    assert.ok(prompt.includes('Never promise the caller a text message'));
+    assert.ok(prompt.includes('VERBAL SMS CONSENT'));
+    assert.ok(prompt.includes("This is Ava with Executive Receptionist, helping [Business]."));
     assert.match(firstMessage('Trailhead Supply'), /AI receptionist/);
   });
 });
