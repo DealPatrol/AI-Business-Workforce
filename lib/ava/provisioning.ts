@@ -1,5 +1,6 @@
 import { BOOKING_PROMPT_SECTION } from '@/lib/ava/booking/agent-tools';
 import { AVA_VOICE } from '@/lib/ava/voice';
+import { AVA_VERBAL_CONSENT_SCRIPT } from '@/lib/sms/consent';
 
 const ELEVENLABS_API = 'https://api.elevenlabs.io/v1';
 
@@ -75,10 +76,11 @@ Never take card numbers, passwords or full payment details. Never promise a refu
 VERBAL SMS CONSENT
 Before you send or promise any text, read this script exactly, then wait for a clear yes or no. Say it early on the call, after the greeting and a brief acknowledgement of the reason they called, and before you take the rest of the lead. Replace [Business] with the business name above.
 
-"This is Ava with Executive Receptionist, helping [Business]. Would you like me to text you at the number you're calling from about this call? I would only text you things like a missed-call callback if we get disconnected, or a booking confirmation if we set an appointment. At most a few texts about this visit. Message and data rates may apply. You can reply STOP anytime to opt out, or HELP for help. This is optional — I can still take your message if you'd rather not get texts. Would you like to receive these texts? Please say yes or no."
+"${AVA_VERBAL_CONSENT_SCRIPT}"
 
-If the caller says yes: "Thanks. I'll send a short text now to confirm. If you ever want to stop, just reply STOP." Then continue the call.
-If the caller says no, or is unsure: "No problem. I won't text you. I can still take your message." Then continue the call. Do not mention texts again.
+As soon as the caller answers, call the record_sms_consent tool with answer yes or no, then say the "say" line it returns. If the tool is unavailable or fails, do not send or promise any text.
+If the caller says yes: after record_sms_consent, say its line (normally "Thanks. I'll send a short text now to confirm. If you ever want to stop, just reply STOP."). Then continue the call.
+If the caller says no, or is unsure: call record_sms_consent with answer no, then say "No problem. I won't text you. I can still take your message." Then continue the call. Do not mention texts again.
 If the caller speaks Spanish, read the same script in Spanish (brand name Executive Receptionist, purpose, frequency, "pueden aplicar tarifas de mensajes y datos", "responda STOP para cancelar, HELP para ayuda", that it is optional, and an explicit sí or no) and get a clear sí or no before any text.
 
 Do not skip this script. Do not shorten it. Do not send or promise a missed-call callback, booking confirmation, or any other text unless the caller has just said yes (or already said yes earlier on this same call). The opening greeting on unanswered calls may also ask the same consent (yes / press 1, no / press 2); treat press 1 as yes and press 2 as no.
@@ -125,10 +127,11 @@ ${details.callHandlingRules}
 VERBAL SMS CONSENT
 Before you send or promise any text, read this script exactly, then wait for a clear yes or no. Say it early on the call, after the greeting and a brief acknowledgement of the reason they called, and before you take the rest of the lead. Replace [Business] with the business name above.
 
-"This is Ava with Executive Receptionist, helping [Business]. Would you like me to text you at the number you're calling from about this call? I would only text you things like a missed-call callback if we get disconnected, or a booking confirmation if we set an appointment. At most a few texts about this visit. Message and data rates may apply. You can reply STOP anytime to opt out, or HELP for help. This is optional — I can still take your message if you'd rather not get texts. Would you like to receive these texts? Please say yes or no."
+"${AVA_VERBAL_CONSENT_SCRIPT}"
 
-If the caller says yes: "Thanks. I'll send a short text now to confirm. If you ever want to stop, just reply STOP." Then continue the call.
-If the caller says no, or is unsure: "No problem. I won't text you. I can still take your message." Then continue the call. Do not mention texts again.
+As soon as the caller answers, call the record_sms_consent tool with answer yes or no, then say the "say" line it returns. If the tool is unavailable or fails, do not send or promise any text.
+If the caller says yes: after record_sms_consent, say its line (normally "Thanks. I'll send a short text now to confirm. If you ever want to stop, just reply STOP."). Then continue the call.
+If the caller says no, or is unsure: call record_sms_consent with answer no, then say "No problem. I won't text you. I can still take your message." Then continue the call. Do not mention texts again.
 If the caller speaks Spanish, read the same script in Spanish (brand name Executive Receptionist, purpose, frequency, "pueden aplicar tarifas de mensajes y datos", "responda STOP para cancelar, HELP para ayuda", that it is optional, and an explicit sí or no) and get a clear sí or no before any text.
 
 Do not skip this script. Do not shorten it. Do not send or promise a missed-call callback, booking confirmation, or any other text unless the caller has just said yes (or already said yes earlier on this same call). The opening greeting on unanswered calls may also ask the same consent (yes / press 1, no / press 2); treat press 1 as yes and press 2 as no.
@@ -244,6 +247,12 @@ export function customerBuiltInTools(details: AvaOnboardingDetails) {
   return tools;
 }
 
+/** The shared record_sms_consent tool, when its ElevenLabs id is configured. */
+export function consentToolIds(env: Record<string, string | undefined> = process.env) {
+  const id = (env.ELEVENLABS_CONSENT_TOOL_ID || '').trim();
+  return id ? [id] : [];
+}
+
 async function configureCustomerAgent(agentId: string, details: AvaOnboardingDetails) {
   // Voice + typed chat on the same agent for the website embed. Does not change SMS.
   await elevenLabsRequest(`/convai/agents/${encodeURIComponent(agentId)}`, {
@@ -256,7 +265,8 @@ async function configureCustomerAgent(agentId: string, details: AvaOnboardingDet
           prompt: {
             prompt: buildAvaAgentPrompt(details),
             // Start clean: never inherit the demo agent's booking tools (they point at the demo calendar).
-            tool_ids: [],
+            // The one shared tool every agent gets is record_sms_consent (logs the verbal yes/no).
+            tool_ids: consentToolIds(),
             built_in_tools: customerBuiltInTools(details),
           },
         },

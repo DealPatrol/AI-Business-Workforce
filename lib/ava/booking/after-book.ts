@@ -42,6 +42,7 @@ export type AfterBookDeps = {
   businessName: (calendar: CalendarRow) => Promise<string>;
   record: (bookingId: string, patch: Partial<Pick<BookingRow, 'sms_status' | 'sms_sid' | 'google_event_id'>>) => Promise<void>;
   smsTransport?: SmsTransport;
+  hasConsent?: (phone: string, conversationId?: string | null) => Promise<boolean>;
   createEvent?: (calendar: CalendarRow, input: GoogleEventInput) => Promise<string | null>;
 };
 
@@ -61,9 +62,11 @@ export async function runAfterBook(calendar: CalendarRow, booking: BookingRow, w
         callerPhone: booking.caller_phone,
         optIn: booking.sms_opt_in === true,
         isDemo: booking.is_demo || calendar.is_demo,
+        conversationId: booking.conversation_id,
       },
       env,
       deps.smsTransport,
+      deps.hasConsent,
     );
     patch.sms_status = sms.status;
     if (sms.sid) patch.sms_sid = sms.sid;

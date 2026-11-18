@@ -17,6 +17,9 @@ import {
   withDeadline,
 } from '@/lib/ava/booking/google';
 import { bookingSmsBody, decideBookingSms, sendBookingConfirmation } from '@/lib/ava/booking/sms-confirm';
+import { isCompliantCallerSms } from '@/lib/sms/consent';
+const recordOk = async () => true;
+const recordFails = async () => false;
 import { computeOpenSlots, type CalendarSettings } from '@/lib/ava/booking/slots';
 import type { BookingRow, CalendarRow } from '@/lib/ava/booking/store';
 import { bookingToolConfigs } from '@/lib/ava/booking/agent-tools';
@@ -103,22 +106,23 @@ describe('booking text confirmation', () => {
     assert.deepEqual(decideBookingSms({ ...smsInput, callerPhone: '888-555-0100' }, smsEnv), { send: false, reason: 'same_number' });
   });
 
-  it('sends one message from the toll-free number to the caller, naming Ava and the business, with STOP language', () => {
+  it('sends one message from the toll-free number to the caller, naming the brand and business, with rates and STOP/HELP', () => {
     const decision = decideBookingSms(smsInput, smsEnv);
     assert.equal(decision.send, true);
     if (!decision.send) return;
     assert.equal(decision.to, '+12055550134');
     assert.equal(decision.from, '+18885550100');
-    assert.match(decision.body, /^Ava for Porchlight Heating & Air: you're booked for Tuesday, November 10, 8 to 10 AM\./);
-    assert.match(decision.body, /Reply HELP for help, STOP to opt out\.$/);
+    assert.match(decision.body, /^Executive Receptionist: You're booked with Porchlight Heating & Air for Tuesday, November 10, 8 to 10 AM\./);
+    assert.match(decision.body, /Msg & data rates may apply\. Reply STOP to opt out, HELP for help\.$/);
+    assert.ok(isCompliantCallerSms(decision.body));
     assert.ok(decision.body.length <= 306, `two segments max, got ${decision.body.length}`);
   });
 
   it('keeps long or odd business names tidy', () => {
     const body = bookingSmsBody('A Very Long Business Name That Goes On And On Heating Cooling\nPlumbing', 'Monday, 8 to 10 AM');
     assert.ok(!body.includes('\n'));
-    assert.match(body, /^Ava for .{1,40}: /);
-    assert.match(bookingSmsBody('', 'Monday'), /^Ava for your service company: /);
+    assert.match(body, /^Executive Receptionist: You're booked with .{1,40} for Monday/);
+    assert.match(bookingSmsBody('', 'Monday'), /^Executive Receptionist: You're booked with your service company for /);
   });
 
   it('uses the injected transport, reports status, and never throws', async () => {
@@ -126,14 +130,18 @@ describe('booking text confirmation', () => {
     const ok = await sendBookingConfirmation(smsInput, smsEnv, async (msg) => {
       sent.push(msg);
       return { sid: 'SM123' };
-    });
+    }, recordOk);
     assert.deepEqual(ok, { status: 'sent', sid: 'SM123' });
     assert.equal(sent.length, 1);
-    const failed = await sendBookingConfirmation(smsInput, smsEnv, async () => ({ error: 'Attempt to send to unsubscribed recipient' }));
+    const failed = await sendBookingConfirmation(smsInput, smsEnv, async () => ({ error: 'Attempt to send to unsubscribed recipient' }), recordOk);
+    const unrecorded = await sendBookingConfirmation(smsInput, smsEnv, async () => {
+      throw new Error('must not send without a consent record');
+    }, recordFails);
+    assert.deepEqual(unrecorded, { status: 'skipped:consent_not_recorded' });
     assert.deepEqual(failed, { status: 'failed' });
     const threw = await sendBookingConfirmation(smsInput, smsEnv, async () => {
       throw new Error('network');
-    });
+    }, recordOk);
     assert.deepEqual(threw, { status: 'failed' });
     const skipped = await sendBookingConfirmation({ ...smsInput, optIn: false }, smsEnv, async () => {
       throw new Error('must not be called');
@@ -291,6 +299,7 @@ describe('after a booking', () => {
         return { sid: 'SM1' };
       },
       createEvent: async () => 'evt_9',
+      hasConsent: recordOk,
     });
     assert.deepEqual(texts, ['+12055550134']);
     assert.deepEqual(patch, { sms_status: 'sent', sms_sid: 'SM1', google_event_id: 'evt_9' });

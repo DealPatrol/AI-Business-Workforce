@@ -1,11 +1,13 @@
 import { toE164 } from '@/lib/analytics/contact';
+import { brandedCallerSms, callerHasVerbalConsent } from '@/lib/sms/consent';
 
 /**
  * Text confirmation to the caller Ava just booked. Transactional only, one message per booking.
  *
  * Off unless AVA_BOOKING_SMS_ENABLED is "1" or "true". It sends only from AVA_BOOKING_SMS_FROM (the toll-free
  * number, set after carrier verification is approved), never on demo calendars, and only when the caller said
- * yes to a text on the call (book_appointment `text_ok`). Twilio's toll-free opt-out handling enforces STOP.
+ * yes to a text on the call (book_appointment `text_ok`). That yes must already be in sms_consents from
+ * record_sms_consent; if the record is missing or the latest answer is no, no text is sent. Twilio's toll-free opt-out handling enforces STOP.
  */
 export type BookingSmsEnv = {
   AVA_BOOKING_SMS_ENABLED?: string;
@@ -20,6 +22,7 @@ export type BookingSmsInput = {
   callerPhone: string | null | undefined;
   optIn: boolean;
   isDemo: boolean;
+  conversationId?: string | null;
 };
 
 export type BookingSmsDecision =
@@ -37,13 +40,13 @@ function cleanBusinessName(name: string) {
   return plain.length > 40 ? `${plain.slice(0, 39).trimEnd()}…` : plain;
 }
 
-/** The message text. Kept short (about two SMS segments) and always carries STOP/HELP language. */
+/** The message text. About two SMS segments; always carries the brand, rates, and STOP/HELP. */
 export function bookingSmsBody(businessName: string, window: string) {
   const business = cleanBusinessName(businessName);
   const when = String(window || '').replace(/\s+/g, ' ').trim().slice(0, 60);
-  return (
-    `Ava for ${business}: you're booked for ${when}. The team will confirm before the visit. ` +
-    'Reply HELP for help, STOP to opt out.'
+  return brandedCallerSms(
+    `Executive Receptionist: You're booked with ${business} for ${when}. The team will confirm before the visit. ` +
+      'Msg & data rates may apply. Reply STOP to opt out, HELP for help.',
   );
 }
 
@@ -90,9 +93,15 @@ export async function sendBookingConfirmation(
   input: BookingSmsInput,
   env: BookingSmsEnv,
   transport: SmsTransport = twilioTransport(env),
+  hasConsent: (phone: string, conversationId?: string | null) => Promise<boolean> = callerHasVerbalConsent,
 ): Promise<{ status: string; sid?: string }> {
   const decision = decideBookingSms(input, env);
   if (!decision.send) return { status: `skipped:${decision.reason}` };
+  // Do not trust a book_appointment text_ok flag alone. The consent tool must have already saved
+  // an explicit yes on this exact conversation/number (and the latest answer must not be no).
+  if (!(await hasConsent(decision.to, input.conversationId))) {
+    return { status: 'skipped:consent_not_recorded' };
+  }
   try {
     const result = await transport({ to: decision.to, from: decision.from, body: decision.body });
     if (result.error) {
