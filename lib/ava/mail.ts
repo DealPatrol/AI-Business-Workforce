@@ -56,10 +56,12 @@ type SendEmailInput = {
   html: string;
   replyTo?: string;
   from?: string;
+  /** When set, used instead of RESEND_API_KEY. Receptionist callers leave this unset. */
+  apiKey?: string;
 };
 
 export async function sendResendEmail(input: SendEmailInput) {
-  const apiKey = process.env.RESEND_API_KEY?.trim();
+  const apiKey = (input.apiKey ?? process.env.RESEND_API_KEY)?.trim();
   if (!apiKey) {
     throw new Error('RESEND_API_KEY is not configured.');
   }

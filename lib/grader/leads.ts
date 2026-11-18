@@ -20,6 +20,16 @@ function graderFromAddress() {
   return `Front Porch Growth <${address}>`;
 }
 
+function graderResendApiKey() {
+  return process.env.GRADER_RESEND_API_KEY ?? process.env.RESEND_API_KEY;
+}
+
+function graderCustomerReplyTo() {
+  const explicit = process.env.GRADER_REPLY_TO?.trim();
+  if (explicit) return explicit;
+  return PUBLIC_CONTACT_EMAIL;
+}
+
 export async function saveReport(input: {
   email: string;
   report: GraderReport;
@@ -116,6 +126,7 @@ export async function sendReportEmails(input: {
         to: avaOwnerEmail(),
         from: graderFromAddress(),
         replyTo: input.email,
+        apiKey: graderResendApiKey(),
         subject: `New grader lead: ${input.report.input.trade} in ${input.report.input.city} (${input.report.score}/100)`,
         html: `<div style="font-family:Arial,sans-serif;max-width:680px;margin:auto"><p><b>${escapeHtml(input.email)}</b> ran the free AI visibility grader.</p><p>Website: ${escapeHtml(input.report.finalUrl)}<br>Trade: ${escapeHtml(input.report.input.trade)}<br>City: ${escapeHtml(input.report.input.city)}<br>AI check: ${input.ai.status === 'done' ? 'ran live' : 'queued, run it and email them'}</p><hr>${html}</div>`,
       });
@@ -128,7 +139,8 @@ export async function sendReportEmails(input: {
     await sendResendEmail({
       to: input.email,
       from: graderFromAddress(),
-      replyTo: PUBLIC_CONTACT_EMAIL,
+      replyTo: graderCustomerReplyTo(),
+      apiKey: graderResendApiKey(),
       subject: `Your visibility check: ${input.report.score}/100`,
       html,
     });
