@@ -11,7 +11,7 @@ import styles from './missed.module.css';
 const FAQS = [
   {
     q: 'What does Executive Receptionist actually do on the call?',
-    a: 'It answers calls that reach it, including after-hours and unanswered calls you forward. It asks for the caller’s name, number, and what they need, then emails that lead to you. It does not book the job on your calendar.',
+    a: 'It answers calls that reach it, including after-hours and unanswered calls you forward. It asks for the caller’s name, number, and what they need, then emails that lead to you. Booking is optional: once you set your hours in the Desk and turn booking on, it can book a visit into your Desk calendar during the call.',
   },
   {
     q: 'What does it cost to start?',
@@ -99,11 +99,11 @@ export default async function MissedCallsPage({ searchParams }: PageProps) {
             <li>It emails you that lead so you can call back and book the job.</li>
           </ul>
           <p>
-            It does not book the appointment on your calendar, and this page does not claim a pickup in under a minute. You still
-            dispatch the truck.
+            It books an appointment only if you set your hours in the Desk and turn booking on, and this page does not claim a
+            pickup in under a minute. You still dispatch the truck.
           </p>
           <p>
-            <Link className={styles.text} href="/receptionist">
+            <Link className={styles.text} href="/receptionist-demo">
               Hear the sample call and see the full rate card
             </Link>
           </p>

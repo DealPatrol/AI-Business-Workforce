@@ -49,7 +49,7 @@ export const TRADE_PAGES: TradePage[] = [
     h1: 'The no-cool call, for HVAC companies.',
     season: 'July and January pile up calls that all sound urgent. A two-truck shop does not have someone sitting on the dispatch board while a tech is in a crawlspace.',
     calls: ['No cooling or no heat', 'A system that is short cycling', 'A maintenance visit', 'A replacement question'],
-    dispatch: 'Executive Receptionist asks whether the house has heat or cooling, the address, and when someone is home, then emails you. You book the call on the calendar you already use.',
+    dispatch: 'Executive Receptionist asks whether the house has heat or cooling, the address, and when someone is home, then emails you. You book the call on the calendar you already use, or turn on booking in the Desk so it offers windows from the hours you set.',
     dispatchSlug: 'ai-answering-service-for-hvac',
     reviews: 'A tune-up is a natural time to ask for a review. ReputationFlow’s free QR tool can sit on the invoice or the truck. The public Google link does not change based on the star rating the customer taps.',
     leads: 'Lead Scout’s HVAC search is other businesses, such as property managers, not a list of homeowners with broken condensers.',

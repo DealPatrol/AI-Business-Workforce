@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { ReceptionistLanding } from '@/components/receptionist/ReceptionistLanding';
-import { AVA_OFFER } from '@/lib/ava/pricing';
+import { avaOfferNodes } from '@/lib/ava/structured-data';
 import { EXECUTIVE_FAQS } from '@/lib/executive-receptionist';
 import { getErDemoNiche } from '@/lib/er-demos';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
@@ -19,17 +19,9 @@ const structured = [
     description:
       'AI phone receptionist that answers calls, takes the caller name, number and reason, and emails the lead to the business. Texting is available after setup.',
     brand: { '@type': 'Brand', name: 'Front Porch Growth' },
-    offers: [
-      {
-        '@type': 'Offer',
-        name: 'Executive Receptionist monthly plans from $79 (Starter first month $1)',
-        price: '25.00',
-        priceCurrency: 'USD',
-        availability: 'https://schema.org/InStock',
-        url: 'https://executivereceptionist.com/pricing',
-        description: AVA_OFFER.summary,
-      },
-    ],
+    url: canonical,
+    // One Offer per published plan, from the same constants as the pricing page.
+    offers: avaOfferNodes(`${EXECUTIVE_RECEPTIONIST_ORIGIN}/pricing`),
   },
   {
     '@context': 'https://schema.org',

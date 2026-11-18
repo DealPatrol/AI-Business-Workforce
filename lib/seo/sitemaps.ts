@@ -49,6 +49,11 @@ function entry(origin: string, path: string, now: Date, changeFrequency: ChangeF
   };
 }
 
+/**
+ * Public indexable pages of the Front Porch Growth host.
+ * `/receptionist` is not listed: on every host it canonicalizes to the Executive Receptionist home,
+ * and a sitemap should only list URLs that canonicalize to themselves.
+ */
 export function frontPorchGrowthSitemap(origin: string, now: Date): MetadataRoute.Sitemap {
   return [
     entry(origin, '/', now, 'weekly', 1),
@@ -61,7 +66,6 @@ export function frontPorchGrowthSitemap(origin: string, now: Date): MetadataRout
     entry(origin, '/agents', now, 'weekly', 0.7),
     entry(origin, '/terms', now, 'yearly', 0.3),
     entry(origin, '/ava', now, 'weekly', 0.95),
-    entry(origin, '/receptionist', now, 'weekly', 0.96),
     entry(origin, '/receptionist/missed-calls', now, 'weekly', 0.9),
     entry(origin, '/hvac', now, 'weekly', 0.9),
     entry(origin, '/missed-call', now, 'weekly', 0.8),
