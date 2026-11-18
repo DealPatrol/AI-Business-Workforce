@@ -163,6 +163,10 @@ export function robotsBlocksRoot(groups: RobotsGroup[], bot: string) {
   return disallowRoot && !allowRoot;
 }
 
+function scriptsCount(html: string) {
+  return (html.match(/<script\b/gi) || []).length;
+}
+
 function status(ok: boolean, partial = false): CheckStatus {
   if (ok) return 'pass';
   return partial ? 'warn' : 'fail';
@@ -486,7 +490,7 @@ export async function runAudit(input: { website: string; trade: string; city: st
   checks.push({
     id: 'answers',
     group: 'ai',
-    label: `Answers what people ask before hiring a ${noun}`,
+    label: `Answers what people ask before hiring ${/^[aeiouh]/i.test(noun) && !/^h(?!vac)/i.test(noun) ? 'an' : 'a'} ${noun}`,
     status: status(answered >= 5, answered >= 3),
     weight: 8,
     found: `The page covers ${answered} of ${answerChecks.length} common questions.`,
@@ -515,6 +519,25 @@ export async function runAudit(input: { website: string; trade: string; city: st
         : `robots.txt does not block Google, Bing, or the AI search crawlers we check (${SEARCH_BOTS.slice(2).join(', ')}).${blockedTraining.length ? ` It does block AI training crawlers (${blockedTraining.join(', ')}), which is a fair choice and does not stop AI search.` : ''}`,
     fix: blockedSearch.length
       ? `Unblock ${blockedSearch.join(', ')} in robots.txt. Blocking them keeps your site out of their search results and answers.`
+      : '',
+  });
+
+  const words = text.split(/\s+/).filter((word) => /[a-z]{2,}/i.test(word)).length;
+  const appShell = /<div[^>]+id=["'](root|app|__next|__nuxt)["'][^>]*>\s*<\/div>/i.test(html);
+  const thin = words < 150;
+  checks.push({
+    id: 'rendered',
+    group: 'ai',
+    label: 'Your words are in the page, not only loaded by JavaScript',
+    status: thin ? (appShell || scriptsCount(html) > 0 ? 'fail' : 'warn') : 'pass',
+    weight: 8,
+    found: thin
+      ? `Only about ${words} words are in the page as it is first sent${appShell ? '. The rest appears to load with JavaScript afterward' : ''}.`
+      : `About ${words} words are readable in the page as first sent.`,
+    fix: thin
+      ? appShell
+        ? 'Your site builds its text with JavaScript after it loads. Google can usually handle that, but many AI crawlers read only the first HTML, so they may see a nearly blank page. Ask your web person about server-side rendering or prerendering.'
+        : 'Add more plain text about your services, towns, and how to reach you. A page with very few words gives search engines and AI assistants little to go on.'
       : '',
   });
 

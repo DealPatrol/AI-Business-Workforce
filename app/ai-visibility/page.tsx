@@ -234,14 +234,14 @@ export default function AiVisibilityPage() {
             <span className={styles.eyebrow}>FREE GRADER</span>
             <h2 id="grader-title">See what search engines and AI can read about you</h2>
             <p>
-              Enter your website, trade, and city. We load your page right now and run 21 checks that search engines and AI assistants
+              Enter your website, trade, and city. We load your page right now and run more than 20 checks that search engines and AI assistants
               rely on. You get a score, what we found, and the fixes that matter most.
             </p>
             <details className={styles.checkList}>
               <summary>What the free grade checks</summary>
               <p>
                 Your phone, address, and hours; whether you say what you do and where; business schema; FAQs; answers to common customer
-                questions; whether search and AI crawlers are allowed in; HTTPS; mobile setup; sitemap; robots.txt; link previews; image
+                questions; whether search and AI crawlers are allowed in; whether your words load without JavaScript; HTTPS; mobile setup; sitemap; robots.txt; link previews; image
                 alt text; and rough speed.
               </p>
             </details>
