@@ -43,17 +43,17 @@ export default function PrivacyPage() {
     <main className={styles.page}>
       <nav className={styles.nav}>
         <Link href="/ava">Executive Receptionist</Link>
-        <b>Executive Receptionist by Workforce AI</b>
+        <b>Cole Collins DBA Executive Receptionist</b>
       </nav>
       <article className={styles.article}>
         <h1>Privacy</h1>
         <p>
-          Executive Receptionist is an AI phone receptionist offered as Executive Receptionist by Workforce AI and operated by DealPatrol.
+          Executive Receptionist is an AI phone receptionist operated by Cole Collins DBA Executive Receptionist.
         </p>
         <p>
           Email <a href="mailto:colecollins763@gmail.com">colecollins763@gmail.com</a>
           <br />
-          DealPatrol
+          Cole Collins DBA Executive Receptionist
           <br />
           12476 County Road 747
           <br />
@@ -152,7 +152,7 @@ export default function PrivacyPage() {
         <p>
           Questions about this page: <a href="mailto:colecollins763@gmail.com">colecollins763@gmail.com</a>
           <br />
-          DealPatrol, 12476 County Road 747, Hanceville, AL 35077
+          Cole Collins DBA Executive Receptionist, 12476 County Road 747, Hanceville, AL 35077
         </p>
         <p>
           <Link href="/ava">Back to Executive Receptionist</Link>

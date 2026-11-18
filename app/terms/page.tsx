@@ -45,7 +45,7 @@ export default function TermsPage() {
       <article className={styles.legal}>
         <h1>Terms</h1>
         <p>
-          Front Porch Growth is operated by DealPatrol. These terms cover the public site at this domain, including YardMailer postcards, Executive Receptionist, Lead Finder, and the invoicing waitlist.
+          This site is operated by Cole Collins DBA Executive Receptionist. These terms cover the public site at this domain, including YardMailer postcards, Executive Receptionist, Lead Finder, and the invoicing waitlist.
         </p>
         <h2>Postcards</h2>
         <p>
