@@ -4,9 +4,11 @@ import test, { beforeEach } from 'node:test';
 import {
   DEFAULT_MISSED_CALL_TEXT_TEMPLATE,
   escapeXml,
+  handleConsentAnswer,
   handleIncomingSms,
   handleIncomingVoice,
   handleVoiceStatus,
+  type MissedCallDeps,
   parseTwilioForm,
   requestUrlCandidates,
   type MissedCallEnv,
@@ -16,11 +18,25 @@ import {
   resetMissedCallLimitsForTests,
 } from './missed-call';
 import { computeTwilioSignature, validateTwilioSignature } from './signature';
+import { isCompliantCallerSms, type SmsConsentRecord } from '../sms/consent';
 
 const TOKEN = 'test-auth-token';
 const VOICE_URL = 'https://frontporchgrowth.com/api/twilio/voice';
 const STATUS_URL = 'https://frontporchgrowth.com/api/twilio/voice/status';
 const SMS_URL = 'https://frontporchgrowth.com/api/twilio/sms';
+const CONSENT_URL = 'https://frontporchgrowth.com/api/twilio/voice/consent';
+
+function depsWith(opts: { owner?: boolean; recordOk?: boolean } = {}) {
+  const records: SmsConsentRecord[] = [];
+  const deps: MissedCallDeps = {
+    ownerConsented: async () => opts.owner ?? true,
+    recordConsent: async (r) => {
+      records.push(r);
+      return opts.recordOk === false ? { ok: false, error: 'db down' } : { ok: true, id: `c${records.length}` };
+    },
+  };
+  return { deps, records };
+}
 
 const fullEnv: MissedCallEnv = {
   TWILIO_ACCOUNT_SID: 'ACtest',
@@ -119,51 +135,124 @@ test('voice: missing forward number plays an apology instead of dialing', () => 
 
 test('status: answered call sends nothing', async () => {
   const { sent, send } = recorder();
-  const res = await handleVoiceStatus(signed(STATUS_URL, { From: '+12565551234', DialCallStatus: 'completed' }), fullEnv, send);
+  const { deps } = depsWith();
+  const res = await handleVoiceStatus(signed(STATUS_URL, { From: '+12565551234', DialCallStatus: 'completed' }), fullEnv, send, deps);
   assert.equal(res.status, 200);
   assert.equal(sent.length, 0);
   assert.equal(res.outcome?.missed, false);
 });
 
 for (const status of ['no-answer', 'busy', 'failed']) {
-  test(`status: ${status} texts the caller (default template) and alerts the owner`, async () => {
+  test(`status: ${status} asks the caller for consent and texts nobody but a consented owner`, async () => {
     const { sent, send } = recorder();
-    const res = await handleVoiceStatus(signed(STATUS_URL, { From: '+12565551234', DialCallStatus: status }), fullEnv, send);
+    const { deps } = depsWith();
+    const res = await handleVoiceStatus(signed(STATUS_URL, { From: '+12565551234', DialCallStatus: status }), fullEnv, send, deps);
     assert.equal(res.status, 200);
-    assert.equal(sent.length, 2);
-    assert.deepEqual(sent[0], { to: '+12565551234', body: DEFAULT_MISSED_CALL_TEXT_TEMPLATE });
-    assert.equal(sent[1].to, '+12565550188');
-    assert.match(sent[1].body, new RegExp(`Missed call from \\+12565551234 \\(${status}\\)`));
+    assert.ok(sent.every((m) => m.to !== '+12565551234'), 'caller must not be texted before saying yes');
+    assert.equal(sent.length, 1);
+    assert.equal(sent[0].to, '+12565550188');
+    assert.match(sent[0].body, new RegExp(`Missed call from \\+12565551234 \\(${status}\\)`));
+    assert.match(res.body, /<Gather input="dtmf speech" numDigits="1"/);
+    assert.ok(res.body.includes(`action="${CONSENT_URL}"`));
+    assert.match(res.body, /Press 1 or say yes/);
+    assert.match(res.body, /Message and data rates may apply/);
+    assert.match(res.body, /Reply STOP to opt out, or HELP for help/);
+    assert.equal(res.outcome?.consentPrompted, true);
   });
 }
 
-test('status: custom template is used; owner falls back to forward number', async () => {
+test('status: owner alert is skipped without written owner consent', async () => {
   const { sent, send } = recorder();
-  const env = { ...fullEnv, AVA_LEAD_SMS_TO: '', MISSED_CALL_TEXT_TEMPLATE: 'Custom hello' };
-  await handleVoiceStatus(signed(STATUS_URL, { From: '+12565551234', DialCallStatus: 'no-answer' }), env, send);
-  assert.equal(sent[0].body, 'Custom hello Reply STOP to opt out.');
-  assert.equal(sent[1].to, '+12565550199');
+  const { deps } = depsWith({ owner: false });
+  const res = await handleVoiceStatus(signed(STATUS_URL, { From: '+12565551234', DialCallStatus: 'no-answer' }), fullEnv, send, deps);
+  assert.equal(sent.length, 0);
+  assert.equal(res.outcome?.ownerAlerted?.sent, false);
+  assert.match(res.body, /<Gather/);
 });
 
-test('status: anonymous caller is not texted, owner still alerted', async () => {
+test('consent: press 1 records a keypad yes, then texts a compliant message', async () => {
   const { sent, send } = recorder();
-  await handleVoiceStatus(signed(STATUS_URL, { From: 'anonymous', DialCallStatus: 'busy' }), fullEnv, send);
+  const { deps, records } = depsWith();
+  const res = await handleConsentAnswer(
+    signed(CONSENT_URL, { From: '+12565551234', To: '+18553603990', Digits: '1', CallSid: 'CA1' }),
+    fullEnv,
+    send,
+    deps,
+  );
+  assert.equal(records.length, 1);
+  assert.equal(records[0].method, 'keypad');
+  assert.equal(records[0].answer, 'yes');
+  assert.equal(records[0].call_sid, 'CA1');
+  assert.equal(records[0].phone, '+12565551234');
+  assert.equal(sent.length, 1);
+  assert.equal(sent[0].to, '+12565551234');
+  assert.ok(isCompliantCallerSms(sent[0].body), sent[0].body);
+  assert.match(sent[0].body, /\(855\) 360-3990/);
+  assert.match(res.body, /text you now/);
+});
+
+test('consent: spoken yes is recorded as verbal; no and silence never text', async () => {
+  const { sent, send } = recorder();
+  const { deps, records } = depsWith();
+  await handleConsentAnswer(signed(CONSENT_URL, { From: '+12565551234', SpeechResult: 'Yes please.', CallSid: 'CA2' }), fullEnv, send, deps);
+  assert.equal(records[0].method, 'verbal');
+  assert.equal(sent.length, 1);
+  const { sent: s2, send: send2 } = recorder();
+  const { deps: d2, records: r2 } = depsWith();
+  await handleConsentAnswer(signed(CONSENT_URL, { From: '+12565559999', Digits: '2' }), fullEnv, send2, d2);
+  await handleConsentAnswer(signed(CONSENT_URL, { From: '+12565559998', SpeechResult: "no, don't text me" }), fullEnv, send2, d2);
+  const silent = await handleConsentAnswer(signed(CONSENT_URL, { From: '+12565559997' }), fullEnv, send2, d2);
+  assert.equal(s2.length, 0);
+  assert.deepEqual(r2.map((r) => r.answer), ['no', 'no']);
+  assert.match(silent.body, /won&apos;t text you/);
+});
+
+test('consent: no text when the consent record cannot be saved', async () => {
+  const { sent, send } = recorder();
+  const { deps } = depsWith({ recordOk: false });
+  const res = await handleConsentAnswer(signed(CONSENT_URL, { From: '+12565551234', Digits: '1', CallSid: 'CA5' }), fullEnv, send, deps);
+  assert.equal(sent.length, 0);
+  assert.equal(res.outcome?.recorded, false);
+});
+
+test('consent: custom template is wrapped with brand, rates, STOP/HELP', async () => {
+  const { sent, send } = recorder();
+  const { deps } = depsWith();
+  const env = { ...fullEnv, MISSED_CALL_TEXT_TEMPLATE: 'Custom hello' };
+  await handleConsentAnswer(signed(CONSENT_URL, { From: '+12565551234', Digits: '1', CallSid: 'CA3' }), env, send, deps);
+  assert.equal(sent[0].body, 'Executive Receptionist: Custom hello Msg & data rates may apply. Reply STOP to opt out, HELP for help.');
+});
+
+test('status: anonymous caller gets no prompt; owner still alerted', async () => {
+  const { sent, send } = recorder();
+  const { deps } = depsWith();
+  const res = await handleVoiceStatus(signed(STATUS_URL, { From: 'anonymous', DialCallStatus: 'busy' }), fullEnv, send, deps);
   assert.equal(sent.length, 1);
   assert.equal(sent[0].to, '+12565550188');
-  assert.match(sent[0].body, /NOT texted/);
+  assert.doesNotMatch(res.body, /<Gather/);
 });
 
 test('status: missing SMS env sends nothing but still answers with TwiML', async () => {
   const { sent, send } = recorder();
+  const { deps } = depsWith();
   const env = { ...fullEnv, TWILIO_FROM_NUMBER: '' };
-  const res = await handleVoiceStatus(signed(STATUS_URL, { From: '+12565551234', DialCallStatus: 'no-answer' }), env, send);
+  const res = await handleVoiceStatus(signed(STATUS_URL, { From: '+12565551234', DialCallStatus: 'no-answer' }), env, send, deps);
   assert.equal(res.status, 200);
   assert.equal(sent.length, 0);
+  assert.doesNotMatch(res.body, /<Gather/);
+});
+
+test('consent: bad signature is rejected', async () => {
+  const { sent, send } = recorder();
+  const { deps, records } = depsWith();
+  const res = await handleConsentAnswer({ urls: [CONSENT_URL], params: { From: '+12565551234', Digits: '1' }, signature: 'nope' }, fullEnv, send, deps);
+  assert.equal(res.status, 403);
+  assert.equal(sent.length + records.length, 0);
 });
 
 test('sms: forwards caller reply to the owner with empty TwiML', async () => {
   const { sent, send } = recorder();
-  const res = await handleIncomingSms(signed(SMS_URL, { From: '+12565551234', Body: 'AC is out' }), fullEnv, send);
+  const res = await handleIncomingSms(signed(SMS_URL, { From: '+12565551234', Body: 'AC is out' }), fullEnv, send, depsWith().deps);
   assert.equal(res.status, 200);
   assert.equal(res.body, '<?xml version="1.0" encoding="UTF-8"?><Response></Response>');
   assert.deepEqual(sent, [{ to: '+12565550188', body: 'Text from +12565551234: AC is out' }]);
@@ -177,9 +266,16 @@ test('sms: does not forward the owner’s own texts or unsigned requests', async
   assert.equal(sent.length, 0);
 });
 
-test('opt-out wording is always present', () => {
-  assert.match(DEFAULT_MISSED_CALL_TEXT_TEMPLATE, /Reply STOP to opt out/);
-  assert.equal(missedCallTextBody({ MISSED_CALL_TEXT_TEMPLATE: 'Hi, text STOP to end' }), 'Hi, text STOP to end');
+test('caller text always carries brand, rates, and STOP/HELP', () => {
+  assert.ok(isCompliantCallerSms(DEFAULT_MISSED_CALL_TEXT_TEMPLATE));
+  assert.ok(isCompliantCallerSms(missedCallTextBody({ MISSED_CALL_TEXT_TEMPLATE: 'Hi, text STOP to end' })));
+  assert.ok(isCompliantCallerSms(missedCallTextBody({ MISSED_CALL_BUSINESS_NAME: 'Maple Ridge' }, '+12565550100')));
+});
+
+test('sms: owner forward needs written owner consent', async () => {
+  const { sent, send } = recorder();
+  await handleIncomingSms(signed(SMS_URL, { From: '+12565551234', Body: 'AC is out' }), fullEnv, send, depsWith({ owner: false }).deps);
+  assert.equal(sent.length, 0);
 });
 
 test('only US/Canada callers that are not our own numbers are textable', () => {
@@ -191,17 +287,18 @@ test('only US/Canada callers that are not our own numbers are textable', () => {
   assert.equal(isTextableCaller('anonymous', fullEnv), false);
 });
 
-test('status: same caller is auto-texted at most once per 24h; international not texted', async () => {
+test('consent: same caller is texted at most once per 24h; international never prompted', async () => {
   const { sent, send } = recorder();
-  const p = { From: '+12565554321', DialCallStatus: 'no-answer' };
-  await handleVoiceStatus(signed(STATUS_URL, p), fullEnv, send);
-  const second = await handleVoiceStatus(signed(STATUS_URL, p), fullEnv, send);
+  const { deps } = depsWith();
+  const p = { From: '+12565554321', Digits: '1', CallSid: 'CA4' };
+  await handleConsentAnswer(signed(CONSENT_URL, p), fullEnv, send, deps);
+  const second = await handleConsentAnswer(signed(CONSENT_URL, p), fullEnv, send, deps);
   assert.equal(sent.filter((m) => m.to === '+12565554321').length, 1);
   assert.equal(second.outcome?.callerTexted?.sent, false);
-  assert.doesNotMatch(second.body, /text you/);
   const { sent: s2, send: send2 } = recorder();
-  await handleVoiceStatus(signed(STATUS_URL, { From: '+447911123456', DialCallStatus: 'busy' }), fullEnv, send2);
+  const res = await handleVoiceStatus(signed(STATUS_URL, { From: '+447911123456', DialCallStatus: 'busy' }), fullEnv, send2, deps);
   assert.ok(s2.every((m) => m.to !== '+447911123456'));
+  assert.doesNotMatch(res.body, /<Gather/);
 });
 
 test('sms: never forwards texts from our own Twilio number and caps forwards per sender', async () => {
@@ -209,7 +306,7 @@ test('sms: never forwards texts from our own Twilio number and caps forwards per
   await handleIncomingSms(signed(SMS_URL, { From: '+12565550100', Body: 'loop' }), fullEnv, send);
   assert.equal(sent.length, 0);
   for (let i = 0; i < 15; i++) {
-    await handleIncomingSms(signed(SMS_URL, { From: '+12565557777', Body: `m${i}` }), fullEnv, send);
+    await handleIncomingSms(signed(SMS_URL, { From: '+12565557777', Body: `m${i}` }), fullEnv, send, depsWith().deps);
   }
   assert.equal(sent.length, 10);
 });
