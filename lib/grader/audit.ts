@@ -166,6 +166,18 @@ export function robotsBlocksRoot(groups: RobotsGroup[], bot: string) {
   return disallowRoot && !allowRoot;
 }
 
+export function centralTime(date: Date) {
+  return date.toLocaleString('en-US', {
+    timeZone: 'America/Chicago',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZoneName: 'short',
+  });
+}
+
 function scriptsCount(html: string) {
   return (html.match(/<script\b/gi) || []).length;
 }
@@ -707,7 +719,7 @@ export async function runAudit(input: { website: string; trade: string; city: st
     },
     page: { title, htmlKb, responseMs: page.responseMs, scripts, images: images.length, truncated: page.truncated },
     method: [
-      `We loaded ${page.finalUrl} once on ${new Date().toUTCString()} and read its HTML as a search crawler would.`,
+      `We loaded ${page.finalUrl} once, on ${centralTime(new Date())}, and read its HTML the way a search crawler does.`,
       'We also read robots.txt and looked for a sitemap.',
       'Only the page you entered was checked, not your whole site. Speed is a rough server-response and page-size check, not a lab speed test.',
     ],

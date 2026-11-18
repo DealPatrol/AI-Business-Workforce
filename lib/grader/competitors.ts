@@ -38,7 +38,7 @@ export async function findCompetitors(input: { tradeLabel: string; city: string;
       .slice(0, 5);
     return {
       status: 'done' as const,
-      source: `Google Places text search for “${query}” on ${new Date().toUTCString()}`,
+      source: `Google Places text search for “${query}” on ${new Date().toISOString().slice(0, 10)}`,
       competitors,
     };
   } catch {

@@ -285,6 +285,13 @@
   min-width: 0;
 }
 
+@media (min-width: 961px) {
+  .graderIntro {
+    position: sticky;
+    top: 110px;
+  }
+}
+
 .form {
   display: grid;
   gap: 14px;

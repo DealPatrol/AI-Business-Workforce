@@ -324,8 +324,8 @@ export default function AiVisibilityPage() {
           <span className={styles.eyebrow}>INTRO PRICING</span>
           <h2 id="pricing-title">Simple monthly plans, with clear limits</h2>
           <p className={styles.sectionLede}>
-            Early-customer pricing while we build this with our first shops. These prices and limits are not permanent; if they change, we
-            will tell you before your plan does. Month to month, cancel anytime.
+            Intro pricing for our first shops while we build this alongside them. These prices and limits are not permanent. If they go
+            up later, we will tell you ahead of time. Month to month, cancel anytime.
           </p>
           <div className={styles.tiers}>
             {TIERS.map((tier) => (
