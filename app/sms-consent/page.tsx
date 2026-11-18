@@ -47,8 +47,9 @@ export default function SmsConsentPage() {
         <p>
           This page is the public record of how Executive Receptionist (operated by Cole Collins, doing
           business as Executive Receptionist) obtains consent before sending text messages. There are two
-          methods. Callers give verbal consent on the phone with Ava, the virtual receptionist, before any
-          missed-call callback or booking confirmation text is sent. Business owners can also give written
+          methods. Callers give consent on the phone, out loud to Ava, the virtual receptionist, or by
+          pressing 1 or saying yes to a short missed-call prompt, before any missed-call callback or
+          booking confirmation text is sent. Business owners can also give written
           consent with a checkbox on the website setup form, for lead-alert texts to their own mobile
           number. We do not send marketing texts to callers, and we do not text numbers from purchased
           lists.
@@ -70,7 +71,7 @@ export default function SmsConsentPage() {
           </li>
           <li>
             <a href="#how-consent-is-stored">
-              How consent is stored (call log / transcript, timestamp, and caller number)
+              How consent is stored (consent record, timestamp, caller number, and call ID)
             </a>
           </li>
           <li>
@@ -84,7 +85,7 @@ export default function SmsConsentPage() {
           </li>
         </ul>
 
-        <h2 id="verbal-script">Verbal consent script (Ava or the opening greeting)</h2>
+        <h2 id="verbal-script">Verbal consent script (Ava)</h2>
         <p>
           Ava, the virtual receptionist, says the following before any text is sent. &quot;[Business]&quot; is
           the client business the person called.
@@ -93,14 +94,18 @@ export default function SmsConsentPage() {
           {`This is Ava with Executive Receptionist, helping [Business]. Would you like me to text you at the number you're calling from about this call? I would only text you things like a missed-call callback if we get disconnected, or a booking confirmation if we set an appointment. At most a few texts about this visit. Message and data rates may apply. You can reply STOP anytime to opt out, or HELP for help. This is optional — I can still take your message if you'd rather not get texts. Would you like to receive these texts? Please say yes or no.`}
         </pre>
 
-        <h2>Opening greeting if no one has answered yet</h2>
+        <h2 id="missed-call-prompt">Missed-call prompt (when no one answers the call)</h2>
         <p>
-          If the call connects before Ava or a person is on the line (so a missed-call text could still
-          be needed), the same consent is requested first:
+          Calls to the business are forwarded to the owner first. If no one answers, the line is busy, or
+          the call fails, the caller hears this recorded prompt before any text is sent:
         </p>
         <pre>
-          {`You've reached [Business]. This is Executive Receptionist, the virtual receptionist for this shop. If you'd like, we can text the number you're calling from about this visit — for example, one callback text if we miss you, or a booking confirmation if we schedule an appointment. A few texts about this visit at most. Message and data rates may apply. You can reply STOP at any time to opt out, or HELP for help. This is optional, and we can still take your call if you say no. Do you agree to these texts? Please say yes or press 1 for yes. Say no or press 2 if you don't want texts.`}
+          {`Sorry we missed your call to [Business]. This is Executive Receptionist. Would you like one text message about this call, so you can reply with what you need? Message and data rates may apply. Reply STOP to opt out, or HELP for help. Press 1 or say yes to get the text. Press 2 or say no, or just hang up, and we will not text you.`}
         </pre>
+        <p>
+          The missed-call text is sent only after the caller presses 1 or says yes and that answer has been
+          saved. Pressing 2, saying no, hanging up, or an unclear answer means no text.
+        </p>
 
         <h2 id="sample-conversation">Sample conversation</h2>
         <pre>
@@ -119,7 +124,7 @@ Ava: Thanks, Jordan. What's the best callback number, and is that the same numbe
         <p>No automated text is sent unless the caller gave a clear yes (or pressed 1).</p>
 
         <h2>Confirmation text after a verbal yes</h2>
-        <p>After the caller says yes, we send this confirmation:</p>
+        <p>After the caller says yes to Ava and the answer is saved, we may send this confirmation (for live client lines with texting turned on):</p>
         <pre>
           {`Executive Receptionist: You're opted in for texts about your call to [Business], like a missed-call callback or booking confirmation. Msg freq: a few texts per visit at most. Msg & data rates may apply. Reply STOP to opt out, HELP for help.`}
         </pre>
@@ -131,7 +136,7 @@ Ava: Thanks, Jordan. What's the best callback number, and is that the same numbe
         </pre>
         <p>Booking confirmation (one text per booked appointment, only if the caller already said yes):</p>
         <pre>
-          {`Executive Receptionist: You're booked with [Business] for [window]. The team will confirm before the visit. Msg & data rates may apply. Reply HELP for help, STOP to opt out.`}
+          {`Executive Receptionist: You're booked with [Business] for [window]. The team will confirm before the visit. Msg & data rates may apply. Reply STOP to opt out, HELP for help.`}
         </pre>
 
         <h2 id="caller-opt-out">How a caller opts out or gets help after consent</h2>
@@ -156,35 +161,41 @@ Ava: Thanks, Jordan. What's the best callback number, and is that the same numbe
           <a href="mailto:colecollins763@gmail.com">colecollins763@gmail.com</a> or (256) 595-3354.
         </p>
 
-        <h2 id="how-consent-is-stored">How verbal consent is recorded and stored</h2>
+        <h2 id="how-consent-is-stored">How consent is recorded and stored</h2>
         <p>
-          Calls may be recorded and transcribed. When a caller says yes or no to the script above, we
-          keep a consent record tied to that call. The record includes:
+          Every yes or no is saved as a consent record in our database before any text is sent. If the
+          record cannot be saved, no text is sent. Each record includes:
         </p>
         <ul className={styles.storeList}>
           <li>
-            <strong>Call log and transcript.</strong> The call is logged, and the recording and
-            transcript are kept so we can show the exact words used to ask for consent and the
-            caller&apos;s yes or no.
+            <strong>Timestamp.</strong> The date and time the answer was saved.
           </li>
           <li>
-            <strong>Timestamp.</strong> The date and time the caller said yes or no.
+            <strong>Phone number.</strong> The number the person called from, or the mobile number entered
+            on the setup form.
           </li>
           <li>
-            <strong>Caller number.</strong> The phone number the person called from (the number that
-            would be texted).
+            <strong>Call or conversation identifier.</strong> The phone carrier&apos;s call ID (Twilio call SID)
+            and/or Ava&apos;s conversation ID, tying the record to that call.
           </li>
           <li>
-            <strong>Call identifier.</strong> The call SID or other call identifier that ties the
-            consent record to that call log and transcript.
+            <strong>Method, answer, script version, and exact wording.</strong> Whether consent was given by
+            voice (verbal), by keypad (pressing 1 or 2), or on the web form; the yes or no; the script
+            version; and the full consent text the person heard or saw.
           </li>
           <li>
-            <strong>Method, script version, and answer.</strong> That consent was verbal, which version
-            of the script was used, and the caller&apos;s yes or no.
+            <strong>Business.</strong> The client business the call was for, when known.
           </li>
         </ul>
         <p>
-          We use that record only to send the texts the caller agreed to and to show consent if asked.
+          <strong>Retention.</strong> Consent records are kept for at least four years after the last
+          message sent to that number; we do not automatically delete them. Ava calls may be recorded
+          and transcribed by our voice provider, and those recordings and transcripts are kept according
+          to each agent&apos;s privacy settings (currently with no automatic deletion). The missed-call prompt
+          is not recorded; the keypad press or spoken answer is saved in the consent record.
+        </p>
+        <p>
+          We use that record only to send the texts the person agreed to and to show consent if asked.
           We do not sell, rent, or share mobile phone numbers or text-messaging opt-in data or consent
           with third parties or affiliates for marketing or promotional purposes. Mobile numbers are
           used only to deliver these texts through our messaging provider, Twilio, which processes them
