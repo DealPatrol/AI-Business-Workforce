@@ -77,6 +77,9 @@ const LOCAL_BUSINESS_TYPES = new Set(
   ].map((type) => type.toLowerCase()),
 );
 
+/** Problems that explain other failures, so they go to the top of the fix list. */
+const ROOT_CAUSES = new Set(['indexable', 'rendered']);
+
 const SEARCH_BOTS = ['Googlebot', 'Bingbot', 'OAI-SearchBot', 'ChatGPT-User', 'PerplexityBot'];
 const TRAINING_BOTS = ['GPTBot', 'Google-Extended', 'ClaudeBot', 'CCBot', 'Applebot-Extended'];
 
@@ -478,6 +481,9 @@ export async function runAudit(input: { website: string; trade: string; city: st
         : 'Add 4–6 real questions customers ask you (price range, how fast you can come, areas you serve, licensed and insured) with short, direct answers.',
   });
 
+  const words = text.split(/\s+/).filter((word) => /[a-z]{2,}/i.test(word)).length;
+  const appShell = /<div[^>]+id=["'](root|app|__next|__nuxt)["'][^>]*>\s*<\/div>/i.test(html);
+  const thin = words < 150;
   const answerChecks = [
     { label: 'Prices or price ranges', ok: /\$\s?\d|\bprice|\bpricing|\bcost|\bestimate|\bquote/i.test(text) },
     { label: 'Licensed, insured, or certified', ok: /licen[cs]ed|insured|bonded|certified|nate\b|epa\b/i.test(text) },
@@ -493,10 +499,15 @@ export async function runAudit(input: { website: string; trade: string; city: st
     label: `Answers what people ask before hiring ${/^[aeiouh]/i.test(noun) && !/^h(?!vac)/i.test(noun) ? 'an' : 'a'} ${noun}`,
     status: status(answered >= 5, answered >= 3),
     weight: 8,
-    found: `The page covers ${answered} of ${answerChecks.length} common questions.`,
+    found:
+      thin && appShell
+        ? `We could only read ${answered} of ${answerChecks.length} because most of the page text loads with JavaScript (see below).`
+        : `The page covers ${answered} of ${answerChecks.length} common questions.`,
     fix:
       answered >= 5
         ? ''
+        : thin && appShell
+          ? 'Once your page text is in the HTML (see the JavaScript check), make sure it plainly covers prices, licensing, areas served, reviews, response time, and who runs the business.'
         : `Add short, plain answers for: ${answerChecks
             .filter((item) => !item.ok)
             .map((item) => item.label.toLowerCase())
@@ -522,15 +533,12 @@ export async function runAudit(input: { website: string; trade: string; city: st
       : '',
   });
 
-  const words = text.split(/\s+/).filter((word) => /[a-z]{2,}/i.test(word)).length;
-  const appShell = /<div[^>]+id=["'](root|app|__next|__nuxt)["'][^>]*>\s*<\/div>/i.test(html);
-  const thin = words < 150;
   checks.push({
     id: 'rendered',
     group: 'ai',
     label: 'Your words are in the page, not only loaded by JavaScript',
     status: thin ? (appShell || scriptsCount(html) > 0 ? 'fail' : 'warn') : 'pass',
-    weight: 8,
+    weight: 10,
     found: thin
       ? `Only about ${words} words are in the page as it is first sent${appShell ? '. The rest appears to load with JavaScript afterward' : ''}.`
       : `About ${words} words are readable in the page as first sent.`,
@@ -668,7 +676,12 @@ export async function runAudit(input: { website: string; trade: string; city: st
   const grade = score >= 80 ? 'Strong' : score >= 55 ? 'Fair' : 'Needs work';
   const fixes = checks
     .filter((check) => check.status !== 'pass' && check.fix)
-    .sort((a, b) => (b.status === 'fail' ? 1 : 0) - (a.status === 'fail' ? 1 : 0) || b.weight - a.weight)
+    .sort(
+      (a, b) =>
+        (ROOT_CAUSES.has(b.id) ? 1 : 0) - (ROOT_CAUSES.has(a.id) ? 1 : 0) ||
+        (b.status === 'fail' ? 1 : 0) - (a.status === 'fail' ? 1 : 0) ||
+        b.weight - a.weight,
+    )
     .map((check) => ({ id: check.id, label: check.label, fix: check.fix, weight: check.weight }));
 
   const ogSite = metaBy(html, 'property', 'og:site_name');
