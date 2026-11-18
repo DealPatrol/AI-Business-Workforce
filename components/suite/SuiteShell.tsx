@@ -8,6 +8,7 @@ const NAV = [
   { href: '/postcards', label: 'Postcards' },
   { href: '/lead-scout', label: 'Leads' },
   { href: '/agents', label: 'Agents' },
+  { href: '/ai-visibility', label: 'AI Visibility' },
   { href: '/compare', label: 'Compare' },
   { href: '/pricing', label: 'Pricing' },
   { href: '/login?next=/desk', label: 'Sign in' },
@@ -44,6 +45,7 @@ export function SuiteShell({ children }: { children: ReactNode }) {
         <nav>
           <Link href="/missed-call">Missed-Call Text-Back</Link>
           <Link href="/google-profile">Google Profile Setup</Link>
+          <Link href="/ai-visibility">Free SEO &amp; AI Visibility Grader</Link>
           <Link href="/pricing">Pricing</Link>
           <Link href="/terms">Terms</Link>
           <Link href="/privacy">Privacy</Link>

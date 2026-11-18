@@ -133,6 +133,13 @@ const PAGES = {
     titleMode: 'absolute',
     receptionist: false,
   },
+  '/ai-visibility': {
+    title: 'Free SEO & AI Visibility Grader | Front Porch Growth',
+    description:
+      'See how Google and AI assistants like ChatGPT see your home-service business. Free grader, real checks, plain-English fixes.',
+    titleMode: 'absolute',
+    receptionist: false,
+  },
   '/google-profile': {
     title: 'Google Business Profile setup, $99 | Front Porch Growth',
     description:

@@ -59,6 +59,7 @@ export function frontPorchGrowthSitemap(origin: string, now: Date): MetadataRout
     entry(origin, '/hvac', now, 'weekly', 0.9),
     entry(origin, '/missed-call', now, 'weekly', 0.8),
     entry(origin, '/google-profile', now, 'weekly', 0.8),
+    entry(origin, '/ai-visibility', now, 'weekly', 0.85),
     entry(origin, '/privacy', now, 'yearly', 0.3),
     entry(origin, '/sms', now, 'yearly', 0.3),
     entry(origin, '/sms-consent', now, 'yearly', 0.3),
