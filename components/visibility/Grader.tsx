@@ -58,6 +58,23 @@ const GROUPS: Array<{ key: Check['group']; title: string }> = [
 
 const STATUS_TEXT = { pass: 'Good', warn: 'Could be better', fail: 'Missing' } as const;
 
+function formatWhen(iso: string) {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return iso;
+  try {
+    return date.toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      timeZoneName: 'short',
+    });
+  } catch {
+    return date.toUTCString();
+  }
+}
+
 function StatusMark({ status }: { status: Check['status'] }) {
   return (
     <span className={`${styles.mark} ${styles[`mark_${status}`]}`} aria-hidden="true">
@@ -100,7 +117,7 @@ export function Grader() {
   }
 
   const report = result?.report;
-  const checkedDate = report ? new Date(report.checkedAt).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short', timeZoneName: 'short' } as Intl.DateTimeFormatOptions) : '';
+  const checkedDate = report ? formatWhen(report.checkedAt) : '';
 
   return (
     <div className={styles.graderWrap}>
@@ -195,7 +212,7 @@ export function Grader() {
                       <span>
                         <b>“{record.prompt}”</b> {record.mentioned ? 'Your business was mentioned.' : 'Your business was not mentioned.'}
                         <small>
-                          {record.engine} ({record.model}) · {record.location} · {new Date(record.checkedAt).toLocaleString('en-US', { timeZoneName: 'short' })}
+                          {record.engine} ({record.model}) · {record.location} · {formatWhen(record.checkedAt)}
                         </small>
                       </span>
                     </li>
