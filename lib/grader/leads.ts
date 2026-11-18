@@ -6,6 +6,11 @@ import type { Competitor } from '@/lib/grader/competitors';
 
 export const PUBLIC_CONTACT_EMAIL = 'hello@frontporchgrowth.com';
 
+/** Resend's test inboxes (delivered@resend.dev etc.) mark QA runs: saved as tests, no owner alert. */
+export function isTestEmail(email: string) {
+  return /@resend\.dev$/i.test(email.trim());
+}
+
 /** Resend only sends from verified domains. Reuse the verified address with the Front Porch Growth name. */
 function graderFromAddress() {
   const explicit = process.env.GRADER_FROM_EMAIL?.trim();
@@ -37,6 +42,7 @@ export async function saveReport(input: {
         ai_checks: input.ai.records,
         ai_check_status: input.ai.status === 'done' ? 'done' : 'queued',
         user_agent: input.userAgent.slice(0, 300),
+        source: isTestEmail(input.email) ? 'ai-visibility grader (QA test)' : 'ai-visibility grader',
       })
       .select('id')
       .single();
@@ -103,17 +109,20 @@ export async function sendReportEmails(input: {
   const html = reportHtml(input.report, input.ai, input.competitors, input.competitorSource);
   let notified = false;
   let emailed = false;
-  try {
-    await sendResendEmail({
-      to: avaOwnerEmail(),
-      from: graderFromAddress(),
-      replyTo: input.email,
-      subject: `New grader lead: ${input.report.input.trade} in ${input.report.input.city} (${input.report.score}/100)`,
-      html: `<div style="font-family:Arial,sans-serif;max-width:680px;margin:auto"><p><b>${escapeHtml(input.email)}</b> ran the free AI visibility grader.</p><p>Website: ${escapeHtml(input.report.finalUrl)}<br>Trade: ${escapeHtml(input.report.input.trade)}<br>City: ${escapeHtml(input.report.input.city)}<br>AI check: ${input.ai.status === 'done' ? 'ran live' : 'queued, run it and email them'}</p><hr>${html}</div>`,
-    });
-    notified = true;
-  } catch (error) {
-    console.error('grader notify error', error instanceof Error ? error.message : error);
+  const test = isTestEmail(input.email);
+  if (!test) {
+    try {
+      await sendResendEmail({
+        to: avaOwnerEmail(),
+        from: graderFromAddress(),
+        replyTo: input.email,
+        subject: `New grader lead: ${input.report.input.trade} in ${input.report.input.city} (${input.report.score}/100)`,
+        html: `<div style="font-family:Arial,sans-serif;max-width:680px;margin:auto"><p><b>${escapeHtml(input.email)}</b> ran the free AI visibility grader.</p><p>Website: ${escapeHtml(input.report.finalUrl)}<br>Trade: ${escapeHtml(input.report.input.trade)}<br>City: ${escapeHtml(input.report.input.city)}<br>AI check: ${input.ai.status === 'done' ? 'ran live' : 'queued, run it and email them'}</p><hr>${html}</div>`,
+      });
+      notified = true;
+    } catch (error) {
+      console.error('grader notify error', error instanceof Error ? error.message : error);
+    }
   }
   try {
     await sendResendEmail({

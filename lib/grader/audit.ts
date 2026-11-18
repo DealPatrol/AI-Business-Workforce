@@ -254,7 +254,7 @@ export async function runAudit(input: { website: string; trade: string; city: st
     .map((href) => digits(decodeURIComponent(href.slice(4))));
   const textPhones = (text.match(PHONE_RE) || []).map(digits);
   const schemaPhones = nodes.map((node) => textOf(node.telephone)).filter(Boolean).map(digits);
-  const phones = Array.from(new Set([...telLinks, ...schemaPhones, ...textPhones].filter((d) => d.length === 10))).slice(0, 3);
+  const phones = Array.from(new Set([...telLinks, ...schemaPhones, ...textPhones].filter((d) => d.length === 10 && !/^\d{3}55501\d{2}$/.test(d)))).slice(0, 3);
   checks.push({
     id: 'phone',
     group: 'facts',

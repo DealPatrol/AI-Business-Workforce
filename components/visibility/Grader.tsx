@@ -100,7 +100,7 @@ export function Grader() {
   }
 
   const report = result?.report;
-  const checkedDate = report ? new Date(report.checkedAt).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : '';
+  const checkedDate = report ? new Date(report.checkedAt).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short', timeZoneName: 'short' } as Intl.DateTimeFormatOptions) : '';
 
   return (
     <div className={styles.graderWrap}>
@@ -195,7 +195,7 @@ export function Grader() {
                       <span>
                         <b>“{record.prompt}”</b> {record.mentioned ? 'Your business was mentioned.' : 'Your business was not mentioned.'}
                         <small>
-                          {record.engine} ({record.model}) · {record.location} · {new Date(record.checkedAt).toLocaleString('en-US')}
+                          {record.engine} ({record.model}) · {record.location} · {new Date(record.checkedAt).toLocaleString('en-US', { timeZoneName: 'short' })}
                         </small>
                       </span>
                     </li>

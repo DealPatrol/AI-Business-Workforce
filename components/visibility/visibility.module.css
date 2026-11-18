@@ -631,6 +631,25 @@
   border: 0;
 }
 
+.checkList {
+  margin: 0 0 14px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid #efe3c8;
+}
+
+.checkList summary {
+  cursor: pointer;
+  font-weight: 750;
+  color: var(--green-2);
+}
+
+.checkList p {
+  margin: 8px 0 0;
+  font-size: 15px;
+}
+
 /* ---------- Sections ---------- */
 .section {
   padding: 64px 0 0;

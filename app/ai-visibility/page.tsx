@@ -84,7 +84,7 @@ const TIERS: Tier[] = [
 ];
 
 const ROADMAP = [
-  { stage: 'Included now', items: ['AI recommendation tracking', 'SEO audit', 'Competitor visibility', 'Business fact check', 'Question-to-page matching', 'Source and citation check', 'Change history'] },
+  { stage: 'Included now', items: ['Everything listed above, on every plan, within its limits'] },
   { stage: 'Early access', items: ['Google Search Console connection'] },
   { stage: 'Coming soon', items: ['Content drafts written for you (you approve every word)', 'Campaign results and ROI tracking'] },
   { stage: 'Later', items: ['Side-by-side experiments', 'AI crawler monitoring (Agency plan)'] },
@@ -234,13 +234,20 @@ export default function AiVisibilityPage() {
             <span className={styles.eyebrow}>FREE GRADER</span>
             <h2 id="grader-title">See what search engines and AI can read about you</h2>
             <p>
-              Enter your website, trade, and city. We load your page right now and check about 20 things: your phone, address, and hours;
-              whether you say what you do and where; structured data; FAQs; mobile setup; sitemap; robots.txt; link previews; and rough speed.
-              You get a score, what we found, and the fixes that matter most.
+              Enter your website, trade, and city. We load your page right now and run 21 checks that search engines and AI assistants
+              rely on. You get a score, what we found, and the fixes that matter most.
             </p>
+            <details className={styles.checkList}>
+              <summary>What the free grade checks</summary>
+              <p>
+                Your phone, address, and hours; whether you say what you do and where; business schema; FAQs; answers to common customer
+                questions; whether search and AI crawlers are allowed in; HTTPS; mobile setup; sitemap; robots.txt; link previews; image
+                alt text; and rough speed.
+              </p>
+            </details>
             <p className={styles.muted}>
-              The AI recommendation check is done with real questions to real assistants. If it is not part of your instant report, we
-              run it and email you the results. We never show made-up AI answers or made-up competitors.
+              The AI recommendation check uses real questions sent to real AI assistants. If it is not in your instant report, we run it
+              and email you the results. We never show made-up AI answers or made-up competitors.
             </p>
           </div>
           <Grader />
