@@ -82,7 +82,7 @@ const TRAINING_BOTS = ['GPTBot', 'Google-Extended', 'ClaudeBot', 'CCBot', 'Apple
 
 const PHONE_RE = /(?:\+?1[\s.-]?)?\(?\b[2-9]\d{2}\)?[\s.-]\d{3}[\s.-]\d{4}\b/g;
 const STREET_RE =
-  /\b\d{2,6}\s+(?:[NSEW]\.?\s+)?[A-Za-z0-9.'-]+(?:\s+[A-Za-z0-9.'-]+){0,4}\s+(?:St|Street|Ave|Avenue|Rd|Road|Hwy|Highway|Blvd|Boulevard|Dr|Drive|Ln|Lane|Way|Pkwy|Parkway|Ct|Court|Pl|Place|Cir|Circle|Trl|Trail)\b\.?/;
+  /(?<![\d#])\b\d{2,6}\s+(?:[NSEW]\.?\s+)?(?:\d+(?:st|nd|rd|th)|[A-Za-z][A-Za-z0-9.'-]*)(?:\s+[A-Za-z0-9.'-]+){0,4}\s+(?:St|Street|Ave|Avenue|Rd|Road|Hwy|Highway|Blvd|Boulevard|Dr|Drive|Ln|Lane|Way|Pkwy|Parkway|Ct|Court|Pl|Place|Cir|Circle|Trl|Trail)\b\.?/;
 const CITY_STATE_ZIP_RE = /\b[A-Z][a-zA-Z.' -]{2,30},?\s+(?:A[LKZR]|C[AOT]|D[EC]|FL|GA|HI|I[DLNA]|K[SY]|LA|M[EDAINSOT]|N[EVHJMYCD]|O[HKR]|PA|RI|S[CD]|T[NX]|UT|V[TA]|W[AVIY])\s+\d{5}\b/;
 
 function escapeRe(value: string) {
@@ -193,17 +193,33 @@ export function normalizeWebsite(raw: string) {
 
 export async function runAudit(input: { website: string; trade: string; city: string }): Promise<GraderReport> {
   const website = normalizeWebsite(input.website);
-  let page: GraderFetchResult;
-  try {
-    page = await graderFetch(website, { timeoutMs: 9_000, maxBytes: 1_500_000 });
-  } catch (error) {
-    // A site that only answers on http still deserves a report.
-    if (website.startsWith('https://') && !/^https:\/\//i.test(input.website.trim())) {
-      page = await graderFetch(website.replace(/^https:/, 'http:'), { timeoutMs: 7_000, maxBytes: 1_500_000 });
-    } else {
-      throw error;
+  const typedProtocol = /^https?:\/\//i.test(input.website.trim());
+  const entered = new URL(website);
+  const candidates = [website];
+  if (!entered.hostname.startsWith('www.')) {
+    const www = new URL(website);
+    www.hostname = `www.${entered.hostname}`;
+    candidates.push(www.toString());
+  }
+  if (!typedProtocol) candidates.push(website.replace(/^https:/, 'http:'));
+  let page: GraderFetchResult | null = null;
+  let firstError: unknown = null;
+  let usedFallback = false;
+  for (const [index, candidate] of candidates.entries()) {
+    try {
+      const attempt = await graderFetch(candidate, { timeoutMs: index === 0 ? 9_000 : 7_000, maxBytes: 1_500_000 });
+      if (attempt.status >= 400 && index < candidates.length - 1) {
+        firstError ??= new PublicFetchError(`Your website answered with an error (HTTP ${attempt.status}), so we could not read it.`);
+        continue;
+      }
+      page = attempt;
+      usedFallback = index > 0;
+      break;
+    } catch (error) {
+      firstError ??= error;
     }
   }
+  if (!page) throw firstError instanceof Error ? firstError : new PublicFetchError('Could not load that website.');
   if (page.status >= 400) {
     throw new PublicFetchError(`Your website answered with an error (HTTP ${page.status}), so we could not read it.`);
   }
@@ -516,15 +532,34 @@ export async function runAudit(input: { website: string; trade: string; city: st
 
   const viewport = metaBy(html, 'name', 'viewport') || '';
   const mobile = /width\s*=\s*device-width/i.test(viewport);
+  const blocksZoom = /user-scalable\s*=\s*(no|0)\b|maximum-scale\s*=\s*1(\.0+)?\b(?!\.?\d)/i.test(viewport);
   checks.push({
     id: 'viewport',
     group: 'technical',
     label: 'Set up for phones (mobile viewport)',
-    status: status(mobile, Boolean(viewport)),
+    status: mobile && !blocksZoom ? 'pass' : viewport ? 'warn' : 'fail',
     weight: 8,
-    found: viewport ? `Viewport tag: “${viewport.slice(0, 80)}”.` : 'No mobile viewport tag found.',
-    fix: mobile ? '' : 'Add <meta name="viewport" content="width=device-width, initial-scale=1"> so the page fits phone screens. Most of your visitors are on a phone.',
+    found: viewport
+      ? `Viewport tag: “${viewport.slice(0, 80)}”.${blocksZoom ? ' It stops people from zooming in.' : ''}`
+      : 'No mobile viewport tag found.',
+    fix: mobile && !blocksZoom
+      ? ''
+      : blocksZoom
+        ? 'Remove “maximum-scale=1” and “user-scalable=no” from the viewport tag so people with weaker eyesight can pinch to zoom.'
+        : 'Add <meta name="viewport" content="width=device-width, initial-scale=1"> so the page fits phone screens. Most of your visitors are on a phone.',
   });
+
+  if (usedFallback) {
+    checks.push({
+      id: 'address-variants',
+      group: 'technical',
+      label: 'Your address works the way people type it',
+      status: 'warn',
+      weight: 4,
+      found: `${website.replace(/\/$/, '')} did not load, so we checked ${page.finalUrl} instead.`,
+      fix: `Make ${entered.hostname} (with and without “www”) forward to your site. Some people and some crawlers will type it the short way and hit an error.`,
+    });
+  }
 
   checks.push({
     id: 'sitemap',
