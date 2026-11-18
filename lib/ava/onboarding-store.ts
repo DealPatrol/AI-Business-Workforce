@@ -1,5 +1,7 @@
 import { createAdminClient } from '@/lib/supabase/admin';
 import { SMS_CONSENT_TEXT } from '@/lib/ava/sms-consent';
+import { WEB_FORM_SCRIPT_VERSION, writeSmsConsent } from '@/lib/sms/consent';
+import { toE164 } from '@/lib/analytics/contact';
 import { linkAvaCustomerToOnboarding } from '@/lib/ava/customers';
 import { assertNotificationDestinationChange } from '@/lib/ava/destination-guard';
 import {
@@ -239,6 +241,22 @@ async function saveSmsConsent(
     if (error) console.error('Executive Receptionist SMS consent was not saved', error.message);
   } catch (error) {
     console.error('Executive Receptionist SMS consent was not saved', error);
+  }
+
+  // Append-only audit row in sms_consents (the ava_onboardings columns stay the gate for owner texts).
+  if (consented) {
+    const saved = await writeSmsConsent({
+      phone: toE164(input.staffPhone) || input.staffPhone?.trim() || null,
+      method: 'web_form',
+      answer: 'yes',
+      script_version: WEB_FORM_SCRIPT_VERSION,
+      consent_text: SMS_CONSENT_TEXT,
+      onboarding_id: id,
+      business_name: input.businessName || null,
+      source: 'onboarding_form',
+      ip: input.smsConsentIp?.trim() || null,
+    });
+    if (!saved.ok) console.error('Web-form SMS consent audit row was not saved', saved.error);
   }
 }
 

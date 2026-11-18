@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { buildAvaAgentPrompt } from '@/lib/ava/provisioning';
+import { buildAvaAgentPrompt, consentToolIds } from '@/lib/ava/provisioning';
 
 const details = {
   businessName: 'Porchlight Heating & Air',
@@ -29,5 +29,14 @@ describe('agent prompt lead handoff', () => {
     assert.ok(prompt.includes('You can reply STOP anytime to opt out, or HELP for help'));
     assert.ok(prompt.includes('Would you like to receive these texts? Please say yes or no.'));
     assert.ok(prompt.includes('Never promise a callback time'));
+  });
+
+  it('logs every answer with record_sms_consent before any text, for home-service and store agents', () => {
+    for (const p of [prompt, buildAvaAgentPrompt({ ...details, plan: 'store' })]) {
+      assert.ok(p.includes('call the record_sms_consent tool with answer yes or no'));
+      assert.ok(p.includes('If the tool is unavailable or fails, do not send or promise any text.'));
+    }
+    assert.deepEqual(consentToolIds({ ELEVENLABS_CONSENT_TOOL_ID: 'tool_x' }), ['tool_x']);
+    assert.deepEqual(consentToolIds({}), []);
   });
 });

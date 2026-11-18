@@ -1,3 +1,4 @@
+import { ownerHasWrittenConsent } from '@/lib/sms/consent';
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import {
@@ -230,7 +231,7 @@ export async function POST(req: NextRequest) {
       let sms;
       try {
         // Goes to the operator's own number; off unless AVA_OPERATOR_SMS_CONSENT=true.
-        sms = operatorSmsConsented()
+        sms = operatorSmsConsented() && await ownerHasWrittenConsent(process.env.AVA_LEAD_SMS_TO || '')
           ? await sendAvaLeadSms({
               body: formatSalesQualifySmsBody(data.business_name),
             })

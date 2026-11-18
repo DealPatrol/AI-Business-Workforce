@@ -1,3 +1,4 @@
+import { ownerHasWrittenConsent } from '@/lib/sms/consent';
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { avaFromAddress, avaOwnerEmail } from '@/lib/ava/mail';
@@ -48,7 +49,7 @@ export async function POST(req: NextRequest) {
       let sms;
       try {
         // Goes to the operator's own number; off unless AVA_OPERATOR_SMS_CONSENT=true.
-        sms=operatorSmsConsented() ? await sendAvaLeadSms({ body: formatAvaLeadSmsBody(data) }) : { ...SMS_SKIPPED_NO_CONSENT };
+        sms=operatorSmsConsented() && await ownerHasWrittenConsent(process.env.AVA_LEAD_SMS_TO || '') ? await sendAvaLeadSms({ body: formatAvaLeadSmsBody(data) }) : { ...SMS_SKIPPED_NO_CONSENT };
       } catch (smsError) {
         console.error('Executive Receptionist lead SMS failed', smsError);
         sms={ sent:false, error: smsError instanceof Error ? smsError.message : 'SMS send failed' };
