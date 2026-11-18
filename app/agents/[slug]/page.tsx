@@ -62,7 +62,7 @@ export default async function AgentPage({ params }: { params: Promise<{ slug: st
         <span className={styles.eyebrow}>FREE WRITING AGENT</span>
         <h1>{agent.title}</h1>
         <p>{seo.intro}</p>
-        <p>{agent.blurb} Free to use, no account needed.</p>
+        <p>Free to use, no account needed. Nothing is sent or posted for you.</p>
         <p>
           <Link href="/agents">All agents</Link>
         </p>
@@ -97,8 +97,8 @@ export default async function AgentPage({ params }: { params: Promise<{ slug: st
           ))}
         </ul>
 
+        <h2>Questions</h2>
         <section className={styles.faq}>
-          <h2>Questions</h2>
           {seo.faqs.map((faq) => (
             <details key={faq.q}>
               <summary>{faq.q}</summary>
