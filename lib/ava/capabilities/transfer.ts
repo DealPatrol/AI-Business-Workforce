@@ -140,8 +140,11 @@ export function liveTransferPromptSection(rules: TransferRule[], opts: { mode?: 
     .join('\n');
   const screened = opts.mode === 'screened';
   const fallback = [
-    'If the transfer fails, nobody answers, or the tool says the call was not accepted, come back to the caller, apologize briefly, and do not try the same number again.',
-    opts.paging ? 'For an emergency, call page_on_call (reason transfer_unanswered) and tell the caller you have paged the on-call team. Never promise an arrival time.' : '',
+    'If transfer_to_number returns status success, the caller has been handed off: do not page, do not book a callback, and do not say it failed.',
+    'If the transfer fails, nobody answers, or the tool says the call was not accepted, come back to the caller, say honestly that nobody could pick up, apologize briefly, and do not try the same number again.',
+    opts.paging
+      ? 'Only if it was an emergency transfer, call page_on_call (reason transfer_unanswered) and tell the caller you have paged the on-call team only after it says Paged. Never promise an arrival time. For a non-emergency transfer (a person, the owner, billing, warranty or a complaint) never call page_on_call.'
+      : '',
     opts.callbacks
       ? 'Then offer a callback: call book_callback, offer the window it returns, and read the held window back.'
       : 'Then confirm their name and number and say the team will call back as soon as they can.',
