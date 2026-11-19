@@ -54,7 +54,7 @@ The app records page-open activity for valid recipient pages and deduplicates re
 
 ## Lead Finder
 
-Lead Finder is Cole's operator tool for finding local buyers, drafting cold email, and sending it from his own domain. It lives at `/dashboard/prospector` (sign in with the same Supabase user as the campaign inbox). `/leads` stays the public redirect it already was.
+Lead Finder is Cole's operator tool for finding local buyers, drafting cold email, and sending it from his own domain. It lives at `/dashboard/prospector` (sign in with the same Supabase user as the campaign inbox). `/leads` is the public lead-list sales page (1,000 leads for $20), with `/leads/thanks` and `/leads/more` as post-checkout offer pages.
 
 Apply `supabase/migrations/007_prospector.sql` in the Supabase SQL editor before using it. Lists, leads, drafts, the send log, and the do-not-contact list are stored there with row-level security.
 
