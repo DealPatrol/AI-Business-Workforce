@@ -27,11 +27,54 @@ export function avaOfferNodes(pageUrl: string) {
 
 export const avaPlanOfferNodes = avaOfferNodes;
 
+const BUSINESS_ADDRESS = {
+  '@type': 'PostalAddress' as const,
+  streetAddress: '12476 County Road 747',
+  addressLocality: 'Hanceville',
+  addressRegion: 'AL',
+  postalCode: '35077',
+  addressCountry: 'US',
+};
+
+/** Parent company. Cole Collins DBA Executive Receptionist, same address as the legal pages. */
+export function frontPorchOrganization() {
+  return {
+    '@type': 'Organization',
+    '@id': `${absoluteSiteUrl('/')}#org`,
+    name: 'Front Porch Growth',
+    legalName: 'Cole Collins DBA Executive Receptionist',
+    url: absoluteSiteUrl('/'),
+    logo: absoluteSiteUrl('/brand-logo.png'),
+    email: AVA_OFFER.contactEmail,
+    telephone: AVA_OFFER.contactPhoneHref.replace('tel:', ''),
+    address: BUSINESS_ADDRESS,
+  };
+}
+
+/** LocalBusiness + Organization, for search and AI assistants that read NAP and service area. */
+export function frontPorchLocalBusiness(extraAreaServed: Array<{ '@type': string; name: string }> = []) {
+  const areaServed = [
+    ...extraAreaServed,
+    { '@type': 'State', name: 'Alabama' },
+    { '@type': 'Country', name: 'United States' },
+  ];
+  return {
+    ...frontPorchOrganization(),
+    '@type': ['Organization', 'LocalBusiness', 'ProfessionalService'],
+    '@id': `${absoluteSiteUrl('/')}#org`,
+    description:
+      'Executive Receptionist is an AI phone receptionist for HVAC, plumbing, and other small businesses. Front Porch Growth also sells YardMailer postcard campaigns.',
+    areaServed,
+    makesOffer: avaOfferNodes(absoluteSiteUrl('/pricing')),
+  };
+}
+
 export function avaOrganization() {
   return {
     '@type': 'Organization',
-    name: 'Executive Receptionist by Workforce AI',
+    name: 'Executive Receptionist',
     url: absoluteSiteUrl('/'),
+    parentOrganization: { '@id': `${absoluteSiteUrl('/')}#org` },
   };
 }
 
@@ -76,6 +119,7 @@ export function avaServiceNode(input: {
   url: string;
   audience: string;
   serviceType: string;
+  areaServed?: Array<{ '@type': string; name: string }>;
 }) {
   return {
     '@type': 'Service',
@@ -84,7 +128,9 @@ export function avaServiceNode(input: {
     description: input.description,
     url: input.url,
     provider: avaOrganization(),
-    areaServed: { '@type': 'Country', name: 'United States' },
+    areaServed: input.areaServed?.length
+      ? input.areaServed
+      : { '@type': 'Country', name: 'United States' },
     audience: { '@type': 'BusinessAudience', audienceType: input.audience },
     offers: avaOfferNodes(input.url),
   };

@@ -15,6 +15,7 @@ const FRONT_PORCH_PATHS = [
   '/compare',
   '/reputation',
   '/lead-scout',
+  '/leads',
   '/agents',
   '/terms',
   '/ava',
@@ -86,7 +87,7 @@ describe('host sitemaps', () => {
     assert.deepEqual(locations, urls('www.executivereceptionist.com'));
     assert.ok(locations.every((url) => url.startsWith(`${EXECUTIVE_RECEPTIONIST_ORIGIN}/`)));
     assert.deepEqual(paths.slice(0, EXECUTIVE_RECEPTIONIST_INDEX.length), EXECUTIVE_RECEPTIONIST_INDEX.map((page) => page.path));
-    for (const path of ['/', '/pricing', '/receptionist-demo', '/privacy', '/terms', '/sms', '/sms-consent', '/ava', '/hvac', '/receptionist/missed-calls']) {
+    for (const path of ['/', '/pricing', '/receptionist-demo', '/privacy', '/terms', '/sms', '/sms-consent', '/ava', '/hvac', '/receptionist/missed-calls', '/business', '/dental', '/law', '/salon', '/auto-repair', '/med-spa', '/real-estate']) {
       assert.ok(paths.includes(path), path);
     }
     for (const slug of avaGuideSlugs()) assert.ok(paths.includes(`/ava/${slug}`));

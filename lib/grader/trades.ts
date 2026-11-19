@@ -14,6 +14,18 @@ export const GRADER_TRADES: GraderTrade[] = [
   { key: 'garage-door', label: 'Garage doors', terms: ['garage door', 'garage doors', 'opener'] },
   { key: 'tree-service', label: 'Tree service', terms: ['tree service', 'tree removal', 'tree trimming', 'stump', 'arborist'] },
   { key: 'pool', label: 'Pool service', terms: ['pool', 'pool cleaning', 'pool service'] },
+  { key: 'dental', label: 'Dentist / dental office', terms: ['dentist', 'dental', 'dentistry', 'teeth', 'orthodont'] },
+  { key: 'law', label: 'Law firm / attorney', terms: ['attorney', 'lawyer', 'law firm', 'legal', 'law office'] },
+  { key: 'salon', label: 'Hair salon / barber', terms: ['salon', 'hair', 'barber', 'stylist', 'haircut'] },
+  { key: 'auto-repair', label: 'Auto repair', terms: ['auto repair', 'mechanic', 'brakes', 'oil change', 'automotive', 'car repair'] },
+  { key: 'med-spa', label: 'Med spa', terms: ['med spa', 'medspa', 'botox', 'filler', 'aesthetics', 'facial'] },
+  { key: 'real-estate', label: 'Real estate agent', terms: ['realtor', 'real estate', 'homes for sale'] },
+  { key: 'restaurant', label: 'Restaurant', terms: ['restaurant', 'menu', 'dine', 'takeout', 'catering'] },
+  { key: 'chiropractor', label: 'Chiropractor', terms: ['chiropractor', 'chiropractic', 'back pain'] },
+  { key: 'veterinarian', label: 'Veterinarian', terms: ['veterinarian', 'vet', 'animal hospital', 'pet care'] },
+  { key: 'accountant', label: 'Accountant / CPA', terms: ['accountant', 'cpa', 'tax', 'bookkeeping', 'accounting'] },
+  { key: 'insurance', label: 'Insurance agency', terms: ['insurance', 'insurance agent', 'insurance agency'] },
+  { key: 'gym', label: 'Gym / fitness', terms: ['gym', 'fitness', 'personal training', 'workout'] },
   { key: 'marketing', label: 'Marketing / agency', terms: ['marketing', 'seo', 'advertising', 'agency', 'leads'] },
 ];
 
@@ -48,5 +60,18 @@ export function tradeNoun(label: string) {
   if (lower.startsWith('tree')) return 'tree service';
   if (lower.startsWith('pool')) return 'pool service';
   if (lower.startsWith('marketing')) return 'marketing agency';
+  if (lower.startsWith('dent')) return 'dentist';
+  if (lower.startsWith('law') || lower.startsWith('attorney') || lower.startsWith('lawyer')) return 'lawyer';
+  if (lower.startsWith('hair') || lower.startsWith('salon')) return 'hair salon';
+  if (lower.startsWith('barber')) return 'barber';
+  if (lower.startsWith('auto')) return 'car repair shop';
+  if (lower.startsWith('med spa') || lower.startsWith('medspa')) return 'med spa';
+  if (lower.startsWith('real estate') || lower.startsWith('realtor')) return 'real estate agent';
+  if (lower.startsWith('restaurant')) return 'restaurant';
+  if (lower.startsWith('chiro')) return 'chiropractor';
+  if (lower.startsWith('vet')) return 'veterinarian';
+  if (lower.startsWith('accountant') || lower.startsWith('cpa')) return 'CPA';
+  if (lower.startsWith('insurance')) return 'local insurance agent';
+  if (lower.startsWith('gym') || lower.startsWith('fitness')) return 'gym';
   return `${label} company`;
 }
