@@ -745,7 +745,7 @@ function AvaOnboardingForm() {
         )}
       </div>
       <footer className={styles.footer}>
-        <span>Executive Receptionist by Workforce AI · DealPatrol</span>
+        <span>Executive Receptionist · Operated by Cole Collins DBA Executive Receptionist</span>
         <Link href="/privacy">Privacy</Link>
       </footer>
     </main>

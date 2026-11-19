@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Sparkles } from 'lucide-react';
 
-export function AvaFooter({ homeHref = '/receptionist' }: { homeHref?: string }) {
+export function AvaFooter({ homeHref = '/' }: { homeHref?: string }) {
   return (
     <footer className="sales-footer">
       <Link className="ava-brand" href={homeHref}>
@@ -10,9 +10,9 @@ export function AvaFooter({ homeHref = '/receptionist' }: { homeHref?: string })
         </span>{' '}
         Executive Receptionist
       </Link>
-      <p>Part of Front Porch Growth. Operated by DealPatrol.</p>
+      <p>Operated by Cole Collins DBA Executive Receptionist, Hanceville, AL.</p>
       <nav className="footer-links" aria-label="Executive Receptionist">
-        <Link href="/">Front Porch Growth</Link>
+        <Link href={homeHref}>Home</Link>
         <Link href="/pricing">Pricing</Link>
         <Link href="/terms">Terms</Link>
         <Link href="/privacy">Privacy</Link>

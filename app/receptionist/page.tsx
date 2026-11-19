@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { ReceptionistLanding } from '@/components/receptionist/ReceptionistLanding';
-import { avaOfferNodes } from '@/lib/ava/structured-data';
+import { avaPlanOfferNodes, executiveReceptionistOrganization, faqNode } from '@/lib/ava/structured-data';
 import { EXECUTIVE_FAQS } from '@/lib/executive-receptionist';
 import { getErDemoNiche } from '@/lib/er-demos';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
@@ -11,28 +11,28 @@ const title = renderedTitle(seo);
 const description = seo.description;
 const canonical = `${EXECUTIVE_RECEPTIONIST_ORIGIN}/`;
 
-const structured = [
-  {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: 'Executive Receptionist',
-    description:
-      'AI phone receptionist that answers calls, takes the caller name, number and reason, and emails the lead to the business. Texting is available after setup.',
-    brand: { '@type': 'Brand', name: 'Front Porch Growth' },
-    url: canonical,
-    // One Offer per published plan, from the same constants as the pricing page.
-    offers: avaOfferNodes(`${EXECUTIVE_RECEPTIONIST_ORIGIN}/pricing`),
-  },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: EXECUTIVE_FAQS.map((faq) => ({
-      '@type': 'Question',
-      name: faq.q,
-      acceptedAnswer: { '@type': 'Answer', text: faq.a },
-    })),
-  },
-];
+const structured = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    executiveReceptionistOrganization(),
+    {
+      '@type': 'WebSite',
+      name: 'Executive Receptionist',
+      url: canonical,
+      publisher: { '@id': `${EXECUTIVE_RECEPTIONIST_ORIGIN}/#org` },
+    },
+    {
+      '@type': 'Product',
+      name: 'Executive Receptionist',
+      description:
+        'Ava, the Executive Receptionist AI phone receptionist, answers calls 24/7, takes the caller name, number and reason, and emails the lead to the business. Once hours are set in the Desk, she books visits during the call. Texting is available after setup.',
+      brand: { '@type': 'Brand', name: 'Executive Receptionist' },
+      url: canonical,
+      offers: avaPlanOfferNodes(`${EXECUTIVE_RECEPTIONIST_ORIGIN}/pricing`),
+    },
+    faqNode(EXECUTIVE_FAQS.map((faq) => ({ q: faq.q, a: faq.a }))),
+  ],
+};
 
 export async function generateMetadata(): Promise<Metadata> {
   return {

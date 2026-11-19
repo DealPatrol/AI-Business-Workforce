@@ -1,5 +1,5 @@
 import { AVA_OFFER, AVA_PLAN_KEYS, AVA_PLANS } from '@/lib/ava/pricing';
-import { absoluteSiteUrl } from '@/lib/site-url';
+import { EXECUTIVE_RECEPTIONIST_ORIGIN, FRONT_PORCH_GROWTH_ORIGIN } from '@/lib/site-url';
 
 type Faq = { q: string; a: string };
 
@@ -27,31 +27,49 @@ export function avaOfferNodes(pageUrl: string) {
 
 export const avaPlanOfferNodes = avaOfferNodes;
 
+/** City only. The street address stays on the legal pages, not in brand data. */
 const BUSINESS_ADDRESS = {
   '@type': 'PostalAddress' as const,
-  streetAddress: '12476 County Road 747',
   addressLocality: 'Hanceville',
   addressRegion: 'AL',
-  postalCode: '35077',
   addressCountry: 'US',
 };
 
-/** Parent company. Cole Collins DBA Executive Receptionist, same address as the legal pages. */
+const LEGAL_NAME = 'Cole Collins DBA Executive Receptionist';
+const ER_ORG_ID = `${EXECUTIVE_RECEPTIONIST_ORIGIN}/#org`;
+const FOUNDER = {
+  '@type': 'Person' as const,
+  name: 'Cole Collins',
+  jobTitle: 'Founder',
+  address: BUSINESS_ADDRESS,
+};
+const TELEPHONE = AVA_OFFER.contactPhoneHref.replace('tel:', '');
+
+/** Brands Cole runs. Executive Receptionist (the receptionist is named Ava), Front Porch Growth (marketing), YardMailer (postcards). */
+const BRANDS = [
+  { '@type': 'Brand', name: 'Executive Receptionist', url: `${EXECUTIVE_RECEPTIONIST_ORIGIN}/` },
+  { '@type': 'Brand', name: 'Front Porch Growth', url: `${FRONT_PORCH_GROWTH_ORIGIN}/` },
+  { '@type': 'Brand', name: 'YardMailer', url: `${FRONT_PORCH_GROWTH_ORIGIN}/postcards` },
+];
+
+/** Front Porch Growth: the marketing-services brand (postcards, Google Profile, free tools). */
 export function frontPorchOrganization() {
   return {
     '@type': 'Organization',
-    '@id': `${absoluteSiteUrl('/')}#org`,
+    '@id': `${FRONT_PORCH_GROWTH_ORIGIN}/#org`,
     name: 'Front Porch Growth',
-    legalName: 'Cole Collins DBA Executive Receptionist',
-    url: absoluteSiteUrl('/'),
-    logo: absoluteSiteUrl('/brand-logo.png'),
+    legalName: LEGAL_NAME,
+    url: `${FRONT_PORCH_GROWTH_ORIGIN}/`,
+    logo: `${FRONT_PORCH_GROWTH_ORIGIN}/brand-logo.png`,
     email: AVA_OFFER.contactEmail,
-    telephone: AVA_OFFER.contactPhoneHref.replace('tel:', ''),
+    telephone: TELEPHONE,
     address: BUSINESS_ADDRESS,
+    founder: FOUNDER,
+    brand: BRANDS,
   };
 }
 
-/** LocalBusiness + Organization, for search and AI assistants that read NAP and service area. */
+/** LocalBusiness + Organization for the Front Porch Growth home page. */
 export function frontPorchLocalBusiness(extraAreaServed: Array<{ '@type': string; name: string }> = []) {
   const areaServed = [
     ...extraAreaServed,
@@ -61,20 +79,45 @@ export function frontPorchLocalBusiness(extraAreaServed: Array<{ '@type': string
   return {
     ...frontPorchOrganization(),
     '@type': ['Organization', 'LocalBusiness', 'ProfessionalService'],
-    '@id': `${absoluteSiteUrl('/')}#org`,
     description:
-      'Executive Receptionist is an AI phone receptionist for HVAC, plumbing, and other small businesses. Front Porch Growth also sells YardMailer postcard campaigns.',
+      'Front Porch Growth sells marketing services for home-service businesses: YardMailer postcard campaigns, Google Business Profile setup, and free writing tools. Its sister brand, Executive Receptionist, is an AI phone receptionist named Ava.',
     areaServed,
-    makesOffer: avaOfferNodes(absoluteSiteUrl('/pricing')),
   };
 }
 
+/** Executive Receptionist: the AI receptionist business. Ava is the receptionist. */
+export function executiveReceptionistOrganization(extraAreaServed: Array<{ '@type': string; name: string }> = []) {
+  return {
+    '@type': ['Organization', 'LocalBusiness', 'ProfessionalService'],
+    '@id': ER_ORG_ID,
+    name: 'Executive Receptionist',
+    alternateName: 'Ava by Executive Receptionist',
+    legalName: LEGAL_NAME,
+    url: `${EXECUTIVE_RECEPTIONIST_ORIGIN}/`,
+    logo: `${EXECUTIVE_RECEPTIONIST_ORIGIN}/brand-logo.png`,
+    email: AVA_OFFER.contactEmail,
+    telephone: TELEPHONE,
+    address: BUSINESS_ADDRESS,
+    founder: FOUNDER,
+    brand: BRANDS,
+    description:
+      'Executive Receptionist is an AI phone receptionist, named Ava, for HVAC, plumbing, and other small businesses. Four monthly plans from $79 (Starter first month $1) to $789.',
+    areaServed: [
+      ...extraAreaServed,
+      { '@type': 'State', name: 'Alabama' },
+      { '@type': 'Country', name: 'United States' },
+    ],
+    makesOffer: avaOfferNodes(`${EXECUTIVE_RECEPTIONIST_ORIGIN}/pricing`),
+  };
+}
+
+/** Short reference to the Executive Receptionist organization, for provider fields. */
 export function avaOrganization() {
   return {
     '@type': 'Organization',
+    '@id': ER_ORG_ID,
     name: 'Executive Receptionist',
-    url: absoluteSiteUrl('/'),
-    parentOrganization: { '@id': `${absoluteSiteUrl('/')}#org` },
+    url: `${EXECUTIVE_RECEPTIONIST_ORIGIN}/`,
   };
 }
 

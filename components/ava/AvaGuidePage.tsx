@@ -11,11 +11,12 @@ import { getAvaGuide, type AvaGuide } from '@/lib/ava/trade-pages';
 import {
   avaProductNode,
   avaServiceNode,
+  executiveReceptionistOrganization,
   faqNode,
-  frontPorchLocalBusiness,
   jsonLdGraph,
 } from '@/lib/ava/structured-data';
-import { absoluteSiteUrl } from '@/lib/site-url';
+import { avaGuidePath } from '@/lib/seo/receptionist-home';
+import { executiveReceptionistUrl } from '@/lib/site-url';
 
 function GuideExtra({ guide }: { guide: AvaGuide }) {
   switch (guide.kind) {
@@ -111,7 +112,7 @@ function CityNotes({ guide }: { guide: AvaGuide }) {
 }
 
 export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: string }) {
-  const pageUrl = absoluteSiteUrl(`/ava/${guide.slug}`);
+  const pageUrl = executiveReceptionistUrl(`/ava/${guide.slug}`);
   const liveHref = `${homeHref}#talk-to-ava`;
   const areaServed = (guide.areaServed || []).map((name) =>
     name === 'United States'
@@ -121,7 +122,7 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
         : { '@type': 'City', name },
   );
   const graph = jsonLdGraph([
-    frontPorchLocalBusiness(areaServed.filter((place) => place['@type'] === 'City')),
+    executiveReceptionistOrganization(areaServed.filter((place) => place['@type'] === 'City')),
     avaServiceNode({
       name: guide.title,
       description: guide.description,
@@ -299,7 +300,7 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
                 <span>{related.navLabel}</span>
                 <h3>{related.title}</h3>
                 <p>{related.blurb}</p>
-                <Link href={`/ava/${slug}`}>
+                <Link href={avaGuidePath(slug)}>
                   Read it <ArrowRight size={16} />
                 </Link>
               </article>

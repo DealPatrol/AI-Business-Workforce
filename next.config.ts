@@ -1,12 +1,14 @@
 import type { NextConfig } from 'next';
 import { AVA_LEGACY_REDIRECTS } from './lib/ava/legacy-paths';
 import { LEGACY_HOME_ANCHORS } from './lib/legacy-home-anchors';
-import { getSiteUrl } from './lib/site-url';
+import { avaGuidePath } from './lib/seo/receptionist-home';
+import { EXECUTIVE_RECEPTIONIST_ORIGIN } from './lib/site-url';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   async redirects() {
-    const base = getSiteUrl();
+    // Receptionist pages live on executivereceptionist.com, so old receptionist URLs go straight there.
+    const er = EXECUTIVE_RECEPTIONIST_ORIGIN;
     return [
       ...LEGACY_HOME_ANCHORS.map((anchor) => ({
         source: `/${anchor}`,
@@ -16,12 +18,12 @@ const nextConfig: NextConfig = {
       { source: '/api/demo10-payment', destination: '/postcards', permanent: true },
       ...AVA_LEGACY_REDIRECTS.map(([source, destination]) => ({
         source: `/ava/${source}`,
-        destination: `${base}/ava/${destination}`,
+        destination: `${er}${avaGuidePath(destination)}`,
         permanent: true,
       })),
-      { source: '/dispatch/missed-calls', destination: '/receptionist/missed-calls', permanent: true },
-      { source: '/dispatch', destination: '/receptionist', permanent: true },
-      { source: '/dispatch/:slug', destination: '/ava/:slug', permanent: true },
+      { source: '/dispatch/missed-calls', destination: `${er}/receptionist/missed-calls`, permanent: true },
+      { source: '/dispatch', destination: `${er}/`, permanent: true },
+      { source: '/dispatch/:slug', destination: `${er}/ava/:slug`, permanent: true },
       { source: '/reviews', destination: '/reputation', permanent: true },
       { source: '/lead-finder', destination: '/dashboard/prospector', permanent: true },
     ];
