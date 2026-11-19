@@ -98,6 +98,25 @@ const PAGES = {
     titleMode: 'absolute',
     receptionist: false,
   },
+  '/leads': {
+    title: '1,000 Business Leads Across the South for $20',
+    description:
+      '1,000 businesses in the industry you sell to, each with its website and the email it publishes. Across 12 Southern states. CSV, one-time $20.',
+    titleMode: 'absolute',
+    receptionist: false,
+  },
+  '/leads/thanks': {
+    title: 'Thanks for your order',
+    description: 'Your lead list order is in. Add a second 1,000-lead list for $15.',
+    titleMode: 'template',
+    receptionist: false,
+  },
+  '/leads/more': {
+    title: 'Turn your lead list into replies',
+    description: 'A cold email sequence for your industry, monthly fresh leads, or done-for-you outreach.',
+    titleMode: 'template',
+    receptionist: false,
+  },
   '/agents': {
     title: 'AI agents for home-service shops | Front Porch Growth',
     description:
