@@ -69,7 +69,7 @@ export function addonCheckoutHref(baseUrl: string, email?: string): string {
   return url.toString();
 }
 
-export function genericHotThanksView(addonUrl = LEAD_LIST_LINKS.hotAddon1000): HotThanksView {
+export function genericHotThanksView(addonUrl: string = LEAD_LIST_LINKS.hotAddon1000): HotThanksView {
   return {
     showAddon: false,
     industry: '',
