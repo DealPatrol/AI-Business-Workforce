@@ -62,6 +62,12 @@ function frontPorchReceptionistRedirect(request: NextRequest) {
 function hvacMergeRedirect(request: NextRequest) {
   const target = hvacMergeTarget(request.nextUrl.pathname);
   if (!target) return null;
+  if (isExecutiveReceptionistHost(requestHost(request))) {
+    return NextResponse.redirect(
+      new URL(`${target}${request.nextUrl.search}`, EXECUTIVE_RECEPTIONIST_ORIGIN),
+      RECEPTIONIST_HOME_REDIRECT_STATUS,
+    );
+  }
   const url = request.nextUrl.clone();
   url.pathname = target;
   return NextResponse.redirect(url, RECEPTIONIST_HOME_REDIRECT_STATUS);
