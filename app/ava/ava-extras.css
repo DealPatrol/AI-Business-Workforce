@@ -201,3 +201,73 @@
     margin-left: 0;
   }
 }
+
+.hero-copy p.direct-answer {
+  margin: 0 0 14px;
+  padding: 16px 18px;
+  background: #163221;
+  border: 1px solid #2f5a40;
+  border-radius: 14px;
+  color: #e8f3ea;
+  font-size: 17px;
+  line-height: 1.55;
+  font-weight: 550;
+}
+
+.hero-copy p.demo-line {
+  margin: 0 0 14px;
+  color: #c5d0c8;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.hero-copy p.demo-line a {
+  color: #8fe66f;
+  font-weight: 800;
+}
+
+.ava-sales .cost-table-wrap {
+  max-width: 920px;
+  margin: 28px auto 0;
+}
+
+.ava-sales .cost-table-wrap h3 {
+  margin: 0 0 12px;
+  font: 600 22px Georgia, serif;
+  color: #102017;
+}
+
+.ava-sales .cost-table-scroll {
+  overflow-x: auto;
+}
+
+.ava-sales .cost-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  color: #102017;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.ava-sales .cost-table th,
+.ava-sales .cost-table td {
+  text-align: left;
+  vertical-align: top;
+  padding: 12px 14px;
+  border: 1px solid #d5dfd5;
+}
+
+.ava-sales .cost-table th {
+  background: #eef4ef;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.ava-sales .cost-table-note {
+  margin: 12px 0 0;
+  color: #3e4f44;
+  font-size: 13px;
+  line-height: 1.5;
+}

@@ -9,7 +9,7 @@ import styles from '@/components/suite/home.module.css';
 import { AVA_DEMO_LINE } from '@/lib/ava/demo-line';
 import { AVA_OFFER } from '@/lib/ava/pricing';
 import { MonthlyPlans, PlanCheckoutButton } from '@/components/ava/MonthlyPlans';
-import { avaPlanOfferNodes, faqNode } from '@/lib/ava/structured-data';
+import { avaPlanOfferNodes, faqNode, frontPorchLocalBusiness } from '@/lib/ava/structured-data';
 import { DESK_TOOLS } from '@/lib/desk-tools';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 import { absoluteSiteUrl } from '@/lib/site-url';
@@ -77,16 +77,10 @@ const orgJsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
     {
-      '@type': 'Organization',
+      ...frontPorchLocalBusiness(),
       '@id': `${absoluteSiteUrl('/')}#org`,
-      name: 'Front Porch Growth',
-      url: absoluteSiteUrl('/'),
-      logo: absoluteSiteUrl('/brand-logo.png'),
       description: 'Ava, an AI phone receptionist, plus lead generation and postcard tools for home-service businesses.',
-      email: 'hello@frontporchgrowth.com',
-      makesOffer: [
-        ...avaPlanOfferNodes(absoluteSiteUrl('/pricing#plans')),
-      ],
+      makesOffer: [...avaPlanOfferNodes(absoluteSiteUrl('/pricing#plans'))],
     },
     { '@type': 'WebSite', name: 'Front Porch Growth', url: absoluteSiteUrl('/'), publisher: { '@id': `${absoluteSiteUrl('/')}#org` } },
     faqNode([...HOME_FAQS]),

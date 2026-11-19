@@ -9,6 +9,10 @@ export type GuideSource = { href: string; text: string };
 
 export type GuideColumn = { title: string; body: string };
 
+export type GuideCostRow = { option: string; cost: string; notes: string };
+
+export type GuideCityNote = { city: string; body: string };
+
 export type AvaGuide = {
   slug: string;
   kind: GuideKind;
@@ -19,6 +23,8 @@ export type AvaGuide = {
   description: string;
   eyebrow: string;
   h1: string;
+  /** Plain-language answer shown immediately under the H1. */
+  directAnswer?: string;
   audience: string;
   lede: string;
   pain: string;
@@ -30,6 +36,10 @@ export type AvaGuide = {
   related: string[];
   columns?: GuideColumn[];
   sources?: GuideSource[];
+  costRows?: GuideCostRow[];
+  costNote?: string;
+  cityNotes?: GuideCityNote[];
+  areaServed?: string[];
 };
 
 const blsSource: GuideSource = {
@@ -52,14 +62,16 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Plumbers',
     blurb: 'Active leaks, drains, water heaters, and after-hours dispatch intake.',
     title: 'AI Answering Service for Plumbers',
-    metaTitle: 'AI Receptionist & Answering Service for Plumbers',
+    metaTitle: 'AI Answering Service for Plumbers | Executive Receptionist',
     description:
-      'AI Receptionist answers plumbing calls 24/7, takes the job details, and emails you the lead. From $79/mo, first month $1.',
+      'An AI answering service for plumbers that answers 24/7, takes the job details, and emails you the lead. Starter is $1 the first month, then $79/mo.',
     eyebrow: 'AI answering service for plumbers',
-    h1: 'Answer the leak call while you are still under the sink.',
+    h1: 'AI answering service for plumbers',
+    directAnswer:
+      'Executive Receptionist is an AI answering service for plumbing shops. She answers the calls you forward, asks whether the water is shut off, takes the name, callback number, address, and what’s wrong, and emails you the lead. Plans are Starter $79 a month (first month $1, 100 minutes), Growth $197, Pro $397, and Elite $789. Hear her on the demo line at (256) 952-4935.',
     audience: 'plumbing companies and owner-operators',
     lede:
-      'A homeowner with water on the floor does not wait on voicemail. Executive Receptionist picks up, asks whether they can shut the water off, and texts you a lead you can dispatch or call back.',
+      'A homeowner with water on the floor does not wait on voicemail. Executive Receptionist picks up, asks whether they can shut the water off, and emails you a lead you can dispatch or call back.',
     pain:
       'Plumbing demand shows up as interruptions. The owner is soldering, the apprentice is driving, and the office line — if there is one — is the same cell phone in a pocket. The caller who reaches a person first usually gets the job.',
     calls: [
@@ -91,8 +103,12 @@ export const AVA_GUIDES: AvaGuide[] = [
         q: 'Can I keep my current plumbing number?',
         a: 'Usually, by forwarding the calls you do not answer. The exact carrier steps are confirmed during setup. Executive Receptionist does not replace your phone carrier.',
       },
+      {
+        q: 'How much does an AI answering service for plumbers cost?',
+        a: 'Four monthly plans: Starter $79 (100 minutes, first month $1), Growth $197 (300 minutes), Pro $397 (1,200 minutes), Elite $789 (2,000 minutes). Month to month, cancel anytime. If you run past your minutes, Ava keeps answering and we reach out about a bigger plan.',
+      },
     ],
-    related: ['ai-answering-service-for-hvac', 'missed-call-cost-calculator', 'ai-answering-service-for-general-contractors'],
+    related: ['ai-answering-service-for-hvac', 'ai-receptionist-for-hvac-and-plumbing-in-alabama', 'ai-receptionist-vs-answering-service'],
   }),
   trade({
     slug: 'ai-answering-service-for-hvac',
@@ -139,7 +155,7 @@ export const AVA_GUIDES: AvaGuide[] = [
         a: 'Yes. Growth and Pro include more room for separate service types and routing. Starter still covers one clear intake: who, where, and what is wrong.',
       },
     ],
-    related: ['ai-answering-service-for-plumbers', 'ai-answering-service-for-electricians', 'missed-call-answering-home-services'],
+    related: ['best-ai-receptionist-for-hvac-companies', 'ai-answering-service-for-plumbers', 'ai-receptionist-for-hvac-and-plumbing-in-alabama'],
   }),
   trade({
     slug: 'ai-answering-service-for-roofers',
@@ -153,7 +169,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     h1: 'Catch the storm calls that hit while every ladder is already up.',
     audience: 'roofing contractors and storm-response crews',
     lede:
-      'After hail, the phone does not ring once. It rings while you are on someone else’s roof. Executive Receptionist takes the address, asks whether water is coming in now, and texts you a list you can schedule instead of a voicemail box.',
+      'After hail, the phone does not ring once. It rings while you are on someone else’s roof. Executive Receptionist takes the address, asks whether water is coming in now, and emails you a list you can schedule instead of a voicemail box.',
     pain:
       'Roofing sales happen away from a desk. A leak caller and a “we might need a roof next year” caller leave the same kind of voicemail. Sorting them at 8 p.m. is how inspections slip to the company that answered at 2 p.m.',
     calls: [
@@ -320,7 +336,7 @@ export const AVA_GUIDES: AvaGuide[] = [
       },
       {
         q: 'What about customers who already have an account?',
-        a: 'You can tell Executive Receptionist to mark “existing customer” and text you the request instead of treating it as a new lead.',
+        a: 'You can tell Executive Receptionist to mark “existing customer” and email you the request instead of treating it as a new lead.',
       },
       {
         q: 'Does this include landscaping installs?',
@@ -853,12 +869,14 @@ export const AVA_GUIDES: AvaGuide[] = [
     kind: 'comparison',
     navLabel: 'Vs answering service',
     blurb: 'Voicemail, a human answering service, and Executive Receptionist — what each one actually does.',
-    title: 'AI Receptionist vs Answering Service',
-    metaTitle: 'AI Receptionist vs an Answering Service',
+    title: 'AI Receptionist vs Traditional Answering Service',
+    metaTitle: 'AI Receptionist vs Traditional Answering Service: Cost Comparison',
     description:
-      'Compare voicemail, a human answering service, and an AI Receptionist that answers, qualifies, and emails you the lead. From $79/mo, first month $1.',
-    eyebrow: 'AI receptionist vs answering service',
-    h1: 'Voicemail, a call center, or software that emails you the lead.',
+      'Cost comparison of an AI receptionist and a traditional answering service. Executive Receptionist plans start at $1 the first month, then $79/mo. We do not invent competitor prices.',
+    eyebrow: 'AI receptionist vs. traditional answering service',
+    h1: 'AI receptionist vs. traditional answering service: the cost comparison',
+    directAnswer:
+      'Executive Receptionist is an AI receptionist with published monthly plans: Starter is $1 the first month, then $79 a month for 100 minutes; Growth is $197; Pro is $397; Elite is $789. A traditional answering service is usually a person in a call center, and the price is typically a quote after a sales call, often by the minute or by the month. An in-house receptionist is a different purchase: the U.S. Bureau of Labor Statistics reported median pay for receptionists of $37,230 a year in May 2024, or about $3,103 a month in wages alone, before taxes and benefits. Executive Receptionist answers the call and emails you the lead. We do not publish other companies’ prices here because we cannot verify them.',
     audience: 'owners comparing an answering service with an AI receptionist',
     lede:
       '“Answering service” usually means people who pick up and take a message. “AI receptionist” means software that holds the conversation you scripted. Executive Receptionist is the second one. The useful comparison is what happens to the caller and what you pay, not a slogan about replacing staff.',
@@ -876,7 +894,7 @@ export const AVA_GUIDES: AvaGuide[] = [
       'What they need',
       'Where the job or appointment is',
       'How urgent it is, using your rules',
-      'A text you can act on',
+      'A lead summary you can act on',
     ],
     roiTitle: 'Put the prices next to each other without a fake percentage',
     roiBody: `Executive Receptionist’s prices are on this site: four monthly plans from $79 a month (Starter’s first month is $1), with 100, 300, 1,200, or 2,000 included minutes. Past your minutes she keeps answering and we reach out about a bigger plan, with no surprise per-minute charges. A human answering service will give you its own quote. A W-2 receptionist at the May 2024 median is about $3,103 a month in wages alone. ${exampleSentence({ missedPerWeek: 6, oneIn: 4, jobValue: 300, jobLabel: 'callback you would have made' })} Use the calculator so the missed-call side is yours.`,
@@ -891,7 +909,7 @@ export const AVA_GUIDES: AvaGuide[] = [
       },
       {
         title: 'Executive Receptionist',
-        body: 'Software answers in the voice and questions you approve, then emails you. You can hear a sample and try a live browser demo before checkout. She will get calls wrong sometimes. You review the texts and edit the rules. She is not a licensed dispatcher, lawyer, or clinician.',
+        body: 'Software answers in the voice and questions you approve, then emails you. You can hear a sample and try a live browser demo before checkout. She will get calls wrong sometimes. You review the leads and edit the rules. She is not a licensed dispatcher, lawyer, or clinician.',
       },
     ],
     faqs: [
@@ -908,8 +926,42 @@ export const AVA_GUIDES: AvaGuide[] = [
         a: 'If you want to hear the call yourself tonight, play the sample and use the browser demo, then start Starter for $1. If you already have a human service you like, stay. This page is not a reason to cancel something that is working.',
       },
     ],
-    related: ['ai-receptionist-for-small-business', 'missed-call-cost-calculator', 'ai-answering-service-for-general-contractors'],
+    related: ['ai-receptionist-for-small-business', 'missed-call-cost-calculator', 'best-ai-receptionist-for-hvac-companies'],
     sources: [blsSource],
+    costRows: [
+      {
+        option: 'Executive Receptionist Starter',
+        cost: '$1 the first month, then $79/month',
+        notes: '100 minutes included. AI answers 24/7 when you forward the line and emails you the lead.',
+      },
+      {
+        option: 'Growth',
+        cost: '$197/month',
+        notes: '300 minutes included. Same product, more minutes.',
+      },
+      {
+        option: 'Pro',
+        cost: '$397/month',
+        notes: '1,200 minutes included. Best value per minute on the published plans.',
+      },
+      {
+        option: 'Elite',
+        cost: '$789/month',
+        notes: '2,000 minutes included, with priority setup.',
+      },
+      {
+        option: 'Traditional answering service',
+        cost: 'Usually quoted after a sales call',
+        notes: 'A person takes a message. Prices often run by the minute, by the month, or by the seat. We do not list a number we cannot source.',
+      },
+      {
+        option: 'In-house receptionist',
+        cost: 'BLS median $37,230/year (May 2024), about $3,103/month in wages only',
+        notes: 'A person at a desk. That role covers more than answering the phone. Figure is wages only, before employer taxes and benefits.',
+      },
+    ],
+    costNote:
+      'Executive Receptionist prices are the ones published on this site. Traditional answering-service prices vary; compare the quote they send you with the plans above. The in-house figure is from the U.S. Bureau of Labor Statistics Occupational Outlook Handbook for receptionists, May 2024.',
   },
   {
     slug: 'missed-call-cost-calculator',
@@ -988,7 +1040,7 @@ export const AVA_GUIDES: AvaGuide[] = [
       'Address or neighborhood',
       'The job in their words',
       'Urgency using your rules',
-      'A text that arrives while you are still on the first job',
+      'An email that arrives while you are still on the first job',
     ],
     roiTitle: 'Count only the calls you actually miss',
     roiBody: `Do not put your entire call volume into the calculator. ${exampleSentence({ missedPerWeek: 8, oneIn: 4, jobValue: 275, jobLabel: 'home-service job' })} Eight misses is an example week, not a benchmark.`,
@@ -1009,12 +1061,152 @@ export const AVA_GUIDES: AvaGuide[] = [
     related: ['missed-call-cost-calculator', 'ai-answering-service-for-hvac', 'ai-receptionist-for-small-business'],
     sources: [nearbySource],
   },
+  {
+    slug: 'best-ai-receptionist-for-hvac-companies',
+    kind: 'guide',
+    navLabel: 'Best for HVAC',
+    blurb: 'What to look for in an AI receptionist for HVAC, and how Executive Receptionist fits.',
+    title: 'Best AI Receptionist for HVAC Companies',
+    metaTitle: 'Best AI Receptionist for HVAC Companies | Executive Receptionist',
+    description:
+      'What to look for in an AI receptionist for HVAC companies, plus Executive Receptionist pricing: $1 the first month, then $79/mo. Call the demo at (256) 952-4935.',
+    eyebrow: 'Best AI receptionist for HVAC companies',
+    h1: 'Best AI receptionist for HVAC companies',
+    directAnswer:
+      'The useful test is not a “best of” badge. It is whether the receptionist can answer a no-heat or no-cool call, take the job details, and get that lead to you without inventing a price or an arrival time. Executive Receptionist (Ava) does that for HVAC shops: she answers forwarded calls 24/7, asks the questions you approve, and emails you the lead. Plans are Starter $79 a month (first month $1, 100 minutes), Growth $197, Pro $397, and Elite $789. Call the demo line at (256) 952-4935; she answers as Porchlight Heating & Air, a made-up HVAC company. There is also a dedicated HVAC page at /hvac.',
+    audience: 'HVAC contractors comparing AI receptionist options',
+    lede:
+      'HVAC phones spike in heat waves and cold snaps, often while every tech is already on a roof or in a crawlspace. A receptionist that only takes a name is not enough. You need the address, what the system is doing, and whether anyone in the house is medically vulnerable — then an email you can act on.',
+    pain:
+      'Most “best AI receptionist” lists do not say how the product handles a no-heat call, what it costs after the first month, or whether you can hear it before you buy. This page sticks to those checks, and to Executive Receptionist’s published plans. It does not invent reviews, customer counts, or competitor prices.',
+    calls: [
+      'No cooling and no heat, including after hours',
+      'Strange noises, short cycling, and thermostat complaints',
+      'Maintenance and tune-up requests',
+      'Replacement and “how much is a new system” questions',
+      'Urgent wording you define, such as no heat with a medically vulnerable person at home',
+    ],
+    qualification: [
+      'Name and callback number',
+      'Service address',
+      'Heat, cooling, or indoor air problem',
+      'Whether the system is running at all',
+      'Repair, maintenance, or replacement intent',
+    ],
+    roiTitle: 'Compare the published price with a missed HVAC call, using your numbers',
+    roiBody: `Starter is $1 the first month, then $79 a month. ${exampleSentence({ missedPerWeek: 8, oneIn: 4, jobValue: 350, jobLabel: 'HVAC service call' })} If your real ticket is a system replacement, put that higher number in the calculator instead of treating $350 as typical.`,
+    faqs: [
+      {
+        q: 'What should an HVAC company look for in an AI receptionist?',
+        a: 'A greeting that says it is an AI receptionist, questions you approve for no-heat and no-cool calls, a lead sent to you by email, a way to hear the product before you pay, and a published price. Booking is optional and only uses hours you set up. It should not invent a price or promise an arrival time.',
+      },
+      {
+        q: 'How much does Executive Receptionist cost for an HVAC shop?',
+        a: 'Four monthly plans: Starter $79 (100 minutes, first month $1), Growth $197 (300 minutes), Pro $397 (1,200 minutes), Elite $789 (2,000 minutes). Month to month, cancel anytime. There is no free plan. If you run past your minutes, Ava keeps answering and we reach out about a bigger plan.',
+      },
+      {
+        q: 'Can I hear it before I buy?',
+        a: 'Yes. Call (256) 952-4935, where Ava answers as Porchlight Heating & Air, a made-up HVAC shop. You can also play a prerecorded sample on this site or talk to her in the browser. None of those need a credit card.',
+      },
+      {
+        q: 'Does she text me the lead?',
+        a: 'She emails you the lead. Owner text alerts are available only after setup, and only if you opt in. Customer texting is not turned on until setup is complete.',
+      },
+      {
+        q: 'Is this a replacement for ServiceTitan or Housecall Pro?',
+        a: 'No. Executive Receptionist is the call layer. Your field software stays where jobs are scheduled and invoiced.',
+      },
+    ],
+    related: ['ai-answering-service-for-hvac', 'ai-receptionist-for-hvac-and-plumbing-in-alabama', 'ai-receptionist-vs-answering-service'],
+  },
+  {
+    slug: 'ai-receptionist-for-hvac-and-plumbing-in-alabama',
+    kind: 'guide',
+    navLabel: 'Alabama HVAC & plumbing',
+    blurb: 'An AI receptionist for HVAC and plumbing shops in Gadsden, Birmingham, Huntsville, Cullman, and Decatur.',
+    title: 'AI Receptionist for HVAC and Plumbing in Alabama',
+    metaTitle: 'AI Receptionist for HVAC and Plumbing in Alabama | Gadsden, Birmingham, Huntsville, Cullman, Decatur',
+    description:
+      'AI receptionist for Alabama HVAC and plumbing shops in Gadsden, Birmingham, Huntsville, Cullman, and Decatur. Run from Hanceville. Starter is $1, then $79/mo.',
+    eyebrow: 'AI receptionist for HVAC and plumbing in Alabama',
+    h1: 'AI receptionist for HVAC and plumbing in Alabama',
+    directAnswer:
+      'Executive Receptionist is an AI phone receptionist run by Cole Collins in Hanceville, Alabama. HVAC and plumbing shops in Gadsden, Birmingham, Huntsville, Cullman, Decatur, and the rest of the state can forward missed and after-hours calls to her. She takes the name, callback number, address, and what’s wrong, and emails you the lead. Plans are Starter $79 a month (first month $1, 100 minutes), Growth $197, Pro $397, and Elite $789. Call the demo line at (256) 952-4935; it is an Alabama number, and she answers as a made-up HVAC shop.',
+    audience: 'Alabama HVAC and plumbing shop owners',
+    lede:
+      'The setup is the same in every city: you keep your business number and forward the calls you cannot pick up. Cole is based in Hanceville, near Cullman and Gadsden, and works with shops across Alabama. This page does not claim a list of current customers in each city.',
+    pain:
+      'A no-heat call in Huntsville and a leak in Birmingham do not wait on voicemail. Owner-operators on a job, or a two-truck shop after hours, lose the same kind of call in every Alabama metro. An AI receptionist is one way to pick up those overflow and after-hours calls without hiring a night desk.',
+    calls: [
+      'No-heat and no-cool calls after hours',
+      'Active leaks and water-heater failures',
+      'Maintenance and tune-up requests',
+      'Overflow while every tech is already out',
+      'Callback-only questions you would rather not miss',
+    ],
+    qualification: [
+      'Name and a direct callback number',
+      'Service address in the city you cover',
+      'What the system or pipe is doing',
+      'Whether anyone is home, and how urgent it is',
+      'An email lead you can return from the truck',
+    ],
+    roiTitle: 'Price the missed Alabama call with your own ticket',
+    roiBody: `The plans are the same statewide. ${exampleSentence({ missedPerWeek: 6, oneIn: 4, jobValue: 350, jobLabel: 'HVAC or plumbing job' })} Put your real average ticket in the calculator. The $350 figure is an example, not an Alabama market average.`,
+    faqs: [
+      {
+        q: 'Do you serve HVAC and plumbing shops in Gadsden, Birmingham, Huntsville, Cullman, and Decatur?',
+        a: 'Yes. Any shop in those cities, or elsewhere in Alabama, can use Executive Receptionist. You keep your existing number and forward missed or after-hours calls. The operator is Cole Collins in Hanceville, Alabama.',
+      },
+      {
+        q: 'What does it cost in Alabama?',
+        a: 'The same published plans as the rest of the country: Starter $79 a month (100 minutes, first month $1), Growth $197, Pro $397, Elite $789. Month to month, cancel anytime. There is no separate Alabama rate.',
+      },
+      {
+        q: 'Is the demo line a local number?',
+        a: 'The demo line is (256) 952-4935, an Alabama number. Ava answers as Porchlight Heating & Air, a made-up HVAC company, so you can try a no-heat or leak call without using a real customer.',
+      },
+      {
+        q: 'Will she text me the lead?',
+        a: 'She emails you the lead. Owner text alerts are available only after setup, and only if you opt in on the setup form.',
+      },
+      {
+        q: 'Can she book a visit on the call?',
+        a: 'Once your hours are set up in your Desk, she can offer open times and put the visit on your Desk calendar. Until then she captures the lead and emails it to you. She never invents a price or promises an arrival time you have not offered.',
+      },
+    ],
+    related: ['ai-answering-service-for-hvac', 'ai-answering-service-for-plumbers', 'best-ai-receptionist-for-hvac-companies'],
+    areaServed: ['Gadsden', 'Birmingham', 'Huntsville', 'Cullman', 'Decatur', 'Hanceville', 'Alabama', 'United States'],
+    cityNotes: [
+      {
+        city: 'Gadsden',
+        body: 'Gadsden and Etowah County shops can forward overflow and after-hours calls to Executive Receptionist. Cole is based nearby in Hanceville. The product, plans, and demo line are the same as the rest of the state.',
+      },
+      {
+        city: 'Birmingham',
+        body: 'Birmingham-area HVAC and plumbing shops often see after-hours and lunch-hour overflow. Forwarding those calls is the same setup used elsewhere in Alabama. We do not claim a Birmingham office or a published list of local customers.',
+      },
+      {
+        city: 'Huntsville',
+        body: 'Shops covering Huntsville and Madison County can use the same AI receptionist for no-heat, no-cool, and leak calls. Pricing does not change by metro. Hear the demo on (256) 952-4935 before you buy.',
+      },
+      {
+        city: 'Cullman',
+        body: 'Cullman is close to the operator’s Hanceville address. HVAC and plumbing shops here use the same four monthly plans, from $1 the first month on Starter, then $79 a month.',
+      },
+      {
+        city: 'Decatur',
+        body: 'Decatur and Morgan County shops can forward missed and after-hours HVAC or plumbing calls. The lead arrives by email. There is no separate Decatur plan or setup fee.',
+      },
+    ],
+  },
 ];
+
 
 const guideBySlug = new Map(AVA_GUIDES.map((guide) => [guide.slug, guide]));
 
-if (AVA_GUIDES.length !== 20 || guideBySlug.size !== 20) {
-  throw new Error(`Expected 20 unique Executive Receptionist guides, found ${AVA_GUIDES.length} rows and ${guideBySlug.size} slugs.`);
+if (AVA_GUIDES.length !== 22 || guideBySlug.size !== 22) {
+  throw new Error(`Expected 22 unique Executive Receptionist guides, found ${AVA_GUIDES.length} rows and ${guideBySlug.size} slugs.`);
 }
 
 for (const guide of AVA_GUIDES) {

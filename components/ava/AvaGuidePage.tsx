@@ -6,11 +6,13 @@ import { JsonLd } from '@/components/ava/JsonLd';
 import { MissedCallCalculator } from '@/components/ava/MissedCallCalculator';
 import { SampleCall } from '@/components/ava/SampleCall';
 import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
+import { AVA_DEMO_LINE } from '@/lib/ava/demo-line';
 import { getAvaGuide, type AvaGuide } from '@/lib/ava/trade-pages';
 import {
   avaProductNode,
   avaServiceNode,
   faqNode,
+  frontPorchLocalBusiness,
   jsonLdGraph,
 } from '@/lib/ava/structured-data';
 import { absoluteSiteUrl } from '@/lib/site-url';
@@ -36,6 +38,7 @@ function GuideExtra({ guide }: { guide: AvaGuide }) {
               </article>
             ))}
           </div>
+          <CostTable guide={guide} />
         </section>
       );
     case 'calculator':
@@ -56,17 +59,76 @@ function GuideExtra({ guide }: { guide: AvaGuide }) {
   }
 }
 
+function CostTable({ guide }: { guide: AvaGuide }) {
+  if (!guide.costRows?.length) return null;
+  return (
+    <div className="cost-table-wrap">
+      <h3>Published costs, side by side</h3>
+      <div className="cost-table-scroll">
+        <table className="cost-table">
+          <thead>
+            <tr>
+              <th scope="col">Option</th>
+              <th scope="col">What it costs</th>
+              <th scope="col">What you get</th>
+            </tr>
+          </thead>
+          <tbody>
+            {guide.costRows.map((row) => (
+              <tr key={row.option}>
+                <td>{row.option}</td>
+                <td>{row.cost}</td>
+                <td>{row.notes}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {guide.costNote ? <p className="cost-table-note">{guide.costNote}</p> : null}
+    </div>
+  );
+}
+
+function CityNotes({ guide }: { guide: AvaGuide }) {
+  if (!guide.cityNotes?.length) return null;
+  return (
+    <section className="comparison">
+      <div className="section-title">
+        <span className="kicker">ALABAMA CITIES</span>
+        <h2>The same receptionist, for shops in these cities.</h2>
+      </div>
+      <div className="comparison-grid">
+        {guide.cityNotes.map((city) => (
+          <article key={city.city}>
+            <small>{city.city}</small>
+            <h3>{city.city}</h3>
+            <p>{city.body}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: string }) {
   const pageUrl = absoluteSiteUrl(`/ava/${guide.slug}`);
-  const demoHref = `${homeHref}#hear-demo`;
   const liveHref = `${homeHref}#talk-to-ava`;
+  const areaServed = (guide.areaServed || []).map((name) =>
+    name === 'United States'
+      ? { '@type': 'Country', name }
+      : name === 'Alabama'
+        ? { '@type': 'State', name }
+        : { '@type': 'City', name },
+  );
   const graph = jsonLdGraph([
+    frontPorchLocalBusiness(areaServed.filter((place) => place['@type'] === 'City')),
     avaServiceNode({
       name: guide.title,
       description: guide.description,
       url: pageUrl,
       audience: guide.audience,
       serviceType: 'AI receptionist and call answering',
+      areaServed: areaServed.length ? areaServed : undefined,
     }),
     avaProductNode({
       name: guide.title,
@@ -100,12 +162,16 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
         <div className="hero-copy">
           <span className="kicker">{guide.eyebrow}</span>
           <h1>{guide.h1}</h1>
+          {guide.directAnswer ? <p className="direct-answer">{guide.directAnswer}</p> : null}
           <p>{guide.lede}</p>
           <p className="trial-line">Starter: first month $1, then $79/month. Pro: 1,200 minutes for $397/month. Cancel anytime.</p>
+          <p className="demo-line">
+            Hear her now: call <a href={AVA_DEMO_LINE.href}>{AVA_DEMO_LINE.display}</a>. She answers as {AVA_DEMO_LINE.answersAs}.
+          </p>
           <div className="hero-actions">
-            <Link className="sales-btn" href={demoHref}>
-              <PhoneCall size={18} /> Hear a demo call
-            </Link>
+            <a className="sales-btn" href={AVA_DEMO_LINE.href}>
+              <PhoneCall size={18} /> Call the demo line
+            </a>
             <TrackedCheckoutLink className="sales-btn secondary" href="/api/checkout?plan=starter" plan="starter">
               Start for $1 <ArrowRight size={18} />
             </TrackedCheckoutLink>
@@ -142,13 +208,14 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
               <span>0{index + 1}</span>
               <PhoneCall />
               <h3>{item}</h3>
-              <p>Executive Receptionist asks what you approved, then texts you. She does not invent a price.</p>
+              <p>Executive Receptionist asks what you approved, then emails you the lead. She does not invent a price.</p>
             </article>
           ))}
         </div>
       </section>
 
       <GuideExtra guide={guide} />
+      <CityNotes guide={guide} />
 
       <section className="comparison">
         <div className="section-title">
@@ -245,8 +312,9 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
         <span className="kicker">HEAR IT, THEN START</span>
         <h2>Try the demo, then pick your plan.</h2>
         <p>
-          The sample call is a landscaping estimate. The live demo is in the browser. Checkout opens
-          Stripe for the plan you pick. Plans run from $79 to $789 a month.
+          The sample call is a landscaping estimate. You can also call the demo line at {AVA_DEMO_LINE.display},
+          where she answers as {AVA_DEMO_LINE.answersAs}. Checkout opens Stripe for the plan you pick. Plans run
+          from $79 to $789 a month.
         </p>
         <div>
           <Link className="sales-btn light" href={liveHref}>
