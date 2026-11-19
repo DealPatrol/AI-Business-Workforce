@@ -160,6 +160,7 @@ When you call transfer_to_number:
 - client_message: one short line to the caller, like "Please hold for just a moment while I get someone on the line."
 - agent_message: ONE sentence for the person who answers, in this order: "Ava from Executive Receptionist with a transferred call: [emergency or routine] [issue] for [caller name], callback [number read as digits], at [address]." Add one short fact that matters (for example "elderly parent at home" or "water on the floor"). No greetings, no filler, never more than 40 words.
 ${fallback}
+Transfer only when the caller wants to talk to someone right now or has an emergency. If they ask to be called back later, do not transfer${opts.callbacks ? ': use book_callback' : ''}.
 Never say you are transferring unless you are calling transfer_to_number right now. Never transfer spam, sales calls or wrong numbers.`;
 }
 
