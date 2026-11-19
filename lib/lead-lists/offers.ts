@@ -10,7 +10,13 @@ export const LEAD_LIST_LINKS = {
   emailSequence: 'https://buy.stripe.com/4gM00l9jE68lcStbus0Ba0f',
   monthly: 'https://buy.stripe.com/bJeaEZ1RcdAN3hTfKI0Ba0g',
   outreach: 'https://buy.stripe.com/14A8wR0N8aoBf0B5640Ba0h',
+  /** $20 Hot Leads add-on: 1,000 more leads after a 500-lead order. */
+  hotAddon1000: 'https://buy.stripe.com/6oUdRb67s2W919L2XW0Ba0j',
 } as const;
+
+/** Live Workspace payment link for the $20 / 500 Hot Leads offer. */
+export const HOT_LEADS_500_PAYMENT_LINK_ID = 'plink_1UdeTSRJZZUpaweBjWElJm11';
+export const HOT_LEADS_500_OFFER = 'hot-leads-500';
 
 export const LEAD_LIST_STATES = [
   'Alabama',

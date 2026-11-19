@@ -166,6 +166,12 @@ const PAGES = {
     titleMode: 'template',
     receptionist: false,
   },
+  '/leads/hot/thanks': {
+    title: 'Thanks for your order',
+    description: "Your Hot Leads order is in. We'll email the CSV within 24 hours.",
+    titleMode: 'template',
+    receptionist: false,
+  },
   '/agents': {
     title: 'AI agents for home-service shops | Front Porch Growth',
     description:
