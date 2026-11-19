@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { avaGuideSlugs } from '@/lib/ava/trade-pages';
 import { POSTCARD_SETUP_LABEL, POSTCARD_SIZES, postcardPackageRows } from '@/lib/postcards/pricing';
 import { POSTCARD_TRADES, getPostcardTrade, postcardTradeDetail, postcardTradeSeo } from '@/lib/postcards/trade-pages';
+import { avaGuidePath } from '@/lib/seo/receptionist-home';
 import { absoluteSiteUrl } from '@/lib/site-url';
 
 export const dynamicParams = false;
@@ -109,8 +110,8 @@ export default async function PostcardTradePage({ params }: { params: Promise<{ 
       </ol>
       <p>
         <Link href="/postcards"><strong>See postcard examples →</strong></Link> · <Link href="/pricing">Pricing</Link> ·{' '}
-        <Link href="/ava">Need someone to answer the calls? Meet Executive Receptionist</Link>
-        {guide ? <> · <Link href={`/ava/${guide}`}>AI answering service for {t.plural}</Link></> : null}
+        <Link href="https://executivereceptionist.com/">Need someone to answer the calls? Meet Executive Receptionist</Link>
+        {guide ? <> · <Link href={`https://executivereceptionist.com${avaGuidePath(guide)}`}>AI answering service for {t.plural}</Link></> : null}
       </p>
 
       <h2>FAQ</h2>

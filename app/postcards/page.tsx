@@ -256,7 +256,7 @@ export default function HomePage() {
             Executive Receptionist is a separate AI receptionist add-on for businesses that want 24/7 call coverage. The postcard campaign remains the main service.
           </p>
         </div>
-        <Link href="/ava">
+        <Link href="https://executivereceptionist.com/">
           See Executive Receptionist add-on <ArrowRight size={16} />
         </Link>
       </section>

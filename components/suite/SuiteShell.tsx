@@ -4,7 +4,7 @@ import styles from './suite.module.css';
 
 const NAV = [
   { href: '/#samples', label: 'Hear Ava' },
-  { href: '/start', label: 'Ava for your business' },
+  { href: 'https://executivereceptionist.com/start', label: 'Ava for your business' },
   { href: '/postcards', label: 'Postcards' },
   { href: '/lead-scout', label: 'Leads' },
   { href: '/agents', label: 'Agents' },
