@@ -201,6 +201,13 @@ const PAGES = {
     titleMode: 'absolute',
     receptionist: false,
   },
+  '/blog': {
+    title: 'Blog: Calls, Search, and AI Answers for Local Shops',
+    description:
+      'Plain guides for home-service owners: after-hours calls, AI receptionists, and showing up in Google and ChatGPT answers. No fluff, no ranking promises.',
+    titleMode: 'absolute',
+    receptionist: false,
+  },
   '/ai-visibility': {
     title: 'Free SEO & AI Visibility Grader | Front Porch Growth',
     description:

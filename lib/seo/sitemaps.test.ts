@@ -51,6 +51,9 @@ const FRONT_PORCH_PATHS = [
   '/trades/roofers',
   '/trades/lawn-care',
   '/trades/cleaners',
+  '/blog',
+  '/blog/is-my-business-in-chatgpt',
+  '/blog/ai-search-checklist-home-services',
 ];
 
 function urls(host: string | null) {
@@ -66,7 +69,7 @@ describe('host sitemaps', () => {
   it('keeps the Front Porch Growth sitemap on its own host', () => {
     const published = frontPorchGrowthSitemap(FRONT_PORCH, new Date('2026-11-08T00:00:00.000Z')).map((item) => item.url);
     assert.deepEqual(published.map(pathOf), FRONT_PORCH_PATHS);
-    assert.equal(published.length, 64);
+    assert.equal(published.length, 67);
     assert.ok(published.every((url) => url.startsWith(`${FRONT_PORCH}/`)));
 
     const origin = getSiteUrl();
@@ -88,6 +91,10 @@ describe('host sitemaps', () => {
       assert.ok(paths.includes(path), path);
     }
     for (const slug of avaGuideSlugs()) assert.ok(paths.includes(`/ava/${slug}`));
+    for (const path of ['/blog', '/blog/after-hours-hvac-calls', '/blog/hvac-answering-service-vs-ai-receptionist']) {
+      assert.ok(paths.includes(path), path);
+    }
+    assert.equal(paths.includes('/blog/is-my-business-in-chatgpt'), false);
     for (const path of ['/postcards', '/receptionist', '/agents', '/compare', '/trades/plumbers', '/missed-call']) {
       assert.equal(paths.includes(path), false, path);
     }

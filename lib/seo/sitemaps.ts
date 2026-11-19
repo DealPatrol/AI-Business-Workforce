@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { AGENTS } from '@/lib/agents/catalog';
+import { BLOG_POSTS } from '@/lib/blog/posts';
 import { avaGuideSlugs } from '@/lib/ava/trade-pages';
 import { POSTCARD_TRADES } from '@/lib/postcards/trade-pages';
 import { absoluteUrl, isExecutiveReceptionistHost, publicIndexOrigin } from '@/lib/site-url';
@@ -76,6 +77,8 @@ export function frontPorchGrowthSitemap(origin: string, now: Date): MetadataRout
     ...avaGuideSlugs().map((slug) => entry(origin, `/ava/${slug}`, now, 'weekly', 0.88)),
     ...AGENTS.map((agent) => entry(origin, `/agents/${agent.id}`, now, 'monthly', 0.6)),
     ...TRADE_PAGES.map((page) => entry(origin, `/trades/${page.slug}`, now, 'monthly', 0.7)),
+    entry(origin, '/blog', now, 'weekly', 0.7),
+    ...BLOG_POSTS.filter((post) => post.site === 'fpg').map((post) => entry(origin, `/blog/${post.slug}`, now, 'monthly', 0.75)),
   ];
 }
 
@@ -83,6 +86,8 @@ export function executiveReceptionistSitemap(origin: string, now: Date): Metadat
   return [
     ...EXECUTIVE_RECEPTIONIST_INDEX.map((page) => entry(origin, page.path, now, page.changeFrequency, page.priority)),
     ...avaGuideSlugs().map((slug) => entry(origin, `/ava/${slug}`, now, 'weekly', 0.88)),
+    entry(origin, '/blog', now, 'weekly', 0.7),
+    ...BLOG_POSTS.filter((post) => post.site === 'er').map((post) => entry(origin, `/blog/${post.slug}`, now, 'monthly', 0.75)),
   ];
 }
 

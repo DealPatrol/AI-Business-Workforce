@@ -2,6 +2,7 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { AGENTS } from '@/lib/agents/catalog';
 import { AVA_GUIDES } from '@/lib/ava/trade-pages';
+import { BLOG_POSTS } from '@/lib/blog/posts';
 import { MISSED_CALL_TRADES, missedCallSeo } from '@/lib/dispatch/missed-call-ads';
 import { POSTCARD_TRADES, postcardTradeSeo } from '@/lib/postcards/trade-pages';
 import {
@@ -73,6 +74,10 @@ export function resolveRouteSeo(route: string, companyNames: string[]): Resolved
 
   if (route === '/ava/[slug]') {
     return AVA_GUIDES.map((guide) => absolute(`/ava/${guide.slug}`, guide.metaTitle, guide.description, true));
+  }
+
+  if (route === '/blog/[slug]') {
+    return BLOG_POSTS.map((post) => absolute(`/blog/${post.slug}`, post.metaTitle, post.description, false));
   }
 
   if (route === '/postcards/[trade]') {
