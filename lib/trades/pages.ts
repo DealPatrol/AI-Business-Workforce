@@ -24,7 +24,7 @@ export const TRADE_PAGES: TradePage[] = [
     h1: 'The leak call and the callback, for plumbing companies.',
     season: 'Plumbing demand shows up as interruptions: an active leak, a water heater, a drain, then a quieter fixture quote. The owner is often under a sink when the phone rings.',
     calls: ['Water still running', 'Drain or sewer backup', 'No hot water', 'A fixture that can wait until tomorrow'],
-    dispatch: 'Executive Receptionist can ask whether the water is shut off, the address, and a callback number, then text you. It does not shut the water off or roll a truck.',
+    dispatch: 'Executive Receptionist can ask whether the water is shut off, the address, and a callback number, then emails you the lead. It does not shut the water off or roll a truck.',
     dispatchSlug: 'ai-answering-service-for-plumbers',
     reviews: 'After a finished job, ReputationFlow can ask for a Google review with the same public link for every customer. A 5-star review is still about the repair, not the software.',
     leads: 'Lead Scout can list property managers and other businesses in a city. It does not email them. Use it when you want commercial accounts to call yourself.',
