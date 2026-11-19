@@ -29,11 +29,11 @@ export const metadata: Metadata = {
 };
 
 const INCLUDED = [
-  { title: 'AI recommendation tracking', body: 'We ask AI assistants the questions your customers ask, like “who’s a good plumber in Cullman?”, and record whether you come up.' },
+  { title: 'AI recommendation tracking', body: 'We ask AI assistants the questions your customers ask, like “who’s a good dentist in Cullman?” or “best plumber near me?”, and record whether you come up.' },
   { title: 'SEO audit', body: 'The basics Google still checks: titles, headings, speed, mobile, sitemap, and whether your pages can be listed at all.' },
-  { title: 'Competitor visibility', body: 'Which nearby shops show up for the same questions, so you know who you are up against.' },
+  { title: 'Competitor visibility', body: 'Which nearby businesses show up for the same questions, so you know who you are up against.' },
   { title: 'Business fact check', body: 'Your name, phone, address, hours, and service area, checked for the same answer everywhere they appear.' },
-  { title: 'Question-to-page matching', body: 'The questions homeowners ask, lined up against the page on your site that answers them, or the gap where one should be.' },
+  { title: 'Question-to-page matching', body: 'The questions your customers ask, lined up against the page on your site that answers them, or the gap where one should be.' },
   { title: 'Source and citation check', body: 'The websites AI assistants point to when they answer, so you can see where your name should be listed.' },
   { title: 'Change history', body: 'Every fix we make is logged with a date, next to the results that came after it.' },
 ];
@@ -59,7 +59,7 @@ const TIERS: Tier[] = [
   {
     name: 'Starter',
     price: 49,
-    who: 'One shop, one town. See where you stand.',
+    who: 'One business, one town. See where you stand.',
     limits: ['1 location', '10 customer questions', '2 AI assistants', 'Checked once a month (20 checks)', 'Search audit of up to 25 pages'],
     features: ['Combined search + AI report', 'Prioritized fix list', 'Business fact check', 'Change history'],
     cta: { label: 'Start with the free grade', href: '#grader' },
@@ -67,7 +67,7 @@ const TIERS: Tier[] = [
   {
     name: 'Growth',
     price: 129,
-    who: 'For shops ready to fix things and track what works.',
+    who: 'For businesses ready to fix things and track what works.',
     limits: ['1 location + 2 nearby towns', '20 customer questions', '3 AI assistants', 'Checked twice a month (120 checks)', 'Search audit of up to 100 pages'],
     features: ['Everything in Starter', 'Up to 3 competitors tracked', 'Source and citation check', 'Question-to-page matching', 'Google Search Console connection', 'Up to 4 approved improvements a month'],
     cta: { label: 'Ask about Growth', href: mailto('Growth plan: AI visibility') },
@@ -105,7 +105,7 @@ const FAQS = [
   },
   {
     q: 'How do the AI checks work?',
-    a: 'We ask a fixed set of questions, like “who’s a good roofer in Gadsden?”, to a few AI assistants on a schedule, and save each answer. Every report lists which assistant, the exact question, the location, the date, and how many times we asked. It is a sample, not a picture of every search anyone makes.',
+    a: 'We ask a fixed set of questions, like “who’s a good roofer in Gadsden?” or “best family lawyer in Huntsville?”, to a few AI assistants on a schedule, and save each answer. Every report lists which assistant, the exact question, the location, the date, and how many times we asked. It is a sample, not a picture of every search anyone makes.',
   },
   {
     q: 'Will you make a page for every town around me?',
@@ -133,7 +133,7 @@ function jsonLd() {
       {
         '@type': 'Service',
         '@id': `${url}#service`,
-        name: 'Search and AI visibility for home-service businesses',
+        name: 'Search and AI visibility for local businesses',
         serviceType: 'SEO and generative engine optimization (GEO)',
         description,
         url,
@@ -218,13 +218,22 @@ export default function AiVisibilityPage() {
           <h2 id="story-title">The phone used to ring from the first page of Google. Now there is a second front door.</h2>
           <div className={styles.storyCols}>
             <p>
-              Picture a homeowner in Hanceville whose AC quits on a Saturday. Some will search “AC repair near me” and scroll. Others
-              will open an app and type, “Who’s a good HVAC company in Cullman that can come today?” and get two or three names back.
+              Picture someone in Hanceville who needs a new dentist, a lawyer, a haircut, or an AC repair this week. Some will search
+              “dentist near me” and scroll. Others will open an app and type, “Who’s a good dentist in Cullman that takes new patients?”
+              and get two or three names back.
             </p>
             <p>
               Those assistants pull from your website, your Google profile, review sites, and local listings. If your hours are missing,
               your phone number is different in three places, or nothing on your site says you serve Hanceville, they have little reason
               to mention you. Much of that is quick to fix once you can see it.
+            </p>
+            <p>
+              One owner who checked what AI tools said about local businesses put it this way: “Some great businesses that have been
+              around for decades don’t get mentioned at all.” (
+              <a href="https://www.reddit.com/r/smallbusiness/comments/1rvc62f/heads_up_ai_assistants_are_now_recommending_your/" target="_blank" rel="noopener noreferrer nofollow">
+                r/smallbusiness
+              </a>
+              ) It works the same for a dental office, a law firm, a salon, an auto shop, or a plumber.
             </p>
           </div>
         </section>
@@ -234,7 +243,7 @@ export default function AiVisibilityPage() {
             <span className={styles.eyebrow}>FREE GRADER</span>
             <h2 id="grader-title">See what search engines and AI can read about you</h2>
             <p>
-              Enter your website, trade, and city. We load your page right now and run more than 20 checks that search engines and AI assistants
+              Enter your website, your type of business, and your city. We load your page right now and run more than 20 checks that search engines and AI assistants
               rely on. You get a score, what we found, and the fixes that matter most.
             </p>
             <details className={styles.checkList}>
@@ -324,7 +333,7 @@ export default function AiVisibilityPage() {
           <span className={styles.eyebrow}>INTRO PRICING</span>
           <h2 id="pricing-title">Simple monthly plans, with clear limits</h2>
           <p className={styles.sectionLede}>
-            Intro pricing for our first shops while we build this alongside them. These prices and limits are not permanent. If they go
+            Intro pricing for our first businesses while we build this alongside them. These prices and limits are not permanent. If they go
             up later, we will tell you ahead of time. Month to month, cancel anytime.
           </p>
           <div className={styles.tiers}>

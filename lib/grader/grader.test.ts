@@ -56,6 +56,14 @@ describe('grader input handling', () => {
   it('maps trades to search terms', () => {
     assert.ok(tradeTerms('HVAC / heating & air').terms.includes('furnace'));
     assert.ok(tradeTerms('drain cleaning').terms.includes('drain'));
+    assert.ok(tradeTerms('Dentist / dental office').terms.includes('dentist'));
+    assert.ok(tradeTerms('Law firm / attorney').terms.includes('attorney'));
+  });
+
+  it('phrases AI questions for businesses outside home services', () => {
+    assert.equal(aiPrompts('Dentist / dental office', 'Cullman, AL')[0], 'Who is a good dentist in Cullman, AL?');
+    assert.equal(aiPrompts('Law firm / attorney', 'Gadsden, AL')[0], 'Who is a good lawyer in Gadsden, AL?');
+    assert.equal(aiPrompts('Med spa', 'Huntsville, AL')[1], 'I need a med spa near Huntsville, AL. Who should I call?');
   });
 
   it('keeps live AI checks off unless explicitly switched on', () => {

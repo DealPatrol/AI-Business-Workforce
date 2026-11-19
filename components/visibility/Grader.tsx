@@ -35,6 +35,18 @@ type Result = {
 };
 
 const TRADES = [
+  'Dentist / dental office',
+  'Law firm / attorney',
+  'Hair salon / barber',
+  'Auto repair',
+  'Med spa',
+  'Real estate agent',
+  'Restaurant',
+  'Chiropractor',
+  'Veterinarian',
+  'Accountant / CPA',
+  'Insurance agency',
+  'Gym / fitness',
   'HVAC / heating & air',
   'Plumbing',
   'Roofing',
@@ -128,8 +140,8 @@ export function Grader() {
         </div>
         <div className={styles.fieldRow}>
           <div className={styles.field}>
-            <label htmlFor={`${formId}-trade`}>Your trade</label>
-            <input id={`${formId}-trade`} name="trade" list={`${formId}-trades`} placeholder="HVAC, plumbing, roofing…" required maxLength={60} />
+            <label htmlFor={`${formId}-trade`}>Type of business</label>
+            <input id={`${formId}-trade`} name="trade" list={`${formId}-trades`} placeholder="Dentist, law firm, salon, HVAC…" required maxLength={60} />
             <datalist id={`${formId}-trades`}>
               {TRADES.map((trade) => (
                 <option key={trade} value={trade} />
