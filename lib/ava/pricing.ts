@@ -114,7 +114,7 @@ export const AVA_OFFER = {
   contactPhoneHref: 'tel:+12565953354',
   contactEmail: 'colecollins763@gmail.com',
   setupCity: 'Gadsden',
-  footerLine: 'Executive Receptionist, 12476 County Road 747, Hanceville, AL 35077',
+  footerLine: 'Executive Receptionist is operated by Cole Collins DBA Executive Receptionist, 12476 County Road 747, Hanceville, AL 35077',
 } as const;
 
 export function isAvaPlanKey(value: string): value is AvaPlanKey {

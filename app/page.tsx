@@ -9,10 +9,10 @@ import styles from '@/components/suite/home.module.css';
 import { AVA_DEMO_LINE } from '@/lib/ava/demo-line';
 import { AVA_OFFER } from '@/lib/ava/pricing';
 import { MonthlyPlans, PlanCheckoutButton } from '@/components/ava/MonthlyPlans';
-import { avaPlanOfferNodes, faqNode, frontPorchLocalBusiness } from '@/lib/ava/structured-data';
+import { executiveReceptionistOrganization, faqNode, frontPorchLocalBusiness } from '@/lib/ava/structured-data';
 import { DESK_TOOLS } from '@/lib/desk-tools';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
-import { absoluteSiteUrl } from '@/lib/site-url';
+import { FRONT_PORCH_GROWTH_ORIGIN } from '@/lib/site-url';
 
 const seo = pageSeo('/');
 const title = renderedTitle(seo);
@@ -76,13 +76,14 @@ export const metadata: Metadata = {
 const orgJsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
+    frontPorchLocalBusiness(),
+    executiveReceptionistOrganization(),
     {
-      ...frontPorchLocalBusiness(),
-      '@id': `${absoluteSiteUrl('/')}#org`,
-      description: 'Ava, an AI phone receptionist, plus lead generation and postcard tools for home-service businesses.',
-      makesOffer: [...avaPlanOfferNodes(absoluteSiteUrl('/pricing#plans'))],
+      '@type': 'WebSite',
+      name: 'Front Porch Growth',
+      url: `${FRONT_PORCH_GROWTH_ORIGIN}/`,
+      publisher: { '@id': `${FRONT_PORCH_GROWTH_ORIGIN}/#org` },
     },
-    { '@type': 'WebSite', name: 'Front Porch Growth', url: absoluteSiteUrl('/'), publisher: { '@id': `${absoluteSiteUrl('/')}#org` } },
     faqNode([...HOME_FAQS]),
   ],
 };
@@ -123,7 +124,7 @@ export default function SuiteHomePage() {
             job. Listen to her, then call her yourself.
           </p>
           <p className={styles.lede} style={{ marginTop: 0 }}>
-            Run a heating &amp; air shop? <Link href="/hvac">See Ava for HVAC companies →</Link>
+            Run a heating &amp; air shop? <Link href="https://executivereceptionist.com/hvac">See Ava for HVAC companies →</Link>
           </p>
           <HeroDemoPicker label="Hear Ava for your business" />
           <div className={styles.actions}>
@@ -172,7 +173,7 @@ export default function SuiteHomePage() {
         <span className={styles.stripLabel}>Ava answers for</span>
         {BUSINESS_TYPES.map((type) =>
           type === 'HVAC' ? (
-            <Link key={type} href="/hvac" className={styles.chip}>
+            <Link key={type} href="https://executivereceptionist.com/hvac" className={styles.chip}>
               {type}
             </Link>
           ) : (
@@ -262,7 +263,7 @@ export default function SuiteHomePage() {
             <a className={styles.primary} href="#sample-ecommerce">
               Hear a store call
             </a>
-            <Link className={styles.secondary} href="/start#ecommerce">
+            <Link className={styles.secondary} href="https://executivereceptionist.com/start#ecommerce">
               See Ava for online stores
             </Link>
           </div>

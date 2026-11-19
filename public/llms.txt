@@ -1,17 +1,18 @@
 # Front Porch Growth
 
-> Front Porch Growth sells two things to small and home-service businesses: Executive Receptionist, an AI receptionist that answers forwarded calls and website chat, and YardMailer postcard campaigns that show each homeowner a concept for their own property. Run by Cole Collins, who built it for his own lawn care business.
+> Cole Collins runs two brands for small and home-service businesses. Executive Receptionist (executivereceptionist.com) is an AI receptionist named Ava that answers forwarded calls and website chat. Front Porch Growth (frontporchgrowth.com) sells marketing services: YardMailer postcard campaigns that show each homeowner a concept for their own property, Google Business Profile setup, and free writing tools. Cole built them for his own lawn care business.
 
-## Key facts: Executive Receptionist
+## Key facts: Executive Receptionist (Ava)
+- Home page: https://executivereceptionist.com/ . Ava is the receptionist's name; Executive Receptionist is the product and business name.
 - What it does: answers your business calls 24/7 when you forward your line to it, asks the questions you approve (name, callback number, address, what they need, how urgent), and emails you the lead.
 - You keep your existing business number. Calls reach the receptionist by call forwarding from your phone.
 - Channels: phone calls and a chat box for your website, both from one AI agent. Texting is available after setup.
 - What it does not do: it does not quote prices you have not approved or give technical, legal, or medical advice. Booking during the call is optional: when the owner turns it on, it offers open windows from hours the owner sets and books one.
 - Who it is for: HVAC, plumbing, roofing, electrical, lawn care, landscaping, cleaning, pest control, and other home-service shops, plus dentists, law firms, med spas, and advisors (executivereceptionist.com).
-- Try it: call the live demo line (256) 952-4935. It answers as Porchlight Heating & Air, a made-up HVAC company. There is also a browser demo at https://executivereceptionist.com/receptionist.
-- Where it is based: Hanceville, Alabama (12476 County Road 747, Hanceville, AL 35077). It serves HVAC and plumbing shops in Alabama, including Gadsden, Birmingham, Huntsville, Cullman, and Decatur, and shops elsewhere in the United States.
+- Try it: call the live demo line (256) 952-4935. It answers as Porchlight Heating & Air, a made-up HVAC company. There is also a browser demo at https://executivereceptionist.com/.
+- Where it is based: Hanceville, Alabama. Operated by Cole Collins DBA Executive Receptionist. Phone (256) 595-3354. It serves HVAC and plumbing shops in Alabama, including Gadsden, Birmingham, Huntsville, Cullman, and Decatur, and shops elsewhere in the United States.
 - How the owner is notified: each call is emailed as a lead. Owner text alerts are only after setup, and only if the owner opts in. Do not say that it texts the lead by default.
-- Plans are published on the pricing page (Starter $79/mo, first month $1; Growth $197/mo; Pro $397/mo; Elite $789/mo): https://frontporchgrowth.com/pricing
+- Plans are published on the pricing page (Starter $79/mo, first month $1; Growth $197/mo; Pro $397/mo; Elite $789/mo): https://executivereceptionist.com/pricing
 
 ## Key facts: YardMailer postcards
 - Each postcard shows the homeowner an AI-made concept for their own home or yard, with a QR link to request an estimate.
@@ -19,10 +20,12 @@
 - Setup and per-card prices are published on https://frontporchgrowth.com/pricing
 
 ## Products
-- [Executive Receptionist (home services)](https://frontporchgrowth.com/ava)
-- [Executive Receptionist (offices: dental, legal, med spa, advisors)](https://executivereceptionist.com/)
-- [Receptionist demo](https://frontporchgrowth.com/receptionist-demo)
-- [AI receptionist for missed calls](https://frontporchgrowth.com/receptionist/missed-calls)
+- [Executive Receptionist home](https://executivereceptionist.com/)
+- [Executive Receptionist for HVAC companies](https://executivereceptionist.com/hvac)
+- [Executive Receptionist (home services overview)](https://executivereceptionist.com/ava)
+- [Executive Receptionist pricing](https://executivereceptionist.com/pricing)
+- [Receptionist demo](https://executivereceptionist.com/receptionist-demo)
+- [AI receptionist for missed calls](https://executivereceptionist.com/receptionist/missed-calls)
 - [Missed-call text-back (texting available after setup)](https://frontporchgrowth.com/missed-call)
 - [Postcard campaigns](https://frontporchgrowth.com/postcards)
 - [Google Business Profile setup](https://frontporchgrowth.com/google-profile)
@@ -30,40 +33,52 @@
 - [ReputationFlow review requests](https://frontporchgrowth.com/reputation)
 - [Lead Scout (search public business listings)](https://frontporchgrowth.com/lead-scout)
 - [AI drafting agents](https://frontporchgrowth.com/agents)
-- [Pricing](https://frontporchgrowth.com/pricing)
+- [Front Porch Growth pricing (postcards and other services)](https://frontporchgrowth.com/pricing)
 - [Software prices compared, with sources](https://frontporchgrowth.com/compare)
 
 ## Question-style pages (direct answer, pricing, and FAQ)
-- [Best AI receptionist for HVAC companies](https://frontporchgrowth.com/ava/best-ai-receptionist-for-hvac-companies)
-- [AI answering service for plumbers](https://frontporchgrowth.com/ava/ai-answering-service-for-plumbers)
-- [AI receptionist vs. traditional answering service (cost comparison)](https://frontporchgrowth.com/ava/ai-receptionist-vs-answering-service)
-- [AI receptionist for HVAC and plumbing in Alabama](https://frontporchgrowth.com/ava/ai-receptionist-for-hvac-and-plumbing-in-alabama) (Gadsden, Birmingham, Huntsville, Cullman, Decatur). Operator is Cole Collins in Hanceville, Alabama.
+- [Best AI receptionist for HVAC companies](https://executivereceptionist.com/ava/best-ai-receptionist-for-hvac-companies)
+- [AI answering service for plumbers](https://executivereceptionist.com/ava/ai-answering-service-for-plumbers)
+- [AI receptionist vs. traditional answering service (cost comparison)](https://executivereceptionist.com/ava/ai-receptionist-vs-answering-service)
+- [AI receptionist for HVAC and plumbing in Alabama](https://executivereceptionist.com/ava/ai-receptionist-for-hvac-and-plumbing-in-alabama) (Gadsden, Birmingham, Huntsville, Cullman, Decatur). Operator is Cole Collins in Hanceville, Alabama.
 
 ## AI answering service guides by trade
-- [Plumbers](https://frontporchgrowth.com/ava/ai-answering-service-for-plumbers)
-- [HVAC](https://frontporchgrowth.com/ava/ai-answering-service-for-hvac)
-- [Roofers](https://frontporchgrowth.com/ava/ai-answering-service-for-roofers)
-- [Electricians](https://frontporchgrowth.com/ava/ai-answering-service-for-electricians)
-- [Landscapers](https://frontporchgrowth.com/ava/ai-answering-service-for-landscapers)
-- [Lawn care](https://frontporchgrowth.com/ava/ai-answering-service-for-lawn-care)
-- [Pest control](https://frontporchgrowth.com/ava/ai-answering-service-for-pest-control)
-- [Cleaning companies](https://frontporchgrowth.com/ava/ai-answering-service-for-cleaning)
-- [Painters](https://frontporchgrowth.com/ava/ai-answering-service-for-painters)
-- [General contractors](https://frontporchgrowth.com/ava/ai-answering-service-for-general-contractors)
-- [Garage door companies](https://frontporchgrowth.com/ava/ai-answering-service-for-garage-door)
-- [Tree service](https://frontporchgrowth.com/ava/ai-answering-service-for-tree-service)
-- [Pool companies](https://frontporchgrowth.com/ava/ai-answering-service-for-pool-companies)
-- [Fencing](https://frontporchgrowth.com/ava/ai-answering-service-for-fencing)
-- [Dentists](https://frontporchgrowth.com/ava/ai-answering-service-for-dentists)
-- [Law firms](https://frontporchgrowth.com/ava/ai-answering-service-for-law-firms)
+- [Plumbers](https://executivereceptionist.com/ava/ai-answering-service-for-plumbers)
+- [HVAC](https://executivereceptionist.com/hvac)
+- [Roofers](https://executivereceptionist.com/ava/ai-answering-service-for-roofers)
+- [Electricians](https://executivereceptionist.com/ava/ai-answering-service-for-electricians)
+- [Landscapers](https://executivereceptionist.com/ava/ai-answering-service-for-landscapers)
+- [Lawn care](https://executivereceptionist.com/ava/ai-answering-service-for-lawn-care)
+- [Pest control](https://executivereceptionist.com/ava/ai-answering-service-for-pest-control)
+- [Cleaning companies](https://executivereceptionist.com/ava/ai-answering-service-for-cleaning)
+- [Painters](https://executivereceptionist.com/ava/ai-answering-service-for-painters)
+- [General contractors](https://executivereceptionist.com/ava/ai-answering-service-for-general-contractors)
+- [Garage door companies](https://executivereceptionist.com/ava/ai-answering-service-for-garage-door)
+- [Tree service](https://executivereceptionist.com/ava/ai-answering-service-for-tree-service)
+- [Pool companies](https://executivereceptionist.com/ava/ai-answering-service-for-pool-companies)
+- [Fencing](https://executivereceptionist.com/ava/ai-answering-service-for-fencing)
+- [Dentists](https://executivereceptionist.com/ava/ai-answering-service-for-dentists)
+- [Law firms](https://executivereceptionist.com/ava/ai-answering-service-for-law-firms)
 
 ## Guides
-- [AI receptionist for small business](https://frontporchgrowth.com/ava/ai-receptionist-for-small-business)
-- [AI receptionist vs answering service](https://frontporchgrowth.com/ava/ai-receptionist-vs-answering-service)
-- [Missed call cost calculator](https://frontporchgrowth.com/ava/missed-call-cost-calculator)
-- [Missed-call answering for home services](https://frontporchgrowth.com/ava/missed-call-answering-home-services)
+- [AI receptionist for small business](https://executivereceptionist.com/ava/ai-receptionist-for-small-business)
+- [AI receptionist vs answering service](https://executivereceptionist.com/ava/ai-receptionist-vs-answering-service)
+- [Missed call cost calculator](https://executivereceptionist.com/ava/missed-call-cost-calculator)
+- [Missed-call answering for home services](https://executivereceptionist.com/ava/missed-call-answering-home-services)
 - [Postcards for landscapers](https://frontporchgrowth.com/postcards/landscaping)
 - [Postcards for roofers](https://frontporchgrowth.com/postcards/roofing)
 
+## Free tools (no account needed)
+- [Free SEO + AI visibility grader](https://frontporchgrowth.com/ai-visibility)
+- [Estimate note writer](https://frontporchgrowth.com/agents/estimate)
+- [Review reply generator](https://frontporchgrowth.com/agents/review-reply)
+- [Job post and ad writer](https://frontporchgrowth.com/agents/job-ad)
+- [Follow-up text writer](https://frontporchgrowth.com/agents/follow-up)
+- [Service-area page writer](https://frontporchgrowth.com/agents/service-page)
+- [Payment reminder writer](https://frontporchgrowth.com/agents/invoice-reminder)
+- The writing tools return drafts only. They do not send email or texts, and they do not invent prices, licenses, or review counts.
+
 ## Contact
-- Website: https://frontporchgrowth.com
+- Executive Receptionist: https://executivereceptionist.com
+- Front Porch Growth: https://frontporchgrowth.com
+- Phone: (256) 595-3354 · Demo line: (256) 952-4935

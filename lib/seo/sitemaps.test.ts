@@ -1,15 +1,14 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { avaGuideSlugs } from '@/lib/ava/trade-pages';
 import { urlsForHost } from '@/lib/seo/public-urls';
-import { EXECUTIVE_RECEPTIONIST_INDEX, frontPorchGrowthSitemap, robotsForHost, sitemapForHost } from '@/lib/seo/sitemaps';
+import { hvacMergeTarget, receptionistHomePath } from '@/lib/seo/receptionist-home';
+import { EXECUTIVE_RECEPTIONIST_INDEX, frontPorchGrowthSitemap, indexedAvaGuideSlugs, robotsForHost, sitemapForHost } from '@/lib/seo/sitemaps';
 import { absoluteUrl, EXECUTIVE_RECEPTIONIST_ORIGIN, getSiteUrl } from '@/lib/site-url';
 
 const FRONT_PORCH = 'https://frontporchgrowth.com';
 
 const FRONT_PORCH_PATHS = [
   '/',
-  '/start',
   '/postcards',
   '/pricing',
   '/compare',
@@ -18,17 +17,12 @@ const FRONT_PORCH_PATHS = [
   '/leads',
   '/agents',
   '/terms',
-  '/ava',
-  '/receptionist',
-  '/receptionist/missed-calls',
-  '/hvac',
   '/missed-call',
   '/google-profile',
   '/ai-visibility',
   '/privacy',
   '/sms',
   '/sms-consent',
-  '/receptionist-demo',
   '/postcards/landscaping',
   '/postcards/lawn-care',
   '/postcards/hardscaping',
@@ -39,7 +33,6 @@ const FRONT_PORCH_PATHS = [
   '/postcards/pool-installation',
   '/postcards/outdoor-lighting',
   '/postcards/tree-service',
-  ...avaGuideSlugs().map((slug) => `/ava/${slug}`),
   '/agents/estimate',
   '/agents/review-reply',
   '/agents/job-ad',
@@ -69,7 +62,11 @@ describe('host sitemaps', () => {
   it('keeps the Front Porch Growth sitemap on its own host', () => {
     const published = frontPorchGrowthSitemap(FRONT_PORCH, new Date('2026-11-08T00:00:00.000Z')).map((item) => item.url);
     assert.deepEqual(published.map(pathOf), FRONT_PORCH_PATHS);
-    assert.equal(published.length, 67);
+    assert.equal(published.length, FRONT_PORCH_PATHS.length);
+    for (const path of ['/receptionist', '/ava', '/hvac', '/start', '/receptionist-demo', '/receptionist/missed-calls']) {
+      assert.equal(published.map(pathOf).includes(path), false, path);
+    }
+    assert.equal(published.some((url) => url.includes('/ava/')), false);
     assert.ok(published.every((url) => url.startsWith(`${FRONT_PORCH}/`)));
 
     const origin = getSiteUrl();
@@ -87,10 +84,12 @@ describe('host sitemaps', () => {
     assert.deepEqual(locations, urls('www.executivereceptionist.com'));
     assert.ok(locations.every((url) => url.startsWith(`${EXECUTIVE_RECEPTIONIST_ORIGIN}/`)));
     assert.deepEqual(paths.slice(0, EXECUTIVE_RECEPTIONIST_INDEX.length), EXECUTIVE_RECEPTIONIST_INDEX.map((page) => page.path));
-    for (const path of ['/', '/pricing', '/receptionist-demo', '/privacy', '/terms', '/sms', '/sms-consent', '/ava', '/hvac', '/receptionist/missed-calls', '/business', '/dental', '/law', '/salon', '/auto-repair', '/med-spa', '/real-estate']) {
+    for (const path of ['/', '/pricing', '/receptionist-demo', '/privacy', '/terms', '/ava', '/hvac', '/receptionist/missed-calls']) {
       assert.ok(paths.includes(path), path);
     }
-    for (const slug of avaGuideSlugs()) assert.ok(paths.includes(`/ava/${slug}`));
+    for (const slug of indexedAvaGuideSlugs()) assert.ok(paths.includes(`/ava/${slug}`));
+    assert.equal(paths.includes('/ava/ai-answering-service-for-hvac'), false);
+    for (const path of ['/sms', '/sms-consent']) assert.equal(paths.includes(path), false, path);
     for (const path of ['/blog', '/blog/after-hours-hvac-calls', '/blog/hvac-answering-service-vs-ai-receptionist']) {
       assert.ok(paths.includes(path), path);
     }
@@ -127,12 +126,35 @@ describe('host sitemaps', () => {
       openGraphUrl: '/pricing',
     });
     assert.deepEqual(urlsForHost('frontporchgrowth.com', '/ava', `${FRONT_PORCH}/ava`, `${FRONT_PORCH}/ava`), {
-      canonical: `${FRONT_PORCH}/ava`,
-      openGraphUrl: `${FRONT_PORCH}/ava`,
+      canonical: `${EXECUTIVE_RECEPTIONIST_ORIGIN}/ava`,
+      openGraphUrl: `${EXECUTIVE_RECEPTIONIST_ORIGIN}/ava`,
+    });
+    assert.deepEqual(urlsForHost(null, '/hvac', '/hvac'), {
+      canonical: `${EXECUTIVE_RECEPTIONIST_ORIGIN}/hvac`,
+      openGraphUrl: `${EXECUTIVE_RECEPTIONIST_ORIGIN}/hvac`,
     });
     assert.deepEqual(urlsForHost(null, '/privacy', '/privacy', `${FRONT_PORCH}/privacy`), {
       canonical: '/privacy',
       openGraphUrl: `${FRONT_PORCH}/privacy`,
     });
+  });
+});
+
+describe('receptionist home redirects', () => {
+  it('maps receptionist paths to executivereceptionist.com and leaves Front Porch Growth paths alone', () => {
+    assert.equal(receptionistHomePath('/ava'), '/ava');
+    assert.equal(receptionistHomePath('/ava/ai-answering-service-for-plumbers'), '/ava/ai-answering-service-for-plumbers');
+    assert.equal(receptionistHomePath('/ava/ai-answering-service-for-hvac'), '/hvac');
+    assert.equal(receptionistHomePath('/receptionist/hvac'), '/hvac');
+    assert.equal(receptionistHomePath('/receptionist'), '/');
+    assert.equal(receptionistHomePath('/receptionist/missed-calls'), '/receptionist/missed-calls');
+    assert.equal(receptionistHomePath('/hvac/'), '/hvac');
+    for (const path of ['/start', '/receptionist-demo', '/business', '/dental', '/law', '/salon', '/auto-repair', '/med-spa', '/real-estate']) {
+      assert.equal(receptionistHomePath(path), path);
+    }
+    for (const path of ['/', '/pricing', '/privacy', '/terms', '/sms', '/sms-consent', '/postcards', '/postcards/roofing', '/agents/estimate', '/google-profile', '/trades/hvac', '/onboarding/ava', '/buy/starter', '/api/checkout', '/missed-call', '/avatar']) {
+      assert.equal(receptionistHomePath(path), null, path);
+    }
+    assert.equal(hvacMergeTarget('/hvac'), null);
   });
 });

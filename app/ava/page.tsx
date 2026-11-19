@@ -14,12 +14,13 @@ import { avaProductNode, avaServiceNode, avaSoftwareNode, faqNode, jsonLdGraph }
 import { LIVE_DEMO_URL } from '@/lib/ava/demo-phone';
 import { AVA_GUIDES } from '@/lib/ava/trade-pages';
 import { urlsForRequest } from '@/lib/seo/host-metadata';
-import { absoluteSiteUrl } from '@/lib/site-url';
+import { avaGuidePath } from '@/lib/seo/receptionist-home';
+import { executiveReceptionistUrl } from '@/lib/site-url';
 
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const published = absoluteSiteUrl('/ava');
+  const published = executiveReceptionistUrl('/ava');
   const { canonical, openGraphUrl } = await urlsForRequest('/ava', published, published);
   return {
     alternates: { canonical },
@@ -72,7 +73,7 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
   const heroNext = SETUP_CALL_URL
     ? 'She’ll ask the setup questions. After that you can request a short setup call with Cole, or pick a plan.'
     : 'She’ll ask the setup questions, then you can pick a plan with answers prefilled.';
-  const canonical = absoluteSiteUrl('/ava');
+  const canonical = executiveReceptionistUrl('/ava');
   const structuredData = jsonLdGraph([
     avaSoftwareNode({
       description:
@@ -104,10 +105,10 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
       <header className="masthead">
         <Link className="wordmark" href="/ava">
           <span className="wordmark-ava">Executive Receptionist</span>
-          <span className="wordmark-sub">by Front Porch Growth</span>
+          <span className="wordmark-sub">AI receptionist · Ava</span>
         </Link>
         <nav className="masthead-links">
-          <Link href="/">Front Porch</Link>
+          <Link href="/">Home</Link>
           <a href="#talk-to-ava">Hear her</a>
           <a href="#how">How it works</a>
           <a href="#pricing">Rate card</a>
@@ -262,7 +263,7 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
         <ul className="trades-list">
           {tradeGuides.map((guide) => (
             <li key={guide.slug}>
-              <Link href={`/ava/${guide.slug}`}>
+              <Link href={avaGuidePath(guide.slug)}>
                 <span className="trade-name">{guide.navLabel}</span>
                 <span className="trade-desc">{guide.blurb}</span>
                 <ArrowUpRight size={18} aria-hidden="true" />
@@ -274,7 +275,7 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
         <ul className="trades-list">
           {buyerGuides.map((guide) => (
             <li key={guide.slug}>
-              <Link href={`/ava/${guide.slug}`}>
+              <Link href={avaGuidePath(guide.slug)}>
                 <span className="trade-name">{guide.navLabel}</span>
                 <span className="trade-desc">{guide.blurb}</span>
                 <ArrowUpRight size={18} aria-hidden="true" />

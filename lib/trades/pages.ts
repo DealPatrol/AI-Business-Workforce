@@ -45,11 +45,11 @@ export const TRADE_PAGES: TradePage[] = [
     name: 'HVAC',
     title: 'AI tools for HVAC companies | Front Porch Growth',
     description:
-      'After-hours no-cool calls, review requests, and drafts for HVAC shops. The receptionist emails the lead. It is not scheduling software.',
+      'After-hours no-cool calls, review requests, and drafts for HVAC shops. The receptionist emails the lead and can book visits once hours are set.',
     h1: 'The no-cool call, for HVAC companies.',
     season: 'July and January pile up calls that all sound urgent. A two-truck shop does not have someone sitting on the dispatch board while a tech is in a crawlspace.',
     calls: ['No cooling or no heat', 'A system that is short cycling', 'A maintenance visit', 'A replacement question'],
-    dispatch: 'Executive Receptionist asks whether the house has heat or cooling, the address, and when someone is home, then emails you. You book the call on the calendar you already use.',
+    dispatch: 'Executive Receptionist asks whether the house has heat or cooling, the address, and when someone is home, then emails you the lead. Once your hours are set in the Desk, she books the visit into your Desk calendar during the call. Your field software stays where jobs are dispatched and invoiced.',
     dispatchSlug: 'ai-answering-service-for-hvac',
     reviews: 'A tune-up is a natural time to ask for a review. ReputationFlow’s free QR tool can sit on the invoice or the truck. The public Google link does not change based on the star rating the customer taps.',
     leads: 'Lead Scout’s HVAC search is other businesses, such as property managers, not a list of homeowners with broken condensers.',

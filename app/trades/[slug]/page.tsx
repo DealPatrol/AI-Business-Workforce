@@ -5,7 +5,8 @@ import { SuiteShell } from '@/components/suite/SuiteShell';
 import styles from '@/components/suite/suite.module.css';
 import { faqNode, jsonLdGraph } from '@/lib/ava/structured-data';
 import { TRADE_PAGES, getTradePage } from '@/lib/trades/pages';
-import { absoluteSiteUrl } from '@/lib/site-url';
+import { avaGuidePath } from '@/lib/seo/receptionist-home';
+import { absoluteSiteUrl, executiveReceptionistUrl } from '@/lib/site-url';
 
 export function generateStaticParams() {
   return TRADE_PAGES.map((page) => ({ slug: page.slug }));
@@ -53,7 +54,11 @@ export default async function TradePage({ params }: { params: Promise<{ slug: st
         <h2>Executive Receptionist</h2>
         <p>{page.dispatch}</p>
         <p>
-          <Link href={`/ava/${page.dispatchSlug}`}>Read the {page.name.toLowerCase()} answering guide</Link>
+          <a href={executiveReceptionistUrl(avaGuidePath(page.dispatchSlug))}>
+            {avaGuidePath(page.dispatchSlug) === '/hvac'
+              ? 'See Executive Receptionist for HVAC companies'
+              : `Read the ${page.name.toLowerCase()} answering guide`}
+          </a>
         </p>
         <h2>Reviews</h2>
         <p>{page.reviews}</p>

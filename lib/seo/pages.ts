@@ -120,14 +120,14 @@ const PAGES = {
     receptionist: true,
   },
   '/pricing': {
-    title: 'Pricing | Front Porch Growth',
+    title: 'AI Receptionist & Postcard Pricing | Front Porch Growth',
     description:
-      'YardMailer postcard prices plus Executive Receptionist plans from $79 to $789 a month.',
+      'AI receptionist plans from $79 to $789 a month (Starter’s first month $1), plus YardMailer postcards: $127 setup, then $3.54 a card.',
     titleMode: 'absolute',
     receptionist: false,
   },
   '/compare': {
-    title: 'Software prices compared | Front Porch Growth',
+    title: 'Home-Service Software Prices: ServiceTitan, Jobber, Smith.ai',
     description:
       'Published starting prices for ServiceTitan, Jobber, Housecall Pro, Podium, Smith.ai, Ruby, and Front Porch Growth, with sources and the check date.',
     titleMode: 'absolute',

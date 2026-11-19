@@ -231,7 +231,7 @@ export function ReceptionistLanding({ niche }: Props) {
           <a href={AVA_OFFER.contactPhoneHref}>{AVA_OFFER.contactPhoneDisplay}</a>.
         </p>
         <p className={styles.fine}>
-          {AVA_OFFER.footerLine}. Part of <Link href="/">Front Porch Growth</Link>. Questions:{' '}
+          {AVA_OFFER.footerLine}. Questions:{' '}
           <a href={`mailto:${AVA_OFFER.contactEmail}`}>{AVA_OFFER.contactEmail}</a>
         </p>
       </section>

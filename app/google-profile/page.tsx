@@ -2,7 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { SuiteShell } from '@/components/suite/SuiteShell';
 import styles from '@/components/suite/suite.module.css';
+import { faqNode, jsonLdGraph } from '@/lib/ava/structured-data';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
+import { absoluteSiteUrl } from '@/lib/site-url';
 
 const CHECKOUT_URL = 'https://buy.stripe.com/14A3cx1Rc2W9dWx4200Ba02';
 const seo = pageSeo('/google-profile');
@@ -14,7 +16,40 @@ const FAQS = [
   { q: 'How long does it take?', a: 'Most profiles are done within 3 business days of getting access and photos. Google sometimes holds edits for review, which can add a few days.' },
   { q: 'Do you guarantee a ranking?', a: 'No. Nobody can honestly promise a map ranking. A complete, accurate profile with the right categories and photos is the foundation Google looks at.' },
   { q: 'Is this a subscription?', a: 'No. It is $99 one time.' },
+  { q: 'Does a Google profile help with ChatGPT and other AI assistants?', a: 'It helps most with Google: map results and Google’s AI answers read your profile. ChatGPT and other assistants lean more on directories and review sites, so a profile is one piece. The free AI visibility grader checks both.' },
+  { q: 'Will you put keywords in my business name?', a: 'No. Google’s guidelines say the name must match your real-world business name, and stuffed names can get a profile suspended.' },
 ] as const;
+
+const MISTAKES = [
+  'The wrong primary category, so Google shows you for the wrong searches.',
+  'Services missing, so the profile never mentions the jobs you want most.',
+  'Old hours or a dead phone number.',
+  'No real job photos, only a logo or nothing at all.',
+  'A street address showing for a business that only drives to customers.',
+  'Two listings for the same business, splitting the reviews.',
+  'Keywords stuffed into the business name, which breaks Google’s rules.',
+] as const;
+
+const structured = jsonLdGraph([
+  {
+    '@type': 'Service',
+    name: 'Google Business Profile setup and optimization',
+    serviceType: 'Google Business Profile optimization',
+    description: seo.description,
+    url: absoluteSiteUrl('/google-profile'),
+    areaServed: { '@type': 'Country', name: 'United States' },
+    provider: { '@type': 'Organization', name: 'Front Porch Growth', url: absoluteSiteUrl('/') },
+    offers: {
+      '@type': 'Offer',
+      price: '99.00',
+      priceCurrency: 'USD',
+      availability: 'https://schema.org/InStock',
+      url: absoluteSiteUrl('/google-profile'),
+      description: 'One-time flat fee. Not a subscription.',
+    },
+  },
+  faqNode([...FAQS]),
+]);
 
 export const metadata: Metadata = {
   title: metadataTitle(seo),
@@ -26,6 +61,7 @@ export const metadata: Metadata = {
 export default function GoogleProfilePage() {
   return (
     <SuiteShell>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structured).replace(/</g, '\\u003c') }} />
       <section className={styles.section}>
         <span className={styles.eyebrow}>GOOGLE BUSINESS PROFILE</span>
         <h1>Your Google profile is your new front door. Let us fix it up for $99.</h1>
@@ -51,9 +87,22 @@ export default function GoogleProfilePage() {
             </a>
           </article>
         </div>
+        <h2>Common Google profile mistakes we fix</h2>
+        <ul>
+          {MISTAKES.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+        <h2>Google, maps, and AI answers</h2>
+        <p>
+          Your profile feeds Google’s map results and Google’s AI answers. ChatGPT and other assistants lean more on directories
+          and review sites, so the profile is the first piece, not the only one. The{' '}
+          <Link href="/ai-visibility">free SEO and AI visibility grader</Link> shows where your business shows up and where it does not.
+        </p>
         <p>
           Want more reviews after setup? See <Link href="/reputation">review requests</Link>.
         </p>
+        <h2>Questions</h2>
         <section className={styles.faq}>
           {FAQS.map((faq) => (
             <details key={faq.q}>
