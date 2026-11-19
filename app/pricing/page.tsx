@@ -9,9 +9,11 @@ import {
   POSTCARD_SETUP_LABEL,
   POSTCARD_SIZES,
   postcardPackageRows,
+  postcardPublicOffers,
 } from '@/lib/postcards/pricing';
+import { avaOfferNodes, jsonLdGraph } from '@/lib/ava/structured-data';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
-import { isExecutiveReceptionistHost } from '@/lib/site-url';
+import { absoluteUrl, EXECUTIVE_RECEPTIONIST_ORIGIN, getSiteUrl, isExecutiveReceptionistHost } from '@/lib/site-url';
 import styles from '@/components/ava/offer-pricing.module.css';
 
 const seo = pageSeo('/pricing');
@@ -99,8 +101,23 @@ export default async function PricingPage() {
   const headerList = await headers();
   const host = headerList.get('x-forwarded-host') || headerList.get('host');
   const onReceptionistSite = isExecutiveReceptionistHost(host);
+  // Price list as structured data, built from the same constants the page renders.
+  const pageUrl = absoluteUrl(onReceptionistSite ? EXECUTIVE_RECEPTIONIST_ORIGIN : getSiteUrl(), '/pricing');
+  const structured = jsonLdGraph([
+    {
+      '@type': 'OfferCatalog',
+      name: onReceptionistSite ? 'Executive Receptionist plans' : 'Front Porch Growth prices',
+      url: pageUrl,
+      itemListElement: onReceptionistSite
+        ? avaOfferNodes(`${pageUrl}#plans`)
+        : [...avaOfferNodes(`${pageUrl}#plans`), ...postcardPublicOffers(`${pageUrl}#other-products`)],
+    },
+  ]);
   const layout = (
-    <OfferPricingLayout showTopbar={onReceptionistSite} otherProducts={onReceptionistSite ? undefined : <OtherProducts />} />
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structured).replace(/</g, '\\u003c') }} />
+      <OfferPricingLayout showTopbar={onReceptionistSite} otherProducts={onReceptionistSite ? undefined : <OtherProducts />} />
+    </>
   );
 
   if (onReceptionistSite) {

@@ -1,14 +1,15 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { AvaGuidePage } from '@/components/ava/AvaGuidePage';
-import { avaGuideSlugs, getAvaGuide } from '@/lib/ava/trade-pages';
+import { getAvaGuide } from '@/lib/ava/trade-pages';
+import { indexedAvaGuideSlugs } from '@/lib/seo/sitemaps';
 import { urlsForRequest } from '@/lib/seo/host-metadata';
-import { absoluteSiteUrl } from '@/lib/site-url';
+import { executiveReceptionistUrl } from '@/lib/site-url';
 
 export const dynamic = 'force-dynamic';
 
 export function generateStaticParams() {
-  return avaGuideSlugs().map((slug) => ({ slug }));
+  return indexedAvaGuideSlugs().map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -19,7 +20,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const page = getAvaGuide(slug);
   if (!page) return {};
-  const published = absoluteSiteUrl(`/ava/${slug}`);
+  const published = executiveReceptionistUrl(`/ava/${slug}`);
   const { canonical, openGraphUrl } = await urlsForRequest(`/ava/${slug}`, published, published);
   return {
     title: { absolute: page.metaTitle },

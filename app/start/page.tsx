@@ -8,6 +8,7 @@ import { MonthlyPlans, PlanCheckoutButton } from '@/components/ava/MonthlyPlans'
 import { avaPlanOfferNodes, faqNode } from '@/lib/ava/structured-data';
 import { EXECUTIVE_INDUSTRIES } from '@/lib/executive-receptionist';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
+import { executiveReceptionistUrl } from '@/lib/site-url';
 import styles from './start.module.css';
 
 const seo = pageSeo('/start');
@@ -17,8 +18,8 @@ const description = seo.description;
 export const metadata: Metadata = {
   title: metadataTitle(seo),
   description,
-  alternates: { canonical: '/start' },
-  openGraph: { title, description, url: '/start', siteName: 'Ava by Front Porch Growth', type: 'website' },
+  alternates: { canonical: executiveReceptionistUrl('/start') },
+  openGraph: { title, description, url: executiveReceptionistUrl('/start'), siteName: 'Executive Receptionist', type: 'website' },
   twitter: { card: 'summary_large_image', title, description },
 };
 
@@ -130,10 +131,11 @@ const jsonLd = {
   '@graph': [
     {
       '@type': 'Product',
-      name: 'Ava AI receptionist',
-      description: 'AI phone receptionist for home-service businesses and online stores.',
-      brand: { '@type': 'Brand', name: 'Front Porch Growth' },
-      offers: avaPlanOfferNodes('/pricing#plans'),
+      name: 'Executive Receptionist (Ava)',
+      description: 'Ava is the Executive Receptionist AI phone receptionist for home-service businesses and online stores.',
+      brand: { '@type': 'Brand', name: 'Executive Receptionist' },
+      url: executiveReceptionistUrl('/start'),
+      offers: avaPlanOfferNodes(executiveReceptionistUrl('/pricing')),
     },
     faqNode([...FAQS]),
   ],
@@ -352,7 +354,7 @@ export default function StartPage() {
         </p>
         <p>{AVA_OFFER.footerLine}</p>
         <nav aria-label="Legal">
-          <Link href="/">Front Porch Growth</Link>
+          <Link href="/">Executive Receptionist</Link>
           <Link href="/login?next=/desk">Customer sign in</Link>
           <Link href="/terms">Terms</Link>
           <Link href="/privacy">Privacy</Link>

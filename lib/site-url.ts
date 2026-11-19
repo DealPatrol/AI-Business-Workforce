@@ -107,3 +107,20 @@ export function isLegacyHostPagePath(pathname: string) {
   if (leaf.includes('.')) return false;
   return true;
 }
+
+export const FRONT_PORCH_GROWTH_APEX_HOST = 'frontporchgrowth.com';
+export const FRONT_PORCH_GROWTH_ORIGIN = `https://${FRONT_PORCH_GROWTH_APEX_HOST}`;
+const FRONT_PORCH_GROWTH_HOSTS = new Set([FRONT_PORCH_GROWTH_APEX_HOST, `www.${FRONT_PORCH_GROWTH_APEX_HOST}`]);
+
+/** frontporchgrowth.com (and www). Preview and localhost hosts are not included. */
+export function isFrontPorchGrowthHost(hostHeader: string | null | undefined) {
+  return FRONT_PORCH_GROWTH_HOSTS.has(hostnameOf(hostHeader));
+}
+
+/** Absolute executivereceptionist.com URL, for links from Front Porch Growth pages. */
+export function executiveReceptionistUrl(path: string) {
+  return absoluteUrl(EXECUTIVE_RECEPTIONIST_ORIGIN, path);
+}
+
+/** Permanent redirect status for receptionist pages moved off frontporchgrowth.com. */
+export const RECEPTIONIST_HOME_REDIRECT_STATUS = 301;

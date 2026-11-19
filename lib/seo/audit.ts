@@ -1,7 +1,9 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { AGENTS } from '@/lib/agents/catalog';
+import { agentSeo } from '@/lib/agents/seo-content';
 import { AVA_GUIDES } from '@/lib/ava/trade-pages';
+import { BLOG_POSTS } from '@/lib/blog/posts';
 import { MISSED_CALL_TRADES, missedCallSeo } from '@/lib/dispatch/missed-call-ads';
 import { POSTCARD_TRADES, postcardTradeSeo } from '@/lib/postcards/trade-pages';
 import {
@@ -11,7 +13,6 @@ import {
   ROOT_SEO,
   SEO_DESCRIPTION_MAX,
   SEO_TITLE_MAX,
-  agentDocumentTitle,
   demoDocumentDescription,
   demoDocumentTitle,
   isStaticSeoPath,
@@ -75,6 +76,10 @@ export function resolveRouteSeo(route: string, companyNames: string[]): Resolved
     return AVA_GUIDES.map((guide) => absolute(`/ava/${guide.slug}`, guide.metaTitle, guide.description, true));
   }
 
+  if (route === '/blog/[slug]') {
+    return BLOG_POSTS.map((post) => absolute(`/blog/${post.slug}`, post.metaTitle, post.description, false));
+  }
+
   if (route === '/postcards/[trade]') {
     return POSTCARD_TRADES.map((trade) => {
       const seo = postcardTradeSeo(trade.slug);
@@ -88,7 +93,10 @@ export function resolveRouteSeo(route: string, companyNames: string[]): Resolved
   }
 
   if (route === '/agents/[slug]') {
-    return AGENTS.map((agent) => absolute(`/agents/${agent.id}`, agentDocumentTitle(agent.title), agent.blurb, false));
+    return AGENTS.map((agent) => {
+      const seo = agentSeo(agent.id);
+      return absolute(`/agents/${agent.id}`, seo.metaTitle, seo.metaDescription, false);
+    });
   }
 
   if (route === '/receptionist/[industry]') {

@@ -3,15 +3,15 @@ import Link from 'next/link';
 import { TrialSignupLink } from '@/components/dispatch/TrialSignupLink';
 import { MISSED_CALL_ADS, missedCallSeo, missedCallTrade } from '@/lib/dispatch/missed-call-ads';
 import { AVA_OFFER, AVA_PLANS } from '@/lib/ava/pricing';
-import { avaPlanOfferNodes, faqNode, jsonLdGraph } from '@/lib/ava/structured-data';
+import { avaOrganization, avaPlanOfferNodes, faqNode, jsonLdGraph } from '@/lib/ava/structured-data';
 import { urlsForRequest } from '@/lib/seo/host-metadata';
-import { absoluteSiteUrl } from '@/lib/site-url';
+import { executiveReceptionistUrl } from '@/lib/site-url';
 import styles from './missed.module.css';
 
 const FAQS = [
   {
     q: 'What does Executive Receptionist actually do on the call?',
-    a: 'It answers calls that reach it, including after-hours and unanswered calls you forward. It asks for the caller’s name, number, and what they need, then emails that lead to you. It does not book the job on your calendar.',
+    a: 'It answers calls that reach it, including after-hours and unanswered calls you forward. It asks for the caller’s name, number, and what they need, then emails that lead to you. Once your hours are set in the Desk and booking is on, it offers open windows and books the visit into your Desk calendar during the call. Until then you call back and book it.',
   },
   {
     q: 'What does it cost to start?',
@@ -42,7 +42,7 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
     description,
     alternates: { canonical },
     robots: raw && raw !== 'hvac' ? { index: false, follow: true } : { index: true, follow: true },
-    openGraph: { images: ['/og-default.png'], title, description, url: openGraphUrl, siteName: 'Front Porch Growth', type: 'website' },
+    openGraph: { images: ['/og-default.png'], title, description, url: openGraphUrl, siteName: 'Executive Receptionist', type: 'website' },
   };
 }
 
@@ -56,9 +56,10 @@ export default async function MissedCallsPage({ searchParams }: PageProps) {
       name: 'Executive Receptionist',
       applicationCategory: 'BusinessApplication',
       operatingSystem: 'Web',
-      url: absoluteSiteUrl('/receptionist/missed-calls'),
-      description: 'AI receptionist that answers missed calls and emails the lead summary.',
-      offers: avaPlanOfferNodes(absoluteSiteUrl('/receptionist/missed-calls')),
+      url: executiveReceptionistUrl('/receptionist/missed-calls'),
+      description: 'AI receptionist that answers missed calls, emails the lead summary, and books visits once hours are set in the Desk.',
+      provider: avaOrganization(),
+      offers: avaPlanOfferNodes(executiveReceptionistUrl('/receptionist/missed-calls')),
     },
     faqNode([...FAQS]),
   ]);
@@ -67,8 +68,9 @@ export default async function MissedCallsPage({ searchParams }: PageProps) {
     <div className={styles.page}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structured).replace(/</g, '\\u003c') }} />
       <header className={styles.bar}>
-        <Link href="/">Front Porch Growth</Link>
-        <Link href="/receptionist">Product</Link>
+        <Link href="/">Executive Receptionist</Link>
+        <Link href="/hvac">HVAC</Link>
+        <Link href="/pricing">Pricing</Link>
       </header>
       <main className={styles.main}>
         <p className={styles.stamp}>{ad.label} · AFTER HOURS</p>
@@ -96,14 +98,20 @@ export default async function MissedCallsPage({ searchParams }: PageProps) {
           <ul>
             <li>It answers the calls you send it, including nights and weekends.</li>
             <li>It takes the name, the number, and what is wrong.</li>
-            <li>It emails you that lead so you can call back and book the job.</li>
+            <li>It emails you that lead right after the call.</li>
+            <li>Once your hours are set in the Desk, it offers open windows and books the visit into your Desk calendar.</li>
           </ul>
           <p>
-            It does not book the appointment on your calendar, and this page does not claim a pickup in under a minute. You still
-            dispatch the truck.
+            It never promises an arrival time or a price you did not approve, and this page does not claim a pickup in under a
+            minute. You still dispatch the truck.
           </p>
           <p>
-            <Link className={styles.text} href="/receptionist">
+            <Link className={styles.text} href="/hvac">
+              Run a heating and air shop? See Executive Receptionist for HVAC
+            </Link>
+          </p>
+          <p>
+            <Link className={styles.text} href="/receptionist-demo">
               Hear the sample call and see the full rate card
             </Link>
           </p>

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { AVA_GUIDES, avaGuideSlugs, getAvaGuide } from '@/lib/ava/trade-pages';
-import { frontPorchGrowthSitemap, sitemapForHost } from '@/lib/seo/sitemaps';
+import { executiveReceptionistSitemap, frontPorchGrowthSitemap, sitemapForHost } from '@/lib/seo/sitemaps';
 
 const QUESTION_SLUGS = [
   'best-ai-receptionist-for-hvac-companies',
@@ -75,16 +75,20 @@ describe('AI visibility question pages', () => {
     assert.doesNotMatch(text, /cheaper than all|lowest price in the industry/i);
   });
 
-  it('lists the new pages in the Front Porch Growth sitemap', () => {
-    const paths = frontPorchGrowthSitemap('https://frontporchgrowth.com', new Date('2026-11-19T12:00:00-06:00')).map((entry) =>
+  it('lists the new pages in the Executive Receptionist sitemap, their one home', () => {
+    const paths = executiveReceptionistSitemap('https://executivereceptionist.com', new Date('2026-11-19T12:00:00-06:00')).map((entry) =>
       new URL(entry.url).pathname,
     );
     for (const slug of QUESTION_SLUGS) {
       assert.ok(paths.includes(`/ava/${slug}`), slug);
     }
-    const hosted = sitemapForHost('frontporchgrowth.com').map((entry) => new URL(entry.url).pathname);
+    const hosted = sitemapForHost('executivereceptionist.com').map((entry) => new URL(entry.url).pathname);
     for (const slug of QUESTION_SLUGS) {
       assert.ok(hosted.includes(`/ava/${slug}`), `host sitemap missing ${slug}`);
     }
+    const frontPorch = frontPorchGrowthSitemap('https://frontporchgrowth.com', new Date('2026-11-19T12:00:00-06:00')).map((entry) =>
+      new URL(entry.url).pathname,
+    );
+    for (const slug of QUESTION_SLUGS) assert.equal(frontPorch.includes(`/ava/${slug}`), false, slug);
   });
 });

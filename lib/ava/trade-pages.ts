@@ -62,7 +62,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Plumbers',
     blurb: 'Active leaks, drains, water heaters, and after-hours dispatch intake.',
     title: 'AI Answering Service for Plumbers',
-    metaTitle: 'AI Answering Service for Plumbers | Executive Receptionist',
+    metaTitle: 'AI Receptionist & Answering Service for Plumbers',
     description:
       'An AI answering service for plumbers that answers 24/7, takes the job details, and emails you the lead. Starter is $1 the first month, then $79/mo.',
     eyebrow: 'AI answering service for plumbers',
@@ -870,9 +870,9 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Vs answering service',
     blurb: 'Voicemail, a human answering service, and Executive Receptionist — what each one actually does.',
     title: 'AI Receptionist vs Traditional Answering Service',
-    metaTitle: 'AI Receptionist vs Traditional Answering Service: Cost Comparison',
+    metaTitle: 'AI Receptionist vs Answering Service: Cost Comparison',
     description:
-      'Cost comparison of an AI receptionist and a traditional answering service. Executive Receptionist plans start at $1 the first month, then $79/mo. We do not invent competitor prices.',
+      'AI receptionist vs. a traditional answering service, by cost. Executive Receptionist: $1 the first month, then $79/mo. No invented competitor prices.',
     eyebrow: 'AI receptionist vs. traditional answering service',
     h1: 'AI receptionist vs. traditional answering service: the cost comparison',
     directAnswer:
@@ -1067,9 +1067,9 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Best for HVAC',
     blurb: 'What to look for in an AI receptionist for HVAC, and how Executive Receptionist fits.',
     title: 'Best AI Receptionist for HVAC Companies',
-    metaTitle: 'Best AI Receptionist for HVAC Companies | Executive Receptionist',
+    metaTitle: 'Best AI Receptionist for HVAC Companies (2026 Guide)',
     description:
-      'What to look for in an AI receptionist for HVAC companies, plus Executive Receptionist pricing: $1 the first month, then $79/mo. Call the demo at (256) 952-4935.',
+      'What to look for in an AI receptionist for HVAC companies. Executive Receptionist: $1 the first month, then $79/mo. Demo: (256) 952-4935.',
     eyebrow: 'Best AI receptionist for HVAC companies',
     h1: 'Best AI receptionist for HVAC companies',
     directAnswer:
@@ -1125,9 +1125,9 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Alabama HVAC & plumbing',
     blurb: 'An AI receptionist for HVAC and plumbing shops in Gadsden, Birmingham, Huntsville, Cullman, and Decatur.',
     title: 'AI Receptionist for HVAC and Plumbing in Alabama',
-    metaTitle: 'AI Receptionist for HVAC and Plumbing in Alabama | Gadsden, Birmingham, Huntsville, Cullman, Decatur',
+    metaTitle: 'AI Receptionist for HVAC and Plumbing in Alabama',
     description:
-      'AI receptionist for Alabama HVAC and plumbing shops in Gadsden, Birmingham, Huntsville, Cullman, and Decatur. Run from Hanceville. Starter is $1, then $79/mo.',
+      'AI receptionist for Alabama HVAC and plumbing shops in Gadsden, Birmingham, Huntsville, Cullman, and Decatur. Starter is $1, then $79/mo.',
     eyebrow: 'AI receptionist for HVAC and plumbing in Alabama',
     h1: 'AI receptionist for HVAC and plumbing in Alabama',
     directAnswer:

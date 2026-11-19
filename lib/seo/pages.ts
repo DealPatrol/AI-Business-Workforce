@@ -120,14 +120,14 @@ const PAGES = {
     receptionist: true,
   },
   '/pricing': {
-    title: 'Pricing | Front Porch Growth',
+    title: 'AI Receptionist & Postcard Pricing | Front Porch Growth',
     description:
-      'YardMailer postcard prices plus Executive Receptionist plans from $79 to $789 a month.',
+      'AI receptionist plans from $79 to $789 a month (Starter’s first month $1), plus YardMailer postcards: $127 setup, then $3.54 a card.',
     titleMode: 'absolute',
     receptionist: false,
   },
   '/compare': {
-    title: 'Software prices compared | Front Porch Growth',
+    title: 'Home-Service Software Prices: ServiceTitan, Jobber, Smith.ai',
     description:
       'Published starting prices for ServiceTitan, Jobber, Housecall Pro, Podium, Smith.ai, Ruby, and Front Porch Growth, with sources and the check date.',
     titleMode: 'absolute',
@@ -145,6 +145,25 @@ const PAGES = {
     description:
       'Search public Google listings by trade and city. Lead Scout shows the name, address, phone, and map link. It does not email or text anyone.',
     titleMode: 'absolute',
+    receptionist: false,
+  },
+  '/leads': {
+    title: '1,000 Business Leads Across the South for $20',
+    description:
+      '1,000 businesses in the industry you sell to, each with its website and the email it publishes. Across 12 Southern states. CSV, one-time $20.',
+    titleMode: 'absolute',
+    receptionist: false,
+  },
+  '/leads/thanks': {
+    title: 'Thanks for your order',
+    description: 'Your lead list order is in. Add a second 1,000-lead list for $15.',
+    titleMode: 'template',
+    receptionist: false,
+  },
+  '/leads/more': {
+    title: 'Turn your lead list into replies',
+    description: 'A cold email sequence for your industry, monthly fresh leads, or done-for-you outreach.',
+    titleMode: 'template',
     receptionist: false,
   },
   '/agents': {
@@ -179,6 +198,13 @@ const PAGES = {
     title: 'SMS consent | Executive Receptionist',
     description:
       'How Executive Receptionist gets consent before texting: Ava’s verbal script on calls and the written checkbox opt-in on the website form.',
+    titleMode: 'absolute',
+    receptionist: false,
+  },
+  '/blog': {
+    title: 'Blog: Calls, Search, and AI Answers for Local Shops',
+    description:
+      'Plain guides for home-service owners: after-hours calls, AI receptionists, and showing up in Google and ChatGPT answers. No fluff, no ranking promises.',
     titleMode: 'absolute',
     receptionist: false,
   },
