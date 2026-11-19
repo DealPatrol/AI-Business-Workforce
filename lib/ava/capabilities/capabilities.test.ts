@@ -223,6 +223,15 @@ describe('emergency paging', () => {
     assert.equal(planPage(contacts, {}, true).demo, true);
   });
 
+  it('demo calendars page only the operator demo address, by email, never SMS', () => {
+    const smsOn = { AVA_PAGING_SMS_ENABLED: 'true', AVA_BOOKING_SMS_FROM: '+18555550100', TWILIO_ACCOUNT_SID: 'AC', TWILIO_AUTH_TOKEN: 't' };
+    const demo = planPage(contacts, { ...smsOn, AVA_DEMO_ALERT_EMAIL: 'ops@demo.example' }, true);
+    assert.equal(demo.demo, false);
+    assert.deepEqual(demo.emails, ['ops@demo.example']);
+    assert.equal(demo.texts.length, 0);
+    assert.equal(planPage(contacts, { AVA_DEMO_ALERT_EMAIL: 'not-an-email' }, true).demo, true);
+  });
+
   function fakeDeps(opts: { fail?: boolean; paged?: boolean } = {}) {
     const sent: string[][] = [];
     const deps: PageDeps = {

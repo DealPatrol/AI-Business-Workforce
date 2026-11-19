@@ -23,6 +23,8 @@ export type PageInput = {
 };
 
 export type PagingEnv = {
+  /** Demo calendars page this one address by email only (never SMS). Unset = demo pages are simulated. */
+  AVA_DEMO_ALERT_EMAIL?: string;
   AVA_PAGING_SMS_ENABLED?: string;
   AVA_BOOKING_SMS_FROM?: string;
   TWILIO_ACCOUNT_SID?: string;
@@ -63,8 +65,17 @@ export type PagePlan = {
   demo: boolean;
 };
 
+/** The operator address that receives demo-line pages and callback alerts (email only), or '' when off. */
+export function demoAlertEmail(env: { AVA_DEMO_ALERT_EMAIL?: string }) {
+  const e = String(env.AVA_DEMO_ALERT_EMAIL || '').trim();
+  return EMAIL.test(e) ? e : '';
+}
+
 export function planPage(contacts: OnCallContact[], env: PagingEnv, isDemo: boolean): PagePlan {
-  if (isDemo) return { emails: [], texts: [], skippedTexts: [], demo: true };
+  if (isDemo) {
+    const demoEmail = demoAlertEmail(env);
+    return demoEmail ? { emails: [demoEmail], texts: [], skippedTexts: [], demo: false } : { emails: [], texts: [], skippedTexts: [], demo: true };
+  }
   const emails = [...new Set(contacts.map((c) => c.email).filter((e): e is string => Boolean(e)))];
   const texts: PagePlan['texts'] = [];
   const skippedTexts: PagePlan['skippedTexts'] = [];

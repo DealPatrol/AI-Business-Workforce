@@ -114,6 +114,8 @@ export type CallbackDeps = {
   /** Owner alert + caller text, after Ava has her answer. Must never throw. */
   afterHold?: (calendar: CallbackCalendar, row: CallbackRow, window: string) => void;
   smsEnabled?: boolean;
+  /** Demo calendar alerts really go to the operator (AVA_DEMO_ALERT_EMAIL), so Ava can promise the callback. */
+  demoAlerts?: boolean;
   label?: (row: Pick<CallbackRow, 'start_at' | 'end_at'>, timeZone: string) => string;
 };
 
@@ -186,7 +188,7 @@ export async function handleCallback(calendar: CallbackCalendar, body: Record<st
     held: true,
     window: slot.label,
     deadline: slot.end,
-    message: calendar.is_demo
+    message: calendar.is_demo && !deps.demoAlerts
       ? `Callback held on the demo calendar for ${slot.label}. Read it back and say this is a demo, so nobody will actually call.`
       : `Callback held for ${slot.label}. Read it back: someone from the team will call them back during that window.${
           texting ? ' Tell them a text confirmation is on its way.' : ''
