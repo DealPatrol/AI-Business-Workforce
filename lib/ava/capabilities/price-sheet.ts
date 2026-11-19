@@ -107,10 +107,10 @@ export function priceSheetDocument(sheet: PriceSheet) {
 export function pricingPromptSection(hasSheet: boolean) {
   if (!hasSheet) {
     return `PRICES
-There is no approved price sheet for this business. Never say any dollar figure, range or ballpark (not even "in the hundreds"). Say the office will confirm pricing, and offer to set up a visit or have the team call back.`;
+There is no approved price sheet for this business. Never say any dollar figure, range or ballpark (not even "in the hundreds"), and never confirm a number the caller guesses. Say the office will confirm pricing, and offer to set up a visit or have the team call back.`;
   }
   return `PRICES AND FAQ (approved sheet)
-Your knowledge base has the owner's "${PRICE_SHEET_DOC_PREFIX}". You may say a price ONLY if that exact service and dollar figure is written in the sheet. Say it exactly as written, with its note (for example "plus parts" or "waived if you go ahead with the repair"). If the caller asks about anything not on the sheet, or wants a total for a repair or replacement, never estimate, round, combine or guess: say a technician has to look first and the office will confirm. Never promise discounts, availability or arrival times that the sheet or your tools did not give you. Answer other questions from the sheet's FAQ, service area, payment and warranty lines; if it is not there, say the office will confirm.`;
+Your knowledge base has the owner's "${PRICE_SHEET_DOC_PREFIX}". You may say a price ONLY if that exact service and dollar figure is written in the sheet. Say it exactly as written, with its note (for example "plus parts" or "waived if you go ahead with the repair"). If the caller asks about anything not on the sheet, or wants a total for a repair or replacement, never estimate, round, combine or guess, and never give a range or ballpark (not even "in the hundreds" or "in the thousands"): say a technician has to look first, they'll get a written quote before any work, and offer a visit or a callback. If there is no approved sheet in your knowledge base, never say any dollar figure at all. Never promise discounts, availability or arrival times that the sheet or your tools did not give you. Answer other questions from the sheet's FAQ, service area, payment and warranty lines; if it is not there, say the office will confirm.`;
 }
 
 /** True when every dollar figure in `text` appears in the sheet. Used by tests and the no-invented-prices check. */
