@@ -45,22 +45,23 @@ describe('warm transfer', () => {
         { phone: '2055550102', reason: 'person' },
       ],
     });
-    const tool = transferToNumberTool(rules) as { params: { transfers: unknown[]; transfer_rules: Array<{ condition: string; provider_configs: Array<{ type: string; transfer_destination: { destination: string } }> }> } };
+    const tool = transferToNumberTool(rules) as { params: { transfers: unknown[]; transfer_rules: Array<{ condition: string; provider_configs: Array<{ type: string; config: { type: string; transfer_destination: { destination: string } } }> }> } };
     assert.equal(tool.params.transfers.length, 0);
+    assert.equal((tool.params.transfer_rules[0].provider_configs[0] as { type: string }).type, 'twilio');
     assert.equal(tool.params.transfer_rules.length, 2);
-    assert.equal(tool.params.transfer_rules[0].provider_configs[0].type, 'twilio_warm_conference_transfer');
-    assert.equal(tool.params.transfer_rules[0].provider_configs[0].transfer_destination.destination, '+12055550101');
+    assert.equal(tool.params.transfer_rules[0].provider_configs[0].config.type, 'twilio_warm_conference_transfer');
+    assert.equal(tool.params.transfer_rules[0].provider_configs[0].config.transfer_destination.destination, '+12055550101');
     assert.match(tool.params.transfer_rules[0].condition, /emergency/);
     assert.equal(transferToNumberTool([]), null);
   });
 
   it('screened mode sends one rule to the screening line, and falls back to warm without a screen number', () => {
     const rules = normalizeTransferRules({ transferNumber: '+12055550199' });
-    const screened = transferToNumberTool(rules, { mode: 'screened', screenNumber: '+12055550150' }) as { params: { transfer_rules: Array<{ provider_configs: Array<{ type: string; transfer_destination: { destination: string } }> }> } };
+    const screened = transferToNumberTool(rules, { mode: 'screened', screenNumber: '+12055550150' }) as { params: { transfer_rules: Array<{ provider_configs: Array<{ type: string; config: { type: string; transfer_destination: { destination: string } } }> }> } };
     assert.equal(screened.params.transfer_rules.length, 1);
-    assert.equal(screened.params.transfer_rules[0].provider_configs[0].transfer_destination.destination, '+12055550150');
-    const fallback = transferToNumberTool(rules, { mode: 'screened', screenNumber: '' }) as { params: { transfer_rules: Array<{ provider_configs: Array<{ type: string }> }> } };
-    assert.equal(fallback.params.transfer_rules[0].provider_configs[0].type, 'twilio_warm_conference_transfer');
+    assert.equal(screened.params.transfer_rules[0].provider_configs[0].config.transfer_destination.destination, '+12055550150');
+    const fallback = transferToNumberTool(rules, { mode: 'screened', screenNumber: '' }) as { params: { transfer_rules: Array<{ provider_configs: Array<{ type: string; config: { type: string } }> }> } };
+    assert.equal(fallback.params.transfer_rules[0].provider_configs[0].config.type, 'twilio_warm_conference_transfer');
   });
 
   it('prompt makes Ava brief the person (agent_message) and fall back to page + callback', () => {

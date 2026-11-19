@@ -102,8 +102,9 @@ export function transferToNumberTool(rules: TransferRule[], opts: { mode?: Trans
               'The caller has an emergency under the urgent-call rules, or clearly asks to speak to a person, and prepare_transfer has returned ok.',
             provider_configs: [
               {
-                type: 'twilio_cold_blind_transfer',
-                transfer_destination: { type: 'phone', destination: toUsE164(opts.screenNumber) },
+                type: 'twilio',
+                // Blind keeps the caller's own number as caller ID, which is how the screen finds the briefing.
+                config: { type: 'twilio_cold_blind_transfer', transfer_destination: { type: 'phone', destination: toUsE164(opts.screenNumber) } },
               },
             ],
           },
@@ -112,8 +113,8 @@ export function transferToNumberTool(rules: TransferRule[], opts: { mode?: Trans
           condition: transferCondition(rule, rules.length === 1),
           provider_configs: [
             {
-              type: 'twilio_warm_conference_transfer',
-              transfer_destination: { type: 'phone', destination: rule.phone },
+              type: 'twilio',
+              config: { type: 'twilio_warm_conference_transfer', transfer_destination: { type: 'phone', destination: rule.phone } },
             },
           ],
         }));
