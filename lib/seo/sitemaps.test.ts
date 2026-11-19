@@ -66,6 +66,9 @@ describe('host sitemaps', () => {
     for (const path of ['/receptionist', '/ava', '/hvac', '/start', '/receptionist-demo', '/receptionist/missed-calls']) {
       assert.equal(published.map(pathOf).includes(path), false, path);
     }
+    for (const path of ['/leads/thanks', '/leads/more', '/leads/hot/thanks']) {
+      assert.equal(published.map(pathOf).includes(path), false, path);
+    }
     assert.equal(published.some((url) => url.includes('/ava/')), false);
     assert.ok(published.every((url) => url.startsWith(`${FRONT_PORCH}/`)));
 
