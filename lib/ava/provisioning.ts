@@ -1,4 +1,12 @@
 import { BOOKING_PROMPT_SECTION } from '@/lib/ava/booking/agent-tools';
+import { pricingPromptSection, priceSheetDocName, priceSheetDocument, type PriceSheet } from '@/lib/ava/capabilities/price-sheet';
+import { CALLBACK_PROMPT_SECTION, PAGING_PROMPT_SECTION } from '@/lib/ava/capabilities/tools';
+import {
+  liveTransferPromptSection,
+  normalizeTransferRules,
+  transferToNumberTool,
+  type TransferMode,
+} from '@/lib/ava/capabilities/transfer';
 import { AVA_VOICE } from '@/lib/ava/voice';
 
 const ELEVENLABS_API = 'https://api.elevenlabs.io/v1';
@@ -18,7 +26,17 @@ export type AvaOnboardingDetails = {
   bookingEnabled?: boolean;
   /** Owner's forwarding number (E.164) for live transfers. Empty means no transfer. */
   transferNumber?: string | null;
+  /** Up to 3 transfer numbers with when-to-use rules. Overrides transferNumber when present. */
+  transferRules?: unknown;
+  /** 'screened' sends transfers through the press-1 screening line (needs AVA_TRANSFER_SCREEN_NUMBER). */
+  transferMode?: TransferMode;
+  /** Owner-approved price and FAQ sheet. Without one, Ava never says a dollar figure. */
+  priceSheet?: PriceSheet | null;
 };
+
+function transferModeFor(details: AvaOnboardingDetails): TransferMode {
+  return details.transferMode === 'screened' && process.env.AVA_TRANSFER_SCREEN_NUMBER?.trim() ? 'screened' : 'warm';
+}
 
 export type AvaProvisioningRecord = AvaOnboardingDetails & {
   id: string;
@@ -95,24 +113,25 @@ STAFF HANDOFF
 export function buildAvaAgentPrompt(details: AvaOnboardingDetails) {
   if (isStorePlan(details)) return buildAvaStorePrompt(details);
   const booking = Boolean(details.bookingEnabled);
-  const transfer = Boolean(details.transferNumber);
+  const rules = normalizeTransferRules(details);
+  const transferSection = liveTransferPromptSection(rules, { mode: transferModeFor(details), paging: booking, callbacks: booking });
   return `You are Ava, the AI phone receptionist for ${details.businessName}. If anyone asks whether you are a person, say honestly that you are an AI receptionist.
 
-Your job is to answer callers in a friendly voice, collect the caller's name, callback number, and what they need, and tell them the business will follow up (never a specific time). Before any text is sent, you must read the verbal consent script in VERBAL SMS CONSENT below and get a clear yes or no. Do not send, offer, or promise a text until the caller has said yes to that script. ${
+Your job is to answer callers in a friendly voice, collect the caller's name, callback number, and what they need, and tell them the business will follow up (never a specific time unless book_callback held one). Before any text is sent, you must read the verbal consent script in VERBAL SMS CONSENT below and get a clear yes or no. Do not send, offer, or promise a text until the caller has said yes to that script. ${
     booking
       ? 'You may offer appointment windows only from the check_availability tool and book them only with book_appointment.'
       : 'Do not offer appointment times or say a visit has been arranged.'
   } Never invent availability, prices, services, policies, or emergency guidance.
 ${booking ? `
 ${BOOKING_PROMPT_SECTION}
-` : ''}${
-    transfer
-      ? `
-LIVE TRANSFER
-If the caller has an emergency under the urgent rules below, or clearly asks to speak to a person, first get their name and callback number, tell them you are connecting them now, then use transfer_to_number. If the transfer fails or nobody answers, apologize, confirm their details, and say the team will call back as soon as possible.
-`
-      : ''
-  }
+
+${CALLBACK_PROMPT_SECTION}
+
+${PAGING_PROMPT_SECTION}
+` : ''}${transferSection ? `
+${transferSection}
+` : ''}
+${pricingPromptSection(Boolean(details.priceSheet))}
 
 BUSINESS DETAILS
 - Business: ${details.businessName}
@@ -134,7 +153,7 @@ If the caller speaks Spanish, read the same script in Spanish (brand name Execut
 Do not skip this script. Do not shorten it. Do not send or promise a missed-call callback, booking confirmation, or any other text unless the caller has just said yes (or already said yes earlier on this same call). The opening greeting on unanswered calls may also ask the same consent (yes / press 1, no / press 2); treat press 1 as yes and press 2 as no.
 
 LEAD HANDOFF
-The owner gets the caller's details by email right away, and by text only if the owner has opted in to lead-alert texts. Never promise a callback time or say how soon someone will call. Say only that the business will follow up. Do not tell the caller that a visit was arranged. If the owner notes below mention texting or a callback time, treat them as the owner's internal workflow and do not repeat them to the caller, except for the verbal SMS consent script and the yes/no confirmation above.
+The owner gets the caller's details by email right away, and by text only if the owner has opted in to lead-alert texts. Never promise a callback time or say how soon someone will call, unless book_callback returned held: true for that window. Otherwise say only that the business will follow up. Do not tell the caller that a visit was arranged. If the owner notes below mention texting or a callback time, treat them as the owner's internal workflow and do not repeat them to the caller, except for the verbal SMS consent script and the yes/no confirmation above.
 Owner notes: ${details.calendarPreference}
 
 URGENT CALLS
@@ -209,7 +228,7 @@ async function duplicateTemplateAgent(templateAgentId: string, name: string) {
   return data.agent_id;
 }
 
-/** end_call always; transfer_to_number only when the owner gave a forwarding number. */
+/** end_call always; transfer_to_number only when the owner gave at least one valid transfer number. */
 export function customerBuiltInTools(details: AvaOnboardingDetails) {
   const tools: Record<string, unknown> = {
     end_call: { type: 'system', name: 'end_call', description: '', params: { system_tool_type: 'end_call' } },
@@ -222,29 +241,28 @@ export function customerBuiltInTools(details: AvaOnboardingDetails) {
     },
     transfer_to_number: null,
   };
-  const number = details.transferNumber?.trim();
-  if (number && /^\+1\d{10}$/.test(number)) {
-    tools.transfer_to_number = {
-      type: 'system',
-      name: 'transfer_to_number',
-      description: '',
-      params: {
-        system_tool_type: 'transfer_to_number',
-        enable_client_message: true,
-        transfers: [
-          {
-            transfer_destination: { type: 'phone', phone_number: number },
-            condition: 'The caller has an emergency under the urgent-call rules, or clearly asks to speak to a person.',
-            transfer_type: 'conference',
-          },
-        ],
-      },
-    };
-  }
+  const transfer = transferToNumberTool(normalizeTransferRules(details), {
+    mode: transferModeFor(details),
+    screenNumber: process.env.AVA_TRANSFER_SCREEN_NUMBER,
+  });
+  if (transfer) tools.transfer_to_number = transfer;
   return tools;
 }
 
+/** Creates the owner-approved price sheet as a knowledge-base document and returns the agent's KB list. */
+async function priceSheetKnowledgeBase(details: AvaOnboardingDetails) {
+  if (!details.priceSheet) return [];
+  const doc = await elevenLabsRequest('/convai/knowledge-base/text', {
+    method: 'POST',
+    body: JSON.stringify({ name: priceSheetDocName(details.businessName), text: priceSheetDocument(details.priceSheet) }),
+  });
+  if (typeof doc.id !== 'string') throw new Error('ElevenLabs did not return a knowledge base id.');
+  // usage_mode 'prompt' puts the whole (short) sheet in context, so Ava quotes it exactly instead of from a search hit.
+  return [{ type: 'text', id: doc.id, name: priceSheetDocName(details.businessName), usage_mode: 'prompt' }];
+}
+
 async function configureCustomerAgent(agentId: string, details: AvaOnboardingDetails) {
+  const knowledgeBase = await priceSheetKnowledgeBase(details);
   // Voice + typed chat on the same agent for the website embed. Does not change SMS.
   await elevenLabsRequest(`/convai/agents/${encodeURIComponent(agentId)}`, {
     method: 'PATCH',
@@ -258,6 +276,7 @@ async function configureCustomerAgent(agentId: string, details: AvaOnboardingDet
             // Start clean: never inherit the demo agent's booking tools (they point at the demo calendar).
             tool_ids: [],
             built_in_tools: customerBuiltInTools(details),
+            knowledge_base: knowledgeBase,
           },
         },
         // Every new customer speaks with Ava's current voice, whatever the template agent uses.

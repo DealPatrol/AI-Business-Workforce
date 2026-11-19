@@ -40,6 +40,9 @@ export type BookingRow = {
   sms_status?: string | null;
   sms_sid?: string | null;
   google_event_id?: string | null;
+  /** 'callback' for a held callback window; null or 'visit' for a technician visit. */
+  kind?: 'visit' | 'callback' | null;
+  owner_alert_status?: string | null;
 };
 
 const CALENDAR_SELECT =
@@ -93,19 +96,34 @@ export async function saveCalendarForOnboarding(onboardingId: string, patch: Rec
   return data as CalendarRow;
 }
 
-export async function listBookings(calendarId: string, fromIso: string, toIso: string) {
+function isMissingKindColumn(message: string) {
+  return /column .*kind.* does not exist|kind.*schema cache/i.test(message);
+}
+
+/**
+ * Booked rows that overlap [fromIso, toIso). `kind` 'visit' (default) leaves out held callback windows, and
+ * 'callback' returns only those, so callbacks and technician visits never block each other. Before the
+ * callback migration is applied there is no kind column and every row is a visit.
+ */
+export async function listBookings(calendarId: string, fromIso: string, toIso: string, kind: 'visit' | 'callback' = 'visit') {
   const supabase = createAdminClient();
-  const { data, error } = await supabase
-    .from('ava_bookings')
-    .select('*')
-    .eq('calendar_id', calendarId)
-    .eq('status', 'booked')
-    .lt('start_at', toIso)
-    .gt('end_at', fromIso)
-    .order('start_at', { ascending: true })
-    .limit(500);
-  if (error) throw new Error(`Unable to load bookings: ${error.message}`);
-  return (data ?? []) as BookingRow[];
+  const base = () =>
+    supabase
+      .from('ava_bookings')
+      .select('*')
+      .eq('calendar_id', calendarId)
+      .eq('status', 'booked')
+      .lt('start_at', toIso)
+      .gt('end_at', fromIso)
+      .order('start_at', { ascending: true })
+      .limit(500);
+  let result = await (kind === 'callback' ? base().eq('kind', 'callback') : base().or('kind.is.null,kind.neq.callback'));
+  if (result.error && isMissingKindColumn(result.error.message)) {
+    if (kind === 'callback') return [] as BookingRow[];
+    result = await base();
+  }
+  if (result.error) throw new Error(`Unable to load bookings: ${result.error.message}`);
+  return (result.data ?? []) as BookingRow[];
 }
 
 /** Records what happened after a booking (text sent, Google event id). Never throws. */
@@ -171,9 +189,10 @@ export async function bookingForConversation(conversationId: string) {
     .eq('conversation_id', conversationId)
     .eq('status', 'booked')
     .order('created_at', { ascending: false })
-    .limit(1);
+    .limit(5);
   if (error) throw new Error(`Unable to load booking: ${error.message}`);
-  return ((data ?? [])[0] as BookingRow | undefined) ?? null;
+  const rows = (data ?? []) as BookingRow[];
+  return rows.find((row) => row.kind !== 'callback') ?? null;
 }
 
 export async function getBooking(id: string) {

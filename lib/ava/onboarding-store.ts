@@ -1,3 +1,4 @@
+import { cleanPriceSheet } from '@/lib/ava/capabilities/price-sheet';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { SMS_CONSENT_TEXT } from '@/lib/ava/sms-consent';
 import { linkAvaCustomerToOnboarding } from '@/lib/ava/customers';
@@ -41,6 +42,10 @@ type AvaOnboardingRow = {
   staff_email?: string | null;
   staff_phone?: string | null;
   transfer_phone?: string | null;
+  /** Up to 3 transfer numbers with when-to-use rules (see lib/ava/capabilities/transfer.ts). */
+  transfer_rules?: unknown;
+  /** Owner-approved price and FAQ sheet (see lib/ava/capabilities/price-sheet.ts). */
+  price_sheet?: unknown;
   sms_consent?: boolean | null;
   channel_voice?: boolean | null;
   channel_sms?: boolean | null;
@@ -55,6 +60,12 @@ type AvaOnboardingRow = {
   provisioning_error: string | null;
 };
 
+function priceSheetOf(raw: unknown) {
+  if (!raw) return null;
+  const parsed = cleanPriceSheet(raw);
+  return parsed.ok ? parsed.sheet : null;
+}
+
 function toProvisioningRecord(row: AvaOnboardingRow) {
   return {
     id: row.id,
@@ -68,6 +79,8 @@ function toProvisioningRecord(row: AvaOnboardingRow) {
     urgentCallRules: row.urgent_call_rules,
     plan: row.selected_plan,
     transferNumber: row.transfer_phone ?? null,
+    transferRules: row.transfer_rules ?? null,
+    priceSheet: priceSheetOf(row.price_sheet),
     elevenlabsAgentId: row.elevenlabs_agent_id,
   };
 }

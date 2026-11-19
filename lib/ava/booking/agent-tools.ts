@@ -1,4 +1,10 @@
-import { TOOL_SECRET_HEADER } from '@/lib/ava/booking/secret';
+import {
+  callbackToolConfig,
+  pageOnCallToolConfig,
+  storeToolSecret,
+  toolHeaders,
+  type ToolSecret,
+} from '@/lib/ava/capabilities/tools';
 import { getSiteUrl } from '@/lib/site-url';
 
 /** Where ElevenLabs should call the booking tools. Preview deployments point at their own branch URL. */
@@ -12,8 +18,9 @@ export function toolBaseUrl() {
 }
 
 /** The two ElevenLabs webhook tools. `secret` authenticates the agent to exactly one calendar. */
-export function bookingToolConfigs(baseUrl: string, secret: string) {
-  const headers = { [TOOL_SECRET_HEADER]: secret, 'Content-Type': 'application/json' };
+export function bookingToolConfigs(baseUrl: string, secret: ToolSecret) {
+  // A SecretRef keeps the value in ElevenLabs secret storage; it never sits in the tool config as text.
+  const headers = toolHeaders(secret);
   return [
     {
       tool_config: {
@@ -106,12 +113,16 @@ async function agentToolIds(agentId: string) {
 }
 
 /**
- * Creates the two booking tools for a customer's agent and attaches them, along with the
- * prompt that tells Ava how to use them. Returns the new tool ids so they can be detached later.
+ * Creates the booking tools (check_availability, book_appointment) plus book_callback and page_on_call for a
+ * customer's agent and attaches them, along with the prompt that tells Ava how to use them. The shared tool
+ * secret is first stored in ElevenLabs secret storage, and the tools reference it by id, so the value never
+ * appears in any tool config. Returns the new tool ids so they can be detached later.
  */
 export async function attachBookingTools(agentId: string, secret: string, prompt: string) {
+  const ref = await storeToolSecret(`ava_tool_secret_${agentId}`, secret);
   const created: string[] = [];
-  for (const config of bookingToolConfigs(toolBaseUrl(), secret)) {
+  const base = toolBaseUrl();
+  for (const config of [...bookingToolConfigs(base, ref), callbackToolConfig(base, ref), pageOnCallToolConfig(base, ref)]) {
     const tool = await elevenLabs('/convai/tools', { method: 'POST', body: JSON.stringify(config) });
     if (typeof tool.id !== 'string') throw new Error('ElevenLabs did not return a tool id.');
     created.push(tool.id);

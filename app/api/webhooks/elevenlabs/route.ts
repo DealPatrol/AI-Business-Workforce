@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyElevenLabsSignature } from '@/lib/ava/elevenlabs-signature';
 import { extractPostCallLead, savePostCallLead } from '@/lib/ava/post-call-lead';
+import { fallbackLeadHtml, fallbackLeadSubject } from '@/lib/ava/lead-safety';
+import { avaOwnerEmail, escapeHtml, sendResendEmail } from '@/lib/ava/mail';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -48,6 +50,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ received: true, ...result });
   } catch (error) {
     console.error('ElevenLabs post-call webhook failed', error);
+    // Keep the lead safe even if every retry fails: email the operator the details now.
+    // The 500 below tells ElevenLabs to retry; saving is idempotent, so the owner gets one email.
+    const reason = error instanceof Error ? error.message : 'unknown error';
+    if (lead.callerPhone || lead.callerName) {
+      await sendResendEmail({
+        to: avaOwnerEmail(),
+        subject: fallbackLeadSubject(lead),
+        html: fallbackLeadHtml(lead, reason, escapeHtml),
+      }).catch((mailError) => console.error('Fallback lead email failed', mailError instanceof Error ? mailError.message : mailError));
+    }
     return NextResponse.json({ error: 'Webhook handling failed.' }, { status: 500 });
   }
 }
