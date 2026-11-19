@@ -34,7 +34,7 @@ export default async function HotLeadsThanksPage({ searchParams }: PageProps) {
             <span className={styles.eyebrow}>ORDER RECEIVED</span>
             <h1>Your 500 Hot Leads are being built</h1>
             <p className={styles.lede}>
-              We&apos;re putting together 500 publicly listed businesses
+              We&apos;re putting together 500 businesses
               {view.industry ? <> in {view.industry}</> : null}
               {view.area ? <> for {view.area}</> : null}. We&apos;ll email the CSV within 24 hours.
             </p>
@@ -48,14 +48,14 @@ export default async function HotLeadsThanksPage({ searchParams }: PageProps) {
                 $20 <small>one time</small>
               </div>
               <p>
-                Add 1,000 more publicly listed businesses in the same industry and area, or nearby
+                Add 1,000 more businesses in the same industry and area, or nearby
                 areas if we need them to reach 1,000. We remove any duplicates from your first 500
                 and email the CSV within 24 hours. If we can&apos;t deliver, we refund you.
               </p>
               <ul className={styles.list}>
                 <li>Same industry and area as your first order, or nearby areas</li>
                 <li>No duplicates from your first 500</li>
-                <li>Business name, website, city, state, and public email where listed</li>
+                <li>Business name, website, city, state, and business email where available</li>
                 <li>No phone numbers</li>
               </ul>
               <div className={styles.ctaRow}>
