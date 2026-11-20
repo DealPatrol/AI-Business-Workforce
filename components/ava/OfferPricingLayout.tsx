@@ -22,10 +22,10 @@ const FEATURE_GROUPS: Array<{
   {
     heading: 'How you are billed',
     rows: [
-      { feature: 'Starter: 100 minutes a month', value: '$79/mo ($1 for month #1)', included: true },
-      { feature: 'Growth: 300 minutes a month', value: '$197/mo ($1 for month #1)', included: true },
-      { feature: 'Pro: 1,200 minutes a month (best value)', value: '$397/mo ($1 for month #1)', included: true },
-      { feature: 'Elite: 2,000 minutes a month, priority setup', value: '$789/mo ($1 for month #1)', included: true },
+      { feature: 'Starter: 100 minutes a month', value: '$79/mo (first month $1)', included: true },
+      { feature: 'Growth: 300 minutes a month', value: '$197/mo', included: true },
+      { feature: 'Pro: 1,200 minutes a month (best value)', value: '$397/mo', included: true },
+      { feature: 'Elite: 2,000 minutes a month, priority setup', value: '$789/mo', included: true },
       { feature: 'Contract', value: 'Month to month', included: true },
     ],
   },
@@ -43,7 +43,7 @@ const FEATURE_GROUPS: Array<{
 const BILLING_STEPS = [
   {
     title: 'Pick a plan',
-    detail: `Choose your minutes. Every plan is $1 for month #1, then the regular monthly price: Starter ${AVA_PLANS.starter.monthlyLabel}, Growth ${AVA_PLANS.growth.monthlyLabel}, Pro ${AVA_PLANS.pro.monthlyLabel}, or Elite ${AVA_PLANS.elite.monthlyLabel}.`,
+    detail: `Choose your minutes. Starter's first month is ${AVA_PLANS.starter.firstMonthLabel}, then ${AVA_PLANS.starter.monthlyLabel}/month. Growth, Pro and Elite are billed at their monthly price from the first month.`,
   },
   {
     title: 'Set up your line',
@@ -64,11 +64,11 @@ const BILLING_STEPS = [
 const FAQS = [
   {
     q: 'What does each plan cost?',
-    a: 'Every plan is $1 for month #1, then the regular monthly price. Starter is $79/month with 100 minutes. Growth is $197/month with 300 minutes. Pro is $397/month with 1,200 minutes. Elite is $789/month with 2,000 minutes and priority setup.',
+    a: 'Starter is $79/month with 100 minutes, and your first month is $1. Growth is $197/month with 300 minutes. Pro is $397/month with 1,200 minutes. Elite is $789/month with 2,000 minutes and priority setup.',
   },
   {
     q: 'Is there a free trial?',
-    a: 'No free trial. Every plan is $1 for month #1, then the regular monthly price: Starter $79, Growth $197, Pro $397, Elite $789.',
+    a: 'No. Starter’s first month is $1, then $79/month. Growth, Pro and Elite are charged their full monthly price from the first month.',
   },
   {
     q: 'What counts as a minute?',
