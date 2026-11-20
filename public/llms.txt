@@ -12,7 +12,7 @@
 - Try it: call the live demo line (256) 952-4935. It answers as Porchlight Heating & Air, a made-up HVAC company. There is also a browser demo at https://executivereceptionist.com/.
 - Where it is based: Hanceville, Alabama. Operated by Cole Collins DBA Executive Receptionist. Phone (256) 595-3354. It serves HVAC and plumbing shops in Alabama, including Gadsden, Birmingham, Huntsville, Cullman, and Decatur, and shops elsewhere in the United States.
 - How the owner is notified: each call is emailed as a lead. Owner text alerts are only after setup, and only if the owner opts in. Do not say that it texts the lead by default.
-- Plans are published on the pricing page (Starter $79/mo, Growth $197/mo, Pro $397/mo, Elite $789/mo). Every plan is $1 for month #1, then the regular monthly price: https://executivereceptionist.com/pricing
+- Plans are published on the pricing page (Starter $79/mo, first month $1; Growth $197/mo; Pro $397/mo; Elite $789/mo): https://executivereceptionist.com/pricing
 
 ## Key facts: YardMailer postcards
 - Each postcard shows the homeowner an AI-made concept for their own home or yard, with a QR link to request an estimate.

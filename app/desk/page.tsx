@@ -351,7 +351,7 @@ export default async function DeskPage({
           ) : (
             <div className={styles.empty}>
               <p>We do not see a plan for {email || 'this email'} yet.</p>
-              <p>Pick a plan (every plan is $1 for month #1), or if you checked out with a different email, sign in with that one.</p>
+              <p>Pick a plan (Starter&apos;s first month is $1), or if you checked out with a different email, sign in with that one.</p>
               <Link className={styles.button} href="/pricing#plans">
                 See plans
               </Link>
@@ -666,7 +666,7 @@ export default async function DeskPage({
                 <small>
                   {customer
                     ? 'Billing management opens here once your plan is billed through Stripe. To change plans now, call '
-                    : 'Every plan is $1 for month #1. Questions? Call '}
+                    : 'Starter’s first month is $1. Questions? Call '}
                   <a href={AVA_OFFER.contactPhoneHref}>{AVA_OFFER.contactPhoneDisplay}</a>.
                 </small>
               </>
