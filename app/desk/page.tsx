@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { CarrierForwarding } from '@/components/ava/onboarding/CarrierForwarding';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { AVA_DEMO_LINE } from '@/lib/ava/demo-line';
@@ -356,6 +357,7 @@ export default async function DeskPage({
               </Link>
             </div>
           )}
+          {onboarding?.phone_number ? <CarrierForwarding avaNumber={onboarding.phone_number} /> : null}
           {greetingEditable ? (
             <p className={styles.help}>
               Test your own Ava in the browser:{' '}
