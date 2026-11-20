@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
+import { publicBookingUrl } from '@/lib/ava/booking/public-booking';
 import { ExternalCalendarPanel } from '@/app/desk/external-calendar';
+import { WebhookPanel, WEBHOOK_STATUS } from '@/app/desk/webhook-panel';
 import { CarrierForwarding } from '@/components/ava/onboarding/CarrierForwarding';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -139,6 +141,7 @@ export default async function DeskPage({
   const query = (await searchParams) ?? {};
   const googleStatus = typeof query.google === 'string' ? GOOGLE_STATUS[query.google] ?? '' : '';
   const extcalStatus = typeof query.extcal === 'string' ? EXTCAL_STATUS[query.extcal] ?? '' : '';
+  const webhookStatus = typeof query.webhook === 'string' ? WEBHOOK_STATUS[query.webhook] ?? '' : '';
   const showAllCalls = query.calls === 'all';
   const leadFilter =
     typeof query.leads === 'string' && LEAD_FILTERS.some((f) => f.key === query.leads) ? query.leads : 'all';
@@ -628,6 +631,20 @@ export default async function DeskPage({
               )}
             </div>
           ) : null}
+          {booking.calendar?.enabled && !booking.calendar.is_demo && publicBookingUrl(booking.calendar.id) ? (
+            <div className={styles.googleSync}>
+              <p>
+                <b>Your online booking page.</b> Share this link on your website or Google profile. Customers pick an open
+                window from the same calendar Ava books on and get an email with a reschedule or cancel link.
+              </p>
+              <a href={publicBookingUrl(booking.calendar.id)} target="_blank" rel="noopener noreferrer">
+                Open booking page
+              </a>
+              <p className={styles.help}>
+                <code>{publicBookingUrl(booking.calendar.id)}</code>
+              </p>
+            </div>
+          ) : null}
           {extcalStatus ? (
             <p className={styles.googleNote} role="status">
               {extcalStatus}
@@ -638,6 +655,8 @@ export default async function DeskPage({
           ) : null}
         </section>
       ) : null}
+
+      {onboarding ? <WebhookPanel onboardingId={onboarding.id} status={webhookStatus} /> : null}
 
       <section id="billing" className={styles.panel} aria-labelledby="billing-title">
         <div className={styles.panelHead}>
