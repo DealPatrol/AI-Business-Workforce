@@ -69,3 +69,22 @@ export async function conversationDurations(conversationIds: string[], limit = 2
   );
   return out;
 }
+
+/**
+ * Replaces the prompt text and the built-in transfer tool together, keeping attached tools, the knowledge
+ * base, and the other built-in tools (end_call, language_detection) as they are. `transfer` null removes it.
+ */
+export async function saveAgentTransfer(agentId: string, prompt: string, transfer: Record<string, unknown> | null) {
+  const agent = await call(`/convai/agents/${encodeURIComponent(agentId)}`);
+  const current = ((agent.conversation_config as Record<string, unknown>)?.agent as Record<string, unknown>)?.prompt as
+    | Record<string, unknown>
+    | undefined;
+  const toolIds = Array.isArray(current?.tool_ids) ? current!.tool_ids : undefined;
+  const builtIns = { ...((current?.built_in_tools as Record<string, unknown> | undefined) ?? {}), transfer_to_number: transfer };
+  await call(`/convai/agents/${encodeURIComponent(agentId)}`, {
+    method: 'PATCH',
+    body: JSON.stringify({
+      conversation_config: { agent: { prompt: { prompt, built_in_tools: builtIns, ...(toolIds ? { tool_ids: toolIds } : {}) } } },
+    }),
+  });
+}
