@@ -1,0 +1,278 @@
+.eyebrow {
+  display: inline-block;
+  color: #2e8b57;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.hero {
+  width: min(1120px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 64px 0 24px;
+  max-width: 860px;
+}
+
+.hero h1 {
+  margin: 12px 0 16px;
+  font: 500 54px/1.04 Georgia, serif;
+  letter-spacing: -0.03em;
+}
+
+.lede {
+  color: #4f5a52;
+  font-size: 19px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.ctaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  align-items: center;
+  margin-top: 26px;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: #205c39;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 800;
+  padding: 16px 22px;
+  font-size: 17px;
+}
+
+.ctaSecondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: 1px solid #205c39;
+  background: #fff;
+  color: #205c39;
+  text-decoration: none;
+  font-weight: 780;
+  padding: 15px 20px;
+  font-size: 16px;
+}
+
+.fine {
+  margin: 12px 0 0;
+  color: #6a756c;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.block {
+  width: min(1120px, calc(100% - 40px));
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 32px 0;
+}
+
+.block h2 {
+  margin: 0 0 12px;
+  font: 560 32px/1.15 Georgia, serif;
+  letter-spacing: -0.02em;
+}
+
+.block p,
+.block li {
+  color: #4f5a52;
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.list {
+  margin: 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 6px;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid #e1e7e1;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.table th,
+.table td {
+  text-align: left;
+  padding: 12px 14px;
+  border-bottom: 1px solid #e7ece7;
+  white-space: nowrap;
+}
+
+.table th {
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: #5d675f;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.sampleTag {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #fff4d6;
+  color: #7a5a00;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.offers {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.offer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid #e1e7e1;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 16px 40px rgba(23, 32, 26, 0.04);
+}
+
+.offerFeatured {
+  border: 2px solid #205c39;
+}
+
+.offer h3 {
+  margin: 0;
+  font: 600 24px/1.2 Georgia, serif;
+}
+
+.offer p {
+  margin: 0;
+  font-size: 16px;
+}
+
+.price {
+  font-size: 32px;
+  font-weight: 800;
+  color: #17201a;
+}
+
+.price small {
+  font-size: 15px;
+  font-weight: 600;
+  color: #6a756c;
+}
+
+.offer .cta,
+.offer .ctaSecondary {
+  margin-top: auto;
+}
+
+.guarantee {
+  background: #eef6f0;
+  border: 1px solid #cfe3d5;
+  border-radius: 18px;
+  padding: 22px 24px;
+}
+
+.guarantee h2 {
+  margin-top: 0;
+}
+
+.faq details {
+  border-top: 1px solid #e0e6e0;
+  padding: 14px 0;
+}
+
+.faq details:last-child {
+  border-bottom: 1px solid #e0e6e0;
+}
+
+.faq summary {
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: 750;
+}
+
+.faq details p {
+  margin: 10px 0 0;
+}
+
+.compliance {
+  color: #6a756c;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.skip {
+  color: #5b675e;
+  font-size: 15px;
+  font-weight: 650;
+}
+
+
+.hotHero h1 {
+  font-size: 46px;
+}
+
+.steps {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 16px;
+}
+
+.steps li {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+.steps p {
+  margin: 4px 0 0;
+}
+
+.stepNum {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #205c39;
+  color: #fff;
+  font-weight: 800;
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 640px) {
+  .hero h1 {
+    font-size: 38px;
+  }
+
+  .hotHero h1 {
+    font-size: 32px;
+  }
+
+  .cta,
+  .ctaSecondary {
+    width: 100%;
+  }
+}

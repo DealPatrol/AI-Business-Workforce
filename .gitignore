@@ -13,3 +13,5 @@ supabase/.temp
 tsconfig.tsbuildinfo
 scripts/sales-video/build/
 
+# Private Hot Leads list. Never commit the CSV.
+data/hot-leads-500.csv

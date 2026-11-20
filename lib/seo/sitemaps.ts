@@ -1,7 +1,9 @@
 import type { MetadataRoute } from 'next';
 import { AGENTS } from '@/lib/agents/catalog';
+import { BLOG_POSTS } from '@/lib/blog/posts';
 import { avaGuideSlugs } from '@/lib/ava/trade-pages';
 import { POSTCARD_TRADES } from '@/lib/postcards/trade-pages';
+import { MERGED_AVA_GUIDES } from '@/lib/seo/receptionist-home';
 import { absoluteUrl, isExecutiveReceptionistHost, publicIndexOrigin } from '@/lib/site-url';
 import { TRADE_PAGES } from '@/lib/trades/pages';
 
@@ -18,6 +20,7 @@ type IndexEntry = {
  * `/` is the receptionist landing (middleware rewrites it). `/receptionist` is the same
  * document and already canonicalizes to `/`, so it is not listed again.
  * Front Porch Growth suite pages (postcards, agents, trades, and the rest) stay on that host.
+ * /sms and /sms-consent canonicalize to frontporchgrowth.com, so they are listed only there.
  */
 export const EXECUTIVE_RECEPTIONIST_INDEX: IndexEntry[] = [
   { path: '/', changeFrequency: 'weekly', priority: 1 },
@@ -26,12 +29,25 @@ export const EXECUTIVE_RECEPTIONIST_INDEX: IndexEntry[] = [
   { path: '/pricing', changeFrequency: 'monthly', priority: 0.8 },
   { path: '/ava', changeFrequency: 'weekly', priority: 0.95 },
   { path: '/hvac', changeFrequency: 'weekly', priority: 0.9 },
+  { path: '/business', changeFrequency: 'weekly', priority: 0.9 },
+  { path: '/dental', changeFrequency: 'weekly', priority: 0.85 },
+  { path: '/law', changeFrequency: 'weekly', priority: 0.85 },
+  { path: '/salon', changeFrequency: 'weekly', priority: 0.85 },
+  { path: '/auto-repair', changeFrequency: 'weekly', priority: 0.85 },
+  { path: '/med-spa', changeFrequency: 'weekly', priority: 0.85 },
+  { path: '/real-estate', changeFrequency: 'weekly', priority: 0.85 },
   { path: '/receptionist/missed-calls', changeFrequency: 'weekly', priority: 0.9 },
   { path: '/terms', changeFrequency: 'yearly', priority: 0.3 },
   { path: '/privacy', changeFrequency: 'yearly', priority: 0.3 },
-  { path: '/sms', changeFrequency: 'yearly', priority: 0.3 },
-  { path: '/sms-consent', changeFrequency: 'yearly', priority: 0.3 },
 ];
+
+/**
+ * /ava guides that are still their own page. Merged guides (the HVAC guide now lives on /hvac)
+ * redirect, so they are not listed.
+ */
+export function indexedAvaGuideSlugs() {
+  return avaGuideSlugs().filter((slug) => !(slug in MERGED_AVA_GUIDES));
+}
 
 function entry(origin: string, path: string, now: Date, changeFrequency: ChangeFrequency, priority: number): MetadataRoute.Sitemap[number] {
   return {
@@ -45,36 +61,35 @@ function entry(origin: string, path: string, now: Date, changeFrequency: ChangeF
 export function frontPorchGrowthSitemap(origin: string, now: Date): MetadataRoute.Sitemap {
   return [
     entry(origin, '/', now, 'weekly', 1),
-    entry(origin, '/start', now, 'weekly', 0.97),
     entry(origin, '/postcards', now, 'weekly', 0.9),
     entry(origin, '/pricing', now, 'monthly', 0.8),
     entry(origin, '/compare', now, 'monthly', 0.8),
     entry(origin, '/reputation', now, 'weekly', 0.8),
     entry(origin, '/lead-scout', now, 'weekly', 0.7),
+    entry(origin, '/leads', now, 'weekly', 0.8),
+    entry(origin, '/leads/hot', now, 'weekly', 0.8),
     entry(origin, '/agents', now, 'weekly', 0.7),
     entry(origin, '/terms', now, 'yearly', 0.3),
-    entry(origin, '/ava', now, 'weekly', 0.95),
-    entry(origin, '/receptionist', now, 'weekly', 0.96),
-    entry(origin, '/receptionist/missed-calls', now, 'weekly', 0.9),
-    entry(origin, '/hvac', now, 'weekly', 0.9),
     entry(origin, '/missed-call', now, 'weekly', 0.8),
     entry(origin, '/google-profile', now, 'weekly', 0.8),
     entry(origin, '/ai-visibility', now, 'weekly', 0.85),
     entry(origin, '/privacy', now, 'yearly', 0.3),
     entry(origin, '/sms', now, 'yearly', 0.3),
     entry(origin, '/sms-consent', now, 'yearly', 0.3),
-    entry(origin, '/receptionist-demo', now, 'weekly', 0.8),
     ...POSTCARD_TRADES.map((trade) => entry(origin, `/postcards/${trade.slug}`, now, 'monthly', 0.8)),
-    ...avaGuideSlugs().map((slug) => entry(origin, `/ava/${slug}`, now, 'weekly', 0.88)),
     ...AGENTS.map((agent) => entry(origin, `/agents/${agent.id}`, now, 'monthly', 0.6)),
     ...TRADE_PAGES.map((page) => entry(origin, `/trades/${page.slug}`, now, 'monthly', 0.7)),
+    entry(origin, '/blog', now, 'weekly', 0.7),
+    ...BLOG_POSTS.filter((post) => post.site === 'fpg').map((post) => entry(origin, `/blog/${post.slug}`, now, 'monthly', 0.75)),
   ];
 }
 
 export function executiveReceptionistSitemap(origin: string, now: Date): MetadataRoute.Sitemap {
   return [
     ...EXECUTIVE_RECEPTIONIST_INDEX.map((page) => entry(origin, page.path, now, page.changeFrequency, page.priority)),
-    ...avaGuideSlugs().map((slug) => entry(origin, `/ava/${slug}`, now, 'weekly', 0.88)),
+    ...indexedAvaGuideSlugs().map((slug) => entry(origin, `/ava/${slug}`, now, 'weekly', 0.88)),
+    entry(origin, '/blog', now, 'weekly', 0.7),
+    ...BLOG_POSTS.filter((post) => post.site === 'er').map((post) => entry(origin, `/blog/${post.slug}`, now, 'monthly', 0.75)),
   ];
 }
 

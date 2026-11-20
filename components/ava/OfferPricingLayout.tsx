@@ -120,7 +120,7 @@ export function OfferPricingLayout({
     <div className={`${styles.wrap} ${isPage ? styles.pageWrap : styles.sectionWrap}`}>
       {renderTopbar ? (
         <header className={styles.topbar}>
-          <Link className={styles.brand} href="/receptionist">
+          <Link className={styles.brand} href="/">
             Executive Receptionist
           </Link>
           <nav aria-label="Pricing page">

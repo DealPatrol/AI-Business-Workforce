@@ -49,7 +49,7 @@ export default function LeadScoutPage() {
         <span className={styles.eyebrow}>LEAD SCOUT</span>
         <h1>Find businesses in a city. Do not contact them from here.</h1>
         <p>
-          There is no DealPatrol repository named Lead Scout. This page is a small search on the Google Places key this site already uses for Lead Finder. One trade, one city, up to ten listings.
+          Lead Scout is a small search on the Google Places key this site already uses for Lead Finder. One trade, one city, up to ten listings.
         </p>
         <LeadScoutApp />
         <section className={styles.faq}>

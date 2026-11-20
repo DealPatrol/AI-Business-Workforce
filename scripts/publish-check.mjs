@@ -169,9 +169,10 @@ async function get(path, host = target, opts = {}) {
 
 async function smoke() {
   console.log(`\n[smoke] ${target}`);
-  const pages = ['/', '/start', '/pricing', '/hvac', '/receptionist', '/receptionist/hvac', '/receptionist/ecommerce', '/onboarding/ava', '/login', '/privacy', '/terms', '/robots.txt', '/sitemap.xml', '/llms.txt'];
+  const pages = ['/', '/start', '/pricing', '/hvac', '/receptionist', '/receptionist/plumbing', '/receptionist/ecommerce', '/onboarding/ava', '/login', '/privacy', '/terms', '/robots.txt', '/sitemap.xml', '/llms.txt'];
   for (const path of pages) {
-    const r = await get(path);
+    // Receptionist pages 301 from frontporchgrowth.com to executivereceptionist.com, so follow redirects here.
+    const r = await get(path, target, { redirect: 'follow' });
     if (r.status !== 200) bad(`${path} → ${r.status}`);
     else if (BANNED.some((re) => re.test(r.text))) bad(`${path} shows a banned phone number`);
     else if (RETIRED_OFFER.some((re) => re.test(r.text))) bad(`${path} still shows the retired free-pilot / per-booked-job offer`);

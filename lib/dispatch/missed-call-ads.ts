@@ -19,7 +19,7 @@ export const MISSED_CALL_ADS: Record<MissedCallTrade, MissedCallAd> = {
     morning: "By morning, they've booked with the next company on Google.",
     stakes: "That's not a missed $129 tune-up. It could be a missed $12,000 changeout.",
     stakesNote:
-      'The $129 and $12,000 figures are an illustration of a tune-up versus a system replacement. They are not a result from a Front Porch Growth customer.',
+      'The $129 and $12,000 figures are an illustration of a tune-up versus a system replacement. They are not a result from an Executive Receptionist customer.',
   },
   plumbing: {
     trade: 'plumbing',

@@ -3,6 +3,10 @@
     {
       "path": "/api/ava/billing/reconcile",
       "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/ava/leads/reconcile",
+      "schedule": "15 * * * *"
     }
   ]
 }

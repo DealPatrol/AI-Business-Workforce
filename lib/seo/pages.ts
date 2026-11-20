@@ -70,15 +70,64 @@ const PAGES = {
     titleMode: 'absolute',
     receptionist: true,
   },
-  '/pricing': {
-    title: 'Pricing | Front Porch Growth',
+  '/business': {
+    title: 'AI Receptionist for Any Business | Executive Receptionist',
     description:
-      'YardMailer postcard prices plus Executive Receptionist plans from $79 to $789 a month.',
+      'Ava answers every call 24/7, takes the name, number and reason, flags urgent calls, and emails you. From $79/mo, first month $1.',
+    titleMode: 'absolute',
+    receptionist: true,
+  },
+  '/dental': {
+    title: 'AI Receptionist for Dental Offices | Executive Receptionist',
+    description:
+      'Ava answers the calls your front desk misses, flags patients in pain as urgent, and emails you every call. From $79/mo, first month $1.',
+    titleMode: 'absolute',
+    receptionist: true,
+  },
+  '/law': {
+    title: 'AI Receptionist for Law Firms | Executive Receptionist',
+    description:
+      'Ava answers while you are in court, takes the name, number and matter, flags urgent calls, and emails you. From $79/mo, first month $1.',
+    titleMode: 'absolute',
+    receptionist: true,
+  },
+  '/salon': {
+    title: 'AI Receptionist for Salons | Executive Receptionist',
+    description:
+      'Ava answers while your hands are full, takes the name, number and service wanted, and emails you. From $79/mo, first month $1.',
+    titleMode: 'absolute',
+    receptionist: true,
+  },
+  '/auto-repair': {
+    title: 'AI Receptionist for Auto Repair Shops',
+    description:
+      'Ava answers while you are in the bays, takes the vehicle and the problem, flags breakdowns, and emails you. From $79/mo, first month $1.',
+    titleMode: 'absolute',
+    receptionist: true,
+  },
+  '/med-spa': {
+    title: 'AI Receptionist for Med Spas | Executive Receptionist',
+    description:
+      'Ava answers consult and pricing calls while you are with clients, flags urgent ones, and emails you. From $79/mo, first month $1.',
+    titleMode: 'absolute',
+    receptionist: true,
+  },
+  '/real-estate': {
+    title: 'AI Receptionist for Real Estate Agents',
+    description:
+      'Ava answers buyer and seller calls while you are at a showing, flags urgent ones, and emails you every call. From $79/mo, first month $1.',
+    titleMode: 'absolute',
+    receptionist: true,
+  },
+  '/pricing': {
+    title: 'AI Receptionist & Postcard Pricing | Front Porch Growth',
+    description:
+      'AI receptionist plans from $79 to $789 a month (Starter’s first month $1), plus YardMailer postcards: $127 setup, then $3.54 a card.',
     titleMode: 'absolute',
     receptionist: false,
   },
   '/compare': {
-    title: 'Software prices compared | Front Porch Growth',
+    title: 'Home-Service Software Prices: ServiceTitan, Jobber, Smith.ai',
     description:
       'Published starting prices for ServiceTitan, Jobber, Housecall Pro, Podium, Smith.ai, Ruby, and Front Porch Growth, with sources and the check date.',
     titleMode: 'absolute',
@@ -96,6 +145,38 @@ const PAGES = {
     description:
       'Search public Google listings by trade and city. Lead Scout shows the name, address, phone, and map link. It does not email or text anyone.',
     titleMode: 'absolute',
+    receptionist: false,
+  },
+  '/leads': {
+    title: '1,000 Business Leads Across the South for $20',
+    description:
+      '1,000 businesses in the industry you sell to, each with its website and the email it publishes. Across 12 Southern states. CSV, one-time $20.',
+    titleMode: 'absolute',
+    receptionist: false,
+  },
+  '/leads/hot': {
+    title: 'Hot Leads: 500 Business Leads for $20',
+    description:
+      '500 business leads for $20. Instant CSV download: name, website, city, state, and email where available. No phone numbers.',
+    titleMode: 'absolute',
+    receptionist: false,
+  },
+  '/leads/thanks': {
+    title: 'Thanks for your order',
+    description: 'Your lead list order is in. Add a second 1,000-lead list for $15.',
+    titleMode: 'template',
+    receptionist: false,
+  },
+  '/leads/more': {
+    title: 'Turn your lead list into replies',
+    description: 'A cold email sequence for your industry, monthly fresh leads, or done-for-you outreach.',
+    titleMode: 'template',
+    receptionist: false,
+  },
+  '/leads/hot/thanks': {
+    title: 'Thanks for your order',
+    description: 'Your Hot Leads order is in. Download the 500-lead CSV on this page.',
+    titleMode: 'template',
     receptionist: false,
   },
   '/agents': {
@@ -133,10 +214,17 @@ const PAGES = {
     titleMode: 'absolute',
     receptionist: false,
   },
+  '/blog': {
+    title: 'Blog: Calls, Search, and AI Answers for Local Shops',
+    description:
+      'Plain guides for home-service owners: after-hours calls, AI receptionists, and showing up in Google and ChatGPT answers. No fluff, no ranking promises.',
+    titleMode: 'absolute',
+    receptionist: false,
+  },
   '/ai-visibility': {
     title: 'Free SEO & AI Visibility Grader | Front Porch Growth',
     description:
-      'See how Google and AI assistants like ChatGPT see your home-service business. Free grader, real checks, plain-English fixes.',
+      'See how Google and AI assistants like ChatGPT see your local business. Free grader, real checks, plain-English fixes.',
     titleMode: 'absolute',
     receptionist: false,
   },
