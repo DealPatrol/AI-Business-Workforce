@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
-import { ReceptionistLanding } from '@/components/receptionist/ReceptionistLanding';
+import { ErHome } from '@/components/receptionist/home/ErHome';
 import { avaPlanOfferNodes, executiveReceptionistOrganization, faqNode } from '@/lib/ava/structured-data';
-import { EXECUTIVE_FAQS } from '@/lib/executive-receptionist';
+import { ER_HOME_FAQS } from '@/lib/ava/er-home-content';
 import { getErDemoNiche } from '@/lib/er-demos';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 import { EXECUTIVE_RECEPTIONIST_ORIGIN } from '@/lib/site-url';
@@ -30,7 +30,7 @@ const structured = {
       url: canonical,
       offers: avaPlanOfferNodes(`${EXECUTIVE_RECEPTIONIST_ORIGIN}/pricing`),
     },
-    faqNode(EXECUTIVE_FAQS.map((faq) => ({ q: faq.q, a: faq.a }))),
+    faqNode(ER_HOME_FAQS.map((faq) => ({ q: faq.q, a: faq.a }))),
   ],
 };
 
@@ -63,7 +63,7 @@ export default async function ReceptionistPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structured).replace(/</g, '\\u003c') }}
       />
-      <ReceptionistLanding niche={niche} />
+      <ErHome niche={niche} />
     </>
   );
 }
