@@ -35,9 +35,6 @@ Add with `vercel env add <NAME> production` (prompts for the value; nothing is e
 | `STRIPE_AVA_PRO_PRICE_ID` | `price_1Ub3uwRJZZUpaweBIdSj9aCa` (Pro $397/mo, 1,200 minutes, featured) |
 | `STRIPE_AVA_ELITE_PRICE_ID` | `price_1Ub3uzRJZZUpaweBtRWSPglF` (Elite $789/mo, 2,000 minutes) |
 | `STRIPE_AVA_STARTER_FIRST_MONTH_COUPON_ID` | `ED3W0r22` ($78 off once, Starter product only, so the first month is $1) |
-| `STRIPE_AVA_GROWTH_FIRST_MONTH_COUPON_ID` | `8JpSZDd3` ($196 off once, Growth product only, so the first month is $1) |
-| `STRIPE_AVA_PRO_FIRST_MONTH_COUPON_ID` | `3TEOVlxp` ($396 off once, Pro product only, so the first month is $1) |
-| `STRIPE_AVA_ELITE_FIRST_MONTH_COUPON_ID` | `JNPWt58v` ($788 off once, Elite product only, so the first month is $1) |
 
 The free 14-day pilot, the $25-per-booked-job meter, and the $119 + $1/call store plan were retired on Nov 12, 2026.
 `STRIPE_AVA_BOOKED_JOB_PRICE_ID` and the `STRIPE_AVA_STORE_*` vars are no longer used by checkout; monthly-plan
@@ -125,9 +122,9 @@ The database changes are additive, so they don't need a rollback.
 
 - Plans live in `lib/ava/pricing.ts` (`AVA_PLANS`). Copy across the site reads from there or from `components/ava/MonthlyPlans.tsx`.
 - Checkout: `POST /api/checkout` with `plan=starter|growth|pro|elite` (old `plan=pilot` forms start Starter). Shareable links: `/buy/starter`, `/buy/growth`, `/buy/pro`, `/buy/elite`. Each makes a fresh Checkout Session branded "Executive Receptionist".
-- Every plan gets a once-only first-month coupon, scoped to that plan's Stripe product, so today is $1 and later months are the regular price. Checkout refuses to start if that plan's coupon env var is missing, so nobody is charged full price by mistake.
+- Only Starter gets the coupon. Growth, Pro and Elite never get a discount, even if a coupon is configured.
 - No metered overage. If a customer runs past their minutes, Ava keeps answering and Cole reaches out about a bigger plan.
-- Do not use Stripe Payment Links for these plans: a payment link cannot reliably apply the first-month coupon. Use `/buy/starter`, `/buy/growth`, `/buy/pro`, or `/buy/elite`. The old Starter Payment Link stays deactivated.
+- Stripe Payment Links for Growth/Pro/Elite exist as a backup (their header shows the Stripe account name). The Starter Payment Link is deactivated because a payment link cannot apply the first-month coupon; use `/buy/starter`.
 
 ## 11. Talk to Ava buttons (Nov 12, 2026)
 

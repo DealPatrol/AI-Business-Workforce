@@ -760,7 +760,7 @@ function OnboardingFallback() {
           <span className={styles.eyebrow}>CHECKOUT STARTS YOUR PLAN</span>
           <h1>Start your plan in Stripe, then send setup notes.</h1>
           <p>
-            Every plan is $1 for month #1, then the regular monthly price from $79 to $789 a month.
+            Starter&apos;s first month is $1, then $79 a month. Plans run up to $789 a month.
             The setup form loads on this page next.
           </p>
           <CheckoutForm className={styles.checkout} href="/api/checkout?plan=starter">

@@ -74,7 +74,7 @@ export function ErHome({ niche }: { niche?: ErDemoNiche }) {
             </a>
           </div>
           <p className={styles.fine}>
-            {starter.firstMonthLabel ? `${starter.firstMonthLabel} for your first month. ` : ''}Month to month, cancel
+            {starter.firstMonthLabel ? `Starter is ${starter.firstMonthLabel} for your first month. ` : ''}Month to month, cancel
             anytime.
           </p>
         </div>
