@@ -23,11 +23,11 @@ export const ROOT_SEO: SeoSpec = {
 
 const PAGES = {
   '/': {
-    title: 'Ava, the AI Receptionist for Home Services',
+    title: 'Local Growth for Home-Service Shops | Front Porch Growth',
     description:
-      'Ava answers every call, takes the job, and sends you the lead. Hear sample calls or call her now. From $79/mo, first month $1.',
+      'YardMailer postcards, Google profile setup, and a free AI visibility grader. The AI receptionist Ava lives at Executive Receptionist.',
     titleMode: 'absolute',
-    receptionist: true,
+    receptionist: false,
   },
   '/start': {
     title: 'Ava AI Receptionist: Home Services and Online Stores',

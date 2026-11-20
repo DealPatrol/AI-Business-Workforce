@@ -84,7 +84,7 @@ describe('public copy', () => {
     const files = [
       'app/page.tsx', 'app/start/page.tsx', 'app/hvac/page.tsx', 'app/pricing/page.tsx', 'app/ava/page.tsx',
       'app/terms/page.tsx', 'components/ava/OfferPricingLayout.tsx', 'components/receptionist/ReceptionistLanding.tsx',
-      'lib/ava/trade-pages.ts', 'lib/seo/pages.ts', 'lib/ava/home-faq.ts', 'public/llms.txt', 'app/start/opengraph-image.tsx',
+      'lib/ava/trade-pages.ts', 'lib/seo/pages.ts', 'lib/ava/home-faq.ts', 'lib/seo/llms-txt.ts', 'app/start/opengraph-image.tsx',
     ];
     for (const rel of files) {
       const source = readFileSync(path.join(root, rel), 'utf8');

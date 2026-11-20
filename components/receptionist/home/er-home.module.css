@@ -208,3 +208,8 @@
   .page .mobileBar { display: flex; position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 30; justify-content: center; align-items: center; min-height: 52px; border-radius: 999px; background: var(--ink); color: #fff; text-decoration: none; font-weight: 500; box-shadow: 0 10px 30px rgba(28, 20, 14, 0.3); }
 }
 @media (max-width: 480px) { .logo { font-size: 17px; white-space: nowrap; } .logoMark { width: 26px; height: 26px; font-size: 14px; } .headerInner { gap: 12px; } }
+
+.sisterSites { flex: 1 1 100%; margin-top: 8px; }
+.sisterSites h2 { font-size: 15px; margin: 0 0 8px; color: var(--ink, inherit); }
+.sisterSites ul { margin: 0 0 8px; padding-left: 18px; }
+.sisterSites a { text-decoration: underline; }

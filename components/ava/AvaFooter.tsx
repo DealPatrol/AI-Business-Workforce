@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Sparkles } from 'lucide-react';
+import { SisterSites } from '@/components/seo/SisterSites';
 
 export function AvaFooter({ homeHref = '/' }: { homeHref?: string }) {
   return (
@@ -18,7 +19,9 @@ export function AvaFooter({ homeHref = '/' }: { homeHref?: string }) {
         <Link href="/privacy">Privacy</Link>
         <Link href="/sms">SMS terms</Link>
         <Link href="/sms-consent">SMS consent</Link>
+        <Link href="/about">About</Link>
       </nav>
+      <SisterSites selfUrl="https://executivereceptionist.com" clusters={['home-services', 'phone']} />
     </footer>
   );
 }
