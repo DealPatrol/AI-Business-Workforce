@@ -1,15 +1,14 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import styles from './suite.module.css';
+import { SisterSites } from '@/components/seo/SisterSites';
 
 const NAV = [
-  { href: '/#samples', label: 'Hear Ava' },
-  { href: 'https://executivereceptionist.com/start', label: 'Ava for your business' },
   { href: '/postcards', label: 'Postcards' },
-  { href: '/lead-scout', label: 'Leads' },
-  { href: '/agents', label: 'Agents' },
+  { href: '/google-profile', label: 'Google profile' },
   { href: '/ai-visibility', label: 'AI Visibility' },
-  { href: '/compare', label: 'Compare' },
+  { href: '/lead-scout', label: 'Leads' },
+  { href: 'https://executivereceptionist.com/', label: 'AI receptionist' },
   { href: '/pricing', label: 'Pricing' },
   { href: '/login?next=/desk', label: 'Sign in' },
 ];
@@ -35,8 +34,8 @@ export function SuiteShell({ children }: { children: ReactNode }) {
             </Link>
           ))}
         </div>
-        <Link className={styles.navCta} href="/#pricing">
-          Start for $1
+        <Link className={styles.navCta} href="/postcards">
+          See postcards
         </Link>
       </nav>
       {children}
@@ -51,7 +50,9 @@ export function SuiteShell({ children }: { children: ReactNode }) {
           <Link href="/privacy">Privacy</Link>
           <Link href="/sms">SMS terms</Link>
           <Link href="/sms-consent">SMS consent</Link>
+          <Link href="/about">About</Link>
         </nav>
+        <SisterSites selfUrl="https://frontporchgrowth.com" clusters={['home-services', 'reviews']} className={styles.sisterSites} />
       </footer>
     </div>
   );

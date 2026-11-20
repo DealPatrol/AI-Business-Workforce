@@ -376,6 +376,125 @@ export const BLOG_POSTS: BlogPost[] = [
     ]
   },
   {
+    "slug": "after-hours-plumbing-calls",
+    "site": "er",
+    "title": "What Happens to After-Hours Plumbing Calls (and How to Keep the Job)",
+    "metaTitle": "After-Hours Plumbing Calls: Keep the Job",
+    "description": "Burst pipes and backed-up drains rarely wait until morning. Here is where after-hours plumbing calls go, and how a shop can keep the first conversation.",
+    "tags": [
+      "plumbing",
+      "home services",
+      "small business",
+      "answering service",
+      "AI receptionist"
+    ],
+    "published": "2026-11-20",
+    "ctaLabel": "See Ava for plumbing shops",
+    "ctaUrl": "https://executivereceptionist.com/ava/ai-answering-service-for-plumbers?utm_source=blog&utm_medium=article&utm_campaign=after-hours-plumbing-calls",
+    "words": 837,
+    "blocks": [
+      {
+        "type": "p",
+        "text": "It is 11:20 on a Tuesday. A homeowner finds water spreading from a supply line under the sink. They search for a plumber, tap the first number, and reach voicemail."
+      },
+      {
+        "type": "p",
+        "text": "That call is not going to sit in the inbox until morning. Most people with water on the floor hang up and try the next shop."
+      },
+      {
+        "type": "h2",
+        "text": "Urgent plumbing calls do not leave polite messages"
+      },
+      {
+        "type": "p",
+        "text": "The pattern is the same one HVAC shops describe for no-heat nights, and it is even less patient when water is moving. A voicemail is a maybe. A live answer is a chance to shut the water off and get on a list."
+      },
+      {
+        "type": "p",
+        "text": "This article does not invent a close rate or a typical ticket. Your call log is the only honest source for that. What you can say without a study is simple: if the first shop does not pick up, the next one often gets the job."
+      },
+      {
+        "type": "p",
+        "text": "If you want the HVAC version of this problem, read [What Happens to Your HVAC Calls After Hours](https://executivereceptionist.com/blog/after-hours-hvac-calls?utm_source=blog&utm_medium=article&utm_campaign=after-hours-plumbing-calls)."
+      },
+      {
+        "type": "h2",
+        "text": "Sort the calls before you treat them the same"
+      },
+      {
+        "type": "p",
+        "text": "After-hours plumbing calls are not all one kind of work:"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "**Active flooding or a gas smell.** The caller needs a clear instruction first (where to shut the water off, whether to leave the house) and a yes or no about whether someone can come out tonight. An AI receptionist can collect those facts and flag the call as urgent. It should not pretend to shut the water off or dispatch a truck on its own.",
+          "**Urgent but contained.** A backed-up drain, no hot water, a weak toilet that can wait until morning if the caller knows they are on the list.",
+          "**Routine work.** A quote, a slow drip, a remodel question. These callers often phone at night because that is when they are home."
+        ]
+      },
+      {
+        "type": "p",
+        "text": "Voicemail treats all three the same. The emergency gets no triage, the urgent call gets no reassurance, and the routine caller gets no booking."
+      },
+      {
+        "type": "h2",
+        "text": "Four ways shops cover the night"
+      },
+      {
+        "type": "p",
+        "text": "None of these is magic, and all of them work better if you write down what “urgent” means for your crew."
+      },
+      {
+        "type": "ol",
+        "items": [
+          "**Forward missed calls to the owner or the on-call tech.** This is the most common setup. It works until the person on call is already under a house, asleep, or out of signal.",
+          "**A traditional answering service.** A person takes a message on a script. Ask what they do with an active leak, what they cost after midnight, and how the lead reaches you.",
+          "**An AI receptionist.** Executive Receptionist’s Ava answers the forwarded line, tells the caller she is AI, asks the questions you approve (is the water still running, where is the shutoff, name, callback number, address), and emails you the lead. [Ava for plumbing shops](https://executivereceptionist.com/ava/ai-answering-service-for-plumbers?utm_source=blog&utm_medium=article&utm_campaign=after-hours-plumbing-calls) explains the setup. Starter is $79 a month for 100 minutes, and Starter is the only plan whose first month is $1. She does not quote a price you have not approved, and she does not roll a truck.",
+          "**A mix.** Many shops keep the phone ringing to the truck during the day and forward nights and overflow."
+        ]
+      },
+      {
+        "type": "p",
+        "text": "If you are comparing an answering service to an AI receptionist, start with [HVAC Answering Service vs. AI Receptionist](https://executivereceptionist.com/blog/hvac-answering-service-vs-ai-receptionist?utm_source=blog&utm_medium=article&utm_campaign=after-hours-plumbing-calls). The trade-offs are the same for plumbing: who answers, what they are allowed to say, and how the lead lands."
+      },
+      {
+        "type": "h2",
+        "text": "What to tell the person (or the receptionist) who picks up"
+      },
+      {
+        "type": "p",
+        "text": "Write this down once, then use it on every after-hours path:"
+      },
+      {
+        "type": "ul",
+        "items": [
+          "If water is still running, ask whether they can reach the shutoff, and flag the call as urgent.",
+          "Take a callback number and a street address before you ask for the life story.",
+          "Do not promise an arrival window you cannot keep.",
+          "Do not quote a price unless you have published one for that situation.",
+          "Tell the caller what happens next: you will get the note and call them back, or an on-call tech will call if you have that set up."
+        ]
+      },
+      {
+        "type": "p",
+        "text": "Ava uses the questions you approve. You can make the water-shutoff question required. You can also leave booking off until your hours and calendar are set in the desk."
+      },
+      {
+        "type": "h2",
+        "text": "Measure the leak for a week"
+      },
+      {
+        "type": "p",
+        "text": "Before you buy anything, note three things for seven days: how many after-hours calls you can already see (missed-call logs, voicemail, Google missed calls), how many of those left a message, and how many turned into a booked job. That is enough to compare against a monthly plan without borrowing someone else’s statistic."
+      },
+      {
+        "type": "p",
+        "text": "If you want to hear how Ava handles a plumbing-style call, use the demo line or the [plumbing answering page](https://executivereceptionist.com/ava/ai-answering-service-for-plumbers?utm_source=blog&utm_medium=article&utm_campaign=after-hours-plumbing-calls). She answers as a made-up shop. No real technician is sent."
+      }
+    ]
+  },
+  {
     "slug": "is-my-business-in-chatgpt",
     "site": "fpg",
     "title": "Is Your Business Showing Up in ChatGPT? How to Check for Free",

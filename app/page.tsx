@@ -1,16 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { SampleCalls } from '@/components/ava-home/SampleCalls';
-import avaStyles from '@/components/ava-home/ava-home.module.css';
-import { HeroDemoPicker } from '@/components/suite/HeroDemoPicker';
-import { InvoicingWaitlistForm } from '@/components/suite/InvoicingWaitlistForm';
 import { SuiteShell } from '@/components/suite/SuiteShell';
+import { SisterSites } from '@/components/seo/SisterSites';
 import styles from '@/components/suite/home.module.css';
-import { AVA_DEMO_LINE } from '@/lib/ava/demo-line';
-import { AVA_OFFER } from '@/lib/ava/pricing';
-import { MonthlyPlans, PlanCheckoutButton } from '@/components/ava/MonthlyPlans';
-import { executiveReceptionistOrganization, faqNode, frontPorchLocalBusiness } from '@/lib/ava/structured-data';
+import { InvoicingWaitlistForm } from '@/components/suite/InvoicingWaitlistForm';
+import avaStyles from '@/components/ava-home/ava-home.module.css';
 import { DESK_TOOLS } from '@/lib/desk-tools';
+import { frontPorchLocalBusiness, faqNode } from '@/lib/ava/structured-data';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 import { FRONT_PORCH_GROWTH_ORIGIN } from '@/lib/site-url';
 
@@ -20,36 +16,28 @@ const description = seo.description;
 
 const HOME_FAQS = [
   {
-    q: 'Who is Ava?',
-    a: 'Ava is an AI phone receptionist. She answers the calls you cannot pick up, asks the questions you approve for your business, and sends you the caller’s name, number, and what they need. Her greeting tells callers she is an AI receptionist.',
+    q: 'What is Front Porch Growth?',
+    a: 'Front Porch Growth is a set of marketing tools for home-service shops: YardMailer postcards, Google Business Profile setup, a free SEO and AI-visibility grader, Lead Scout, and review-request tools. Cole Collins built it in Hanceville, Alabama.',
   },
   {
-    q: 'Can I hear her before I pay?',
-    a: `Yes, three ways. Play any sample call on this page. Call the demo line at ${AVA_DEMO_LINE.display}, where she answers as ${AVA_DEMO_LINE.answersAs}. Or talk to her in your browser with your microphone. None of these need a card.`,
+    q: 'Where is the AI receptionist?',
+    a: 'Ava, the AI receptionist, lives at Executive Receptionist (executivereceptionist.com). Front Porch Growth links there instead of republishing that product. Starter on that site is $79 a month, and Starter is the only plan whose first month is $1.',
   },
   {
-    q: 'What does it cost?',
-    a: `${AVA_OFFER.summary} ${AVA_OFFER.overageNote}`,
+    q: 'What does a YardMailer postcard cost?',
+    a: 'Setup is $127 once, then $3.54 per 4x6 card or $4.95 per 6x9. You approve the design, the audience, and the cost before anything is mailed. Details are on the pricing page.',
   },
   {
-    q: 'Is there a free trial?',
-    a: 'No free plan or trial. Starter’s first month is $1, then $79/month. Growth, Pro and Elite are billed at their monthly price from the first month. All plans renew monthly; cancel anytime.',
+    q: 'Is the AI visibility grader free?',
+    a: 'Yes. You can grade a site at /ai-visibility without an account. It does not promise rankings or traffic.',
   },
   {
-    q: 'Do I need an account to start?',
-    a: 'No. Pick a plan and check out without signing in. After setup you can sign in to your desk to see Ava’s leads and the rest of the tools.',
+    q: 'Do you guarantee Google or AI-search rankings?',
+    a: 'No. The grader and the checklist tell you what is missing. They do not promise a position in Google or in ChatGPT answers.',
   },
   {
-    q: 'Does she book the job for me?',
-    a: 'Once your hours are set up in your Desk, she can offer open times and put the visit on your Desk calendar. Until then she captures the lead and sends it to you, and you book the work. She never invents a price or promises an arrival time you have not offered.',
-  },
-  {
-    q: 'Which businesses is she for?',
-    a: 'Home-service shops first: HVAC, plumbing, roofing, electrical, lawn care, pest control, cleaning, pool, garage door, and more. Online stores can use her for order, shipping, and return calls on the same monthly plans. Dental offices, law firms, and med spas can use her too if the questions you approve are appropriate. She is not a HIPAA product and does not give legal advice.',
-  },
-  {
-    q: 'Does she call or text people on her own?',
-    a: 'No. Ava only answers inbound calls. She never makes cold calls or sends cold texts.',
+    q: 'How do review requests work?',
+    a: 'ReputationFlow gives you a link and a QR code so customers can leave an honest public review. The free tool is at tryreputationflow.com. Front Porch Growth also has a Reputation page that explains the paid option.',
   },
 ] as const;
 
@@ -63,7 +51,7 @@ export const metadata: Metadata = {
     url: '/',
     siteName: 'Front Porch Growth',
     type: 'website',
-    images: [{ url: '/og-home.png', width: 1200, height: 630, alt: 'Ava, the AI receptionist for home service businesses' }],
+    images: [{ url: '/og-home.png', width: 1200, height: 630, alt: 'Front Porch Growth tools for home-service shops' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -77,7 +65,6 @@ const orgJsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
     frontPorchLocalBusiness(),
-    executiveReceptionistOrganization(),
     {
       '@type': 'WebSite',
       name: 'Front Porch Growth',
@@ -88,26 +75,37 @@ const orgJsonLd = {
   ],
 };
 
-const BUSINESS_TYPES = [
-  'HVAC',
-  'Plumbing',
-  'Roofing',
-  'Electrical',
-  'Lawn care',
-  'Pest control',
-  'Cleaning',
-  'Pool service',
-  'Garage door',
-  'Tree service',
-  'Online stores',
-  'Auto repair',
-];
-
-const STEPS = [
-  { number: '01', title: 'The phone rings while you work', detail: 'You are under a sink, up a ladder, or with another customer.' },
-  { number: '02', title: 'Ava answers', detail: 'She says she is an AI receptionist and asks the questions you wrote for your business.' },
-  { number: '03', title: 'You get the lead', detail: 'Name, number, address, and what they need land in your email and your desk.' },
-  { number: '04', title: 'You call back and book it', detail: 'You keep your prices and your calendar. Mark it booked in one tap.' },
+const TOOLS = [
+  {
+    href: '/postcards',
+    title: 'YardMailer postcards',
+    detail: 'Each card shows a homeowner a concept for their own property, with a QR code to request an estimate. You approve the design and the cost first.',
+  },
+  {
+    href: '/google-profile',
+    title: 'Google Business Profile setup',
+    detail: 'A $99 setup to get the shop’s profile in shape: categories, photos, and the details people search for.',
+  },
+  {
+    href: '/ai-visibility',
+    title: 'Free SEO and AI visibility grader',
+    detail: 'See what a search engine or an AI assistant can already read about the shop. No ranking promises.',
+  },
+  {
+    href: '/reputation',
+    title: 'Review requests',
+    detail: 'A link and a QR code so a finished job can turn into an honest public review. The free tool is also on ReputationFlow.',
+  },
+  {
+    href: '/lead-scout',
+    title: 'Lead Scout',
+    detail: 'Search public Google listings by trade and city. It does not email or text anyone.',
+  },
+  {
+    href: '/missed-call',
+    title: 'Missed-call text-back',
+    detail: 'A waitlist for texting a caller back after a missed ring, once messaging is approved and the owner opts in.',
+  },
 ];
 
 export default function SuiteHomePage() {
@@ -117,107 +115,65 @@ export default function SuiteHomePage() {
 
       <section className={styles.hero} id="start">
         <div>
-          <span className={styles.eyebrow}>Ava · AI receptionist for home services</span>
-          <h1>Meet Ava. She answers the calls you can’t.</h1>
+          <span className={styles.eyebrow}>Front Porch Growth · Hanceville, Alabama</span>
+          <h1>Local growth tools for the shop that’s already booked tomorrow.</h1>
           <p className={styles.lede}>
-            Ava picks up every call, asks the right questions, and sends you the lead so you can call back and book the
-            job. Listen to her, then call her yourself.
+            Postcards, Google profiles, review requests, and a free visibility grader — built for HVAC, plumbing, lawn
+            care, and the rest of the trades. The AI receptionist Ava lives on the sister site, Executive Receptionist.
           </p>
-          <p className={styles.lede} style={{ marginTop: 0 }}>
-            Run a heating &amp; air shop? <Link href="https://executivereceptionist.com/hvac">See Ava for HVAC companies →</Link>
-          </p>
-          <HeroDemoPicker label="Hear Ava for your business" />
           <div className={styles.actions}>
-            <PlanCheckoutButton plan="starter" className={styles.primary}>
-              Start for $1
-            </PlanCheckoutButton>
-            <a className={styles.secondary} href={AVA_DEMO_LINE.href}>
-              Call Ava: {AVA_DEMO_LINE.display}
-            </a>
+            <Link className={styles.primary} href="/postcards">
+              See YardMailer postcards
+            </Link>
+            <Link className={styles.secondary} href="/ai-visibility">
+              Grade your site free
+            </Link>
           </div>
           <p className={styles.fine}>
-            {AVA_OFFER.starterIntro} Bigger plans from $197/month. <a href="#pricing">See all plans</a>. No account needed to start.
+            Need someone to answer the phone? <Link href="https://executivereceptionist.com/">Meet Ava at Executive Receptionist</Link>.
+            Starter there is $79 a month, and Starter is the only plan whose first month is $1.
           </p>
         </div>
-
-        <aside className={avaStyles.callCard} aria-label="Call Ava now">
-          <small>Call Ava right now</small>
-          <a className={avaStyles.callNumber} href={AVA_DEMO_LINE.href}>
-            {AVA_DEMO_LINE.display}
-          </a>
-          <p>
-            Call from any phone. She answers as {AVA_DEMO_LINE.answersAs}. Ask about a broken AC, a price, or whether
-            she is a robot.
-          </p>
-          <div className={avaStyles.callButtons}>
-            <a className={avaStyles.callPrimary} href={AVA_DEMO_LINE.href}>
-              Call Ava now
-            </a>
-            <a className={avaStyles.callSecondary} href={AVA_OFFER.demoUrl} target="_blank" rel="noopener noreferrer">
-              Or talk to her in your browser
-            </a>
-          </div>
-          <div className={avaStyles.leadPreview}>
-            <b>What lands in your inbox after the call:</b>
-            <br />
-            Example caller · 7:42 PM · AC blowing warm · 412 Walnut St · wants tomorrow morning
-          </div>
-          <p className={avaStyles.callFine}>
-            Demo line for a made-up company. No real technician is sent. Questions for a person? Call Cole at{' '}
-            <a href={AVA_OFFER.contactPhoneHref} style={{ color: '#fff' }}>{AVA_OFFER.contactPhoneDisplay}</a>.
-          </p>
-        </aside>
       </section>
 
-      <section className={styles.strip} aria-label="Business types Ava answers for">
-        <span className={styles.stripLabel}>Ava answers for</span>
-        {BUSINESS_TYPES.map((type) =>
-          type === 'HVAC' ? (
-            <Link key={type} href="https://executivereceptionist.com/hvac" className={styles.chip}>
-              {type}
-            </Link>
-          ) : (
-            <span key={type} className={styles.chip}>
-              {type}
-            </span>
-          ),
-        )}
-      </section>
-
-      <section className={styles.band} id="samples">
-        <span className={styles.kicker}>Listen before you pay</span>
-        <h2 className={styles.h2}>Six real-sounding calls. Press play.</h2>
-        <p className={styles.body}>
-          Each sample is a recorded call with a made-up business, not a customer recording. Every demo is also live: press
-          “Talk to this demo live” and Ava answers in your browser.
-        </p>
-        <SampleCalls />
-      </section>
-
-      <section className={styles.band} id="how-it-works">
-        <span className={styles.kicker}>How it works</span>
-        <h2 className={styles.h2}>From a ringing phone to a booked job.</h2>
-        <ol className={styles.steps}>
-          {STEPS.map((step) => (
-            <li key={step.number} className={styles.step}>
-              <span className={styles.stepNum}>{step.number}</span>
-              <h3>{step.title}</h3>
-              <p>{step.detail}</p>
+      <section className={styles.band} id="tools">
+        <span className={styles.kicker}>What you can use today</span>
+        <h2 className={styles.h2}>Marketing that stays on this site.</h2>
+        <ul className={avaStyles.tiles}>
+          {TOOLS.map((tool) => (
+            <li key={tool.href}>
+              <Link className={avaStyles.tile} href={tool.href}>
+                <h3>{tool.title}</h3>
+                <p>{tool.detail}</p>
+              </Link>
             </li>
           ))}
-        </ol>
+        </ul>
       </section>
 
-      <section className={styles.band} id="pricing">
-        <MonthlyPlans />
+      <section className={styles.band} id="receptionist">
+        <span className={styles.kicker}>Sister product</span>
+        <h2 className={styles.h2}>Ava answers the calls this shop would otherwise miss.</h2>
+        <p className={styles.body}>
+          Executive Receptionist is the AI receptionist brand. Ava tells callers she is AI, takes the job details, and
+          emails you the lead. She only answers inbound calls. Plans are month to month, with no free pilot.
+        </p>
+        <div className={styles.actions}>
+          <a className={styles.primary} href="https://executivereceptionist.com/">
+            Go to Executive Receptionist
+          </a>
+          <a className={styles.secondary} href="https://executivereceptionist.com/hvac">
+            Ava for HVAC shops
+          </a>
+        </div>
       </section>
 
       <section className={styles.band} id="desk">
         <span className={styles.kicker}>Your desk</span>
-        <h2 className={styles.h2}>Ava’s leads and every growth tool, in one place.</h2>
+        <h2 className={styles.h2}>Leads, campaigns, and writing tools in one place.</h2>
         <p className={styles.body}>
-          Sign in to your desk to see what Ava caught, decide what happens next, and open the rest of the Front Porch
-          Growth tools. Buying does not need an account.
+          Sign in to your desk to open the Front Porch Growth tools you already use. Buying a postcard campaign or
+          grading a site does not always need an account first.
         </p>
         <ul className={avaStyles.tiles}>
           {DESK_TOOLS.map((tool) => (
@@ -247,32 +203,9 @@ export default function SuiteHomePage() {
         </div>
       </section>
 
-      <section className={styles.band} id="ecommerce">
-        <div className={avaStyles.ecomBand}>
-          <div>
-            <span className={styles.kicker}>Run an online store?</span>
-            <h2 className={styles.h2}>Ava answers “where is my order?” so you don’t have to.</h2>
-            <ul className={avaStyles.ecomList}>
-              <li>Order status, shipping times, and tracking emails</li>
-              <li>Returns, exchanges, sizing, and store hours</li>
-              <li>Damaged items, double charges, and upset customers go to a person, with notes</li>
-            </ul>
-            <p className={avaStyles.compareNote}>Stores use the same monthly plans as everyone else. <a href="#pricing">See plans</a>.</p>
-          </div>
-          <div className={styles.actions}>
-            <a className={styles.primary} href="#sample-ecommerce">
-              Hear a store call
-            </a>
-            <Link className={styles.secondary} href="https://executivereceptionist.com/start#ecommerce">
-              See Ava for online stores
-            </Link>
-          </div>
-        </div>
-      </section>
-
       <section className={styles.wideFaq} id="faq">
-        <span className={styles.kicker}>Before you pay</span>
-        <h2>Straight answers.</h2>
+        <span className={styles.kicker}>Straight answers</span>
+        <h2>Before you pick a tool.</h2>
         {HOME_FAQS.map((faq) => (
           <details key={faq.q}>
             <summary>{faq.q}</summary>
@@ -281,25 +214,21 @@ export default function SuiteHomePage() {
         ))}
       </section>
 
+      <section className={styles.band}>
+        <SisterSites selfUrl="https://frontporchgrowth.com" clusters={['home-services', 'reviews']} />
+      </section>
+
       <section className={styles.closing}>
-        <span className={styles.kicker}>Start with the phone</span>
-        <h2>The next call is the one that pays for this.</h2>
-        <p>
-          Put Ava on your line for $1 with Starter, or go straight to Pro for the best value per minute.
-        </p>
+        <span className={styles.kicker}>Start with what you need</span>
+        <h2>Mail a route, fix the profile, or put Ava on the phone.</h2>
         <div className={styles.actions}>
-          <PlanCheckoutButton plan="starter" className={styles.primary}>
-            Start for $1
-          </PlanCheckoutButton>
-          <a className={styles.secondary} href={AVA_DEMO_LINE.href}>
-            Call Ava: {AVA_DEMO_LINE.display}
-          </a>
+          <Link className={styles.primary} href="/postcards">
+            See postcards
+          </Link>
+          <Link className={styles.secondary} href="/ai-visibility">
+            Grade your site free
+          </Link>
         </div>
-        <p className={styles.closingFine}>
-          Ava is an AI receptionist; callers are told. Talk to a person: Cole at{' '}
-          <a href={AVA_OFFER.contactPhoneHref}>{AVA_OFFER.contactPhoneDisplay}</a> or{' '}
-          <a href={`mailto:${AVA_OFFER.contactEmail}`}>{AVA_OFFER.contactEmail}</a>.
-        </p>
       </section>
     </SuiteShell>
   );

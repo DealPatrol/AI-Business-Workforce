@@ -39,6 +39,7 @@ export const EXECUTIVE_RECEPTIONIST_INDEX: IndexEntry[] = [
   { path: '/receptionist/missed-calls', changeFrequency: 'weekly', priority: 0.9 },
   { path: '/terms', changeFrequency: 'yearly', priority: 0.3 },
   { path: '/privacy', changeFrequency: 'yearly', priority: 0.3 },
+  { path: '/about', changeFrequency: 'monthly', priority: 0.5 },
 ];
 
 /**
@@ -74,6 +75,7 @@ export function frontPorchGrowthSitemap(origin: string, now: Date): MetadataRout
     entry(origin, '/google-profile', now, 'weekly', 0.8),
     entry(origin, '/ai-visibility', now, 'weekly', 0.85),
     entry(origin, '/privacy', now, 'yearly', 0.3),
+    entry(origin, '/about', now, 'monthly', 0.5),
     entry(origin, '/sms', now, 'yearly', 0.3),
     entry(origin, '/sms-consent', now, 'yearly', 0.3),
     ...POSTCARD_TRADES.map((trade) => entry(origin, `/postcards/${trade.slug}`, now, 'monthly', 0.8)),

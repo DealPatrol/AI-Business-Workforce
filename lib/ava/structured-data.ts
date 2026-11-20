@@ -1,4 +1,5 @@
 import { AVA_OFFER, AVA_PLAN_KEYS, AVA_PLANS } from '@/lib/ava/pricing';
+import { ownedOrganizationNodes } from '@/lib/seo/sister-sites';
 import { EXECUTIVE_RECEPTIONIST_ORIGIN, FRONT_PORCH_GROWTH_ORIGIN } from '@/lib/site-url';
 
 type Faq = { q: string; a: string };
@@ -39,9 +40,12 @@ const LEGAL_NAME = 'Cole Collins DBA Executive Receptionist';
 const ER_ORG_ID = `${EXECUTIVE_RECEPTIONIST_ORIGIN}/#org`;
 const FOUNDER = {
   '@type': 'Person' as const,
+  '@id': `${FRONT_PORCH_GROWTH_ORIGIN}/#cole`,
   name: 'Cole Collins',
   jobTitle: 'Founder',
   address: BUSINESS_ADDRESS,
+  url: `${EXECUTIVE_RECEPTIONIST_ORIGIN}/about`,
+  owns: ownedOrganizationNodes(),
 };
 const TELEPHONE = AVA_OFFER.contactPhoneHref.replace('tel:', '');
 
@@ -183,5 +187,12 @@ export function jsonLdGraph(nodes: object[]) {
   return {
     '@context': 'https://schema.org',
     '@graph': nodes,
+  };
+}
+
+export function coleCollinsPersonJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    ...FOUNDER,
   };
 }

@@ -22,6 +22,7 @@ const FRONT_PORCH_PATHS = [
   '/google-profile',
   '/ai-visibility',
   '/privacy',
+  '/about',
   '/sms',
   '/sms-consent',
   '/postcards/landscaping',
@@ -94,7 +95,7 @@ describe('host sitemaps', () => {
     for (const slug of indexedAvaGuideSlugs()) assert.ok(paths.includes(`/ava/${slug}`));
     assert.equal(paths.includes('/ava/ai-answering-service-for-hvac'), false);
     for (const path of ['/sms', '/sms-consent']) assert.equal(paths.includes(path), false, path);
-    for (const path of ['/blog', '/blog/after-hours-hvac-calls', '/blog/hvac-answering-service-vs-ai-receptionist']) {
+    for (const path of ['/blog', '/about', '/blog/after-hours-hvac-calls', '/blog/hvac-answering-service-vs-ai-receptionist', '/blog/after-hours-plumbing-calls']) {
       assert.ok(paths.includes(path), path);
     }
     assert.equal(paths.includes('/blog/is-my-business-in-chatgpt'), false);

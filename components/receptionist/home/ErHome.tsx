@@ -17,6 +17,7 @@ import {
 import { ER_DEMO_NICHES, type ErDemoNiche } from '@/lib/er-demos';
 import { liveWidgetEnabled, realFaceEnabled } from '@/lib/live-receptionist/config';
 import styles from './er-home.module.css';
+import { SisterSites } from '@/components/seo/SisterSites';
 
 // Transfers are left off the home page list: no live-handoff claims in marketing copy.
 const PLAN_INCLUDES = AVA_PLAN_INCLUDES.filter((item) => !/transfer/i.test(item));
@@ -291,12 +292,16 @@ export function ErHome({ niche }: { niche?: ErDemoNiche }) {
         <nav aria-label="Footer">
           <Link href="/pricing">Pricing</Link>
           <Link href="/hvac">HVAC</Link>
+          <Link href="/ava/ai-answering-service-for-plumbers">Plumbing</Link>
+          <Link href="/blog">Blog</Link>
           <Link href="/receptionist-demo">Demo</Link>
+          <Link href="/about">About</Link>
           <Link href="/privacy">Privacy</Link>
           <Link href="/terms">Terms</Link>
           <Link href="/sms">SMS terms</Link>
           <Link href="/sms-consent">SMS consent</Link>
         </nav>
+        <SisterSites selfUrl="https://executivereceptionist.com" clusters={['home-services', 'phone']} className={styles.sisterSites} />
       </footer>
 
       <a className={styles.mobileBar} href="#demo">
