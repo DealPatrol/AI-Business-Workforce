@@ -48,11 +48,11 @@ describe('hot leads thank-you verification', () => {
     assert.equal(isPaidCheckoutSession({ status: 'open', payment_status: 'paid' }), false);
   });
 
-  it('shows the add-on only for a paid Hot Leads 500 session when a secret is configured', () => {
-    const view = hotThanksViewFromSession(paidHotSession, { secretConfigured: true });
+  it('shows the download and add-on only for a paid Hot Leads 500 session when a secret is configured', () => {
+    const view = hotThanksViewFromSession(paidHotSession, { secretConfigured: true, sessionId: 'cs_live_abc123' });
     assert.equal(view.showAddon, true);
-    assert.equal(view.industry, 'dentists');
-    assert.equal(view.area, 'Birmingham, AL');
+    assert.equal(view.showDownload, true);
+    assert.equal(view.downloadHref, '/api/leads/hot/download?session_id=cs_live_abc123');
     assert.equal(view.email, 'buyer@example.com');
     assert.equal(view.addonHref, addonCheckoutHref(LEAD_LIST_LINKS.hotAddon1000, 'buyer@example.com'));
     assert.ok(view.addonHref.includes('prefilled_email=buyer%40example.com'));
@@ -74,7 +74,9 @@ describe('hot leads thank-you verification', () => {
       { secretConfigured: true },
     );
     assert.equal(unpaid.showAddon, false);
+    assert.equal(unpaid.showDownload, false);
     assert.equal(otherOffer.showAddon, false);
+    assert.equal(otherOffer.showDownload, false);
   });
 
   it('leaves the add-on URL unchanged when there is no email to prefill', () => {

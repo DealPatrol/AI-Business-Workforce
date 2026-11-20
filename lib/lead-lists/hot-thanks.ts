@@ -1,3 +1,4 @@
+import { downloadPathForSession } from '@/lib/lead-lists/hot-download';
 import {
   HOT_LEADS_500_OFFER,
   HOT_LEADS_500_PAYMENT_LINK_ID,
@@ -25,10 +26,11 @@ export type StripeCheckoutSession = {
 
 export type HotThanksView = {
   showAddon: boolean;
-  industry: string;
-  area: string;
+  showDownload: boolean;
+  downloadHref: string;
   email: string;
   addonHref: string;
+  sessionId: string;
 };
 
 function paymentLinkId(session: StripeCheckoutSession): string {
@@ -72,28 +74,31 @@ export function addonCheckoutHref(baseUrl: string, email?: string): string {
 export function genericHotThanksView(addonUrl: string = LEAD_LIST_LINKS.hotAddon1000): HotThanksView {
   return {
     showAddon: false,
-    industry: '',
-    area: '',
+    showDownload: false,
+    downloadHref: '',
     email: '',
     addonHref: addonUrl,
+    sessionId: '',
   };
 }
 
 export function hotThanksViewFromSession(
   session: StripeCheckoutSession,
-  options?: { secretConfigured?: boolean; addonUrl?: string },
+  options?: { secretConfigured?: boolean; addonUrl?: string; sessionId?: string },
 ): HotThanksView {
   const addonUrl = options?.addonUrl ?? LEAD_LIST_LINKS.hotAddon1000;
   const hidden = genericHotThanksView(addonUrl);
   if (options?.secretConfigured === false) return hidden;
   if (!isPaidCheckoutSession(session) || !isHotLeads500Order(session)) return hidden;
   const email = checkoutEmail(session);
+  const sessionId = (options?.sessionId || session.id || '').trim();
   return {
     showAddon: true,
-    industry: customFieldValue(session, 'industry'),
-    area: customFieldValue(session, 'area'),
+    showDownload: true,
+    downloadHref: sessionId && isValidCheckoutSessionId(sessionId) ? downloadPathForSession(sessionId) : '',
     email,
     addonHref: addonCheckoutHref(addonUrl, email),
+    sessionId,
   };
 }
 
@@ -101,12 +106,10 @@ function stripeSecret(): string {
   return process.env.STRIPE_SECRET_KEY?.trim() || '';
 }
 
-export async function loadHotThanks(sessionId: string | null | undefined): Promise<HotThanksView> {
-  const hidden = genericHotThanksView();
+export async function fetchCheckoutSession(sessionId: string | null | undefined): Promise<StripeCheckoutSession | null> {
   const secret = stripeSecret();
-  if (!secret) return hidden;
   const id = (sessionId || '').trim();
-  if (!isValidCheckoutSessionId(id)) return hidden;
+  if (!secret || !isValidCheckoutSessionId(id)) return null;
 
   try {
     const response = await fetch(`${STRIPE_API}/checkout/sessions/${encodeURIComponent(id)}`, {
@@ -116,10 +119,17 @@ export async function loadHotThanks(sessionId: string | null | undefined): Promi
       },
       cache: 'no-store',
     });
-    if (!response.ok) return hidden;
-    const session = (await response.json()) as StripeCheckoutSession;
-    return hotThanksViewFromSession(session, { secretConfigured: true });
+    if (!response.ok) return null;
+    return (await response.json()) as StripeCheckoutSession;
   } catch {
-    return hidden;
+    return null;
   }
+}
+
+export async function loadHotThanks(sessionId: string | null | undefined): Promise<HotThanksView> {
+  const hidden = genericHotThanksView();
+  const id = (sessionId || '').trim();
+  const session = await fetchCheckoutSession(id);
+  if (!session) return hidden;
+  return hotThanksViewFromSession(session, { secretConfigured: true, sessionId: id });
 }

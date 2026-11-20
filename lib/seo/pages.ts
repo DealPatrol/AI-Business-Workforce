@@ -154,6 +154,13 @@ const PAGES = {
     titleMode: 'absolute',
     receptionist: false,
   },
+  '/leads/hot': {
+    title: 'Hot Leads: 500 Business Leads for $20',
+    description:
+      '500 business leads for $20. Instant CSV download: name, website, city, state, and email where available. No phone numbers.',
+    titleMode: 'absolute',
+    receptionist: false,
+  },
   '/leads/thanks': {
     title: 'Thanks for your order',
     description: 'Your lead list order is in. Add a second 1,000-lead list for $15.',
@@ -168,7 +175,7 @@ const PAGES = {
   },
   '/leads/hot/thanks': {
     title: 'Thanks for your order',
-    description: "Your Hot Leads order is in. We'll email the CSV within 24 hours.",
+    description: 'Your Hot Leads order is in. Download the 500-lead CSV on this page.',
     titleMode: 'template',
     receptionist: false,
   },

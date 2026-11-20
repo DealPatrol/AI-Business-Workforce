@@ -67,6 +67,7 @@ export function frontPorchGrowthSitemap(origin: string, now: Date): MetadataRout
     entry(origin, '/reputation', now, 'weekly', 0.8),
     entry(origin, '/lead-scout', now, 'weekly', 0.7),
     entry(origin, '/leads', now, 'weekly', 0.8),
+    entry(origin, '/leads/hot', now, 'weekly', 0.8),
     entry(origin, '/agents', now, 'weekly', 0.7),
     entry(origin, '/terms', now, 'yearly', 0.3),
     entry(origin, '/missed-call', now, 'weekly', 0.8),

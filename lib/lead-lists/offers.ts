@@ -12,6 +12,8 @@ export const LEAD_LIST_LINKS = {
   outreach: 'https://buy.stripe.com/14A8wR0N8aoBf0B5640Ba0h',
   /** $20 Hot Leads add-on: 1,000 more leads after a 500-lead order. */
   hotAddon1000: 'https://buy.stripe.com/6oUdRb67s2W919L2XW0Ba0j',
+  /** $20 Hot Leads: 500 mixed business leads, instant CSV download after checkout. */
+  hotLeads500: 'https://buy.stripe.com/14AdRbanI68l4lXgOM0Ba0i',
 } as const;
 
 /** Live Workspace payment link for the $20 / 500 Hot Leads offer. */
@@ -40,6 +42,18 @@ export const SAMPLE_ROWS = [
   { business_name: 'Example Dental Studio', website: 'example.com', email: 'office@example.com', city: 'Huntsville', state: 'AL' },
   { business_name: 'Sample Roofing Co.', website: 'example.net', email: 'info@example.net', city: 'Macon', state: 'GA' },
   { business_name: 'Demo Law Group', website: 'example.org', email: 'contact@example.org', city: 'Knoxville', state: 'TN' },
+] as const;
+
+
+/** Fictional Hot Leads sample rows. The landing page labels them as example format. Emails are masked. */
+export const HOT_LEADS_SAMPLE_ROWS = [
+  { business_name: 'Example Dental Studio', website: 'dental.example.com', email: 'office@exa•••.com', city: 'Huntsville', state: 'AL' },
+  { business_name: 'Sample Roofing Co.', website: 'roofing.example.net', email: 'info@exa•••.net', city: 'Macon', state: 'GA' },
+  { business_name: 'Demo Law Group', website: 'law.example.org', email: 'contact@exa•••.org', city: 'Knoxville', state: 'TN' },
+  { business_name: 'Placeholder HVAC LLC', website: 'hvac.example.com', email: 'service@exa•••.com', city: 'Tampa', state: 'FL' },
+  { business_name: 'Fictional Auto Repair', website: 'auto.example.net', email: 'shop@exa•••.net', city: 'Austin', state: 'TX' },
+  { business_name: 'Mockup Salon Studio', website: 'salon.example.org', email: 'hello@exa•••.org', city: 'Raleigh', state: 'NC' },
+  { business_name: 'Sample Landscaping Co.', website: 'landscape.example.com', email: 'info@exa•••.com', city: 'Lexington', state: 'KY' },
 ] as const;
 
 export const LEAD_LIST_SUPPORT_EMAIL = 'hello@frontporchgrowth.com';
