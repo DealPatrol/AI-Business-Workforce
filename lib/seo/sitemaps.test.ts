@@ -15,6 +15,7 @@ const FRONT_PORCH_PATHS = [
   '/reputation',
   '/lead-scout',
   '/leads',
+  '/leads/hot',
   '/agents',
   '/terms',
   '/missed-call',

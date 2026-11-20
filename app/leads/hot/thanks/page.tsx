@@ -28,18 +28,25 @@ export default async function HotLeadsThanksPage({ searchParams }: PageProps) {
 
   return (
     <SuiteShell>
-      {view.showAddon ? (
+      {view.showDownload ? (
         <>
           <section className={styles.hero}>
-            <span className={styles.eyebrow}>ORDER RECEIVED</span>
-            <h1>Your 500 Hot Leads are being built</h1>
+            <span className={styles.eyebrow}>ORDER CONFIRMED</span>
+            <h1>Your 500 Hot Leads are ready</h1>
             <p className={styles.lede}>
-              We&apos;re putting together 500 businesses
-              {view.industry ? <> in {view.industry}</> : null}
-              {view.area ? <> for {view.area}</> : null}. We&apos;ll email the CSV within 24 hours.
+              Download the CSV now. It opens in Excel or Google Sheets. Each row has the business
+              name, website, city, state, and a business email where one is available. No phone numbers.
             </p>
+            {view.downloadHref ? (
+              <div className={styles.ctaRow}>
+                <a className={styles.cta} href={view.downloadHref}>
+                  Download your 500 leads
+                </a>
+              </div>
+            ) : null}
           </section>
 
+          {view.showAddon ? (
           <section className={styles.block}>
             <div className={`${styles.offer} ${styles.offerFeatured}`}>
               <span className={styles.eyebrow}>OPTIONAL ADD-ON</span>
@@ -48,12 +55,10 @@ export default async function HotLeadsThanksPage({ searchParams }: PageProps) {
                 $20 <small>one time</small>
               </div>
               <p>
-                Add 1,000 more businesses in the same industry and area, or nearby
-                areas if we need them to reach 1,000. We remove any duplicates from your first 500
-                and email the CSV within 24 hours. If we can&apos;t deliver, we refund you.
+                Add 1,000 more businesses in the same mixed-list format. We remove any duplicates
+                from your first 500 and email that CSV within 24 hours. If we can&apos;t deliver, we refund you.
               </p>
               <ul className={styles.list}>
-                <li>Same industry and area as your first order, or nearby areas</li>
                 <li>No duplicates from your first 500</li>
                 <li>Business name, website, city, state, and business email where available</li>
                 <li>No phone numbers</li>
@@ -65,14 +70,15 @@ export default async function HotLeadsThanksPage({ searchParams }: PageProps) {
               </div>
             </div>
           </section>
+          ) : null}
         </>
       ) : (
         <section className={styles.hero}>
           <span className={styles.eyebrow}>THANKS</span>
           <h1>Thanks! Your order is in.</h1>
           <p className={styles.lede}>
-            If you just paid, look for a confirmation from Stripe. We&apos;ll email your list as a
-            CSV when it&apos;s ready.
+            If you just paid for 500 Hot Leads, go back through the Stripe receipt so this page can
+            confirm your payment and show the download. If something looks wrong, email us.
           </p>
         </section>
       )}

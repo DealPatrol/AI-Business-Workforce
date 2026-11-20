@@ -225,9 +225,50 @@
   font-weight: 650;
 }
 
+
+.hotHero h1 {
+  font-size: 46px;
+}
+
+.steps {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 16px;
+}
+
+.steps li {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+.steps p {
+  margin: 4px 0 0;
+}
+
+.stepNum {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #205c39;
+  color: #fff;
+  font-weight: 800;
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 @media (max-width: 640px) {
   .hero h1 {
     font-size: 38px;
+  }
+
+  .hotHero h1 {
+    font-size: 32px;
   }
 
   .cta,
