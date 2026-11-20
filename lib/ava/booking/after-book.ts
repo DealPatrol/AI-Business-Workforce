@@ -1,5 +1,7 @@
+import { externalBusyRanges, externalCalendarFor } from '@/lib/ava/booking/external-calendars';
 import {
   createGoogleEvent,
+  decryptToken,
   googleBusyRanges,
   isGoogleLinked,
   withDeadline,
@@ -14,13 +16,13 @@ import type { BookingRow, CalendarRow } from '@/lib/ava/booking/store';
 export const GOOGLE_BUSY_DEADLINE_MS = 2500;
 
 /** Owner busy time from Google. Fails open (empty) so a Google outage never stalls a caller. */
-export async function outsideBusy(
+async function googleBusy(
   calendar: CalendarRow,
   fromIso: string,
   toIso: string,
-  deps: { busy?: typeof googleBusyRanges; env?: GoogleEnv } = {},
+  deps: { busy?: typeof googleBusyRanges; env?: GoogleEnv },
 ): Promise<BookedRange[]> {
-  if (calendar.is_demo || !isGoogleLinked(calendar)) return [];
+  if (!isGoogleLinked(calendar)) return [];
   const busy = deps.busy ?? googleBusyRanges;
   const result = await withDeadline(
     busy(
@@ -35,6 +37,42 @@ export async function outsideBusy(
   if (result.timedOut) console.error('Google busy lookup timed out; offering from the Ava calendar only.');
   if (result.error) console.error('Google busy lookup failed; offering from the Ava calendar only.', result.error);
   return result.value;
+}
+
+/** Busy time from a linked Cal.com or Calendly account. Fails open like Google. */
+async function externalBusy(
+  calendar: CalendarRow,
+  fromIso: string,
+  toIso: string,
+  deps: { external?: (calendar: CalendarRow, fromIso: string, toIso: string) => Promise<BookedRange[]>; env?: GoogleEnv },
+): Promise<BookedRange[]> {
+  const lookup =
+    deps.external ??
+    (async (cal: CalendarRow, from: string, to: string) => {
+      const link = await externalCalendarFor(cal.id);
+      if (!link?.external_calendar_provider || !link.external_calendar_token_enc) return [];
+      return externalBusyRanges(link.external_calendar_provider, decryptToken(link.external_calendar_token_enc, deps.env), from, to);
+    });
+  const result = await withDeadline(lookup(calendar, fromIso, toIso), GOOGLE_BUSY_DEADLINE_MS, [] as BookedRange[]);
+  if (result.timedOut) console.error('Cal.com/Calendly busy lookup timed out; offering without it.');
+  if (result.error) console.error('Cal.com/Calendly busy lookup failed; offering without it.', result.error);
+  return result.value;
+}
+
+/** Owner busy time from every linked calendar (Google, Cal.com, Calendly). Never throws. */
+export async function outsideBusy(
+  calendar: CalendarRow,
+  fromIso: string,
+  toIso: string,
+  deps: {
+    busy?: typeof googleBusyRanges;
+    env?: GoogleEnv;
+    external?: (calendar: CalendarRow, fromIso: string, toIso: string) => Promise<BookedRange[]>;
+  } = {},
+): Promise<BookedRange[]> {
+  if (calendar.is_demo) return [];
+  const [google, external] = await Promise.all([googleBusy(calendar, fromIso, toIso, deps), externalBusy(calendar, fromIso, toIso, deps)]);
+  return [...google, ...external];
 }
 
 export type AfterBookDeps = {
