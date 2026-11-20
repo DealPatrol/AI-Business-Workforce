@@ -208,3 +208,32 @@ export async function getCalendar(id: string) {
   if (error) throw new Error(`Unable to load calendar: ${error.message}`);
   return (data as CalendarRow | null) ?? null;
 }
+
+/** Last 10 digits of a US phone number, for matching a caller to their booking. */
+export function phoneKey(value: string | null | undefined) {
+  const digits = String(value || '').replace(/\D/g, '');
+  return digits.length >= 10 ? digits.slice(-10) : '';
+}
+
+/** Upcoming booked visits on one calendar for a caller's phone number, soonest first. */
+export async function upcomingBookingsForPhone(calendarId: string, phone: string, nowIso: string) {
+  const key = phoneKey(phone);
+  if (!key) return [] as BookingRow[];
+  const horizon = new Date(Date.parse(nowIso) + 120 * 86_400_000).toISOString();
+  const rows = await listBookings(calendarId, nowIso, horizon);
+  return rows.filter((row) => phoneKey(row.caller_phone) === key && row.start_at >= nowIso);
+}
+
+/** Moves a booking to a new window. */
+export async function moveBooking(id: string, startIso: string, endIso: string) {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from('ava_bookings')
+    .update({ start_at: startIso, end_at: endIso })
+    .eq('id', id)
+    .eq('status', 'booked')
+    .select('*')
+    .single();
+  if (error) throw new Error(`Unable to move booking: ${error.message}`);
+  return data as BookingRow;
+}

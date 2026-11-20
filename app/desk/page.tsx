@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { ExternalCalendarPanel } from '@/app/desk/external-calendar';
 import { CarrierForwarding } from '@/components/ava/onboarding/CarrierForwarding';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -48,6 +49,18 @@ export const metadata: Metadata = {
 const TZ = 'America/Chicago';
 const CALLS_PAGE = 25;
 const CALLS_ALL = 200;
+
+const EXTCAL_STATUS: Record<string, string> = {
+  connected: 'Connected. Ava now skips times already booked in that calendar.',
+  disconnected: 'Disconnected. Ava no longer checks that calendar.',
+  rejected: 'That key did not work. Check you copied the whole key and try again.',
+  invalid: 'Pick Cal.com or Calendly and paste the full key.',
+  busy: 'Too many tries. Wait a few minutes and try again.',
+  setup: 'Finish setup before connecting a calendar.',
+  store: 'Calendar sync is for home-service plans.',
+  signin: 'Sign in again, then connect the calendar.',
+  failed: 'The calendar could not be connected right now. Try again in a minute.',
+};
 
 const GOOGLE_STATUS: Record<string, string> = {
   connected: 'Google Calendar connected. Ava now skips your busy times and adds each booking to your calendar.',
@@ -125,6 +138,7 @@ export default async function DeskPage({
 }) {
   const query = (await searchParams) ?? {};
   const googleStatus = typeof query.google === 'string' ? GOOGLE_STATUS[query.google] ?? '' : '';
+  const extcalStatus = typeof query.extcal === 'string' ? EXTCAL_STATUS[query.extcal] ?? '' : '';
   const showAllCalls = query.calls === 'all';
   const leadFilter =
     typeof query.leads === 'string' && LEAD_FILTERS.some((f) => f.key === query.leads) ? query.leads : 'all';
@@ -613,6 +627,14 @@ export default async function DeskPage({
                 </>
               )}
             </div>
+          ) : null}
+          {extcalStatus ? (
+            <p className={styles.googleNote} role="status">
+              {extcalStatus}
+            </p>
+          ) : null}
+          {booking.calendar && !booking.calendar.is_demo ? (
+            <ExternalCalendarPanel calendarId={booking.calendar.id} />
           ) : null}
         </section>
       ) : null}
