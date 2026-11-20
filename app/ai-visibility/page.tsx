@@ -42,7 +42,7 @@ const STEPS = [
   { n: '1', title: 'We check', body: 'A fixed set of real questions, asked on a schedule, plus a search audit of your site.' },
   { n: '2', title: 'You get one list', body: 'Search and AI results in one place, with one short to-do list, most important first.' },
   { n: '3', title: 'You approve', body: 'Nothing changes on your site or listings until you say yes to it.' },
-  { n: '4', title: 'We track it', body: 'Each change sits next to what happened afterward, so you can see what helped.' },
+  { n: '4', title: 'We track it', body: 'See the date of each change alongside later search results and inquiries.' },
 ];
 
 type Tier = {
@@ -84,7 +84,7 @@ const TIERS: Tier[] = [
 ];
 
 const ROADMAP = [
-  { stage: 'Included now', items: ['Everything listed above, on every plan, within its limits'] },
+  { stage: 'Included now', items: ['Free website grader and prioritized on-page findings. See individual plans for additional services.'] },
   { stage: 'Early access', items: ['Google Search Console connection'] },
   { stage: 'Coming soon', items: ['Content drafts written for you (you approve every word)', 'Campaign results and ROI tracking'] },
   { stage: 'Later', items: ['Side-by-side experiments', 'AI crawler monitoring (Agency plan)'] },
@@ -183,34 +183,18 @@ export default function AiVisibilityPage() {
           <figure className={styles.demo} aria-label="Example dashboard with demo data">
             <figcaption className={styles.demoTag}>Example · demo data</figcaption>
             <div className={styles.demoHead}>
-              <b>Smith Heating &amp; Air</b>
-              <span>Cullman, AL · sample business</span>
+              <b>Collins Lawncare</b>
+              <span>Landscape bed renovations · Cullman, AL</span>
             </div>
             <div className={styles.demoStats}>
-              <div>
-                <small>Search health</small>
-                <b>72/100</b>
-              </div>
-              <div>
-                <small>AI recommendation rate</small>
-                <b>35%</b>
-              </div>
+              <div><small>Qualified estimate requests</small><b>4</b></div>
+              <div><small>AI answers recommending Collins</small><b>2 of 6</b></div>
             </div>
-            <p className={styles.demoNote}>Example: named in 7 of 20 sample questions across 2 AI assistants.</p>
+            <p className={styles.demoNote}>Sample week. Of four estimate requests, two came from organic search, one from a referral, and one had an unknown source.</p>
             <ol className={styles.demoList}>
-              <li>
-                <b>Add your hours and emergency line</b>
-                <span>Business facts</span>
-              </li>
-              <li>
-                <b>Answer “how much does a new AC cost?”</b>
-                <span>Question gap</span>
-              </li>
-              <li>
-                <b>Fix your phone number on Yelp</b>
-                <span>Listing mismatch</span>
-              </li>
+              <li><b>Does bed cleanup include haul-away?</b><span>Two sample answers leave the question open.</span></li>
             </ol>
+            <a className={styles.secondary} href="/visibility-sample/report.html">Explore the sample campaign →</a>
           </figure>
         </section>
 
@@ -243,8 +227,7 @@ export default function AiVisibilityPage() {
             <span className={styles.eyebrow}>FREE GRADER</span>
             <h2 id="grader-title">See what search engines and AI can read about you</h2>
             <p>
-              Enter your website, your type of business, and your city. We load your page right now and run more than 20 checks that search engines and AI assistants
-              rely on. You get a score, what we found, and the fixes that matter most.
+              Enter your website, your type of business, and your city. We check the page for readable content, clear business details, and common technical issues. You get a score, what we found, and the fixes that matter most.
             </p>
             <details className={styles.checkList}>
               <summary>What the free grade checks</summary>
@@ -255,8 +238,7 @@ export default function AiVisibilityPage() {
               </p>
             </details>
             <p className={styles.muted}>
-              The AI recommendation check uses real questions sent to real AI assistants. If it is not in your instant report, we run it
-              and email you the results. We never show made-up AI answers or made-up competitors.
+              Your instant grade measures the page you enter. The campaign sample shows how a separate AI recommendation check is reported, including the question, assistant, answer, and source.
             </p>
           </div>
           <Grader />
