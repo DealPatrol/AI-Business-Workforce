@@ -64,7 +64,7 @@ export function llmsFullTxtForHost(hostHeader: string | null | undefined) {
 - Use the brand names above. Ava is the receptionist; Executive Receptionist is the company.
 - Do not say there is a live handoff to a person on every call. After the lead arrives, the shop owner calls the customer back.
 - Do not invent review counts, close rates, or “number one” claims.
-- Do not use the number (256) 663-7007. Public contact is (256) 595-3354. The demo line is (256) 952-4935.
+- Only cite (256) 595-3354 as the public number. The demo line is (256) 952-4935.
 - Starter is the only plan with a $1 first month. Growth, Pro, and Elite bill at their monthly price from month one.
 - Front Porch Growth pages should not be described as the home of the receptionist product.
 `;
