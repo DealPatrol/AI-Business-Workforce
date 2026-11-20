@@ -16,6 +16,10 @@ import {
   type AvaPlanKey,
 } from '@/lib/ava/pricing';
 import styles from './onboarding.module.css';
+import { WebsiteImport, type WebsiteDraft } from '@/components/ava/onboarding/WebsiteImport';
+import { CarrierForwarding } from '@/components/ava/onboarding/CarrierForwarding';
+import toolStyles from '@/components/ava/onboarding/onboarding-tools.module.css';
+import { AVA_PLAN_KEYS } from '@/lib/ava/pricing';
 import { readAttribution, readBrowserIds } from '@/lib/analytics/attribution';
 import { CheckoutSuccessTracking } from '@/components/analytics/CheckoutSuccessTracking';
 import { splitContact } from '@/lib/analytics/contact';
@@ -119,6 +123,18 @@ function AvaOnboardingForm() {
     plan: searchParams.get('plan') || '',
   });
   const [prefillNote, setPrefillNote] = useState('');
+  const [formKey, setFormKey] = useState(0);
+
+  function applyWebsiteDraft(draft: WebsiteDraft) {
+    const { profile } = draft;
+    setPrefill((current) => ({
+      ...current,
+      businessName: profile.businessName || current.businessName,
+      businessHours: profile.hours || current.businessHours,
+      services: draft.servicesDraft || current.services,
+    }));
+    setFormKey((k) => k + 1);
+  }
   const [prefillReady, setPrefillReady] = useState(!qualificationId);
   const [linkState, setLinkState] = useState<'idle' | 'sending' | 'sent'>('idle');
   const [linkMessage, setLinkMessage] = useState('');
@@ -456,6 +472,7 @@ function AvaOnboardingForm() {
               Ava’s leads will show up on your desk. Sign in with the email you used at checkout and we will email you a
               link.
             </p>
+            <CarrierForwarding />
             <Link href="/login?next=/desk">Sign in to your desk</Link>{' '}
             <Link href="/ava">Return to Executive Receptionist</Link>
           </section>
@@ -470,6 +487,22 @@ function AvaOnboardingForm() {
                 {`${avaPlanPriceLine(selectedPlan)}. ${avaPlanBillingLine(selectedPlan)}`}{' '}
                 Checkout returns you here with the session attached.
               </p>
+              {!isStoreOnboarding ? (
+                <div className={toolStyles.plans} role="radiogroup" aria-label="Pick your plan">
+                  {AVA_PLAN_KEYS.map((key) => (
+                    <label key={key}>
+                      <input
+                        type="radio"
+                        name="plan-pick"
+                        checked={selectedPlan === key}
+                        onChange={() => setPrefill((current) => ({ ...current, plan: key }))}
+                      />
+                      <b>{AVA_PLANS[key].label}</b>
+                      <span>{AVA_PLANS[key].monthlyLabel}/mo · {AVA_PLANS[key].minutesLabel}</span>
+                    </label>
+                  ))}
+                </div>
+              ) : null}
               <TrackedCheckoutLink
                 className={styles.checkout}
                 href={`/api/checkout?plan=${selectedPlan}${
@@ -481,7 +514,8 @@ function AvaOnboardingForm() {
               </TrackedCheckoutLink>
             </section>
           ) : null}
-          <form className={styles.form} onSubmit={submit}>
+          <WebsiteImport onDraft={applyWebsiteDraft} />
+          <form key={formKey} className={styles.form} onSubmit={submit}>
             <header className={styles.formHeader}>
               <h2>How should Executive Receptionist handle your calls?</h2>
               <p>Short answers are fine. Cole will confirm the details during your live test.</p>
