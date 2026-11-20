@@ -1,7 +1,7 @@
 export const AVA_HOME_FAQS = [
   {
     q: 'How much does Executive Receptionist cost?',
-    a: 'Four monthly plans: Starter $79 (100 minutes, first month $1), Growth $197 (300 minutes), Pro $397 (1,200 minutes, best value), Elite $789 (2,000 minutes). Month to month, cancel anytime. No free plan or trial.',
+    a: 'Four monthly plans: Starter $79 (100 minutes), Growth $197 (300 minutes), Pro $397 (1,200 minutes, best value), Elite $789 (2,000 minutes). Every plan is $1 for your first month, then the regular monthly price. Month to month, cancel anytime. No free plan or trial.',
   },
   {
     q: 'Can I hear Executive Receptionist before I pay?',
@@ -13,7 +13,7 @@ export const AVA_HOME_FAQS = [
   },
   {
     q: 'How do I start?',
-    a: 'Pick a plan and check out. Starter charges $1 today for the first month, then $79 a month. Growth, Pro and Elite charge their monthly price today and each month after. Sending the setup form without checkout only emails Cole your notes. It does not start the subscription.',
+    a: 'Pick a plan and check out. Every plan charges $1 today for the first month, then the regular monthly price: Starter $79, Growth $197, Pro $397, Elite $789. Sending the setup form without checkout only emails Cole your notes. It does not start the subscription.',
   },
   {
     q: 'What does Executive Receptionist do on a call?',

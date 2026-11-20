@@ -165,7 +165,7 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
           <h1>{guide.h1}</h1>
           {guide.directAnswer ? <p className="direct-answer">{guide.directAnswer}</p> : null}
           <p>{guide.lede}</p>
-          <p className="trial-line">Starter: first month $1, then $79/month. Pro: 1,200 minutes for $397/month. Cancel anytime.</p>
+          <p className="trial-line">$1 for month #1 on every plan, then the regular monthly price. Starter $79/month. Pro: 1,200 minutes for $397/month. Cancel anytime.</p>
           <p className="demo-line">
             Hear her now: call <a href={AVA_DEMO_LINE.href}>{AVA_DEMO_LINE.display}</a>. She answers as {AVA_DEMO_LINE.answersAs}.
           </p>
@@ -263,9 +263,8 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
           <span className="kicker">PRICING</span>
           <h2>Four monthly plans. $0 setup.</h2>
           <p>
-            Checkout is Stripe. Starter&apos;s first month is $1; every other plan bills its monthly price from the first
-            month. Included minutes reset each month. Past your minutes, Ava keeps answering and we reach out about a
-            bigger plan.
+            Checkout is Stripe. Every plan is $1 for month #1, then the regular monthly price. Included minutes reset
+            each month. Past your minutes, Ava keeps answering and we reach out about a bigger plan.
           </p>
         </div>
         <AvaPlanCards />

@@ -43,7 +43,7 @@ const RETIRED_OFFER = [/14-day pilot/i, /per booked job/i, /\$297/, /first booke
 /** Production env vars by feature. Names only; values are never read. */
 export const REQUIRED_ENV = {
   'Site + auth': ['NEXT_PUBLIC_SITE_URL', 'NEXT_PUBLIC_APP_URL', 'NEXT_PUBLIC_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY', 'SUPABASE_SERVICE_ROLE_KEY'],
-  'Stripe (Workspace account, live)': ['STRIPE_SECRET_KEY', 'STRIPE_WEBHOOK_SECRET', 'STRIPE_AVA_STARTER_PRICE_ID', 'STRIPE_AVA_GROWTH_PRICE_ID', 'STRIPE_AVA_PRO_PRICE_ID', 'STRIPE_AVA_ELITE_PRICE_ID', 'STRIPE_AVA_STARTER_FIRST_MONTH_COUPON_ID'],
+  'Stripe (Workspace account, live)': ['STRIPE_SECRET_KEY', 'STRIPE_WEBHOOK_SECRET', 'STRIPE_AVA_STARTER_PRICE_ID', 'STRIPE_AVA_GROWTH_PRICE_ID', 'STRIPE_AVA_PRO_PRICE_ID', 'STRIPE_AVA_ELITE_PRICE_ID', 'STRIPE_AVA_STARTER_FIRST_MONTH_COUPON_ID', 'STRIPE_AVA_GROWTH_FIRST_MONTH_COUPON_ID', 'STRIPE_AVA_PRO_FIRST_MONTH_COUPON_ID', 'STRIPE_AVA_ELITE_FIRST_MONTH_COUPON_ID'],
   'Ava voice (ElevenLabs)': ['ELEVENLABS_API_KEY', 'ELEVENLABS_AGENT_ID', 'ELEVENLABS_WEBHOOK_SECRET', 'AVA_PROVISIONING_SECRET'],
   'Lead + owner email (Resend)': ['RESEND_API_KEY', 'AVA_FROM_EMAIL', 'AVA_LEAD_NOTIFICATION_EMAIL'],
   'Booking': ['AVA_BOOKING_LINK_SECRET'],
@@ -228,7 +228,7 @@ async function smoke() {
 
   if (!args.checkout) return warn('Checkout not exercised (add --checkout; needs a Stripe key here to expire the sessions).');
   if (!stripeKey()) return bad('--checkout needs STRIPE_SECRET_KEY/STRIPE_WORKSPACE_SECRET_KEY so the test sessions can be expired.');
-  const dueToday = { starter: 100, growth: 19700, pro: 39700, elite: 78900 };
+  const dueToday = { starter: 100, growth: 100, pro: 100, elite: 100 };
   for (const plan of Object.keys(dueToday)) {
     const r = await get('/api/checkout', target, {
       method: 'POST',

@@ -146,7 +146,7 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
             surface="ava-home"
           />
           <p className="hero-prices">
-            <a href="#pricing">Starter $79/mo, first month $1</a>
+            <a href="#pricing">$1 for month #1, then from $79/mo</a>
             <span aria-hidden="true">·</span>
             Pro 1,200 minutes $397/mo
             <span aria-hidden="true">·</span>
@@ -300,12 +300,12 @@ export default async function AvaPage({ searchParams }: AvaPageProps) {
 
       {/* ── Final CTA ────────────────────────────────────────── */}
       <section className="finale">
-        <p className="stamp stamp-light">Starter: first month $1 · $0 setup</p>
+        <p className="stamp stamp-light">$1 for month #1 · $0 setup</p>
         <h2>
           Put Executive Receptionist on the <em>phones.</em>
         </h2>
         <p>
-          Talk to her above, then pick a plan. Starter&apos;s first month is $1, then $79 a month. Pro gives you 1,200
+          Talk to her above, then pick a plan. Every plan is $1 for month #1, then the regular monthly price. Starter is $79 a month. Pro gives you 1,200
           minutes for $397 a month, the best value per minute. Tomorrow&apos;s after-hours calls answer themselves.
         </p>
         <div className="hero-ctas">

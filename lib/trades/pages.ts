@@ -36,7 +36,7 @@ export const TRADE_PAGES: TradePage[] = [
       },
       {
         q: 'Which plan answers after hours?',
-        a: 'Plans from $79 a month; Starter’s first month is $1. That is the same price as the pricing page.',
+        a: 'Plans from $79 a month. Every plan is $1 for month #1, then the regular monthly price. That is the same price as the pricing page.',
       },
     ],
   },

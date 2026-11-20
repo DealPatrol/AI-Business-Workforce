@@ -56,7 +56,7 @@ type AvaCheckoutInput = {
   origin: string;
   planKey: AvaPlanKey;
   priceId?: string;
-  /** Once-only coupon that makes the first month $1 (Starter only). */
+  /** Once-only coupon that makes the first month $1 for this plan. */
   firstMonthCouponId?: string;
   qualificationId?: string;
   prefillToken?: string;
@@ -153,8 +153,8 @@ export function readStripeCouponId(value: string | undefined) {
 }
 
 /**
- * Monthly plan checkout. Starter gets the once-only first-month coupon ($79 - $78 = $1 today, then $79/mo).
- * Growth, Pro and Elite charge the full monthly price today. No trial on any plan.
+ * Monthly plan checkout. Every plan applies a once-only first-month coupon so today is $1,
+ * then the regular monthly price. No free trial on any plan.
  */
 export function buildAvaCheckoutParams(input: AvaCheckoutInput) {
   const plan = AVA_PLANS[input.planKey];

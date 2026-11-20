@@ -75,7 +75,7 @@ const COMPARE = [
   ['Emergencies and “get me a person”', 'Varies by plan', 'Ava can transfer the call to your phone, if you give her a number'],
   ['Spanish-speaking callers', 'Varies by plan', 'Ava switches to Spanish when the caller does'],
   ['Hear it before you pay', 'Often a sales demo first', 'Six sample calls, a call-in line, and a browser demo on this page'],
-  ['Getting started', 'Free trial, then a monthly plan', 'Starter’s first month is $1, then $79/month'],
+  ['Getting started', 'Free trial, then a monthly plan', '$1 for month #1, then the regular monthly price'],
   ['Setup', 'Do it yourself', 'Done with you by Cole, included on every plan'],
 ] as const;
 
@@ -98,7 +98,7 @@ const FAQS = [
   },
   {
     q: 'Is there a free trial?',
-    a: 'No free plan or trial. Starter’s first month is $1, then $79/month. Growth, Pro and Elite are billed at their monthly price from the first month.',
+    a: 'No free plan or trial. Every plan is $1 for month #1, then the regular monthly price: Starter $79, Growth $197, Pro $397, Elite $789.',
   },
   {
     q: 'Which plan is the best value?',
@@ -169,7 +169,7 @@ export default function StartPage() {
           </a>
         </div>
         <ul className={styles.trust} aria-label="The offer">
-          <li>Starter: first month $1, then $79/mo</li>
+          <li>$1 for month #1 on every plan, then the regular monthly price</li>
           <li>Pro: 1,200 minutes for $397/mo, best value</li>
           <li>Month to month, cancel anytime</li>
         </ul>
@@ -227,7 +227,7 @@ export default function StartPage() {
               <tr className={styles.usRow}>
                 <th scope="row">Ava</th>
                 <td>A flat monthly plan with included minutes; no per-minute overage charges</td>
-                <td>$79/mo for 100 minutes (first month $1). Pro $397/mo for 1,200 minutes</td>
+                <td>$1 for month #1, then $79/mo for 100 minutes. Pro $397/mo for 1,200 minutes</td>
               </tr>
               {VENDOR_PLANS.map((vendor) => (
                 <tr key={vendor.name}>
