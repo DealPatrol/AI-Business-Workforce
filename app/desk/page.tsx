@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { publicBookingUrl } from '@/lib/ava/booking/public-booking';
 import { ExternalCalendarPanel } from '@/app/desk/external-calendar';
 import { WebhookPanel, WEBHOOK_STATUS } from '@/app/desk/webhook-panel';
+import { CarrierForwarding } from '@/components/ava/onboarding/CarrierForwarding';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { AVA_DEMO_LINE } from '@/lib/ava/demo-line';
@@ -20,10 +21,12 @@ import {
   type DeskCalendar,
   type DeskCall,
 } from '@/lib/desk/data';
+import type { TransferRule } from '@/lib/ava/capabilities/transfer';
 import { readAgentGreeting } from '@/lib/desk/eleven';
 import { isEditableAgent, LEAD_STATUS_LABEL } from '@/lib/desk/settings';
 import { loadDeskSubscription, type DeskSubscription } from '@/lib/desk/stripe';
 import { deskUsage, minutesFromSeconds, usageWindow } from '@/lib/desk/usage';
+import { loadDeskTransferRules } from '@/lib/desk/transfer-store';
 import { DESK_TOOLS } from '@/lib/desk-tools';
 import type { ErLead } from '@/lib/leads/types';
 import { metadataTitle, pageSeo } from '@/lib/seo/pages';
@@ -32,6 +35,7 @@ import { BookingSettings } from './booking-settings';
 import { DeskSettings } from './desk-settings';
 import { LeadActions } from './lead-actions';
 import { SignOut } from './sign-out';
+import { TransferSettings } from './transfer-settings';
 import styles from './desk.module.css';
 
 export const dynamic = 'force-dynamic';
@@ -174,7 +178,7 @@ export default async function DeskPage({
   const greetingEditable = isEditableAgent(agentId);
   const isStore = customer?.plan === 'store';
 
-  const [leads, callData, usageData, booking, greeting] = await Promise.all([
+  const [leads, callData, usageData, booking, greeting, transferRules] = await Promise.all([
     loadDeskLeads(supabase).catch((error) => {
       note('leads')(error);
       return [] as ErLead[];
@@ -203,6 +207,12 @@ export default async function DeskPage({
         })
       : Promise.resolve({ calendar: null as DeskCalendar | null, bookings: [] as DeskBooking[] }),
     greetingEditable ? readAgentGreeting(agentId) : Promise.resolve(''),
+    onboarding && !isStore
+      ? loadDeskTransferRules(onboarding.id).catch((error) => {
+          note('transfer numbers')(error);
+          return [] as TransferRule[];
+        })
+      : Promise.resolve([] as TransferRule[]),
   ]);
 
   const usage = deskUsage(planKey, minutesFromSeconds(usageData.seconds));
@@ -250,6 +260,7 @@ export default async function DeskPage({
         {onboarding && !isStore ? <a href="#calendar">Calendar</a> : null}
         <a href="#billing">Plan &amp; billing</a>
         <a href="#settings">Settings</a>
+        {onboarding && !isStore ? <a href="#transfers">Transfers</a> : null}
         <a href="#texts">Texts</a>
       </nav>
 
@@ -746,6 +757,32 @@ export default async function DeskPage({
           <p className={styles.empty}>Settings open once your receptionist setup form is in.</p>
         )}
       </section>
+
+      {onboarding && !isStore ? (
+        <section id="transfers" className={styles.panel} aria-labelledby="transfers-title">
+          <div className={styles.panelHead}>
+            <h2 id="transfers-title">Live transfer and call forwarding</h2>
+          </div>
+          <div className={styles.transferLayout}>
+            <div>
+              <h3 className={styles.subhead}>Who Ava can hand a caller to</h3>
+              <p className={styles.muted}>
+                Up to three people, each with when Ava should use them. Ava only transfers when a rule fits; otherwise she
+                takes a message and you get the lead.
+              </p>
+              <TransferSettings rules={transferRules} live={greetingEditable} />
+            </div>
+            <div>
+              <h3 className={styles.subhead}>Ring your team first, then Ava</h3>
+              <p className={styles.muted}>
+                Forward only the calls you miss: your phone rings first, and Ava answers the rest. Pick your carrier for the
+                codes.
+              </p>
+              <CarrierForwarding avaNumber={onboarding.phone_number} />
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <section id="texts" className={styles.panel} aria-labelledby="texts-title">
         <div className={styles.panelHead}>
