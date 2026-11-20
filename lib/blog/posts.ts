@@ -32,7 +32,7 @@ export const BLOG_POSTS: BlogPost[] = [
       "AI receptionist"
     ],
     "published": "2026-11-18",
-    "ctaLabel": "See Ava for HVAC, $1 for month #1",
+    "ctaLabel": "See Ava for HVAC, from $1 for the first month",
     "ctaUrl": "https://executivereceptionist.com/hvac?utm_source=blog&utm_medium=article&utm_campaign=after-hours-hvac-calls",
     "words": 1127,
     "blocks": [
@@ -158,10 +158,10 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         "type": "ul",
         "items": [
-          "**Starter:** $1 for month #1, then $79/month for 100 minutes.",
-          "**Growth:** $1 for month #1, then $197/month for 300 minutes.",
-          "**Pro:** $1 for month #1, then $397/month for 1,200 minutes.",
-          "**Elite:** $1 for month #1, then $789/month for 2,000 minutes, with priority setup."
+          "**Starter:** first month $1, then $79/month for 100 minutes.",
+          "**Growth:** $197/month for 300 minutes.",
+          "**Pro:** $397/month for 1,200 minutes.",
+          "**Elite:** $789/month for 2,000 minutes, with priority setup."
         ]
       },
       {
@@ -351,10 +351,10 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         "type": "ul",
         "items": [
-          "**Starter:** $1 for month #1, then $79/month for 100 minutes.",
-          "**Growth:** $1 for month #1, then $197/month for 300 minutes.",
-          "**Pro:** $1 for month #1, then $397/month for 1,200 minutes, the lowest price per minute.",
-          "**Elite:** $1 for month #1, then $789/month for 2,000 minutes, with priority setup."
+          "**Starter:** $1 for the first month, then $79/month for 100 minutes.",
+          "**Growth:** $197/month for 300 minutes.",
+          "**Pro:** $397/month for 1,200 minutes, the lowest price per minute.",
+          "**Elite:** $789/month for 2,000 minutes, with priority setup."
         ]
       },
       {
@@ -371,7 +371,7 @@ export const BLOG_POSTS: BlogPost[] = [
       },
       {
         "type": "p",
-        "text": "You can do that with Ava right now. [Talk to the HVAC demo](https://elevenlabs.io/app/talk-to?agent_id=agent_0001m6k8pwnaebqver0sztwknn72) in your browser. It answers for a made-up shop called \"Demo Heating & Air,\" so try a no-heat call, a broken AC, or ask what a service call costs. If you like what you hear, you can put her on your own line for $1 for month #1, then the regular monthly price."
+        "text": "You can do that with Ava right now. [Talk to the HVAC demo](https://elevenlabs.io/app/talk-to?agent_id=agent_0001m6k8pwnaebqver0sztwknn72) in your browser. It answers for a made-up shop called \"Demo Heating & Air,\" so try a no-heat call, a broken AC, or ask what a service call costs. If you like what you hear, the Starter plan lets you put her on your own line for $1 for the first month."
       }
     ]
   },

@@ -48,7 +48,7 @@ Hi [First Name] — saw you checked out the demo. The "Call Executive Receptioni
 ## Follow-up (they called Executive Receptionist, no reply)
 
 ```
-Hi [First Name] — glad you tried the demo. If you want Ava on your actual number: every plan is $1 for month #1, then the regular monthly price (Starter $79, Growth $197, Pro $397, Elite $789). Cancel anytime. Happy to walk through it on a 10-minute call.
+Hi [First Name] — glad you tried the demo. If you want to run a 14-day pilot on your actual number: Executive Receptionist plans start at $77/month, 300 minutes included, cancel anytime. Happy to walk through it on a 10-minute call.
 ```
 
 ---

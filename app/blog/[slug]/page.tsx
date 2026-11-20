@@ -93,7 +93,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <h2>{post.site === 'er' ? 'Hear Ava answer a no-heat call' : 'See where your business stands'}</h2>
           <p>
             {post.site === 'er'
-              ? 'Every plan is $1 for month #1, then the regular monthly price. Starter is $79/month for 100 minutes. Month to month, cancel anytime.'
+              ? 'Starter is $1 for the first month, then $79/month for 100 minutes. Month to month, cancel anytime.'
               : 'Free, about 15 seconds, no card. Real checks only, and no ranking promises.'}
           </p>
           <a className="blog-cta-btn" href={post.ctaUrl}>
