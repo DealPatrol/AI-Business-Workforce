@@ -157,7 +157,7 @@ export function servicesFromHtml(html: string): string[] {
   let m: RegExpExecArray | null;
   while ((m = re.exec(html))) {
     const text = clean(m[1], 80);
-    if (!text || text.length < 4 || text.length > 60 || /[?!]$/.test(text) || HEADING_SKIP.test(text)) continue;
+    if (!text || text.length < 4 || text.length > 60 || /[?!.:]$/.test(text) || HEADING_SKIP.test(text)) continue;
     if (text.split(' ').length > 7) continue;
     out.push(text);
   }
