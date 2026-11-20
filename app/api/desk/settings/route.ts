@@ -3,6 +3,7 @@ import { onboardingForOwnerEmail } from '@/lib/ava/booking/owner';
 import { calendarForOnboarding } from '@/lib/ava/booking/store';
 import { buildAvaAgentPrompt } from '@/lib/ava/provisioning';
 import { saveAgentGreeting, saveAgentPrompt } from '@/lib/desk/eleven';
+import { promptDetailsFor } from '@/lib/desk/prompt-details';
 import { cleanDeskSettings, isEditableAgent } from '@/lib/desk/settings';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
@@ -60,19 +61,7 @@ export async function PUT(request: NextRequest) {
         const bookingEnabled = Boolean(calendar?.enabled && (calendar.elevenlabs_tool_ids ?? []).length);
         await saveAgentPrompt(
           agentId,
-          buildAvaAgentPrompt({
-            businessName: onboarding.business_name || 'the business',
-            businessHours: settings.businessHours,
-            services: onboarding.services,
-            callHandlingRules: onboarding.call_handling_rules,
-            staffName: onboarding.staff_name,
-            staffContact: onboarding.staff_contact,
-            calendarPreference: onboarding.calendar_preference,
-            urgentCallRules: onboarding.urgent_call_rules,
-            plan: onboarding.selected_plan,
-            transferNumber: onboarding.transfer_phone ?? null,
-            bookingEnabled,
-          }),
+          buildAvaAgentPrompt(promptDetailsFor(onboarding, bookingEnabled, { businessHours: settings.businessHours })),
         );
         notes.push('Ava now tells callers your new hours.');
       } else {
