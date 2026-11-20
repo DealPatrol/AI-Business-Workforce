@@ -5,25 +5,14 @@ import { hashToolSecret, newToolSecret } from '@/lib/ava/booking/secret';
 import { cleanSettingsInput } from '@/lib/ava/booking/slots';
 import { calendarForOnboarding, saveCalendarForOnboarding } from '@/lib/ava/booking/store';
 import { buildAvaAgentPrompt } from '@/lib/ava/provisioning';
+import { promptDetailsFor } from '@/lib/desk/prompt-details';
 import { isEditableAgent } from '@/lib/desk/settings';
 import { createClient } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
 
 function promptFor(onboarding: OwnerOnboarding, bookingEnabled: boolean) {
-  return buildAvaAgentPrompt({
-    businessName: onboarding.business_name || 'the business',
-    businessHours: onboarding.business_hours,
-    services: onboarding.services,
-    callHandlingRules: onboarding.call_handling_rules,
-    staffName: onboarding.staff_name,
-    staffContact: onboarding.staff_contact,
-    calendarPreference: onboarding.calendar_preference,
-    urgentCallRules: onboarding.urgent_call_rules,
-    plan: onboarding.selected_plan,
-    transferNumber: onboarding.transfer_phone ?? null,
-    bookingEnabled,
-  });
+  return buildAvaAgentPrompt(promptDetailsFor(onboarding, bookingEnabled));
 }
 
 /** Saves the owner's booking calendar settings. Turning booking on wires the tools into their Ava. */
