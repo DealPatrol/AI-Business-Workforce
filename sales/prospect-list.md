@@ -64,7 +64,7 @@ Track progress in [/sales](/sales).
 | Demo opened | Auto-tracked via `/api/sales/track` |
 | Called Executive Receptionist | Auto-tracked on demo page |
 | Replied | Manual update in sales tracker |
-| Pilot clicked | Auto-tracked on "Try Executive Receptionist for 14 days" |
+| Checkout clicked | Auto-tracked on "Start for $1" / "$1 for month #1" |
 | Conversation | Manual update in sales tracker |
 | Pilot proposed | Manual update or pilot click |
 

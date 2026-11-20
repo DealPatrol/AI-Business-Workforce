@@ -33,7 +33,7 @@ const HOME_FAQS = [
   },
   {
     q: 'Is there a free trial?',
-    a: 'No free plan or trial. Starter’s first month is $1, then $79/month. Growth, Pro and Elite are billed at their monthly price from the first month. All plans renew monthly; cancel anytime.',
+    a: 'No free plan or trial. Every plan is $1 for month #1, then the regular monthly price: Starter $79, Growth $197, Pro $397, Elite $789. All plans renew monthly; cancel anytime.',
   },
   {
     q: 'Do I need an account to start?',
@@ -136,7 +136,7 @@ export default function SuiteHomePage() {
             </a>
           </div>
           <p className={styles.fine}>
-            {AVA_OFFER.starterIntro} Bigger plans from $197/month. <a href="#pricing">See all plans</a>. No account needed to start.
+            {AVA_OFFER.starterIntro} Plans from $79 to $789 a month after that. <a href="#pricing">See all plans</a>. No account needed to start.
           </p>
         </div>
 

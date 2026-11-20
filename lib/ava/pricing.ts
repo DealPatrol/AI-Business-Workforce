@@ -1,8 +1,8 @@
 /**
- * Executive Receptionist pricing (Nov 12, 2026): four monthly plans billed by included minutes.
+ * Executive Receptionist pricing: four monthly plans billed by included minutes.
  *
- * Only Starter has an intro offer: the first month is $1 (a once-only Stripe coupon), then $79/month.
- * Growth, Pro and Elite charge full price from the first month. No free trial, no free plan.
+ * Every plan has the same intro offer: the first month is $1 (a once-only Stripe coupon
+ * scoped to that plan's product), then the regular monthly price. No free trial, no free plan.
  * There is no metered overage: past the included minutes Ava keeps answering and we reach out
  * about moving up a plan.
  */
@@ -35,10 +35,10 @@ export const AVA_PLANS = {
     minutes: 300,
     minutesLabel: '300 minutes',
     perMinuteLabel: '$0.66/min',
-    firstMonthCents: null,
-    firstMonthLabel: null,
+    firstMonthCents: 100,
+    firstMonthLabel: '$1',
     priceEnv: 'STRIPE_AVA_GROWTH_PRICE_ID',
-    couponEnv: null,
+    couponEnv: 'STRIPE_AVA_GROWTH_FIRST_MONTH_COUPON_ID',
     description: 'For shops whose phone rings most days and who cannot miss the after-hours repair call.',
     features: ['300 minutes of Ava answering each month', 'Everything in every plan, below'],
     valueNote: '',
@@ -54,10 +54,10 @@ export const AVA_PLANS = {
     minutes: 1200,
     minutesLabel: '1,200 minutes',
     perMinuteLabel: '$0.33/min',
-    firstMonthCents: null,
-    firstMonthLabel: null,
+    firstMonthCents: 100,
+    firstMonthLabel: '$1',
     priceEnv: 'STRIPE_AVA_PRO_PRICE_ID',
-    couponEnv: null,
+    couponEnv: 'STRIPE_AVA_PRO_FIRST_MONTH_COUPON_ID',
     description: 'The best value per minute. For busy shops that want every call answered, day and night.',
     features: ['1,200 minutes of Ava answering each month', 'Lowest price per minute of any plan', 'Everything in every plan, below'],
     valueNote: '4x the minutes of Growth for about 2x the price.',
@@ -73,10 +73,10 @@ export const AVA_PLANS = {
     minutes: 2000,
     minutesLabel: '2,000 minutes',
     perMinuteLabel: '$0.39/min',
-    firstMonthCents: null,
-    firstMonthLabel: null,
+    firstMonthCents: 100,
+    firstMonthLabel: '$1',
     priceEnv: 'STRIPE_AVA_ELITE_PRICE_ID',
-    couponEnv: null,
+    couponEnv: 'STRIPE_AVA_ELITE_FIRST_MONTH_COUPON_ID',
     description: 'The most minutes, with priority setup. For the highest-volume shops.',
     features: ['2,000 minutes of Ava answering each month', 'Priority setup: first in line for your setup', 'Everything in every plan, below'],
     valueNote: '',
@@ -104,8 +104,8 @@ export const AVA_PLAN_INCLUDES = [
 /** Shared offer facts used across the site. */
 export const AVA_OFFER = {
   summary:
-    'Four monthly plans: Starter $79 (100 minutes, first month $1), Growth $197 (300 minutes), Pro $397 (1,200 minutes), Elite $789 (2,000 minutes). Renews monthly. Cancel anytime.',
-  starterIntro: 'Starter: first month $1, then $79/month. Renews automatically. Cancel anytime.',
+    'Four monthly plans: Starter $79 (100 minutes), Growth $197 (300 minutes), Pro $397 (1,200 minutes), Elite $789 (2,000 minutes). Every plan is $1 for month #1, then the regular monthly price. Renews monthly. Cancel anytime.',
+  starterIntro: '$1 for month #1, then the regular monthly price. Renews automatically. Cancel anytime.',
   renewalNote: 'Plans renew monthly at the listed price until you cancel. Cancel anytime.',
   overageNote:
     'If you run past your minutes, Ava keeps answering. We reach out about moving you up a plan. No surprise per-minute charges.',

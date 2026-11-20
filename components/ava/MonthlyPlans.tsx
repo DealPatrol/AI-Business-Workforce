@@ -31,7 +31,7 @@ export function MonthlyPlans({ heading = true, includes = true }: { heading?: bo
           <h2>Pick your minutes. Ava answers every call.</h2>
           <p>
             Every plan includes the same receptionist. Plans differ by how many minutes of calls Ava answers each month.
-            Starter&rsquo;s first month is {AVA_PLANS.starter.firstMonthLabel}.
+            Every plan is $1 for month #1, then the regular monthly price.
           </p>
         </div>
       ) : null}

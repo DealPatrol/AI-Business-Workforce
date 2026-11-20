@@ -17,9 +17,12 @@ describe('monthly plans', () => {
     );
   });
 
-  it('gives only Starter a $1 first month', () => {
-    assert.equal(AVA_PLANS.starter.firstMonthCents, 100);
-    for (const key of ['growth', 'pro', 'elite'] as const) assert.equal(AVA_PLANS[key].firstMonthCents, null);
+  it('gives every plan a $1 first month', () => {
+    for (const key of AVA_PLAN_KEYS) {
+      assert.equal(AVA_PLANS[key].firstMonthCents, 100);
+      assert.equal(AVA_PLANS[key].firstMonthLabel, '$1');
+      assert.ok(AVA_PLANS[key].couponEnv);
+    }
   });
 
   it('features Pro, with the lowest price per minute', () => {
@@ -47,30 +50,23 @@ describe('monthly plans', () => {
 describe('plan checkout', () => {
   const origin = 'https://executivereceptionist.com';
 
-  it('Starter applies the first-month coupon, no trial, Executive Receptionist branding', () => {
-    const p = buildAvaCheckoutParams({ origin, planKey: 'starter', priceId: 'price_starter', firstMonthCouponId: 'coupon1' });
-    assert.equal(p.get('mode'), 'subscription');
-    assert.equal(p.get('line_items[0][price]'), 'price_starter');
-    assert.equal(p.get('discounts[0][coupon]'), 'coupon1');
-    assert.equal(p.get('subscription_data[trial_period_days]'), null);
-    assert.equal(p.get('branding_settings[display_name]'), 'Executive Receptionist');
-    assert.equal(p.get('metadata[product]'), 'ava');
-    assert.equal(p.get('metadata[plan]'), 'starter');
-    assert.equal(p.get('subscription_data[metadata][included_minutes]'), '100');
-    assert.match(p.get('success_url') || '', /onboarding\/ava\?session_id=\{CHECKOUT_SESSION_ID\}&plan=starter/);
-  });
-
-  it('refuses Starter without its coupon so nobody is charged $79 by mistake', () => {
-    assert.throws(() => buildAvaCheckoutParams({ origin, planKey: 'starter', priceId: 'price_starter' }));
-  });
-
-  for (const planKey of ['growth', 'pro', 'elite'] as const) {
-    it(`${planKey} charges full price: never a coupon, even if one is passed`, () => {
-      const p = buildAvaCheckoutParams({ origin, planKey, priceId: `price_${planKey}`, firstMonthCouponId: 'coupon1' });
-      assert.equal(p.get('discounts[0][coupon]'), null);
+  for (const planKey of AVA_PLAN_KEYS) {
+    it(`${planKey} applies the first-month coupon, no trial, Executive Receptionist branding`, () => {
+      const p = buildAvaCheckoutParams({ origin, planKey, priceId: `price_${planKey}`, firstMonthCouponId: `coupon_${planKey}` });
+      assert.equal(p.get('mode'), 'subscription');
       assert.equal(p.get('line_items[0][price]'), `price_${planKey}`);
+      assert.equal(p.get('discounts[0][coupon]'), `coupon_${planKey}`);
+      assert.equal(p.get('subscription_data[trial_period_days]'), null);
+      assert.equal(p.get('branding_settings[display_name]'), 'Executive Receptionist');
+      assert.equal(p.get('metadata[product]'), 'ava');
       assert.equal(p.get('metadata[plan]'), planKey);
-      assert.equal(p.get('metadata[included_minutes]'), String(AVA_PLANS[planKey].minutes));
+      assert.equal(p.get('metadata[offer]'), 'first_month_1');
+      assert.equal(p.get('subscription_data[metadata][included_minutes]'), String(AVA_PLANS[planKey].minutes));
+      assert.match(p.get('success_url') || '', new RegExp(`onboarding/ava\\?session_id=\\{CHECKOUT_SESSION_ID\\}&plan=${planKey}`));
+    });
+
+    it(`refuses ${planKey} without its coupon so nobody is charged full price by mistake`, () => {
+      assert.throws(() => buildAvaCheckoutParams({ origin, planKey, priceId: `price_${planKey}` }));
     });
   }
 

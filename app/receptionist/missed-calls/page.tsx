@@ -15,7 +15,7 @@ const FAQS = [
   },
   {
     q: 'What does it cost to start?',
-    a: `${AVA_OFFER.starterIntro} Bigger plans are $197, $397 and $789 a month and are billed at full price from the first month. Setup is done with you by Cole.`
+    a: `${AVA_OFFER.starterIntro} After that, plans are $79, $197, $397 and $789 a month. Setup is done with you by Cole.`
   },
   {
     q: 'Does the browser demo become my business line?',
@@ -76,10 +76,10 @@ export default async function MissedCallsPage({ searchParams }: PageProps) {
         <p className={styles.stamp}>{ad.label} · AFTER HOURS</p>
         <h1>{ad.hook}</h1>
         <p className={styles.morning}>{ad.morning}</p>
-        <section className={styles.offer} aria-label="Price and trial">
+        <section className={styles.offer} aria-label="Price and first month">
           <p className={styles.price}>
             {AVA_PLANS.starter.firstMonthLabel}
-            <span> first month on Starter, then {AVA_PLANS.starter.monthlyLabel}/month</span>
+            <span> for month #1 on every plan, then the regular monthly price from {AVA_PLANS.starter.monthlyLabel}/month</span>
           </p>
           <TrialSignupLink className={styles.cta} href="/api/checkout?plan=starter" plan="starter">
             Start for $1
