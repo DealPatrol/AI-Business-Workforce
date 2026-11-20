@@ -1,4 +1,4 @@
-import { BOOKING_PROMPT_SECTION } from '@/lib/ava/booking/agent-tools';
+import { BOOKING_PROMPT_SECTION, MANAGE_BOOKING_PROMPT_SECTION } from '@/lib/ava/booking/agent-tools';
 import { pricingPromptSection, priceSheetDocName, priceSheetDocument, type PriceSheet } from '@/lib/ava/capabilities/price-sheet';
 import { CALLBACK_PROMPT_SECTION, PAGING_PROMPT_SECTION } from '@/lib/ava/capabilities/tools';
 import {
@@ -124,6 +124,8 @@ Your job is to answer callers in a friendly voice, collect the caller's name, ca
   } Never invent availability, prices, services, policies, or emergency guidance.
 ${booking ? `
 ${BOOKING_PROMPT_SECTION}
+
+${MANAGE_BOOKING_PROMPT_SECTION}
 
 ${CALLBACK_PROMPT_SECTION}
 

@@ -85,6 +85,61 @@ export function bookingToolConfigs(baseUrl: string, secret: ToolSecret) {
   ];
 }
 
+const callerPhoneProp = { type: 'string', description: 'The phone number the appointment was booked under, digits only.' };
+const bookingIdProp = { type: 'string', description: 'booking_id exactly as returned by find_booking.' };
+
+/** Reschedule/cancel-by-phone tools. Each one only touches bookings on this agent's calendar that match the caller's number. */
+export function manageBookingToolConfigs(baseUrl: string, secret: ToolSecret) {
+  const headers = toolHeaders(secret);
+  const tool = (name: string, path: string, description: string, required: string[], properties: Record<string, unknown>) => ({
+    tool_config: {
+      type: 'webhook',
+      name,
+      description,
+      response_timeout_secs: 10,
+      pre_tool_speech: 'force',
+      api_schema: {
+        url: `${baseUrl}${path}`,
+        method: 'POST',
+        request_headers: headers,
+        request_body_schema: { type: 'object', required, description: 'Caller details.', properties },
+      },
+    },
+  });
+  return [
+    tool(
+      'find_booking',
+      '/api/ava/find-booking',
+      'Look up the caller\'s upcoming appointments by the phone number it was booked under. Use when a caller wants to check, move, or cancel an appointment.',
+      ['caller_phone'],
+      { caller_phone: callerPhoneProp },
+    ),
+    tool(
+      'reschedule_appointment',
+      '/api/ava/reschedule',
+      'Move the caller\'s appointment. Call first without new_slot_start to get open windows, then again with the chosen new_slot_start copied exactly.',
+      ['booking_id', 'caller_phone'],
+      {
+        booking_id: bookingIdProp,
+        caller_phone: callerPhoneProp,
+        new_slot_start: { type: 'string', description: 'slot_start of the chosen new window, or empty to get options.' },
+        preferred_date: { type: 'string', description: 'YYYY-MM-DD the caller prefers, or empty.' },
+        part_of_day: { type: 'string', enum: ['morning', 'afternoon', 'any'], description: 'morning, afternoon, or any.' },
+      },
+    ),
+    tool(
+      'cancel_appointment',
+      '/api/ava/cancel-booking',
+      'Cancel the caller\'s appointment after they clearly confirm which one and that they want it canceled.',
+      ['booking_id', 'caller_phone'],
+      { booking_id: bookingIdProp, caller_phone: callerPhoneProp },
+    ),
+  ];
+}
+
+export const MANAGE_BOOKING_PROMPT_SECTION = `CHANGING AN APPOINTMENT
+If a caller wants to check, move, or cancel an appointment, ask for the phone number it was booked under and call find_booking. Read the window back and confirm it is the right one. To move it, call reschedule_appointment without new_slot_start, offer two of the windows it returns, then call it again with the chosen new_slot_start copied exactly, and read the new window back only after it says rescheduled. To cancel, confirm once ("Just to confirm, cancel your Tuesday 8 to 10 visit?") and only then call cancel_appointment. If nothing is found or a tool fails, take their details and say the team will call back about it. Never change an appointment for a number that does not match.`;
+
 export const BOOKING_PROMPT_SECTION = `BOOKING (the booking calendar is turned on)
 After you have the caller's name, callback number, service address and issue, and it is not an emergency you are transferring, offer to put them on the schedule. Ask if they prefer a day or morning versus afternoon, then call check_availability. Offer two windows using the "say" phrase, never more than three. When the caller picks one, call book_appointment with that window's slot_start copied exactly. If check_availability returned text_confirmations: true, and the caller already said yes to the VERBAL SMS CONSENT script on this call, pass text_ok true and do not re-ask a short "want a text?" question. If they have not yet been asked, read the full VERBAL SMS CONSENT script first and pass text_ok true only if they say yes. If they said no, pass text_ok false and do not mention texts again. Read the booked window back. Say the team will confirm before the visit. Never invent a time that check_availability did not return, never promise an exact arrival minute, and if the tools fail or nothing is open, take the details and say the team will call to schedule.`;
 
@@ -122,7 +177,7 @@ export async function attachBookingTools(agentId: string, secret: string, prompt
   const ref = await storeToolSecret(`ava_tool_secret_${agentId}`, secret);
   const created: string[] = [];
   const base = toolBaseUrl();
-  for (const config of [...bookingToolConfigs(base, ref), callbackToolConfig(base, ref), pageOnCallToolConfig(base, ref)]) {
+  for (const config of [...bookingToolConfigs(base, ref), ...manageBookingToolConfigs(base, ref), callbackToolConfig(base, ref), pageOnCallToolConfig(base, ref)]) {
     const tool = await elevenLabs('/convai/tools', { method: 'POST', body: JSON.stringify(config) });
     if (typeof tool.id !== 'string') throw new Error('ElevenLabs did not return a tool id.');
     created.push(tool.id);

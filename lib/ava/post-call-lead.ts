@@ -6,6 +6,7 @@ import { decidePostCallGate, planPostCallEffects } from '@/lib/ava/post-call-gat
 import { isJunkCallType, meterStoreCall } from '@/lib/ava/store-call-billing';
 import { findLeadByConversationId, insertLead } from '@/lib/leads/store';
 import { getSiteUrl } from '@/lib/site-url';
+import { callCompletedPayload, deliverWebhook, webhookForOnboarding } from '@/lib/ava/integrations/webhook';
 import { bookingLinks, bookingWindowLabel } from '@/lib/ava/booking/event';
 import { bookingForConversation, getCalendar } from '@/lib/ava/booking/store';
 import { SMS_SKIPPED_NO_CONSENT, decideOwnerSms } from '@/lib/ava/sms-consent';
@@ -478,6 +479,32 @@ export async function savePostCallLead(lead: ExtractedCallLead) {
     if (!sms.sent && !sms.skipped) {
       console.error('Executive Receptionist post-call SMS failed', sms.error);
     }
+  }
+
+  // Owner's Zapier/Make/custom webhook, if set. Never blocks or fails the lead.
+  const hook = await webhookForOnboarding(match.id);
+  if (hook) {
+    const delivery = await deliverWebhook(
+      hook.url,
+      hook.secret,
+      callCompletedPayload({
+        conversationId: lead.conversationId,
+        businessName: match.business_name,
+        callerName: lead.callerName,
+        callerPhone: lead.callerPhone,
+        email: lead.email,
+        address: lead.address,
+        need: lead.need,
+        urgency: lead.urgency,
+        callType: lead.callType,
+        summary: lead.summary,
+        durationSecs: lead.callDurationSecs ?? null,
+        booked: booked ? { window: booked.window, start_at: booked.booking.start_at, end_at: booked.booking.end_at } : null,
+        deskUrl: `${getSiteUrl()}/desk`,
+        occurredAt: new Date().toISOString(),
+      }),
+    );
+    if (!delivery.ok) console.error('Owner webhook delivery failed for %s: status %s', lead.conversationId, delivery.status);
   }
 
   const notifiedAt = new Date().toISOString();

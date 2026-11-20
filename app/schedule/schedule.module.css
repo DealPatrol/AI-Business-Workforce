@@ -1,0 +1,18 @@
+.page { min-height: 100vh; background: #f7f2eb; color: #1c140e; font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; padding: 40px 16px 80px; }
+.wrap { max-width: 720px; margin: 0 auto; background: #fff; border: 1px solid #e6ded3; border-radius: 24px; padding: clamp(20px, 4vw, 36px); }
+.wrap h1 { margin: 0 0 6px; font-family: Georgia, serif; font-weight: 500; font-size: clamp(28px, 4vw, 38px); }
+.lede { margin: 0 0 20px; color: #5b4f45; }
+.days { display: grid; gap: 14px; margin: 0 0 20px; }
+.day h2 { margin: 0 0 8px; font-size: 15px; color: #5b4f45; font-weight: 600; }
+.slots { display: flex; flex-wrap: wrap; gap: 8px; }
+.slot, .slotOn { padding: 10px 14px; border-radius: 999px; border: 1px solid #e6ded3; background: #fff; font: inherit; font-size: 14px; cursor: pointer; }
+.slotOn { background: #1c140e; color: #fff; border-color: #1c140e; }
+.form { display: grid; gap: 12px; }
+.form label { display: grid; gap: 4px; font-size: 14px; }
+.form input, .form textarea { min-height: 44px; padding: 8px 12px; border: 1px solid #d9cfc2; border-radius: 12px; font: inherit; }
+.btn { min-height: 48px; border-radius: 999px; border: 0; background: #1c140e; color: #fff; font: inherit; font-weight: 600; cursor: pointer; padding: 0 22px; }
+.btn:disabled { opacity: 0.6; }
+.ghost { min-height: 44px; border-radius: 999px; border: 1px solid #e6ded3; background: #fff; font: inherit; cursor: pointer; padding: 0 18px; }
+.err { color: #9b1c1c; font-weight: 600; }
+.ok { background: #eef5ef; border-radius: 16px; padding: 16px; }
+.fine { font-size: 12px; color: #5b4f45; }

@@ -1,4 +1,8 @@
 import type { Metadata } from 'next';
+import { publicBookingUrl } from '@/lib/ava/booking/public-booking';
+import { ExternalCalendarPanel } from '@/app/desk/external-calendar';
+import { WebhookPanel, WEBHOOK_STATUS } from '@/app/desk/webhook-panel';
+import { CarrierForwarding } from '@/components/ava/onboarding/CarrierForwarding';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { AVA_DEMO_LINE } from '@/lib/ava/demo-line';
@@ -20,10 +24,12 @@ import {
   type MetricData,
 } from '@/lib/desk/data';
 import { computeDeskMetrics, formatUsd, metricRange, METRIC_RANGES } from '@/lib/desk/metrics';
+import type { TransferRule } from '@/lib/ava/capabilities/transfer';
 import { readAgentGreeting } from '@/lib/desk/eleven';
 import { isEditableAgent, LEAD_STATUS_LABEL } from '@/lib/desk/settings';
 import { loadDeskSubscription, type DeskSubscription } from '@/lib/desk/stripe';
 import { deskUsage, minutesFromSeconds, usageWindow } from '@/lib/desk/usage';
+import { loadDeskTransferRules } from '@/lib/desk/transfer-store';
 import { DESK_TOOLS } from '@/lib/desk-tools';
 import type { ErLead } from '@/lib/leads/types';
 import { metadataTitle, pageSeo } from '@/lib/seo/pages';
@@ -33,6 +39,7 @@ import { DeskSettings } from './desk-settings';
 import { JobValueForm } from './job-value';
 import { LeadActions } from './lead-actions';
 import { SignOut } from './sign-out';
+import { TransferSettings } from './transfer-settings';
 import styles from './desk.module.css';
 
 export const dynamic = 'force-dynamic';
@@ -48,6 +55,18 @@ export const metadata: Metadata = {
 const TZ = 'America/Chicago';
 const CALLS_PAGE = 25;
 const CALLS_ALL = 200;
+
+const EXTCAL_STATUS: Record<string, string> = {
+  connected: 'Connected. Ava now skips times already booked in that calendar.',
+  disconnected: 'Disconnected. Ava no longer checks that calendar.',
+  rejected: 'That key did not work. Check you copied the whole key and try again.',
+  invalid: 'Pick Cal.com or Calendly and paste the full key.',
+  busy: 'Too many tries. Wait a few minutes and try again.',
+  setup: 'Finish setup before connecting a calendar.',
+  store: 'Calendar sync is for home-service plans.',
+  signin: 'Sign in again, then connect the calendar.',
+  failed: 'The calendar could not be connected right now. Try again in a minute.',
+};
 
 const GOOGLE_STATUS: Record<string, string> = {
   connected: 'Google Calendar connected. Ava now skips your busy times and adds each booking to your calendar.',
@@ -125,6 +144,8 @@ export default async function DeskPage({
 }) {
   const query = (await searchParams) ?? {};
   const googleStatus = typeof query.google === 'string' ? GOOGLE_STATUS[query.google] ?? '' : '';
+  const extcalStatus = typeof query.extcal === 'string' ? EXTCAL_STATUS[query.extcal] ?? '' : '';
+  const webhookStatus = typeof query.webhook === 'string' ? WEBHOOK_STATUS[query.webhook] ?? '' : '';
   const showAllCalls = query.calls === 'all';
   const rangeDays = metricRange(query.range);
   const leadFilter =
@@ -162,7 +183,7 @@ export default async function DeskPage({
   const greetingEditable = isEditableAgent(agentId);
   const isStore = customer?.plan === 'store';
 
-  const [leads, callData, usageData, booking, greeting, metricData] = await Promise.all([
+  const [leads, callData, usageData, booking, greeting, metricData, transferRules] = await Promise.all([
     loadDeskLeads(supabase).catch((error) => {
       note('leads')(error);
       return [] as ErLead[];
@@ -197,6 +218,12 @@ export default async function DeskPage({
           return null as MetricData | null;
         })
       : Promise.resolve(null as MetricData | null),
+    onboarding && !isStore
+      ? loadDeskTransferRules(onboarding.id).catch((error) => {
+          note('transfer numbers')(error);
+          return [] as TransferRule[];
+        })
+      : Promise.resolve([] as TransferRule[]),
   ]);
 
   const usage = deskUsage(planKey, minutesFromSeconds(usageData.seconds));
@@ -250,6 +277,7 @@ export default async function DeskPage({
         {onboarding && !isStore ? <a href="#calendar">Calendar</a> : null}
         <a href="#billing">Plan &amp; billing</a>
         <a href="#settings">Settings</a>
+        {onboarding && !isStore ? <a href="#transfers">Transfers</a> : null}
         <a href="#texts">Texts</a>
       </nav>
 
@@ -685,8 +713,32 @@ export default async function DeskPage({
               )}
             </div>
           ) : null}
+          {booking.calendar?.enabled && !booking.calendar.is_demo && publicBookingUrl(booking.calendar.id) ? (
+            <div className={styles.googleSync}>
+              <p>
+                <b>Your online booking page.</b> Share this link on your website or Google profile. Customers pick an open
+                window from the same calendar Ava books on and get an email with a reschedule or cancel link.
+              </p>
+              <a href={publicBookingUrl(booking.calendar.id)} target="_blank" rel="noopener noreferrer">
+                Open booking page
+              </a>
+              <p className={styles.help}>
+                <code>{publicBookingUrl(booking.calendar.id)}</code>
+              </p>
+            </div>
+          ) : null}
+          {extcalStatus ? (
+            <p className={styles.googleNote} role="status">
+              {extcalStatus}
+            </p>
+          ) : null}
+          {booking.calendar && !booking.calendar.is_demo ? (
+            <ExternalCalendarPanel calendarId={booking.calendar.id} />
+          ) : null}
         </section>
       ) : null}
+
+      {onboarding ? <WebhookPanel onboardingId={onboarding.id} status={webhookStatus} /> : null}
 
       <section id="billing" className={styles.panel} aria-labelledby="billing-title">
         <div className={styles.panelHead}>
@@ -787,6 +839,32 @@ export default async function DeskPage({
           <p className={styles.empty}>Settings open once your receptionist setup form is in.</p>
         )}
       </section>
+
+      {onboarding && !isStore ? (
+        <section id="transfers" className={styles.panel} aria-labelledby="transfers-title">
+          <div className={styles.panelHead}>
+            <h2 id="transfers-title">Live transfer and call forwarding</h2>
+          </div>
+          <div className={styles.transferLayout}>
+            <div>
+              <h3 className={styles.subhead}>Who Ava can hand a caller to</h3>
+              <p className={styles.muted}>
+                Up to three people, each with when Ava should use them. Ava only transfers when a rule fits; otherwise she
+                takes a message and you get the lead.
+              </p>
+              <TransferSettings rules={transferRules} live={greetingEditable} />
+            </div>
+            <div>
+              <h3 className={styles.subhead}>Ring your team first, then Ava</h3>
+              <p className={styles.muted}>
+                Forward only the calls you miss: your phone rings first, and Ava answers the rest. Pick your carrier for the
+                codes.
+              </p>
+              <CarrierForwarding avaNumber={onboarding.phone_number} />
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <section id="texts" className={styles.panel} aria-labelledby="texts-title">
         <div className={styles.panelHead}>

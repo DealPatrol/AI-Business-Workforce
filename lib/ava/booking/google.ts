@@ -249,6 +249,51 @@ export async function createGoogleEvent(
   return data.id;
 }
 
+/** Moves an Ava booking's Google event to its new window. Returns false when not linked. */
+export async function updateGoogleEvent(
+  link: GoogleCalendarLink,
+  eventId: string,
+  input: GoogleEventInput,
+  env: GoogleEnv = process.env as GoogleEnv,
+  fetchImpl: typeof fetch = fetch,
+) {
+  const config = googleCalendarConfig(env);
+  if (!config || !isGoogleLinked(link) || !eventId) return false;
+  const token = await accessToken(link, config, env, fetchImpl);
+  const calendarId = encodeURIComponent(link.google_calendar_id || 'primary');
+  const response = await fetchImpl(
+    `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events/${encodeURIComponent(eventId)}`,
+    {
+      method: 'PATCH',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(googleEventBody(input)),
+    },
+  );
+  if (!response.ok) throw new Error(`Google event update failed (${response.status}).`);
+  return true;
+}
+
+/** Deletes an Ava booking's Google event. A 404/410 (already gone) counts as done. */
+export async function deleteGoogleEvent(
+  link: GoogleCalendarLink,
+  eventId: string,
+  env: GoogleEnv = process.env as GoogleEnv,
+  fetchImpl: typeof fetch = fetch,
+) {
+  const config = googleCalendarConfig(env);
+  if (!config || !isGoogleLinked(link) || !eventId) return false;
+  const token = await accessToken(link, config, env, fetchImpl);
+  const calendarId = encodeURIComponent(link.google_calendar_id || 'primary');
+  const response = await fetchImpl(
+    `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events/${encodeURIComponent(eventId)}`,
+    { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } },
+  );
+  if (!response.ok && response.status !== 404 && response.status !== 410) {
+    throw new Error(`Google event delete failed (${response.status}).`);
+  }
+  return true;
+}
+
 /** Best-effort revoke when the owner disconnects. */
 export async function revokeGoogleToken(sealed: string, env: GoogleEnv = process.env as GoogleEnv, fetchImpl: typeof fetch = fetch) {
   try {
