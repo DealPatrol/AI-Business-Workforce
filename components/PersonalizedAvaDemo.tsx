@@ -511,7 +511,7 @@ function PersonalizedDemoContent({ prospect }: { prospect: Prospect }) {
 
       <section className="demo-pilot">
         <div>
-          <span className="demo-kicker">$1 FOR MONTH #1</span>
+          <span className="demo-kicker">STARTER: FIRST MONTH $1</span>
           <h2>Try Executive Receptionist for {prospect.companyName}</h2>
           <p>
             {AVA_OFFER.summary} · 

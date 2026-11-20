@@ -15,7 +15,7 @@ import styles from '@/app/receptionist/receptionist.module.css';
 
 const trustPoints = [
   'Prices published below',
-  '$1 for month #1, then from $79/mo',
+  'Starter: first month $1, then $79/mo',
   'Pro: 1,200 minutes, best value',
   'Try the live demo before you pay',
 ];
@@ -28,7 +28,7 @@ const defaultHero = {
 
 const storeTrustPoints = [
   'Prices published below',
-  '$1 for month #1, then from $79/mo',
+  'Starter: first month $1, then $79/mo',
   'Same four monthly plans as every business',
   'Try the live demo before you pay',
 ];

@@ -3,7 +3,7 @@ import { EXECUTIVE_RECEPTIONIST_ORIGIN, FRONT_PORCH_GROWTH_ORIGIN } from '@/lib/
 
 type Faq = { q: string; a: string };
 
-/** One Offer per monthly plan. The $1 first month is a once-only discount, so the listed price is the regular monthly price. */
+/** One Offer per monthly plan. Starter's $1 first month is a once-only discount, so the listed price is the monthly price. */
 export function avaOfferNodes(pageUrl: string) {
   return AVA_PLAN_KEYS.map((key) => {
     const plan = AVA_PLANS[key];
@@ -101,7 +101,7 @@ export function executiveReceptionistOrganization(extraAreaServed: Array<{ '@typ
     founder: FOUNDER,
     brand: BRANDS,
     description:
-      'Executive Receptionist is an AI phone receptionist, named Ava, for HVAC, plumbing, and other small businesses. Four monthly plans from $79 to $789. Every plan is $1 for month #1, then the regular monthly price.',
+      'Executive Receptionist is an AI phone receptionist, named Ava, for HVAC, plumbing, and other small businesses. Four monthly plans from $79 (Starter first month $1) to $789.',
     areaServed: [
       ...extraAreaServed,
       { '@type': 'State', name: 'Alabama' },
