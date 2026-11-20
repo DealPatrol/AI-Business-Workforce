@@ -64,11 +64,11 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for Plumbers',
     metaTitle: 'AI Receptionist & Answering Service for Plumbers',
     description:
-      'An AI answering service for plumbers that answers 24/7, takes the job details, and emails you the lead. $1 for month #1, then from $79/mo.',
+      'An AI answering service for plumbers that answers 24/7, takes the job details, and emails you the lead. Starter is $1 the first month, then $79/mo.',
     eyebrow: 'AI answering service for plumbers',
     h1: 'AI answering service for plumbers',
     directAnswer:
-      'Executive Receptionist is an AI answering service for plumbing shops. She answers the calls you forward, asks whether the water is shut off, takes the name, callback number, address, and what’s wrong, and emails you the lead. Plans are Starter $79 a month (100 minutes), Growth $197, Pro $397, and Elite $789. Every plan is $1 for month #1, then the regular monthly price. Hear her on the demo line at (256) 952-4935.',
+      'Executive Receptionist is an AI answering service for plumbing shops. She answers the calls you forward, asks whether the water is shut off, takes the name, callback number, address, and what’s wrong, and emails you the lead. Plans are Starter $79 a month (first month $1, 100 minutes), Growth $197, Pro $397, and Elite $789. Hear her on the demo line at (256) 952-4935.',
     audience: 'plumbing companies and owner-operators',
     lede:
       'A homeowner with water on the floor does not wait on voicemail. Executive Receptionist picks up, asks whether they can shut the water off, and emails you a lead you can dispatch or call back.',
@@ -105,7 +105,7 @@ export const AVA_GUIDES: AvaGuide[] = [
       },
       {
         q: 'How much does an AI answering service for plumbers cost?',
-        a: 'Four monthly plans: Starter $79 (100 minutes), Growth $197 (300 minutes), Pro $397 (1,200 minutes), Elite $789 (2,000 minutes). Every plan is $1 for month #1, then the regular monthly price. Month to month, cancel anytime. If you run past your minutes, Ava keeps answering and we reach out about a bigger plan.',
+        a: 'Four monthly plans: Starter $79 (100 minutes, first month $1), Growth $197 (300 minutes), Pro $397 (1,200 minutes), Elite $789 (2,000 minutes). Month to month, cancel anytime. If you run past your minutes, Ava keeps answering and we reach out about a bigger plan.',
       },
     ],
     related: ['ai-answering-service-for-hvac', 'ai-receptionist-for-hvac-and-plumbing-in-alabama', 'ai-receptionist-vs-answering-service'],
@@ -117,7 +117,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for HVAC',
     metaTitle: 'AI Receptionist & Answering Service for HVAC Companies',
     description:
-      'AI Receptionist answers HVAC calls 24/7, takes the job details, and emails you the lead. From $79/mo. $1 for month #1.',
+      'AI Receptionist answers HVAC calls 24/7, takes the job details, and emails you the lead. From $79/mo, first month $1.',
     eyebrow: 'AI answering service for HVAC',
     h1: 'Pick up the no-cool call while the tech is on another roof.',
     audience: 'HVAC contractors and heating and cooling teams',
@@ -164,7 +164,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for Roofers',
     metaTitle: 'AI Receptionist for Roofing Companies, Plans from $79/mo',
     description:
-      'AI Receptionist answers roofing calls 24/7, takes the job details, and emails you the lead. From $79/mo. $1 for month #1.',
+      'AI Receptionist answers roofing calls 24/7, takes the job details, and emails you the lead. From $79/mo, first month $1.',
     eyebrow: 'AI answering service for roofers',
     h1: 'Catch the storm calls that hit while every ladder is already up.',
     audience: 'roofing contractors and storm-response crews',
@@ -211,7 +211,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for Electricians',
     metaTitle: 'AI Receptionist & Answering Service for Electricians',
     description:
-      'AI Receptionist answers electrical calls and emails you the lead. She does not give electrical advice. From $79/mo. $1 for month #1.',
+      'AI Receptionist answers electrical calls and emails you the lead. She does not give electrical advice. From $79/mo, first month $1.',
     eyebrow: 'AI answering service for electricians',
     h1: 'Take the panel call without stepping off the ladder.',
     audience: 'electrical contractors',
@@ -258,7 +258,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for Landscapers',
     metaTitle: 'AI Receptionist for Landscapers, 24/7, Plans from $79/mo',
     description:
-      'AI Receptionist answers landscaping calls 24/7, takes the job details, and emails you the lead. From $79/mo. $1 for month #1.',
+      'AI Receptionist answers landscaping calls 24/7, takes the job details, and emails you the lead. From $79/mo, first month $1.',
     eyebrow: 'AI answering service for landscapers',
     h1: 'Stay on the install. Let Executive Receptionist take the next estimate call.',
     audience: 'landscaping companies',
@@ -305,7 +305,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for Lawn Care',
     metaTitle: 'AI Receptionist for Lawn Care Companies, Plans from $79/mo',
     description:
-      'AI Receptionist answers lawn care calls 24/7, takes the job details, and emails you the lead. From $79/mo. $1 for month #1.',
+      'AI Receptionist answers lawn care calls 24/7, takes the job details, and emails you the lead. From $79/mo, first month $1.',
     eyebrow: 'AI answering service for lawn care',
     h1: 'Take the new-route call without killing the mower.',
     audience: 'lawn care and mowing companies',
@@ -352,7 +352,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for Pest Control',
     metaTitle: 'AI Receptionist & Answering Service for Pest Control',
     description:
-      'AI Receptionist answers pest-control calls and emails you the lead. She does not recommend pesticides. From $79/mo. $1 for month #1.',
+      'AI Receptionist answers pest-control calls and emails you the lead. She does not recommend pesticides. From $79/mo, first month $1.',
     eyebrow: 'AI answering service for pest control',
     h1: 'Get the “there are wasps in the wall” call while you are under another house.',
     audience: 'pest control companies',
@@ -399,7 +399,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for Cleaning Companies',
     metaTitle: 'AI Receptionist & Answering Service for Cleaning Companies',
     description:
-      'AI Receptionist answers cleaning-company calls 24/7, takes the job details, and emails you the lead. From $79/mo. $1 for month #1.',
+      'AI Receptionist answers cleaning-company calls 24/7, takes the job details, and emails you the lead. From $79/mo, first month $1.',
     eyebrow: 'AI answering service for cleaning companies',
     h1: 'Book the walkthrough conversation while your team is in someone else’s house.',
     audience: 'residential and commercial cleaning companies',
@@ -446,7 +446,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for Painters',
     metaTitle: 'AI Receptionist & Answering Service for Painters',
     description:
-      'AI Receptionist answers painting calls 24/7, takes the job details, and emails you the lead. From $79/mo. $1 for month #1.',
+      'AI Receptionist answers painting calls 24/7, takes the job details, and emails you the lead. From $79/mo, first month $1.',
     eyebrow: 'AI answering service for painters',
     h1: 'Take the estimate call without climbing down.',
     audience: 'painting contractors',
@@ -493,7 +493,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for General Contractors',
     metaTitle: 'AI Receptionist & Answering Service for General Contractors',
     description:
-      'AI Receptionist answers contractor calls and emails you the lead. She does not produce a bid on the call. From $79/mo. $1 for month #1.',
+      'AI Receptionist answers contractor calls and emails you the lead. She does not produce a bid on the call. From $79/mo, first month $1.',
     eyebrow: 'AI answering service for general contractors',
     h1: 'Capture the remodel call while you are on a jobsite.',
     audience: 'general contractors and remodeling companies',
@@ -528,7 +528,7 @@ export const AVA_GUIDES: AvaGuide[] = [
       },
       {
         q: 'How is this different from a call center?',
-        a: 'A call center is a staffing service with its own price sheet. Executive Receptionist is software on a published plan: four monthly plans from $79 a month, $1 for month #1 on every plan, with included minutes listed on the plan.',
+        a: 'A call center is a staffing service with its own price sheet. Executive Receptionist is software on a published plan: four monthly plans from $79 a month (Starter’s first month is $1), with included minutes listed on the plan.',
       },
     ],
     related: ['ai-receptionist-vs-answering-service', 'ai-answering-service-for-painters', 'ai-answering-service-for-roofers'],
@@ -540,7 +540,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for Dentists',
     metaTitle: 'AI Receptionist & Answering Service for Dentists',
     description:
-      'AI Receptionist for dental front-desk overflow. Not a HIPAA product. Confirm what she may say before you forward the line. From $79/mo. $1 for month #1.',
+      'AI Receptionist for dental front-desk overflow. Not a HIPAA product. Confirm what she may say before you forward the line. From $79/mo, first month $1.',
     eyebrow: 'AI answering service for dental offices',
     h1: 'Cover the front desk when the chair is full and the phone is still ringing.',
     audience: 'dental practices and small clinics',
@@ -587,7 +587,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for Law Firms',
     metaTitle: 'AI Receptionist & Answering Service for Law Firms',
     description:
-      'AI Receptionist takes a name and number for a law-firm callback. She does not give legal advice or run a conflict check. From $79/mo. $1 for month #1.',
+      'AI Receptionist takes a name and number for a law-firm callback. She does not give legal advice or run a conflict check. From $79/mo, first month $1.',
     eyebrow: 'AI answering service for law firms',
     h1: 'Take the consult call when everyone is in a hearing.',
     audience: 'small law firms and solo practices',
@@ -634,7 +634,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for Garage Door Companies',
     metaTitle: 'AI Receptionist for Garage Door Companies',
     description:
-      'AI Receptionist answers garage-door calls and emails you the lead. She does not talk anyone through a spring repair. From $79/mo. $1 for month #1.',
+      'AI Receptionist answers garage-door calls and emails you the lead. She does not talk anyone through a spring repair. From $79/mo, first month $1.',
     eyebrow: 'AI answering service for garage door companies',
     h1: 'Answer the stuck-door call while you are on another driveway.',
     audience: 'garage door repair and installation companies',
@@ -728,7 +728,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for Pool Companies',
     metaTitle: 'AI Receptionist & Answering Service for Pool Companies',
     description:
-      'AI Receptionist answers pool-company calls and emails you the lead. She does not prescribe chemicals. From $79/mo. $1 for month #1.',
+      'AI Receptionist answers pool-company calls and emails you the lead. She does not prescribe chemicals. From $79/mo, first month $1.',
     eyebrow: 'AI answering service for pool companies',
     h1: 'Answer the green-pool call while you are in someone else’s equipment pit.',
     audience: 'pool service and repair companies',
@@ -775,7 +775,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for Fencing Companies',
     metaTitle: 'AI Receptionist & Answering Service for Fencing Companies',
     description:
-      'AI Receptionist answers fencing calls 24/7, takes the job details, and emails you the lead. From $79/mo. $1 for month #1.',
+      'AI Receptionist answers fencing calls 24/7, takes the job details, and emails you the lead. From $79/mo, first month $1.',
     eyebrow: 'AI answering service for fencing companies',
     h1: 'Log the fence estimate while the crew is setting posts.',
     audience: 'fence contractors',
@@ -854,7 +854,7 @@ export const AVA_GUIDES: AvaGuide[] = [
       },
       {
         q: 'What does setup cost?',
-        a: '$0 setup. Plans run from $79 a month (100 minutes) to $789 a month (2,000 minutes). Every plan is $1 for month #1, then the regular monthly price.',
+        a: '$0 setup. Plans run from $79 a month (100 minutes) to $789 a month (2,000 minutes). Starter’s first month is $1.',
       },
       {
         q: 'Can any small business use it?',
@@ -897,7 +897,7 @@ export const AVA_GUIDES: AvaGuide[] = [
       'A lead summary you can act on',
     ],
     roiTitle: 'Put the prices next to each other without a fake percentage',
-    roiBody: `Executive Receptionist’s prices are on this site: four monthly plans from $79 a month ($1 for month #1 on every plan), with 100, 300, 1,200, or 2,000 included minutes. Past your minutes she keeps answering and we reach out about a bigger plan, with no surprise per-minute charges. A human answering service will give you its own quote. A W-2 receptionist at the May 2024 median is about $3,103 a month in wages alone. ${exampleSentence({ missedPerWeek: 6, oneIn: 4, jobValue: 300, jobLabel: 'callback you would have made' })} Use the calculator so the missed-call side is yours.`,
+    roiBody: `Executive Receptionist’s prices are on this site: four monthly plans from $79 a month (Starter’s first month is $1), with 100, 300, 1,200, or 2,000 included minutes. Past your minutes she keeps answering and we reach out about a bigger plan, with no surprise per-minute charges. A human answering service will give you its own quote. A W-2 receptionist at the May 2024 median is about $3,103 a month in wages alone. ${exampleSentence({ missedPerWeek: 6, oneIn: 4, jobValue: 300, jobLabel: 'callback you would have made' })} Use the calculator so the missed-call side is yours.`,
     columns: [
       {
         title: 'Voicemail',
@@ -971,7 +971,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'Missed Call Cost Calculator',
     metaTitle: 'AI Receptionist Missed-Call Cost Calculator',
     description:
-      'Estimate missed-call value with your numbers. The calculator shows the formula. It is not a promise. From $79/mo. $1 for month #1.',
+      'Estimate missed-call value with your numbers. The calculator shows the formula. It is not a promise. From $79/mo, first month $1.',
     eyebrow: 'Missed call cost calculator',
     h1: 'What missed calls cost is the arithmetic you put in.',
     audience: 'owners who want a missed-call figure without a fake industry average',
@@ -1020,7 +1020,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'Missed-Call Answering for Home Services',
     metaTitle: 'AI Receptionist for Missed Home-Service Calls',
     description:
-      'Use an AI Receptionist on calls you do not answer: after hours, overflow, and weekends. She emails you the lead. From $79/mo. $1 for month #1.',
+      'Use an AI Receptionist on calls you do not answer: after hours, overflow, and weekends. She emails you the lead. From $79/mo, first month $1.',
     eyebrow: 'Missed-call answering for home services',
     h1: 'You do not have to give Executive Receptionist every call. Give her the ones you miss.',
     audience: 'home-service businesses that already answer some of the time',
@@ -1192,7 +1192,7 @@ export const AVA_GUIDES: AvaGuide[] = [
       },
       {
         city: 'Cullman',
-        body: 'Cullman is close to the operator’s Hanceville address. HVAC and plumbing shops here use the same four monthly plans, with $1 for month #1 on every plan, then the regular monthly price from $79 a month.',
+        body: 'Cullman is close to the operator’s Hanceville address. HVAC and plumbing shops here use the same four monthly plans, from $1 the first month on Starter, then $79 a month.',
       },
       {
         city: 'Decatur',
