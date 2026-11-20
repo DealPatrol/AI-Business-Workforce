@@ -16,11 +16,14 @@ import {
   loadDeskCalendar,
   loadDeskCalls,
   loadDeskLeads,
+  loadDeskMetricData,
   loadUsageSeconds,
   type DeskBooking,
   type DeskCalendar,
   type DeskCall,
+  type MetricData,
 } from '@/lib/desk/data';
+import { computeDeskMetrics, formatUsd, metricRange, METRIC_RANGES } from '@/lib/desk/metrics';
 import type { TransferRule } from '@/lib/ava/capabilities/transfer';
 import { readAgentGreeting } from '@/lib/desk/eleven';
 import { isEditableAgent, LEAD_STATUS_LABEL } from '@/lib/desk/settings';
@@ -33,6 +36,7 @@ import { metadataTitle, pageSeo } from '@/lib/seo/pages';
 import { createClient } from '@/lib/supabase/server';
 import { BookingSettings } from './booking-settings';
 import { DeskSettings } from './desk-settings';
+import { JobValueForm } from './job-value';
 import { LeadActions } from './lead-actions';
 import { SignOut } from './sign-out';
 import { TransferSettings } from './transfer-settings';
@@ -143,6 +147,7 @@ export default async function DeskPage({
   const extcalStatus = typeof query.extcal === 'string' ? EXTCAL_STATUS[query.extcal] ?? '' : '';
   const webhookStatus = typeof query.webhook === 'string' ? WEBHOOK_STATUS[query.webhook] ?? '' : '';
   const showAllCalls = query.calls === 'all';
+  const rangeDays = metricRange(query.range);
   const leadFilter =
     typeof query.leads === 'string' && LEAD_FILTERS.some((f) => f.key === query.leads) ? query.leads : 'all';
   const googleSyncAvailable = Boolean(googleCalendarConfig());
@@ -178,7 +183,7 @@ export default async function DeskPage({
   const greetingEditable = isEditableAgent(agentId);
   const isStore = customer?.plan === 'store';
 
-  const [leads, callData, usageData, booking, greeting, transferRules] = await Promise.all([
+  const [leads, callData, usageData, booking, greeting, metricData, transferRules] = await Promise.all([
     loadDeskLeads(supabase).catch((error) => {
       note('leads')(error);
       return [] as ErLead[];
@@ -207,6 +212,12 @@ export default async function DeskPage({
         })
       : Promise.resolve({ calendar: null as DeskCalendar | null, bookings: [] as DeskBooking[] }),
     greetingEditable ? readAgentGreeting(agentId) : Promise.resolve(''),
+    onboarding
+      ? loadDeskMetricData(supabase, onboarding.id, new Date(now.getTime() - rangeDays * 86_400_000)).catch((error) => {
+          note('results')(error);
+          return null as MetricData | null;
+        })
+      : Promise.resolve(null as MetricData | null),
     onboarding && !isStore
       ? loadDeskTransferRules(onboarding.id).catch((error) => {
           note('transfer numbers')(error);
@@ -234,6 +245,11 @@ export default async function DeskPage({
     bookingDays.set(day, [...(bookingDays.get(day) ?? []), row]);
   }
 
+  const metrics = metricData
+    ? computeDeskMetrics({ ...metricData, leads, rangeDays, now })
+    : null;
+  const barMax = Math.max(1, ...(metrics?.weeks.map((w) => w.calls) ?? [1]));
+
   const subscriptionStatus = subscription?.status || customer?.subscription_status || '';
   const renewal = renewalLine(subscription, customer?.subscription_status);
   const windowLabel =
@@ -255,6 +271,7 @@ export default async function DeskPage({
 
       <nav className={styles.sectionNav} aria-label="Desk sections">
         <a href="#overview">Overview</a>
+        {onboarding ? <a href="#results">Results</a> : null}
         <a href="#calls">Calls</a>
         <a href="#leads">Leads</a>
         {onboarding && !isStore ? <a href="#calendar">Calendar</a> : null}
@@ -302,6 +319,71 @@ export default async function DeskPage({
           <span>{plan ? `of ${plan.minutes.toLocaleString('en-US')} on ${plan.label}` : 'No plan yet'}</span>
         </article>
       </section>
+
+      {onboarding && metrics ? (
+        <section id="results" className={styles.panel} aria-labelledby="results-title">
+          <div className={styles.panelHead}>
+            <h2 id="results-title">Results</h2>
+            <nav className={styles.rangeTabs} aria-label="Results period">
+              {METRIC_RANGES.map((days) => (
+                <a key={days} href={`?range=${days}#results`} aria-current={days === rangeDays ? 'page' : undefined}>
+                  {days} days
+                </a>
+              ))}
+            </nav>
+          </div>
+          <div className={styles.stats}>
+            <article>
+              <small>Calls answered</small>
+              <b>{metrics.calls}</b>
+              <span>Last {rangeDays} days</span>
+            </article>
+            <article>
+              <small>Bookings</small>
+              <b>{metrics.appointments + metrics.won}</b>
+              <span>
+                {metrics.appointments} booked by Ava · {metrics.won} marked Won
+              </span>
+            </article>
+            <article>
+              <small>Call-to-booking rate</small>
+              <b>{metrics.rate === null ? '—' : `${Math.round(metrics.rate * 100)}%`}</b>
+              <span>
+                {metrics.bookedCalls} of {metrics.calls} calls booked or won
+              </span>
+            </article>
+            <article>
+              <small>Estimated revenue</small>
+              <b>{metrics.revenueCents === null ? '—' : formatUsd(metrics.revenueCents)}</b>
+              <span>
+                {metrics.avgJobValueCents === null
+                  ? 'Set your average job value below'
+                  : `Bookings × ${formatUsd(metrics.avgJobValueCents)} average job`}
+              </span>
+            </article>
+          </div>
+          {metrics.weeks.length > 1 ? (
+            <figure className={styles.weekChart}>
+              <figcaption className={styles.muted}>Calls per week (darker part: booked or won)</figcaption>
+              <ol>
+                {metrics.weeks.map((week) => (
+                  <li key={week.start} title={`${week.calls} calls, ${week.booked} booked`}>
+                    <span className={styles.weekBar} style={{ height: `${Math.round((week.calls / barMax) * 100)}%` }}>
+                      <span style={{ height: week.calls ? `${Math.round((week.booked / week.calls) * 100)}%` : '0%' }} />
+                    </span>
+                    <small>{new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', timeZone: TZ }).format(new Date(week.start))}</small>
+                  </li>
+                ))}
+              </ol>
+            </figure>
+          ) : null}
+          <JobValueForm cents={metrics.avgJobValueCents} />
+          <p className={styles.help}>
+            Estimated revenue is bookings in this period times the average job value you set. It is an estimate, not
+            what you billed. The leads behind the Won count are your 200 most recent.
+          </p>
+        </section>
+      ) : null}
 
       <div className={styles.grid}>
         <section className={styles.panel} aria-labelledby="decide">
