@@ -9,7 +9,7 @@ export const AVA_PILOT_OFFER = {
   ctaCall: 'Call Executive Receptionist',
 } as const;
 
-/** Plan checkout: $1 for month #1, then the regular monthly price. Default link is Starter. */
+/** Starter checkout: $1 first month, then $79/month. */
 export const AVA_PILOT_PAYMENT_LINK = '/buy/starter';
 
 export const SALES_WEEK_TARGETS = {

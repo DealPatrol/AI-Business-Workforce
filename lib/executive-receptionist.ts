@@ -138,7 +138,7 @@ export const EXECUTIVE_FAQS = [
   },
   {
     q: 'What does it cost?',
-    a: 'Plans from $79 a month. Every plan is $1 for month #1, then the regular monthly price. Setup is in person in Gadsden.',
+    a: 'Plans from $79 a month; Starter’s first month is $1. Setup is in person in Gadsden.',
   },
   {
     q: 'Can I hear a demo for my kind of shop?',

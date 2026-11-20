@@ -21,7 +21,7 @@ export function avaPlanForPriceId(priceId: string | null | undefined, env: NodeJ
   return null;
 }
 
-/** Once-only first-month coupon for this plan, from env. */
+/** Starter's once-only first-month coupon from env. */
 export function avaFirstMonthCouponId(planKey: AvaPlanKey, env: NodeJS.ProcessEnv = process.env) {
   const name = AVA_PLANS[planKey].couponEnv;
   return name ? readStripeCouponId(env[name]) : '';
