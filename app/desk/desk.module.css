@@ -249,3 +249,20 @@ button.button { border: 0; cursor: pointer; font: inherit; font-weight: 850; }
 @media (min-width: 901px) {
   .install { display: none; }
 }
+
+/* Results */
+.rangeTabs { display: flex; gap: 6px; }
+.rangeTabs a { border: 1px solid #cfd8cf; border-radius: 999px; padding: 4px 12px; font-size: 13px; font-weight: 700; color: #205c39; text-decoration: none; }
+.rangeTabs a[aria-current='page'] { background: #205c39; border-color: #205c39; color: #fff; }
+.weekChart { margin: 18px 0 6px; }
+.weekChart ol { list-style: none; margin: 8px 0 0; padding: 0; display: flex; gap: 8px; align-items: flex-end; height: 120px; }
+.weekChart li { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; height: 100%; min-width: 0; }
+.weekChart small { font-size: 11px; color: #6b776f; white-space: nowrap; }
+.weekBar { width: 100%; max-width: 44px; min-height: 2px; background: #cfe3d4; border-radius: 6px 6px 0 0; display: flex; align-items: flex-end; overflow: hidden; }
+.weekBar span { display: block; width: 100%; background: #205c39; }
+.jobValue { display: grid; gap: 6px; margin-top: 14px; max-width: 360px; font-size: 14px; }
+.jobValue label { font-weight: 800; }
+.jobValue div { display: flex; gap: 8px; align-items: center; }
+.jobValue input { flex: 1; border: 1px solid #cfd8cf; border-radius: 10px; padding: 8px 10px; font: inherit; font-size: 16px; min-height: 42px; }
+.jobValue button { border: 1px solid #205c39; border-radius: 10px; background: #205c39; color: #fff; padding: 9px 14px; font: inherit; font-size: 14px; font-weight: 800; cursor: pointer; }
+.jobValue button:disabled { opacity: 0.6; cursor: wait; }

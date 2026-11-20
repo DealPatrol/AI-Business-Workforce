@@ -198,3 +198,48 @@ export async function loadDeskCalendar(supabase: SupabaseClient, onboardingId: s
   if (bookingError) fail('bookings', bookingError.message);
   return { calendar: calendar as DeskCalendar, bookings: (bookings ?? []) as DeskBooking[] };
 }
+
+export type MetricData = {
+  calls: Array<{ conversation_id: string | null; created_at: string }>;
+  bookings: Array<{ conversation_id: string | null; created_at: string; status: string | null; kind?: string | null; is_demo: boolean | null }>;
+  avgJobValueCents: number | null;
+};
+
+/**
+ * Rows behind the Desk results panel since `since`: call times, Ava's bookings, and the owner's average
+ * job value. Works before the kind / avg_job_value_cents columns exist (callbacks then count as visits,
+ * and the job value reads as unset).
+ */
+export async function loadDeskMetricData(supabase: SupabaseClient, onboardingId: string, since: Date): Promise<MetricData> {
+  const sinceIso = since.toISOString();
+  const [callsRes, calendarRes, valueRes] = await Promise.all([
+    supabase
+      .from('ava_call_leads')
+      .select('conversation_id, created_at')
+      .eq('onboarding_id', onboardingId)
+      .gte('created_at', sinceIso)
+      .limit(5000),
+    supabase.from('ava_calendars').select('id').eq('onboarding_id', onboardingId).maybeSingle(),
+    supabase.from('ava_onboardings').select('avg_job_value_cents').eq('id', onboardingId).maybeSingle(),
+  ]);
+  if (callsRes.error) fail('call counts', callsRes.error.message);
+  if (calendarRes.error) fail('the calendar', calendarRes.error.message);
+
+  let bookings: MetricData['bookings'] = [];
+  const calendarId = (calendarRes.data as { id: string } | null)?.id;
+  if (calendarId) {
+    const query = (columns: string) =>
+      supabase.from('ava_bookings').select(columns).eq('calendar_id', calendarId).gte('created_at', sinceIso).limit(5000);
+    let res = await query('conversation_id, created_at, status, kind, is_demo');
+    if (res.error) res = await query('conversation_id, created_at, status, is_demo');
+    if (res.error) fail('bookings', res.error.message);
+    bookings = (res.data ?? []) as unknown as MetricData['bookings'];
+  }
+
+  const raw = valueRes.error ? null : (valueRes.data as { avg_job_value_cents?: number | null } | null)?.avg_job_value_cents;
+  return {
+    calls: (callsRes.data ?? []) as MetricData['calls'],
+    bookings,
+    avgJobValueCents: typeof raw === 'number' ? raw : null,
+  };
+}
