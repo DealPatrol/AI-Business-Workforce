@@ -123,6 +123,14 @@
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
+.forWho {
+  margin: 16px 0 0;
+  color: #24352b;
+  font-size: 17px;
+  line-height: 1.55;
+  font-weight: 650;
+}
+
 .sampleTag {
   display: inline-block;
   margin-bottom: 8px;
@@ -133,6 +141,18 @@
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.06em;
+}
+
+.sampleTagReal {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #eef6f0;
+  color: #205c39;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
 }
 
 .offers {
