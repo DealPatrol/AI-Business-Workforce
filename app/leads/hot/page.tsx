@@ -108,7 +108,7 @@ export default function HotLeadsPage() {
           <BuyButton />
         </div>
         <p className={styles.fine}>
-          One-time payment. No subscription. Mixed industries, mostly Alabama and Tennessee businesses (11 states total) — not a list for one niche or one town.
+          One-time payment. No subscription. Mixed industries, mostly Southeast US businesses (largely Alabama and Tennessee) — not a list for one niche or one town.
         </p>
       </section>
 
