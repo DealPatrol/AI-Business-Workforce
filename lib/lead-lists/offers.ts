@@ -45,15 +45,37 @@ export const SAMPLE_ROWS = [
 ] as const;
 
 
-/** Fictional Hot Leads sample rows. The landing page labels them as example format. Emails are masked. */
+/**
+ * Mask a business email for the public sample table: keep the first two
+ * characters of the local part, then bullets, then the real domain.
+ * Example: office@domain.com → of•••@domain.com
+ */
+export function maskLeadEmail(email: string): string {
+  const at = email.indexOf('@');
+  if (at <= 0) return email;
+  const local = email.slice(0, at);
+  const domain = email.slice(at + 1);
+  const keep = local.slice(0, Math.min(2, local.length));
+  return `${keep}•••@${domain}`;
+}
+
+/**
+ * Ten real rows from the same 500-row Hot Leads list served after a paid
+ * checkout (Vercel env HOT_LEADS_500_CSV). Emails are masked. The full file
+ * is not in this repo. Chosen to show different cities and industries from
+ * the list; emails never appear unmasked here.
+ */
 export const HOT_LEADS_SAMPLE_ROWS = [
-  { business_name: 'Example Dental Studio', website: 'dental.example.com', email: 'office@exa•••.com', city: 'Huntsville', state: 'AL' },
-  { business_name: 'Sample Roofing Co.', website: 'roofing.example.net', email: 'info@exa•••.net', city: 'Macon', state: 'GA' },
-  { business_name: 'Demo Law Group', website: 'law.example.org', email: 'contact@exa•••.org', city: 'Knoxville', state: 'TN' },
-  { business_name: 'Placeholder HVAC LLC', website: 'hvac.example.com', email: 'service@exa•••.com', city: 'Tampa', state: 'FL' },
-  { business_name: 'Fictional Auto Repair', website: 'auto.example.net', email: 'shop@exa•••.net', city: 'Austin', state: 'TX' },
-  { business_name: 'Mockup Salon Studio', website: 'salon.example.org', email: 'hello@exa•••.org', city: 'Raleigh', state: 'NC' },
-  { business_name: 'Sample Landscaping Co.', website: 'landscape.example.com', email: 'info@exa•••.com', city: 'Lexington', state: 'KY' },
+  { business_name: 'Air Zone LLC', website: 'airzonellc.com', email: 'pa•••@gmail.com', city: 'Alabaster', state: 'AL' },
+  { business_name: 'Accel Auto Repair', website: 'accelautorepair.net', email: 'na•••@accelautorepair.net', city: 'Birmingham', state: 'AL' },
+  { business_name: 'J&L Plumbing', website: 'jlplumbingservices.com', email: 'in•••@jlplumbingservices.com', city: 'Cullman', state: 'AL' },
+  { business_name: "AJ's Septic Service", website: 'ajsss.com', email: 'aj•••@gmail.com', city: 'Gadsden', state: 'AL' },
+  { business_name: 'THE REFINERY', website: 'therefinery.clinic', email: 'in•••@therefinery.clinic', city: 'Guntersville', state: 'AL' },
+  { business_name: 'Homes and Apartments for Rent - Athens, AL - Near Huntsville', website: 'c21jandlrealty.com', email: 'ce•••@gmail.com', city: 'Huntsville', state: 'AL' },
+  { business_name: 'Rastore Day Spa', website: 'rastoredayspa.com', email: 'ra•••@gmail.com', city: 'Jasper', state: 'AL' },
+  { business_name: 'Southside Family Dentistry', website: 'southsidefamilydentistry.com', email: 'so•••@gmail.com', city: 'Southside', state: 'AL' },
+  { business_name: 'Scatterridge Lodge', website: 'scatterridgelodge.com', email: 'sc•••@gmail.com', city: 'Gatlinburg', state: 'TN' },
+  { business_name: 'Rodeo Mechanical Bulls (RMB)', website: 'rodeomechanicalbulls.com', email: 'ro•••@gmail.com', city: 'Austin', state: 'TX' },
 ] as const;
 
 export const LEAD_LIST_SUPPORT_EMAIL = 'hello@frontporchgrowth.com';

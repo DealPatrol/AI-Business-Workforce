@@ -100,15 +100,21 @@ export default function HotLeadsPage() {
           business name, website, city, state, and a business email where one is available. No phone numbers. If we
           can’t deliver the file, you get a full refund.
         </p>
+        <p className={styles.forWho}>
+          Built for web designers, SEO and marketing freelancers, agencies, and B2B sales reps doing cold email
+          outreach.
+        </p>
         <div className={styles.ctaRow}>
           <BuyButton />
         </div>
-        <p className={styles.fine}>One-time payment. No subscription.</p>
+        <p className={styles.fine}>
+          One-time payment. No subscription. Mixed industries across the US — not a list for one niche or one town.
+        </p>
       </section>
 
       <section className={styles.block}>
         <h2>What’s in every row</h2>
-        <span className={styles.sampleTag}>EXAMPLE ROWS · FICTIONAL BUSINESSES</span>
+        <span className={styles.sampleTagReal}>Free sample: 10 real rows from the list</span>
         <div className={styles.tableWrap}>
           <table className={styles.table}>
             <thead>
@@ -132,8 +138,8 @@ export default function HotLeadsPage() {
           </table>
         </div>
         <p className={styles.fine}>
-          These example rows are made up to show the layout. Your file has 500 real businesses in this format. Emails
-          are included where we can find them.
+          These are 10 real rows from the 500-lead file. Emails are partly hidden. Your download includes the full
+          addresses, plus 490 more businesses in this format.
         </p>
         <div className={styles.ctaRow}>
           <BuyButton />
