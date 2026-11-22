@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { HotLeadsPurchaseTracking } from '@/components/analytics/HotLeadsPurchaseTracking';
 import { SuiteShell } from '@/components/suite/SuiteShell';
 import { loadHotThanks } from '@/lib/lead-lists/hot-thanks';
 import { LEAD_LIST_SUPPORT_EMAIL } from '@/lib/lead-lists/offers';
@@ -30,6 +31,7 @@ export default async function HotLeadsThanksPage({ searchParams }: PageProps) {
     <SuiteShell>
       {view.showDownload ? (
         <>
+          <HotLeadsPurchaseTracking sessionId={view.sessionId} />
           <section className={styles.hero}>
             <span className={styles.eyebrow}>ORDER CONFIRMED</span>
             <h1>Your 500 Hot Leads are ready</h1>
