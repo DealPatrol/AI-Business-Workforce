@@ -229,9 +229,9 @@ const PAGES = {
     receptionist: false,
   },
   '/ai-search-visibility': {
-    title: 'AI Search Visibility for Roofers | Front Porch Growth',
+    title: 'AI Search Visibility for Alabama Trades | Front Porch Growth',
     description:
-      'Get your roofing company recommended in ChatGPT, Google AI Overviews and Perplexity. Free Competitor Gap Report, $497 Sprint, plans from $1,500/mo.',
+      'Get your HVAC, plumbing, electrical or roofing shop named in ChatGPT, Google AI Overviews and Perplexity. Free Gap Report, $497 Sprint, from $1,500/mo.',
     titleMode: 'absolute',
     receptionist: false,
   },
