@@ -4,8 +4,8 @@ import { ErBreadcrumbs, ErShell, erStyles as s } from '@/components/er/ErSite';
 import { breadcrumbNode, executiveReceptionistOrganization, faqNode, jsonLdGraph } from '@/lib/ava/structured-data';
 import { AVA_FACTS, COMPETITORS, PRICES_CHECKED_LABEL } from '@/lib/er/competitors';
 import { requestHost } from '@/lib/seo/request-host';
-import { EXECUTIVE_RECEPTIONIST_ORIGIN, isFrontPorchGrowthHost } from '@/lib/site-url';
-import { FpgComparePage, fpgCompareMetadata } from './fpg-compare';
+import { FpgCompareHub } from '@/components/fpg/CompareHub';
+import { EXECUTIVE_RECEPTIONIST_ORIGIN, isExecutiveReceptionistHost } from '@/lib/site-url';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,8 +24,23 @@ const FAQS = [
   },
 ];
 
+const FPG_COMPARE_TITLE = 'Compare Front Porch Growth: Postcards, SEO, Reviews';
+const FPG_COMPARE_DESCRIPTION =
+  'Front Porch Growth next to Local SEO Bot, BrightLocal, PostcardMania, USPS EDDM, AEO Engine, Otterly.ai and NiceJob. Prices from each vendor’s page.';
+
+/**
+ * Domain check: executivereceptionist.com gets the Ava comparison hub; frontporchgrowth.com
+ * (and previews) get the Front Porch Growth compare hub from components/fpg/CompareHub.
+ */
 export async function generateMetadata(): Promise<Metadata> {
-  if (isFrontPorchGrowthHost(await requestHost())) return fpgCompareMetadata;
+  if (!isExecutiveReceptionistHost(await requestHost())) {
+    return {
+      title: { absolute: FPG_COMPARE_TITLE },
+      description: FPG_COMPARE_DESCRIPTION,
+      alternates: { canonical: '/compare' },
+      openGraph: { images: ['/og-default.png'], title: FPG_COMPARE_TITLE, description: FPG_COMPARE_DESCRIPTION, url: '/compare', siteName: 'Front Porch Growth', type: 'website' },
+    };
+  }
   return {
     title: { absolute: title },
     description,
@@ -35,8 +50,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ComparePage() {
-  // frontporchgrowth.com keeps its software price list. Every other host gets the Ava comparison hub.
-  if (isFrontPorchGrowthHost(await requestHost())) return <FpgComparePage />;
+  if (!isExecutiveReceptionistHost(await requestHost())) return <FpgCompareHub />;
   const jsonLd = jsonLdGraph([
     executiveReceptionistOrganization(),
     breadcrumbNode([

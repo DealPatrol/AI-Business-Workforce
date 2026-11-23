@@ -11,6 +11,7 @@ import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 import { EXECUTIVE_RECEPTIONIST_ORIGIN } from '@/lib/site-url';
 import HvacContactForm from './contact-form';
 import './hvac.css';
+import { ErDemoBar, ErLinkColumns } from '@/components/er/ErSite';
 
 const seo = pageSeo('/hvac');
 const title = renderedTitle(seo);
@@ -132,6 +133,7 @@ const structured = {
 export default function HvacPage() {
   return (
     <main className="hvac-page">
+      <ErDemoBar />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structured).replace(/</g, '\\u003c') }} />
       <nav className="hvac-nav">
         <Link href="/" className="hvac-brand">
@@ -273,6 +275,7 @@ export default function HvacPage() {
         <HvacContactForm />
       </section>
 
+      <ErLinkColumns />
       <footer className="hvac-footer">
         <span>Executive Receptionist · Operated by Cole Collins DBA Executive Receptionist, Hanceville, AL</span>
         <Link href="/">Home</Link>

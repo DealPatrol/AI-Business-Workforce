@@ -70,6 +70,17 @@ export function ErFooterColumns({ className }: { className?: string }) {
   );
 }
 
+/** Link columns for templates that keep their own footer (hvac, industry pages, blog). */
+export function ErLinkColumns() {
+  return (
+    <section className={`${styles.shell} ${styles.footer}`} aria-label="Site links">
+      <div className={styles.wrap}>
+        <ErFooterColumns />
+      </div>
+    </section>
+  );
+}
+
 export function ErSiteFooter() {
   return (
     <footer className={`${styles.shell} ${styles.footer}`}>

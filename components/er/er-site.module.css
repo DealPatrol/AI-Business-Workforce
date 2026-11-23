@@ -16,7 +16,7 @@
 .shell a { color: inherit; }
 .wrap { width: min(1160px, calc(100% - 40px)); margin: 0 auto; }
 
-.demoBar { background: var(--ink); color: var(--cream); font-size: 14px; }
+.demoBar { background: var(--ink, #1c140e); color: var(--cream, #f7f2eb); font-size: 14px; }
 .demoBarInner { width: min(1160px, calc(100% - 40px)); margin: 0 auto; display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: center; justify-content: center; min-height: 40px; padding: 6px 0; text-align: center; }
 .demoBar a { color: #fff; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 .demoBar small { color: rgba(247, 242, 235, 0.75); font-size: 13px; }

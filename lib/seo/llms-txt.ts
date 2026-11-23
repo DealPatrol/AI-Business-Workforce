@@ -1,5 +1,7 @@
 import { isExecutiveReceptionistHost } from '@/lib/site-url';
 import { SISTER_SITES } from '@/lib/seo/sister-sites';
+import { fpgLlmsSection } from '@/lib/fpg/llms';
+import { erMarkdownPaths } from '@/lib/er/markdown';
 
 const SHARED_FACTS = `Cole Collins, based in Hanceville, Alabama, operates Executive Receptionist and Front Porch Growth as sister brands, plus other small sites listed at the end of this file. Phone (256) 595-3354. Demo line for the AI receptionist: (256) 952-4935. Inbound only: Ava does not make cold calls or send cold texts.
 
@@ -8,7 +10,7 @@ const SHARED_FACTS = `Cole Collins, based in Hanceville, Alabama, operates Execu
 - Ava is the receptionist's name. Executive Receptionist is the product and business.
 - Ava answers forwarded business calls 24/7, asks the questions the owner approves (name, callback number, address, what they need, how urgent), and emails the lead.
 - The shop keeps its existing number and forwards missed or after-hours calls.
-- Channels today: inbound phone calls and a website chat box from one agent. Owner text alerts and booking SMS stay off until the owner opts in after Twilio approval.
+- Channels today: inbound phone calls and a website chat box from one agent. Text alerts and booking texts are not live; they stay off until phone-carrier (10DLC) registration is approved.
 - Ava does not quote prices the owner has not approved, and does not give technical, legal, or medical advice. In-call booking is optional and only offers windows the owner has set.
 - For HVAC, plumbing, and other home-service shops, plus dentists, law firms, med spas, and similar offices.
 - Try it: call (256) 952-4935. She answers as Porchlight Heating & Air, a made-up HVAC company. Browser demo: https://executivereceptionist.com/receptionist-demo
@@ -17,6 +19,7 @@ const SHARED_FACTS = `Cole Collins, based in Hanceville, Alabama, operates Execu
 - Plumbing answering guide: https://executivereceptionist.com/ava/ai-answering-service-for-plumbers
 - After-hours HVAC calls: https://executivereceptionist.com/blog/after-hours-hvac-calls
 - After-hours plumbing calls: https://executivereceptionist.com/blog/after-hours-plumbing-calls
+- Industries: https://executivereceptionist.com/industries · Comparisons: https://executivereceptionist.com/compare · Free tools: https://executivereceptionist.com/tools · Call scripts: https://executivereceptionist.com/templates
 
 ## Front Porch Growth
 - Home: https://frontporchgrowth.com/
@@ -44,6 +47,11 @@ function sisterList() {
   return `## Other sites from the same maker\n${lines.join('\n')}\n`;
 }
 
+function erPageCopies() {
+  const lines = erMarkdownPaths().map((path) => `- https://executivereceptionist.com${path}.md`);
+  return `## Markdown copies of Executive Receptionist pages\n${lines.join('\n')}\n`;
+}
+
 function contact() {
   return `## Contact
 - Executive Receptionist: https://executivereceptionist.com
@@ -53,8 +61,10 @@ function contact() {
 }
 
 export function llmsTxtForHost(hostHeader: string | null | undefined) {
-  const intro = isExecutiveReceptionistHost(hostHeader) ? ER_INTRO : FPG_INTRO;
-  return `${intro}\n${SHARED_FACTS}\n${sisterList()}\n${contact()}`;
+  const er = isExecutiveReceptionistHost(hostHeader);
+  const intro = er ? ER_INTRO : FPG_INTRO;
+  const fpgPages = er ? `${erPageCopies()}\n` : `${fpgLlmsSection()}\n`;
+  return `${intro}\n${SHARED_FACTS}\n${fpgPages}${sisterList()}\n${contact()}`;
 }
 
 export function llmsFullTxtForHost(hostHeader: string | null | undefined) {

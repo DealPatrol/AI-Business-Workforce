@@ -6,6 +6,17 @@ import { EXECUTIVE_RECEPTIONIST_ORIGIN } from './lib/site-url';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  async rewrites() {
+    // Markdown copies of Executive Receptionist pages for AI assistants, listed in llms.txt.
+    return {
+      beforeFiles: [],
+      afterFiles: [
+        { source: '/:section(compare|industries|tools|templates).md', destination: '/md/:section' },
+        { source: '/:section(compare|tools|templates|ava)/:slug.md', destination: '/md/:section/:slug' },
+      ],
+      fallback: [],
+    };
+  },
   async redirects() {
     // Receptionist pages live on executivereceptionist.com, so old receptionist URLs go straight there.
     const er = EXECUTIVE_RECEPTIONIST_ORIGIN;

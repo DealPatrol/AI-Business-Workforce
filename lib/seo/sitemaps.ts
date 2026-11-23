@@ -8,6 +8,7 @@ import { POSTCARD_TRADES } from '@/lib/postcards/trade-pages';
 import { MERGED_AVA_GUIDES } from '@/lib/seo/receptionist-home';
 import { absoluteUrl, isExecutiveReceptionistHost, publicIndexOrigin } from '@/lib/site-url';
 import { TRADE_PAGES } from '@/lib/trades/pages';
+import { FPG_EXTRA_INDEX_PATHS } from '@/lib/fpg/seo';
 
 type ChangeFrequency = NonNullable<MetadataRoute.Sitemap[number]['changeFrequency']>;
 
@@ -91,6 +92,7 @@ export function frontPorchGrowthSitemap(origin: string, now: Date): MetadataRout
     ...POSTCARD_TRADES.map((trade) => entry(origin, `/postcards/${trade.slug}`, now, 'monthly', 0.8)),
     ...AGENTS.map((agent) => entry(origin, `/agents/${agent.id}`, now, 'monthly', 0.6)),
     ...TRADE_PAGES.map((page) => entry(origin, `/trades/${page.slug}`, now, 'monthly', 0.7)),
+    ...FPG_EXTRA_INDEX_PATHS.map((path) => entry(origin, path, now, 'monthly', 0.75)),
     entry(origin, '/blog', now, 'weekly', 0.7),
     ...BLOG_POSTS.filter((post) => post.site === 'fpg').map((post) => entry(origin, `/blog/${post.slug}`, now, 'monthly', 0.75)),
   ];

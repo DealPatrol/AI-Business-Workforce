@@ -47,6 +47,17 @@ const FRONT_PORCH_PATHS = [
   '/trades/roofers',
   '/trades/lawn-care',
   '/trades/cleaners',
+  '/trades',
+  '/free-tools',
+  '/free-tools/postcard-cost-calculator',
+  '/free-tools/postcard-roi-calculator',
+  '/compare/front-porch-growth-vs-local-seo-bot',
+  '/compare/front-porch-growth-vs-brightlocal',
+  '/compare/yardmailer-vs-postcardmania',
+  '/compare/yardmailer-vs-eddm',
+  '/compare/front-porch-growth-vs-aeo-engine',
+  '/compare/front-porch-growth-vs-otterly',
+  '/compare/front-porch-growth-vs-nicejob',
   '/blog',
   '/blog/is-my-business-in-chatgpt',
   '/blog/ai-search-checklist-home-services',
@@ -100,7 +111,11 @@ describe('host sitemaps', () => {
       assert.ok(paths.includes(path), path);
     }
     assert.equal(paths.includes('/blog/is-my-business-in-chatgpt'), false);
-    for (const path of ['/postcards', '/receptionist', '/agents', '/compare', '/trades/plumbers', '/missed-call']) {
+    // /compare on executivereceptionist.com is the Ava comparison hub (a different page from FPG's /compare).
+    for (const path of ['/compare', '/compare/ava-vs-smith-ai', '/industries', '/tools', '/tools/call-forwarding-codes', '/templates']) {
+      assert.ok(paths.includes(path), path);
+    }
+    for (const path of ['/postcards', '/receptionist', '/agents', '/trades/plumbers', '/missed-call']) {
       assert.equal(paths.includes(path), false, path);
     }
     assert.equal(robotsForHost('www.executivereceptionist.com').sitemap, `${EXECUTIVE_RECEPTIONIST_ORIGIN}/sitemap.xml`);

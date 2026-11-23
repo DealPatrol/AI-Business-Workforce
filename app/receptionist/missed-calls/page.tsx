@@ -1,3 +1,4 @@
+import { ErDemoBar } from '@/components/er/ErSite';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { TrialSignupLink } from '@/components/dispatch/TrialSignupLink';
@@ -67,6 +68,7 @@ export default async function MissedCallsPage({ searchParams }: PageProps) {
   return (
     <div className={styles.page}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structured).replace(/</g, '\\u003c') }} />
+      <ErDemoBar />
       <header className={styles.bar}>
         <Link href="/">Executive Receptionist</Link>
         <Link href="/hvac">HVAC</Link>

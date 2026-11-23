@@ -1,3 +1,4 @@
+import { ErDemoBar } from '@/components/er/ErSite';
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { AVA_OFFER, AVA_PLANS } from '@/lib/ava/pricing';
@@ -16,7 +17,6 @@ const FEATURE_GROUPS: Array<{
       { feature: 'Emails you a summary of the call', value: 'Included', included: true },
       { feature: 'Greeting and questions written for your trade', value: 'Included', included: true },
       { feature: 'Built first for HVAC and plumbing shops', value: 'Included', included: true },
-      { feature: 'In-person setup in Gadsden, Alabama', value: 'Included', included: true },
     ],
   },
   {
@@ -118,6 +118,7 @@ export function OfferPricingLayout({
 
   return (
     <div className={`${styles.wrap} ${isPage ? styles.pageWrap : styles.sectionWrap}`}>
+      {renderTopbar ? <ErDemoBar /> : null}
       {renderTopbar ? (
         <header className={styles.topbar}>
           <Link className={styles.brand} href="/">

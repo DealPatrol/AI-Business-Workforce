@@ -1206,7 +1206,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'After-hours answering',
     blurb: 'Nights, weekends and holidays answered, with the lead in your email by morning.',
     title: 'After-Hours Answering Service for Small Businesses',
-    metaTitle: 'After-Hours Answering Service, Flat Monthly Price',
+    metaTitle: 'After-Hours AI Receptionist & Answering Service',
     description:
       'An AI after-hours answering service: Ava answers nights, weekends and holidays, takes the details, and emails you the lead. From $79/mo, first month $1.',
     eyebrow: 'After-hours answering service',
@@ -1256,7 +1256,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Spanish answering',
     blurb: 'Ava switches to Spanish when the caller does, then emails you the lead.',
     title: 'Bilingual Answering Service: English and Spanish',
-    metaTitle: 'Spanish & English AI Answering Service',
+    metaTitle: 'Spanish & English AI Receptionist for Small Business',
     description:
       'A bilingual AI answering service: Ava answers in English and switches to Spanish when the caller does, then emails you the lead. From $79/mo.',
     eyebrow: 'Bilingual answering service',
@@ -1302,7 +1302,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Emergency calls',
     blurb: 'Urgent rules you write, flagged at the top of every summary.',
     title: 'Emergency Call Answering for Contractors',
-    metaTitle: 'Emergency Call Answering for Contractors',
+    metaTitle: 'Emergency Call AI Receptionist for Contractors',
     description:
       'Ava answers emergency calls for contractors 24/7, follows the urgent rules you write, and flags those calls at the top of the emailed summary.',
     eyebrow: 'Emergency call answering',
@@ -1347,7 +1347,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Septic',
     blurb: 'Backups, alarms and pump-out requests, captured while the truck is out.',
     title: 'AI Answering Service for Septic Companies',
-    metaTitle: 'AI Answering Service for Septic Companies',
+    metaTitle: 'AI Receptionist & Answering Service for Septic',
     description:
       'An AI answering service for septic companies: Ava answers 24/7, takes the job details, and emails you the lead. Starter is $1 the first month, then $79/mo.',
     eyebrow: 'AI answering service for septic companies',
@@ -1394,7 +1394,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Water damage restoration',
     blurb: 'Flooded rooms and burst pipes, taken at 2 AM with the address and the source.',
     title: 'AI Answering Service for Water Damage Restoration',
-    metaTitle: 'AI Answering Service for Water Damage Restoration',
+    metaTitle: 'AI Receptionist for Water Damage Restoration',
     description:
       'An AI answering service for water damage restoration companies: Ava answers 24/7, takes the loss details, and emails you the lead. From $79/mo.',
     eyebrow: 'AI answering service for restoration companies',
@@ -1437,7 +1437,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Locksmiths',
     blurb: 'Lockouts and rekey requests, answered while you’re on a job.',
     title: 'AI Answering Service for Locksmiths',
-    metaTitle: 'AI Answering Service for Locksmiths',
+    metaTitle: 'AI Receptionist & Answering Service for Locksmiths',
     description:
       'An AI answering service for locksmiths: Ava answers 24/7, takes the lockout details and location, and emails you the lead. From $79/mo, first month $1.',
     eyebrow: 'AI answering service for locksmiths',
@@ -1481,7 +1481,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Gadsden, AL',
     blurb: 'An AI receptionist for Gadsden and Etowah County shops.',
     title: 'AI Answering Service in Gadsden, AL',
-    metaTitle: 'AI Answering Service in Gadsden, AL',
+    metaTitle: 'AI Receptionist & Answering Service in Gadsden, AL',
     description:
       'An AI answering service for Gadsden and Etowah County shops. Forward missed and after-hours calls; Ava emails you the lead. Starter $1, then $79/mo.',
     eyebrow: 'Gadsden, Alabama',
@@ -1520,7 +1520,7 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Birmingham, AL',
     blurb: 'An AI receptionist for Birmingham-area home-service shops.',
     title: 'AI Answering Service in Birmingham, AL',
-    metaTitle: 'AI Answering Service in Birmingham, AL',
+    metaTitle: 'AI Receptionist & Answering Service, Birmingham AL',
     description:
       'An AI answering service for Birmingham-area home-service shops. Forward missed and after-hours calls; Ava emails you the lead. Starter $1, then $79/mo.',
     eyebrow: 'Birmingham, Alabama',

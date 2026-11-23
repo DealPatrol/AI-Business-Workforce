@@ -53,8 +53,9 @@ export function receptionistHomePath(pathname: string): string | null {
   if (RECEPTIONIST_EXACT_PATHS.has(path)) return path;
   if (path.startsWith('/ava/') || path.startsWith('/receptionist/')) return path;
   // Executive Receptionist comparisons, free tools and call scripts. Exact /compare stays on
-  // Front Porch Growth (its own compare page); /compare/<slug> pages live only on executivereceptionist.com.
-  if (path.startsWith('/compare/') || path.startsWith('/tools/') || path.startsWith('/templates/')) return path;
+  // Front Porch Growth (its own compare hub), and so do FPG's /compare/front-porch-growth-vs-* and
+  // /compare/yardmailer-vs-* pages. Only /compare/ava-vs-* pages live on executivereceptionist.com.
+  if (path.startsWith('/compare/ava-vs-') || path.startsWith('/tools/') || path.startsWith('/templates/')) return path;
   return null;
 }
 

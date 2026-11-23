@@ -1,3 +1,4 @@
+import { ErDemoBar, ErLinkColumns } from '@/components/er/ErSite';
 import Link from 'next/link';
 import { Check, MessageSquareQuote, Phone, PhoneCall } from 'lucide-react';
 import { MonthlyPlans, PlanCheckoutButton } from '@/components/ava/MonthlyPlans';
@@ -62,6 +63,7 @@ export function BusinessLanding({ page, title, description }: { page: BusinessPa
   const json = JSON.stringify(structuredData(page, title, description)).replace(/</g, '\\u003c');
   return (
     <main className="hvac-page">
+      <ErDemoBar />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: json }} />
       <nav className="hvac-nav" aria-label="Main">
         <Link href="/" className="hvac-brand">
@@ -174,6 +176,7 @@ export function BusinessLanding({ page, title, description }: { page: BusinessPa
         </p>
       </section>
 
+      <ErLinkColumns />
       <footer className="hvac-footer">
         <span>{AVA_OFFER.footerLine}</span>
         <Link href="/">Home</Link>
