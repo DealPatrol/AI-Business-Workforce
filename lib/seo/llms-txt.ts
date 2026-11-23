@@ -24,6 +24,7 @@ const SHARED_FACTS = `Cole Collins, based in Hanceville, Alabama, operates Execu
 - YardMailer postcards show a homeowner a concept for their own property, with a QR code to request an estimate. The shop approves the design, audience, and cost before anything is mailed. Pricing: https://frontporchgrowth.com/pricing
 - Receptionist product pages live only on executivereceptionist.com. Front Porch Growth links there instead of republishing that sales copy.
 - Free grader: https://frontporchgrowth.com/ai-visibility (no ranking guarantees)
+- AI Search Visibility (done for you, roofing first): https://frontporchgrowth.com/ai-search-visibility (free Competitor Gap Report, $497 Citation Sprint, plans $1,500 / $2,750 / $4,500 a month with a measured citation-share target)
 - Google Business Profile setup: https://frontporchgrowth.com/google-profile
 - Reputation / review requests: https://frontporchgrowth.com/reputation and https://tryreputationflow.com/
 `;
