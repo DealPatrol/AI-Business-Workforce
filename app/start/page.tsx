@@ -133,6 +133,7 @@ const jsonLd = {
       '@type': 'Product',
       name: 'Executive Receptionist (Ava)',
       description: 'Ava is the Executive Receptionist AI phone receptionist for home-service businesses and online stores.',
+      image: executiveReceptionistUrl('/er/og-default.png'),
       brand: { '@type': 'Brand', name: 'Executive Receptionist' },
       url: executiveReceptionistUrl('/start'),
       offers: avaPlanOfferNodes(executiveReceptionistUrl('/pricing')),
