@@ -19,7 +19,7 @@ const description = seo.description;
 const HOME_FAQS = [
   {
     q: 'What is Front Porch Growth?',
-    a: 'Front Porch Growth is a set of marketing tools for home-service shops: done-for-you AI Search Visibility (roofing first), YardMailer postcards, Google Business Profile setup, a free SEO and AI-visibility grader, Lead Scout, and review-request tools. Cole Collins built it in Hanceville, Alabama.',
+    a: 'Front Porch Growth is a set of marketing tools for home-service shops: done-for-you AI Search Visibility (HVAC, plumbing, electrical and roofing), YardMailer postcards, Google Business Profile setup, a free SEO and AI-visibility grader, Lead Scout, and review-request tools. Cole Collins built it in Hanceville, Alabama.',
   },
   {
     q: 'Where is the AI receptionist?',
@@ -176,14 +176,14 @@ export default function SuiteHomePage() {
                   <tr>
                     <th>Check</th>
                     <th>You</th>
-                    <th>Named roofer</th>
+                    <th>Shop AI named</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr><td>Pages on site</td><td>18</td><td>240</td></tr>
                   <tr><td>Town pages</td><td>0</td><td>12</td></tr>
                   <tr><td>Cost page</td><td>No</td><td>Yes</td></tr>
-                  <tr><td>Insurance-claim guide</td><td>No</td><td>Yes</td></tr>
+                  <tr><td>Google reviews</td><td>12</td><td>340</td></tr>
                   <tr><td>Named in AI answers</td><td>0 of 8</td><td>5 of 8</td></tr>
                 </tbody>
               </table>
