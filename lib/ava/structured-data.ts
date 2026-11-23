@@ -196,3 +196,36 @@ export function coleCollinsPersonJsonLd() {
     ...FOUNDER,
   };
 }
+
+/** BreadcrumbList for an executivereceptionist.com page. Items are [label, path]. */
+export function breadcrumbNode(items: Array<[string, string]>) {
+  return {
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map(([name, path], index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name,
+      item: `${EXECUTIVE_RECEPTIONIST_ORIGIN}${path === '/' ? '/' : path}`,
+    })),
+  };
+}
+
+/** The setup steps that are true on every plan today. */
+export const AVA_SETUP_STEPS = [
+  { name: 'Tell us about your shop', text: 'Send your website and notes: services, hours, service area, and what counts as urgent.' },
+  { name: 'Forward your line', text: 'Keep your number. Forward every call, or only the ones you miss or cannot take.' },
+  { name: 'Every call gets answered', text: 'Ava says she is an AI receptionist, takes the details, and emails you a summary.' },
+] as const;
+
+export function howToNode(name: string) {
+  return {
+    '@type': 'HowTo',
+    name,
+    step: AVA_SETUP_STEPS.map((step, index) => ({
+      '@type': 'HowToStep',
+      position: index + 1,
+      name: step.name,
+      text: step.text,
+    })),
+  };
+}

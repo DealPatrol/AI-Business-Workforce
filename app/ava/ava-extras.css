@@ -271,3 +271,11 @@
   font-size: 13px;
   line-height: 1.5;
 }
+
+/* Footer columns linking every Executive Receptionist hub and trade page. */
+.er-footer-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 22px; width: min(1160px, 100%); margin: 18px auto; text-align: left; font-size: 14px; }
+.er-footer-cols h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 8px; }
+.er-footer-cols ul { list-style: none; padding: 0; margin: 0; }
+.er-footer-cols li { margin: 4px 0; }
+.er-footer-cols a { text-decoration: none; opacity: 0.85; }
+.er-footer-cols a:hover { text-decoration: underline; opacity: 1; }

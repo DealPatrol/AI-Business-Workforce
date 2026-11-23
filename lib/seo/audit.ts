@@ -3,7 +3,7 @@ import path from 'node:path';
 import { AGENTS } from '@/lib/agents/catalog';
 import { agentSeo } from '@/lib/agents/seo-content';
 import { AVA_GUIDES } from '@/lib/ava/trade-pages';
-import { BLOG_POSTS } from '@/lib/blog/posts';
+import { BLOG_POSTS } from '@/lib/blog/all-posts';
 import { MISSED_CALL_TRADES, missedCallSeo } from '@/lib/dispatch/missed-call-ads';
 import { POSTCARD_TRADES, postcardTradeSeo } from '@/lib/postcards/trade-pages';
 import {

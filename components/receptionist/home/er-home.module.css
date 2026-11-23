@@ -213,3 +213,12 @@
 .sisterSites h2 { font-size: 15px; margin: 0 0 8px; color: var(--ink, inherit); }
 .sisterSites ul { margin: 0 0 8px; padding-left: 18px; }
 .sisterSites a { text-decoration: underline; }
+
+/* Footer link columns (every hub and trade page). */
+.footerCols { flex: 1 1 100%; order: -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 22px; margin-bottom: 18px; }
+.footer .footerCols nav { display: block; }
+.footerCols h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 8px; color: var(--ink); }
+.footerCols ul { list-style: none; padding: 0; margin: 0; }
+.footerCols li { margin: 4px 0; }
+.footerCols a { text-decoration: none; }
+.footerCols a:hover { color: var(--copper); text-decoration: underline; }

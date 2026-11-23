@@ -25,7 +25,7 @@ const structured = {
       '@type': 'Product',
       name: 'Executive Receptionist',
       description:
-        'Ava, the Executive Receptionist AI phone receptionist, answers calls 24/7, takes the caller name, number and reason, and emails the lead to the business. Once hours are set in the Desk, she books visits during the call. Texting is available after setup.',
+        'Ava, the Executive Receptionist AI phone receptionist, answers calls 24/7, takes the caller name, number and reason, and emails the lead to the business. Once hours are set in the Desk, she books visits into the Desk calendar during the call.',
       brand: { '@type': 'Brand', name: 'Executive Receptionist' },
       url: canonical,
       offers: avaPlanOfferNodes(`${EXECUTIVE_RECEPTIONIST_ORIGIN}/pricing`),

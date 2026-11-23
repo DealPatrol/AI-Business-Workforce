@@ -1064,16 +1064,16 @@ export const AVA_GUIDES: AvaGuide[] = [
   {
     slug: 'best-ai-receptionist-for-hvac-companies',
     kind: 'guide',
-    navLabel: 'Best for HVAC',
-    blurb: 'What to look for in an AI receptionist for HVAC, and how Executive Receptionist fits.',
-    title: 'Best AI Receptionist for HVAC Companies',
-    metaTitle: 'Best AI Receptionist for HVAC Companies (2026 Guide)',
+    navLabel: 'HVAC buyer checklist',
+    blurb: 'Five tests to run on any AI receptionist before an HVAC shop buys one.',
+    title: 'How to Choose an AI Receptionist for an HVAC Company',
+    metaTitle: 'Choosing an AI Receptionist for HVAC: 5 Tests',
     description:
       'What to look for in an AI receptionist for HVAC companies. Executive Receptionist: $1 the first month, then $79/mo. Demo: (256) 952-4935.',
-    eyebrow: 'Best AI receptionist for HVAC companies',
-    h1: 'Best AI receptionist for HVAC companies',
+    eyebrow: 'Buyer checklist for HVAC companies',
+    h1: 'How to choose an AI receptionist for an HVAC company',
     directAnswer:
-      'The useful test is not a “best of” badge. It is whether the receptionist can answer a no-heat or no-cool call, take the job details, and get that lead to you without inventing a price or an arrival time. Executive Receptionist (Ava) does that for HVAC shops: she answers forwarded calls 24/7, asks the questions you approve, and emails you the lead. Plans are Starter $79 a month (first month $1, 100 minutes), Growth $197, Pro $397, and Elite $789. Call the demo line at (256) 952-4935; she answers as Porchlight Heating & Air, a made-up HVAC company. There is also a dedicated HVAC page at /hvac.',
+      'The useful test is not a “best of” badge. It is whether the receptionist can answer a no-heat or no-cool call, take the job details, and get that lead to you without inventing a price or an arrival time. Executive Receptionist (Ava) does that for HVAC shops: she answers forwarded calls 24/7, asks the questions you approve, and emails you the lead. Plans are Starter $79 a month (first month $1, 100 minutes), Growth $197, Pro $397, and Elite $789. Call the demo line at (256) 952-4935; she answers as Porchlight Heating & Air, a made-up HVAC company. Ava’s main HVAC page, with sample calls and plans, is executivereceptionist.com/hvac.',
     audience: 'HVAC contractors comparing AI receptionist options',
     lede:
       'HVAC phones spike in heat waves and cold snaps, often while every tech is already on a roof or in a crawlspace. A receptionist that only takes a name is not enough. You need the address, what the system is doing, and whether anyone in the house is medically vulnerable — then an email you can act on.',
@@ -1110,7 +1110,7 @@ export const AVA_GUIDES: AvaGuide[] = [
       },
       {
         q: 'Does she text me the lead?',
-        a: 'She emails you the lead. Owner text alerts are available only after setup, and only if you opt in. Customer texting is not turned on until setup is complete.',
+        a: 'She emails you the lead. Text alerts are not on yet: they turn on only after phone-carrier registration is approved. Until then every lead arrives by email.',
       },
       {
         q: 'Is this a replacement for ServiceTitan or Housecall Pro?',
@@ -1125,9 +1125,9 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Alabama HVAC & plumbing',
     blurb: 'An AI receptionist for HVAC and plumbing shops in Gadsden, Birmingham, Huntsville, Cullman, and Decatur.',
     title: 'AI Receptionist for HVAC and Plumbing in Alabama',
-    metaTitle: 'AI Receptionist for HVAC and Plumbing in Alabama',
+    metaTitle: 'Alabama HVAC & Plumbing Shops: AI Receptionist',
     description:
-      'AI receptionist for Alabama HVAC and plumbing shops in Gadsden, Birmingham, Huntsville, Cullman, and Decatur. Starter is $1, then $79/mo.',
+      'Statewide guide for Alabama HVAC and plumbing shops in Gadsden, Birmingham, Huntsville, Cullman, and Decatur. Starter is $1, then $79/mo.',
     eyebrow: 'AI receptionist for HVAC and plumbing in Alabama',
     h1: 'AI receptionist for HVAC and plumbing in Alabama',
     directAnswer:
@@ -1168,7 +1168,7 @@ export const AVA_GUIDES: AvaGuide[] = [
       },
       {
         q: 'Will she text me the lead?',
-        a: 'She emails you the lead. Owner text alerts are available only after setup, and only if you opt in on the setup form.',
+        a: 'She emails you the lead. Text alerts are not on yet: they turn on only after phone-carrier registration is approved.',
       },
       {
         q: 'Can she book a visit on the call?',
@@ -1200,13 +1200,366 @@ export const AVA_GUIDES: AvaGuide[] = [
       },
     ],
   },
+  {
+    slug: 'after-hours-answering-service',
+    kind: 'guide',
+    navLabel: 'After-hours answering',
+    blurb: 'Nights, weekends and holidays answered, with the lead in your email by morning.',
+    title: 'After-Hours Answering Service for Small Businesses',
+    metaTitle: 'After-Hours Answering Service, Flat Monthly Price',
+    description:
+      'An AI after-hours answering service: Ava answers nights, weekends and holidays, takes the details, and emails you the lead. From $79/mo, first month $1.',
+    eyebrow: 'After-hours answering service',
+    h1: 'After-hours answering service that picks up every time',
+    directAnswer:
+      'Executive Receptionist (Ava) answers the calls you forward after you close: nights, weekends and holidays. She says she is an AI receptionist, takes the name, callback number, address and what the caller needs, flags the urgent ones at the top of the summary, and emails you the lead. Plans are Starter $79 a month (first month $1, 100 minutes), Growth $197, Pro $397 and Elite $789. Hear her at (256) 952-4935.',
+    audience: 'small businesses that close before their callers do',
+    lede:
+      'Forward your line when you lock up. Ava answers, asks the questions you approved, and the lead is in your inbox before you open in the morning.',
+    pain:
+      'Most after-hours calls land in a voicemail box, and many urgent callers hang up and try the next number. A staffed night service bills by the minute. Ava is a flat monthly plan.',
+    calls: [
+      'Evening and weekend calls after the office closes',
+      'Holiday calls when nobody is on the phones',
+      'Urgent problems you define, flagged at the top of the summary',
+      'New customers asking for a quote or a visit',
+      'Existing customers who just need a callback',
+    ],
+    qualification: [
+      'Name and callback number',
+      'Address or service area',
+      'What they need, in their own words',
+      'Whether it is urgent under your rules',
+      'Best time to call them back',
+    ],
+    roiTitle: 'What an unanswered evening call is worth, as an example',
+    roiBody: `${exampleSentence({ missedPerWeek: 5, oneIn: 4, jobValue: 300, jobLabel: 'job' })} Put your own numbers in the calculator.`,
+    faqs: [
+      {
+        q: 'Can I forward only after-hours calls?',
+        a: 'Yes. You choose what to forward: every call, only the ones you miss, or only after hours. Your carrier’s forwarding settings control it; see the call forwarding codes tool for Verizon and T-Mobile.',
+      },
+      {
+        q: 'Does Ava call or text me for urgent calls at night?',
+        a: 'Ava flags urgent calls at the top of the emailed summary. Text alerts are not on yet; they turn on only after phone-carrier registration is approved.',
+      },
+      {
+        q: 'What does it cost?',
+        a: 'Starter $79 a month (100 minutes, first month $1), Growth $197 (300), Pro $397 (1,200), Elite $789 (2,000). No per-minute overage.',
+      },
+    ],
+    related: ['missed-call-answering-home-services', 'ai-receptionist-vs-answering-service', 'missed-call-cost-calculator'],
+  },
+  {
+    slug: 'spanish-answering-service',
+    kind: 'guide',
+    navLabel: 'Spanish answering',
+    blurb: 'Ava switches to Spanish when the caller does, then emails you the lead.',
+    title: 'Bilingual Answering Service: English and Spanish',
+    metaTitle: 'Spanish & English AI Answering Service',
+    description:
+      'A bilingual AI answering service: Ava answers in English and switches to Spanish when the caller does, then emails you the lead. From $79/mo.',
+    eyebrow: 'Bilingual answering service',
+    h1: 'An answering service that switches to Spanish when your caller does',
+    directAnswer:
+      'Executive Receptionist (Ava) answers in English and switches to Spanish when a caller starts in Spanish, then keeps going: name, callback number, address and what they need. She emails you the summary. Spanish is included on every plan: Starter $79 a month (first month $1), Growth $197, Pro $397, Elite $789. Try it on the demo line, (256) 952-4935, by speaking Spanish.',
+    audience: 'shops with Spanish-speaking customers',
+    lede:
+      'A caller who opens with “¿Hablan español?” gets an answer in Spanish, not a voicemail. You get the lead in your email.',
+    pain:
+      'Many staffed answering services charge extra for a bilingual line. Missing a Spanish-speaking caller is the same lost job as missing anyone else.',
+    calls: [
+      'Callers who start in Spanish',
+      'Service requests and quotes in either language',
+      'After-hours calls from Spanish-speaking customers',
+      'Property managers and tenants calling about repairs',
+      'Callbacks and scheduling questions',
+    ],
+    qualification: [
+      'Name and callback number',
+      'Address',
+      'What they need',
+      'Preferred language for the callback',
+      'How soon they need you',
+    ],
+    roiTitle: 'Price a missed Spanish-speaking caller, as an example',
+    roiBody: `${exampleSentence({ missedPerWeek: 3, oneIn: 3, jobValue: 300, jobLabel: 'job' })} Your numbers will differ; the calculator uses yours.`,
+    faqs: [
+      {
+        q: 'Is Spanish an add-on?',
+        a: 'No. Ava switches to Spanish on every plan at no extra cost.',
+      },
+      {
+        q: 'What language is the summary in?',
+        a: 'The emailed summary is written for you, the owner. Ask Cole during setup if you want something different.',
+      },
+    ],
+    related: ['after-hours-answering-service', 'ai-receptionist-for-small-business', 'ai-receptionist-vs-answering-service'],
+  },
+  {
+    slug: 'emergency-call-answering',
+    kind: 'guide',
+    navLabel: 'Emergency calls',
+    blurb: 'Urgent rules you write, flagged at the top of every summary.',
+    title: 'Emergency Call Answering for Contractors',
+    metaTitle: 'Emergency Call Answering for Contractors',
+    description:
+      'Ava answers emergency calls for contractors 24/7, follows the urgent rules you write, and flags those calls at the top of the emailed summary.',
+    eyebrow: 'Emergency call answering',
+    h1: 'Emergency call answering that follows your rules',
+    directAnswer:
+      'You write what counts as urgent: no heat with a baby at home, water still running, a tree on the roof. Executive Receptionist (Ava) asks about it on every call and flags those calls at the top of the summary she emails you. She does not dispatch a truck or promise an arrival time. For a gas smell or danger, she tells the caller to call 911 or the gas company. Plans from $79 a month (Starter first month $1). Demo: (256) 952-4935.',
+    audience: 'contractors who take emergency calls',
+    lede:
+      'Emergency calls come at the worst time. Ava gets the address and the problem while the caller is still on the line, and you decide who calls back.',
+    pain:
+      'An emergency caller who reaches voicemail calls the next shop. A message that just says “call me back” doesn’t tell you whether to get out of bed.',
+    calls: [
+      'No heat or no cooling with someone at risk',
+      'Water that won’t stop',
+      'Storm damage and active roof leaks',
+      'Power out to part of the house',
+      'Garage doors stuck open at night',
+    ],
+    qualification: [
+      'Name and callback number',
+      'Service address',
+      'What is happening right now',
+      'Whether it meets your urgent rules',
+      'Whether anyone is in danger',
+    ],
+    roiTitle: 'What one emergency job is worth, as an example',
+    roiBody: `${exampleSentence({ missedPerWeek: 2, oneIn: 2, jobValue: 600, jobLabel: 'emergency job' })} Your own ticket goes in the calculator.`,
+    faqs: [
+      {
+        q: 'Will Ava send a tech out?',
+        a: 'No. She takes the details, flags urgent calls at the top of the emailed summary, and you or your on-call tech decide. She never promises an arrival time.',
+      },
+      {
+        q: 'What happens with a gas smell?',
+        a: 'You set the safety line. A typical setup tells the caller to leave the house and call the gas company or 911 first.',
+      },
+    ],
+    related: ['after-hours-answering-service', 'ai-answering-service-for-plumbers', 'ai-answering-service-for-roofers'],
+  },
+  trade({
+    slug: 'ai-answering-service-for-septic',
+    navLabel: 'Septic',
+    blurb: 'Backups, alarms and pump-out requests, captured while the truck is out.',
+    title: 'AI Answering Service for Septic Companies',
+    metaTitle: 'AI Answering Service for Septic Companies',
+    description:
+      'An AI answering service for septic companies: Ava answers 24/7, takes the job details, and emails you the lead. Starter is $1 the first month, then $79/mo.',
+    eyebrow: 'AI answering service for septic companies',
+    h1: 'AI answering service for septic companies',
+    directAnswer:
+      'Executive Receptionist (Ava) answers the calls you forward for your septic business: backups, alarms, pump-outs and inspections. She takes the name, callback number, address and what is happening, and emails you the lead. Plans are Starter $79 a month (first month $1, 100 minutes), Growth $197, Pro $397 and Elite $789. Demo line: (256) 952-4935.',
+    audience: 'septic pumping and repair companies',
+    lede: 'A backup into the house is a call that won’t wait. Ava picks up while you are on a pump job and gets the details you need to call back.',
+    pain: 'Septic work is mostly in the field. When the phone rings during a pump-out, it goes to voicemail, and a homeowner with a backup calls the next company.',
+    calls: [
+      'Sewage backing up into the house',
+      'Tank alarms going off',
+      'Routine pump-out scheduling',
+      'Real-estate inspections',
+      'Drain field and repair questions',
+    ],
+    qualification: [
+      'Name and callback number',
+      'Property address and county',
+      'Whether sewage is backing up inside',
+      'When the tank was last pumped, if they know',
+      'Whether it is for a home sale inspection',
+    ],
+    roiTitle: 'What a missed septic call is worth, as an example',
+    roiBody: `${exampleSentence({ missedPerWeek: 4, oneIn: 3, jobValue: 450, jobLabel: 'septic job' })} Use your own ticket in the calculator.`,
+    faqs: [
+      {
+        q: 'Can Ava tell a backup from a routine pump-out?',
+        a: 'Yes, with the urgent rules you write. A backup inside the house can be flagged at the top of the summary.',
+      },
+      {
+        q: 'Will she quote a pump-out price?',
+        a: 'Only a price you give her to say. Otherwise she takes the details for your callback.',
+      },
+      {
+        q: 'How much does it cost?',
+        a: 'Starter $79 a month (100 minutes, first month $1), Growth $197 (300), Pro $397 (1,200), Elite $789 (2,000). Month to month.',
+      },
+    ],
+    related: ['ai-answering-service-for-plumbers', 'emergency-call-answering', 'missed-call-cost-calculator'],
+  }),
+  trade({
+    slug: 'ai-answering-service-for-water-damage-restoration',
+    navLabel: 'Water damage restoration',
+    blurb: 'Flooded rooms and burst pipes, taken at 2 AM with the address and the source.',
+    title: 'AI Answering Service for Water Damage Restoration',
+    metaTitle: 'AI Answering Service for Water Damage Restoration',
+    description:
+      'An AI answering service for water damage restoration companies: Ava answers 24/7, takes the loss details, and emails you the lead. From $79/mo.',
+    eyebrow: 'AI answering service for restoration companies',
+    h1: 'AI answering service for water damage restoration',
+    directAnswer:
+      'Executive Receptionist (Ava) answers restoration calls you forward, day or night. She asks where the water is coming from, whether it is stopped, the address and the callback number, and emails you the lead with urgent calls flagged first. Plans are Starter $79 a month (first month $1), Growth $197, Pro $397, Elite $789. Demo line: (256) 952-4935.',
+    audience: 'water damage restoration companies',
+    lede: 'A flooded basement call comes in at 2 AM. Ava answers, gets the source and the address, and you decide who rolls.',
+    pain: 'Restoration jobs go to the company that answers first. Voicemail at night means the job goes to someone else.',
+    calls: [
+      'Burst pipes and flooded rooms',
+      'Water heater and appliance leaks',
+      'Storm and roof-leak water damage',
+      'Sewage cleanup requests',
+      'Insurance-claim callbacks',
+    ],
+    qualification: [
+      'Name and callback number',
+      'Property address',
+      'Source of the water and whether it is stopped',
+      'Rooms affected',
+      'Whether an insurance claim is open',
+    ],
+    roiTitle: 'What one missed restoration call is worth, as an example',
+    roiBody: `${exampleSentence({ missedPerWeek: 2, oneIn: 3, jobValue: 2500, jobLabel: 'restoration job' })} Put in your own average job.`,
+    faqs: [
+      {
+        q: 'Does Ava give insurance advice?',
+        a: 'No. She asks whether a claim is open so your team has it on the callback.',
+      },
+      {
+        q: 'How much does it cost?',
+        a: 'Starter $79 a month (100 minutes, first month $1), Growth $197 (300), Pro $397 (1,200), Elite $789 (2,000).',
+      },
+    ],
+    related: ['emergency-call-answering', 'ai-answering-service-for-plumbers', 'after-hours-answering-service'],
+  }),
+  trade({
+    slug: 'ai-answering-service-for-locksmiths',
+    navLabel: 'Locksmiths',
+    blurb: 'Lockouts and rekey requests, answered while you’re on a job.',
+    title: 'AI Answering Service for Locksmiths',
+    metaTitle: 'AI Answering Service for Locksmiths',
+    description:
+      'An AI answering service for locksmiths: Ava answers 24/7, takes the lockout details and location, and emails you the lead. From $79/mo, first month $1.',
+    eyebrow: 'AI answering service for locksmiths',
+    h1: 'AI answering service for locksmiths',
+    directAnswer:
+      'Executive Receptionist (Ava) answers locksmith calls you forward: lockouts, rekeys, lock changes and car keys. She takes the name, callback number, location and what is needed, and emails you the lead. Plans are Starter $79 a month (first month $1), Growth $197, Pro $397, Elite $789. Demo line: (256) 952-4935.',
+    audience: 'locksmiths and lock-and-key shops',
+    lede: 'A locked-out caller calls until somebody answers. Ava answers and gets the location so you can call back fast.',
+    pain: 'Locksmiths work alone in the field a lot. Every call missed during a job is a lockout that goes to the next listing.',
+    calls: [
+      'House and car lockouts',
+      'Rekeys after a move-in',
+      'Lock changes and new hardware',
+      'Commercial lock and access requests',
+      'Car key and fob questions',
+    ],
+    qualification: [
+      'Name and callback number',
+      'Exact location',
+      'Home, car or business',
+      'What is needed',
+      'How soon',
+    ],
+    roiTitle: 'What a missed lockout call is worth, as an example',
+    roiBody: `${exampleSentence({ missedPerWeek: 6, oneIn: 3, jobValue: 150, jobLabel: 'locksmith job' })} Use your own numbers in the calculator.`,
+    faqs: [
+      {
+        q: 'Will Ava quote a lockout price?',
+        a: 'Only a price you approve. Otherwise she takes the details for your callback.',
+      },
+      {
+        q: 'How much does it cost?',
+        a: 'Starter $79 a month (100 minutes, first month $1), Growth $197 (300), Pro $397 (1,200), Elite $789 (2,000).',
+      },
+    ],
+    related: ['ai-answering-service-for-garage-door', 'after-hours-answering-service', 'missed-call-cost-calculator'],
+  }),
+  {
+    slug: 'ai-answering-service-gadsden-al',
+    kind: 'guide',
+    navLabel: 'Gadsden, AL',
+    blurb: 'An AI receptionist for Gadsden and Etowah County shops.',
+    title: 'AI Answering Service in Gadsden, AL',
+    metaTitle: 'AI Answering Service in Gadsden, AL',
+    description:
+      'An AI answering service for Gadsden and Etowah County shops. Forward missed and after-hours calls; Ava emails you the lead. Starter $1, then $79/mo.',
+    eyebrow: 'Gadsden, Alabama',
+    h1: 'AI answering service for Gadsden shops',
+    directAnswer:
+      'Executive Receptionist is run by Cole Collins in Hanceville, Alabama, about an hour from Gadsden. Shops in Gadsden, Rainbow City, Attalla, Southside and the rest of Etowah County keep their number and forward missed or after-hours calls to Ava. She takes the details and emails you the lead. Plans are the same statewide: Starter $79 a month (first month $1), Growth $197, Pro $397, Elite $789. The demo line, (256) 952-4935, is a 256 number.',
+    audience: 'Gadsden and Etowah County shops',
+    lede: 'Same setup as anywhere: keep your number, forward the calls you can’t take, and get every lead by email. Setup is done over the phone and email.',
+    pain: 'Small Gadsden shops are often one or two trucks with the owner answering the phone. When everyone is on a job, calls go to voicemail.',
+    calls: [
+      'No-heat and no-cool calls in Etowah County',
+      'Plumbing leaks and backups',
+      'Roofing and storm calls',
+      'After-hours and weekend calls',
+      'Overflow while the owner is on a job',
+    ],
+    qualification: ['Name and callback number', 'Address and town', 'What they need', 'How urgent it is', 'Best callback time'],
+    roiTitle: 'Price a missed Gadsden call with your own numbers',
+    roiBody: `${exampleSentence({ missedPerWeek: 5, oneIn: 4, jobValue: 350, jobLabel: 'job' })} The $350 is an example, not a Gadsden average.`,
+    faqs: [
+      {
+        q: 'Do you have an office in Gadsden?',
+        a: 'No. Executive Receptionist is run by Cole Collins from Hanceville, Alabama. Setup is done by phone and email.',
+      },
+      {
+        q: 'Is there a local rate?',
+        a: 'No. The same four plans apply statewide: Starter $79 (first month $1), Growth $197, Pro $397, Elite $789.',
+      },
+    ],
+    related: ['ai-receptionist-for-hvac-and-plumbing-in-alabama', 'ai-answering-service-birmingham-al', 'after-hours-answering-service'],
+    areaServed: ['Gadsden', 'Rainbow City', 'Attalla', 'Southside', 'Alabama', 'United States'],
+  },
+  {
+    slug: 'ai-answering-service-birmingham-al',
+    kind: 'guide',
+    navLabel: 'Birmingham, AL',
+    blurb: 'An AI receptionist for Birmingham-area home-service shops.',
+    title: 'AI Answering Service in Birmingham, AL',
+    metaTitle: 'AI Answering Service in Birmingham, AL',
+    description:
+      'An AI answering service for Birmingham-area home-service shops. Forward missed and after-hours calls; Ava emails you the lead. Starter $1, then $79/mo.',
+    eyebrow: 'Birmingham, Alabama',
+    h1: 'AI answering service for Birmingham shops',
+    directAnswer:
+      'Executive Receptionist is run by Cole Collins in Hanceville, Alabama, north of Birmingham. Shops in Birmingham, Hoover, Vestavia Hills, Trussville and the rest of the metro keep their number and forward missed or after-hours calls to Ava. She takes the details and emails you the lead. Plans are the same statewide: Starter $79 a month (first month $1), Growth $197, Pro $397, Elite $789. Demo line: (256) 952-4935.',
+    audience: 'Birmingham-area home-service shops',
+    lede: 'Keep your 205 number, forward what you can’t take, and get every lead by email. Setup is done over the phone and email.',
+    pain: 'Birmingham shops juggle lunch-hour overflow, drive time across the metro and after-hours calls. Each unanswered call can go to the next listing.',
+    calls: [
+      'HVAC calls in summer heat and winter cold snaps',
+      'Plumbing leaks and backups',
+      'Electrical and panel questions',
+      'After-hours and weekend calls',
+      'Overflow while every tech is out',
+    ],
+    qualification: ['Name and callback number', 'Address and part of town', 'What they need', 'How urgent it is', 'Best callback time'],
+    roiTitle: 'Price a missed Birmingham call with your own numbers',
+    roiBody: `${exampleSentence({ missedPerWeek: 6, oneIn: 4, jobValue: 350, jobLabel: 'job' })} The $350 is an example, not a Birmingham average.`,
+    faqs: [
+      {
+        q: 'Do you have a Birmingham office?',
+        a: 'No. Executive Receptionist is run by Cole Collins from Hanceville, Alabama. Setup is done by phone and email.',
+      },
+      {
+        q: 'Can I keep my 205 number?',
+        a: 'Yes. You forward calls from your existing number to Ava. Your number and carrier stay the same.',
+      },
+    ],
+    related: ['ai-receptionist-for-hvac-and-plumbing-in-alabama', 'ai-answering-service-gadsden-al', 'after-hours-answering-service'],
+    areaServed: ['Birmingham', 'Hoover', 'Vestavia Hills', 'Trussville', 'Alabama', 'United States'],
+  },
 ];
 
 
 const guideBySlug = new Map(AVA_GUIDES.map((guide) => [guide.slug, guide]));
 
-if (AVA_GUIDES.length !== 22 || guideBySlug.size !== 22) {
-  throw new Error(`Expected 22 unique Executive Receptionist guides, found ${AVA_GUIDES.length} rows and ${guideBySlug.size} slugs.`);
+if (AVA_GUIDES.length !== 30 || guideBySlug.size !== 30) {
+  throw new Error(`Expected 30 unique Executive Receptionist guides, found ${AVA_GUIDES.length} rows and ${guideBySlug.size} slugs.`);
 }
 
 for (const guide of AVA_GUIDES) {

@@ -18,6 +18,8 @@ import { ER_DEMO_NICHES, type ErDemoNiche } from '@/lib/er-demos';
 import { liveWidgetEnabled, realFaceEnabled } from '@/lib/live-receptionist/config';
 import styles from './er-home.module.css';
 import { SisterSites } from '@/components/seo/SisterSites';
+import { ErDemoBar, ErFooterColumns } from '@/components/er/ErSite';
+import { ER_NAV } from '@/lib/er/site-links';
 
 // Transfers are left off the home page list: no live-handoff claims in marketing copy.
 const PLAN_INCLUDES = AVA_PLAN_INCLUDES.filter((item) => !/transfer/i.test(item));
@@ -35,6 +37,7 @@ export function ErHome({ niche }: { niche?: ErDemoNiche }) {
   const starter = AVA_PLANS.starter;
   return (
     <main className={styles.page}>
+      <ErDemoBar />
       <header className={styles.header}>
         <div className={styles.headerInner}>
           <Link href="/" className={styles.logo}>
@@ -44,10 +47,11 @@ export function ErHome({ niche }: { niche?: ErDemoNiche }) {
             Executive Receptionist
           </Link>
           <nav aria-label="Main" className={styles.navLinks}>
-            <a href="#features">Features</a>
-            <a href="#industries">Industries</a>
-            <a href="#pricing">Pricing</a>
-            <a href="#faq">FAQ</a>
+            {ER_NAV.map((item) => (
+              <Link key={item.href} href={item.href}>
+                {item.label}
+              </Link>
+            ))}
             <Link href="/desk">Log in</Link>
           </nav>
           <PlanCheckoutButton plan="starter" className={styles.pillDark}>
@@ -289,18 +293,7 @@ export function ErHome({ niche }: { niche?: ErDemoNiche }) {
           </p>
           <p>{AVA_OFFER.footerLine}.</p>
         </div>
-        <nav aria-label="Footer">
-          <Link href="/pricing">Pricing</Link>
-          <Link href="/hvac">HVAC</Link>
-          <Link href="/ava/ai-answering-service-for-plumbers">Plumbing</Link>
-          <Link href="/blog">Blog</Link>
-          <Link href="/receptionist-demo">Demo</Link>
-          <Link href="/about">About</Link>
-          <Link href="/privacy">Privacy</Link>
-          <Link href="/terms">Terms</Link>
-          <Link href="/sms">SMS terms</Link>
-          <Link href="/sms-consent">SMS consent</Link>
-        </nav>
+        <ErFooterColumns className={styles.footerCols} />
         <SisterSites selfUrl="https://executivereceptionist.com" clusters={['home-services', 'phone']} className={styles.sisterSites} />
       </footer>
 

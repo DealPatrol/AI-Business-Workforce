@@ -1,6 +1,8 @@
 import type { MetadataRoute } from 'next';
 import { AGENTS } from '@/lib/agents/catalog';
-import { BLOG_POSTS } from '@/lib/blog/posts';
+import { BLOG_POSTS } from '@/lib/blog/all-posts';
+import { CALL_SCRIPTS } from '@/lib/er/call-scripts';
+import { COMPETITORS } from '@/lib/er/competitors';
 import { avaGuideSlugs } from '@/lib/ava/trade-pages';
 import { POSTCARD_TRADES } from '@/lib/postcards/trade-pages';
 import { MERGED_AVA_GUIDES } from '@/lib/seo/receptionist-home';
@@ -37,6 +39,13 @@ export const EXECUTIVE_RECEPTIONIST_INDEX: IndexEntry[] = [
   { path: '/med-spa', changeFrequency: 'weekly', priority: 0.85 },
   { path: '/real-estate', changeFrequency: 'weekly', priority: 0.85 },
   { path: '/receptionist/missed-calls', changeFrequency: 'weekly', priority: 0.9 },
+  { path: '/industries', changeFrequency: 'weekly', priority: 0.85 },
+  { path: '/compare', changeFrequency: 'monthly', priority: 0.85 },
+  { path: '/tools', changeFrequency: 'monthly', priority: 0.8 },
+  { path: '/tools/call-forwarding-codes', changeFrequency: 'monthly', priority: 0.75 },
+  { path: '/tools/answering-service-cost-calculator', changeFrequency: 'monthly', priority: 0.75 },
+  { path: '/tools/after-hours-greeting-generator', changeFrequency: 'monthly', priority: 0.75 },
+  { path: '/templates', changeFrequency: 'monthly', priority: 0.7 },
   { path: '/terms', changeFrequency: 'yearly', priority: 0.3 },
   { path: '/privacy', changeFrequency: 'yearly', priority: 0.3 },
   { path: '/about', changeFrequency: 'monthly', priority: 0.5 },
@@ -90,6 +99,8 @@ export function frontPorchGrowthSitemap(origin: string, now: Date): MetadataRout
 export function executiveReceptionistSitemap(origin: string, now: Date): MetadataRoute.Sitemap {
   return [
     ...EXECUTIVE_RECEPTIONIST_INDEX.map((page) => entry(origin, page.path, now, page.changeFrequency, page.priority)),
+    ...COMPETITORS.map((c) => entry(origin, `/compare/${c.slug}`, now, 'monthly', 0.8)),
+    ...CALL_SCRIPTS.map((t) => entry(origin, `/templates/${t.slug}`, now, 'monthly', 0.65)),
     ...indexedAvaGuideSlugs().map((slug) => entry(origin, `/ava/${slug}`, now, 'weekly', 0.88)),
     entry(origin, '/blog', now, 'weekly', 0.7),
     ...BLOG_POSTS.filter((post) => post.site === 'er').map((post) => entry(origin, `/blog/${post.slug}`, now, 'monthly', 0.75)),
