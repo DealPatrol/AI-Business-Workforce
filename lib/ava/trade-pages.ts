@@ -1175,7 +1175,7 @@ export const AVA_GUIDES: AvaGuide[] = [
         a: 'Once your hours are set up in your Desk, she can offer open times and put the visit on your Desk calendar. Until then she captures the lead and emails it to you. She never invents a price or promises an arrival time you have not offered.',
       },
     ],
-    related: ['ai-answering-service-for-hvac', 'ai-answering-service-for-plumbers', 'best-ai-receptionist-for-hvac-companies'],
+    related: ['ai-answering-service-for-hvac', 'ai-answering-service-for-plumbers', 'best-ai-receptionist-for-hvac-companies', 'ai-answering-service-cullman-al', 'ai-answering-service-huntsville-al', 'ai-answering-service-gadsden-al', 'ai-answering-service-birmingham-al'],
     areaServed: ['Gadsden', 'Birmingham', 'Huntsville', 'Cullman', 'Decatur', 'Hanceville', 'Alabama', 'United States'],
     cityNotes: [
       {
@@ -1510,8 +1510,16 @@ export const AVA_GUIDES: AvaGuide[] = [
         q: 'Is there a local rate?',
         a: 'No. The same four plans apply statewide: Starter $79 (first month $1), Growth $197, Pro $397, Elite $789.',
       },
+      {
+        q: 'Which Gadsden trades is it set up for?',
+        a: 'HVAC, plumbing, roofing, electrical, and other home-service shops. Cole writes the greeting and intake questions for your trade, such as no-heat versus no-cool, an active leak, storm damage, or a breaker that keeps tripping. Ava takes the details and emails you the lead.',
+      },
+      {
+        q: 'Can I hear it before I pay?',
+        a: 'Yes. Call (256) 952-4935 and Ava answers as a made-up HVAC company, or talk to her in your browser on the demo page. Nothing books a real truck.',
+      },
     ],
-    related: ['ai-receptionist-for-hvac-and-plumbing-in-alabama', 'ai-answering-service-birmingham-al', 'after-hours-answering-service'],
+    related: ['ai-receptionist-for-hvac-and-plumbing-in-alabama', 'ai-answering-service-birmingham-al', 'ai-answering-service-cullman-al', 'after-hours-answering-service'],
     areaServed: ['Gadsden', 'Rainbow City', 'Attalla', 'Southside', 'Alabama', 'United States'],
   },
   {
@@ -1549,17 +1557,119 @@ export const AVA_GUIDES: AvaGuide[] = [
         q: 'Can I keep my 205 number?',
         a: 'Yes. You forward calls from your existing number to Ava. Your number and carrier stay the same.',
       },
+      {
+        q: 'Which Birmingham trades is it set up for?',
+        a: 'HVAC, plumbing, electrical, roofing, and other home-service shops across the metro. The greeting and questions are written for your trade, and every call is emailed to you as a lead. Starter is $79 a month with the first month $1.',
+      },
+      {
+        q: 'Does Ava tell Birmingham callers she is AI?',
+        a: 'Yes. Her greeting says she is an AI receptionist for your business. She does not pretend to be a person and does not quote prices you have not approved.',
+      },
     ],
-    related: ['ai-receptionist-for-hvac-and-plumbing-in-alabama', 'ai-answering-service-gadsden-al', 'after-hours-answering-service'],
+    related: ['ai-receptionist-for-hvac-and-plumbing-in-alabama', 'ai-answering-service-gadsden-al', 'ai-answering-service-huntsville-al', 'after-hours-answering-service'],
     areaServed: ['Birmingham', 'Hoover', 'Vestavia Hills', 'Trussville', 'Alabama', 'United States'],
+  },
+  {
+    slug: 'ai-answering-service-cullman-al',
+    kind: 'guide',
+    navLabel: 'Cullman, AL',
+    blurb: 'An AI receptionist for Cullman County HVAC, plumbing, roofing, and electrical shops.',
+    title: 'AI Answering Service in Cullman, AL',
+    metaTitle: 'AI Receptionist & Answering Service in Cullman, AL',
+    description:
+      'An AI answering service for Cullman County HVAC, plumbing, roofing, and electrical shops. Ava emails you every lead. Starter $1, then $79/mo.',
+    eyebrow: 'Cullman, Alabama',
+    h1: 'AI answering service for Cullman shops',
+    directAnswer:
+      'Executive Receptionist is run by Cole Collins in Hanceville, Alabama, in Cullman County. HVAC, plumbing, roofing, and electrical shops in Cullman, Hanceville, Good Hope, Vinemont, and the rest of the county keep their number and forward missed or after-hours calls to Ava. She says she is an AI receptionist, takes the name, callback number, address, and what is wrong, and emails you the lead. Plans are the same statewide: Starter $79 a month (first month $1), Growth $197, Pro $397, Elite $789. The demo line, (256) 952-4935, is a 256 number.',
+    audience: 'Cullman County home-service shops',
+    lede: 'This is the operator’s home county. You keep your number, forward the calls you can’t take, and get every lead by email. Setup is done by phone and email, and Cole writes the greeting from your services, hours, and service area.',
+    pain: 'Most Cullman County shops are one to three trucks, and the owner is the one answering the phone between jobs. A no-cool call at 9 p.m. or a leak on a Sunday goes to voicemail, and the caller tries the next shop on the list.',
+    calls: [
+      'No-heat and no-cool calls after hours',
+      'Leaks, backups, and water-heater failures',
+      'Storm and roof-leak calls after a front moves through',
+      'Breakers tripping, outages, and panel questions',
+      'Overflow while the owner is on a job',
+    ],
+    qualification: ['Name and callback number', 'Address and town in the county', 'What the system, pipe, roof, or panel is doing', 'How urgent it is', 'Best callback time'],
+    roiTitle: 'Price a missed Cullman call with your own numbers',
+    roiBody: `${exampleSentence({ missedPerWeek: 5, oneIn: 4, jobValue: 350, jobLabel: 'job' })} The $350 is an example, not a Cullman average.`,
+    faqs: [
+      {
+        q: 'Is Executive Receptionist based in Cullman County?',
+        a: 'Yes. It is operated by Cole Collins DBA Executive Receptionist in Hanceville, Alabama. Setup is done by phone and email.',
+      },
+      {
+        q: 'Which Cullman trades is it set up for?',
+        a: 'HVAC, plumbing, roofing, electrical, and other home-service shops. The greeting and intake questions are written for your trade: no-heat versus no-cool, an active leak, storm damage, or a breaker that keeps tripping.',
+      },
+      {
+        q: 'What does it cost?',
+        a: 'The same four plans apply statewide: Starter $79 a month (100 minutes, first month $1), Growth $197, Pro $397, Elite $789. Month to month, cancel anytime, no per-minute overage.',
+      },
+      {
+        q: 'Can I keep my number and only forward missed calls?',
+        a: 'Yes. Your carrier forwards calls to Ava. Forward every call, or only the ones you miss or can’t take while busy, so she covers overflow and after hours.',
+      },
+    ],
+    related: ['ai-receptionist-for-hvac-and-plumbing-in-alabama', 'ai-answering-service-huntsville-al', 'ai-answering-service-gadsden-al', 'after-hours-answering-service'],
+    areaServed: ['Cullman', 'Hanceville', 'Good Hope', 'Vinemont', 'Cullman County', 'Alabama', 'United States'],
+  },
+  {
+    slug: 'ai-answering-service-huntsville-al',
+    kind: 'guide',
+    navLabel: 'Huntsville, AL',
+    blurb: 'An AI receptionist for Huntsville and Madison County home-service shops.',
+    title: 'AI Answering Service in Huntsville, AL',
+    metaTitle: 'AI Receptionist & Answering Service in Huntsville, AL',
+    description:
+      'AI answering service for Huntsville and Madison County HVAC, plumbing, roofing, and electrical shops. Ava emails you every lead. Starter $1, then $79/mo.',
+    eyebrow: 'Huntsville, Alabama',
+    h1: 'AI answering service for Huntsville shops',
+    directAnswer:
+      'Executive Receptionist is run by Cole Collins in Hanceville, Alabama, about an hour south of Huntsville. HVAC, plumbing, roofing, and electrical shops in Huntsville, Madison, Harvest, Hampton Cove, and the rest of Madison County keep their number and forward missed or after-hours calls to Ava. She says she is an AI receptionist, takes the details, and emails you the lead. Plans are the same statewide: Starter $79 a month (first month $1), Growth $197, Pro $397, Elite $789. Demo line: (256) 952-4935.',
+    audience: 'Huntsville and Madison County home-service shops',
+    lede: 'Keep your 256 number, forward what you can’t take, and get every lead by email. Setup is done by phone and email. We do not claim a Huntsville office or a list of local customers.',
+    pain: 'Huntsville keeps growing, and so does the drive time between jobs. When every tech is on a call across town, the phone rolls to voicemail, and new-construction homeowners with no regular shop yet just call the next listing.',
+    calls: [
+      'No-heat and no-cool calls in Madison County',
+      'Leaks, backups, and water-heater failures',
+      'Roof leaks and storm-damage calls',
+      'Electrical outages and panel questions',
+      'After-hours and weekend overflow',
+    ],
+    qualification: ['Name and callback number', 'Address and part of town', 'What they need', 'How urgent it is', 'Best callback time'],
+    roiTitle: 'Price a missed Huntsville call with your own numbers',
+    roiBody: `${exampleSentence({ missedPerWeek: 6, oneIn: 4, jobValue: 350, jobLabel: 'job' })} The $350 is an example, not a Huntsville average.`,
+    faqs: [
+      {
+        q: 'Do you have a Huntsville office?',
+        a: 'No. Executive Receptionist is run by Cole Collins from Hanceville, Alabama. Setup is done by phone and email.',
+      },
+      {
+        q: 'Which Huntsville trades is it set up for?',
+        a: 'HVAC, plumbing, roofing, electrical, and other home-service shops. The greeting and intake questions are written for your trade, and every call is emailed to you as a lead.',
+      },
+      {
+        q: 'What does it cost?',
+        a: 'The same four plans apply statewide: Starter $79 a month (100 minutes, first month $1), Growth $197, Pro $397, Elite $789. Month to month, cancel anytime.',
+      },
+      {
+        q: 'Can Ava book the visit?',
+        a: 'Once your hours are set up in your Desk, she offers open windows and books the visit on the call. Until then she takes the details and emails you the lead so you can call back.',
+      },
+    ],
+    related: ['ai-receptionist-for-hvac-and-plumbing-in-alabama', 'ai-answering-service-cullman-al', 'ai-answering-service-birmingham-al', 'after-hours-answering-service'],
+    areaServed: ['Huntsville', 'Madison', 'Harvest', 'Hampton Cove', 'Madison County', 'Alabama', 'United States'],
   },
 ];
 
 
 const guideBySlug = new Map(AVA_GUIDES.map((guide) => [guide.slug, guide]));
 
-if (AVA_GUIDES.length !== 30 || guideBySlug.size !== 30) {
-  throw new Error(`Expected 30 unique Executive Receptionist guides, found ${AVA_GUIDES.length} rows and ${guideBySlug.size} slugs.`);
+if (AVA_GUIDES.length !== 32 || guideBySlug.size !== 32) {
+  throw new Error(`Expected 32 unique Executive Receptionist guides, found ${AVA_GUIDES.length} rows and ${guideBySlug.size} slugs.`);
 }
 
 for (const guide of AVA_GUIDES) {
