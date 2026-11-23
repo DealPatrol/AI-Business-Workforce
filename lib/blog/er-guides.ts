@@ -17,7 +17,7 @@ function post(input: Omit<BlogPost, 'words' | 'site' | 'published'>): BlogPost {
 }
 
 const AVA_PLANS_LINE =
-  'Executive Receptionist (Ava) is a flat monthly plan: Starter $79 for 100 minutes (the first month is $1), Growth $197 for 300 minutes, Pro $397 for 1,200 minutes, and Elite $789 for 2,000 minutes. There are no per-minute overage fees; if you run past your minutes, Ava keeps answering and we reach out about a bigger plan.';
+  'Executive Receptionist (Ava) is a flat monthly plan: Overflow $25 for 60 minutes (then $1 a minute after 60), Starter $79 for 100 minutes (the first month is $1), Growth $197 for 300 minutes, Pro $397 for 1,200 minutes, and Elite $789 for 2,000 minutes. Starter and up have no per-minute overage fees; if you run past your minutes, Ava keeps answering and we reach out about a bigger plan.';
 
 export const ER_GUIDE_POSTS: BlogPost[] = [
   post({
@@ -96,7 +96,7 @@ export const ER_GUIDE_POSTS: BlogPost[] = [
       { type: 'p', text: 'Rosie: $49 for 250 minutes, $149 for 1,000, $299 for 2,000 a month. My AI Front Desk: $99 a month, or $79 a month billed yearly, for 200 voice minutes, with prepaid credits for extra use.' },
       { type: 'h2', text: 'Per unique caller' },
       { type: 'p', text: 'Goodcall: $79 a month for 100 unique customers, $129 for 500, $299 for 2,000, with a per-customer charge past that.' },
-      { type: 'h2', text: 'Flat plan with minutes and no overage' },
+      { type: 'h2', text: 'Flat plans with included minutes' },
       { type: 'p', text: AVA_PLANS_LINE + ' Setup is done for you.' },
       { type: 'h2', text: 'How to compare' },
       { type: 'ol', items: [

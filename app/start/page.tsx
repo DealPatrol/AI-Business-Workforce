@@ -69,7 +69,7 @@ const ECOM_ESCALATES = [
 ];
 
 const COMPARE = [
-  ['How the bill is counted', 'Per minute, per call, or per caller, with overage fees', 'One flat monthly price for your plan’s minutes. No per-minute overage charges'],
+  ['How the bill is counted', 'Per minute, per call, or per caller, with overage fees', 'One flat monthly price for your plan’s minutes. No per-minute overage on Starter and up (Overflow: $1/min after 60)'],
   ['Running past your minutes', 'Overage billed per minute or per call', 'Ava keeps answering. We reach out about moving you up a plan'],
   ['Booking during the call', 'Often through a connected calendar or scheduling app', 'Once you set your hours in the Desk and turn booking on, Ava books into your Desk calendar during the call. Optional'],
   ['Emergencies and “get me a person”', 'Varies by plan', 'Ava flags it urgent at the top of the emailed summary so you can call back first'],
@@ -175,7 +175,7 @@ export default function StartPage() {
           <li>Month to month, cancel anytime</li>
         </ul>
         <p className={styles.fine}>
-          {AVA_OFFER.starterIntro} <a href="#pricing">See all four plans</a>.
+          {AVA_OFFER.starterIntro} <a href="#pricing">See all five plans</a>.
         </p>
         <div className={styles.picker}>
           <HeroDemoPicker label="Hear Ava for your business" />
@@ -227,7 +227,7 @@ export default function StartPage() {
             <tbody>
               <tr className={styles.usRow}>
                 <th scope="row">Ava</th>
-                <td>A flat monthly plan with included minutes; no per-minute overage charges</td>
+                <td>A flat monthly plan with included minutes; no per-minute overage on Starter and up</td>
                 <td>$79/mo for 100 minutes (first month $1). Pro $397/mo for 1,200 minutes</td>
               </tr>
               {VENDOR_PLANS.map((vendor) => (

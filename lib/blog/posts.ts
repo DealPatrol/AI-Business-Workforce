@@ -359,7 +359,7 @@ export const BLOG_POSTS: BlogPost[] = [
       },
       {
         "type": "p",
-        "text": "If you run past your minutes, Ava keeps answering and we reach out about moving up a plan. There are no surprise per-minute charges, and you can cancel anytime."
+        "text": "On Starter and up, if you run past your minutes, Ava keeps answering and we reach out about moving up a plan, with no surprise per-minute charges. Overflow ($25 for 60 minutes) bills $1 a minute after 60, and you can cancel anytime."
       },
       {
         "type": "h2",

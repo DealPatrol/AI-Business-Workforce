@@ -37,7 +37,7 @@ export default async function CompetitorPage({ params }: { params: Promise<{ slu
     },
     {
       q: 'What does Ava cost?',
-      a: 'Starter $79 a month for 100 minutes (first month $1), Growth $197 for 300, Pro $397 for 1,200, Elite $789 for 2,000. Month to month, no per-minute overage.',
+      a: 'Overflow $25 a month for 60 minutes ($1/min after 60), Starter $79 a month for 100 minutes (first month $1), Growth $197 for 300, Pro $397 for 1,200, Elite $789 for 2,000. Month to month. No per-minute overage on Starter and up.',
     },
   ];
   const jsonLd = jsonLdGraph([

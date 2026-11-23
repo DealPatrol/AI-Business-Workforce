@@ -43,7 +43,7 @@ const FEATURE_GROUPS: Array<{
 const BILLING_STEPS = [
   {
     title: 'Pick a plan',
-    detail: `Choose your minutes. Starter's first month is ${AVA_PLANS.starter.firstMonthLabel}, then ${AVA_PLANS.starter.monthlyLabel}/month. Growth, Pro and Elite are billed at their monthly price from the first month.`,
+    detail: `Choose your minutes. Overflow is ${AVA_PLANS.overflow.monthlyLabel}/month for ${AVA_PLANS.overflow.minutesLabel}, then ${AVA_PLANS.overflow.overageLabel}. Starter's first month is ${AVA_PLANS.starter.firstMonthLabel}, then ${AVA_PLANS.starter.monthlyLabel}/month. Overflow, Growth, Pro and Elite are billed at their monthly price from the first month.`,
   },
   {
     title: 'Set up your line',
@@ -72,7 +72,7 @@ const FAQS = [
   },
   {
     q: 'What counts as a minute?',
-    a: 'Minutes are the time Ava spends on calls she answers for you. Every plan includes the same receptionist; plans differ by how many minutes are included each month.',
+    a: 'Minutes are the time Ava spends on calls she answers for you. Plans differ by how many minutes are included each month. Overflow includes 60 minutes, then $1/min after 60.',
   },
   {
     q: 'What if I run past my minutes?',
@@ -135,7 +135,7 @@ export function OfferPricingLayout({
 
       <section className={styles.hero} id={isPage ? 'top' : undefined}>
         <p className={styles.kicker}>For HVAC and plumbing shops that cannot miss the next repair call</p>
-        {isPage ? <h1>Your 24/7 front desk. Four simple monthly plans.</h1> : <h2>Four plans. Pick your minutes.</h2>}
+        {isPage ? <h1>Your 24/7 front desk. Five simple monthly plans.</h1> : <h2>Five plans. Pick your minutes.</h2>}
         <p className={styles.lede}>
           Executive Receptionist answers the inbound calls you cannot pick up, 24 hours a day. It writes down the
           caller’s details and the job, then emails you the summary. If you turn on booking, it offers the open windows

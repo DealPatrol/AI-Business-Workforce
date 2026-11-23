@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og';
 
-export const alt = 'Ava, the AI receptionist: every call answered. Plans from $79/month, Starter first month $1';
+export const alt = 'Ava, the AI receptionist: every call answered. Plans from $25/month, Starter first month $1';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 

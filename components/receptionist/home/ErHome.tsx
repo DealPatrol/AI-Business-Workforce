@@ -181,8 +181,8 @@ export function ErHome({ niche }: { niche?: ErDemoNiche }) {
         <div className={styles.head}>
           <h2>Simple pricing that follows your call volume.</h2>
           <p>
-            Same receptionist on every plan. Plans differ by minutes, and Elite adds priority setup. Month to month, no setup fee, no per-minute
-            overage.
+            Start at {AVA_PLANS.overflow.monthlyLabel}/mo on Overflow, or pick more minutes. Elite adds priority setup. Month to month, no setup
+            fee. Only Overflow has per-minute overage ({AVA_PLANS.overflow.overageLabel}).
           </p>
         </div>
         <div className={styles.plans}>
@@ -202,7 +202,15 @@ export function ErHome({ niche }: { niche?: ErDemoNiche }) {
                 {plan.firstMonthLabel ? (
                   <p className={styles.planIntro}>{plan.firstMonthLabel} for your first month</p>
                 ) : null}
+                {plan.overageLabel ? <p className={styles.planIntro}>{plan.overageLabel}</p> : null}
                 <p className={styles.planDesc}>{plan.description}</p>
+                {plan.overageLabel ? (
+                  <ul className={styles.planDesc}>
+                    {plan.features.slice(1).map((feature) => (
+                      <li key={feature}>{feature}</li>
+                    ))}
+                  </ul>
+                ) : null}
                 {key === 'elite' ? <p className={styles.planExtra}>Priority setup</p> : null}
                 <PlanCheckoutButton plan={key} className={plan.featured ? styles.pillDark : styles.pillLight} />
               </article>
@@ -210,12 +218,15 @@ export function ErHome({ niche }: { niche?: ErDemoNiche }) {
           })}
         </div>
         <div className={styles.includes}>
-          <h3>Every plan includes</h3>
+          <h3>Starter, Growth, Pro and Elite include</h3>
           <ul>
             {PLAN_INCLUDES.map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ul>
+          <p className={styles.fine}>
+            Overflow includes 24/7 answering, the caller&rsquo;s details, and an emailed summary of every call. {AVA_OFFER.overflowLine}
+          </p>
           <p className={styles.fine}>{AVA_OFFER.overageNote}</p>
           <p className={styles.fine}>
             <Link href="/pricing">Full plan details and billing FAQ →</Link>

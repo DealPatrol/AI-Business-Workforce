@@ -21,6 +21,11 @@ export function avaPlanForPriceId(priceId: string | null | undefined, env: NodeJ
   return null;
 }
 
+/** Optional metered overage price for Overflow (STRIPE_AVA_OVERFLOW_MINUTE_PRICE_ID). Unset today. */
+export function avaOveragePriceId(planKey: AvaPlanKey, env: NodeJS.ProcessEnv = process.env) {
+  return planKey === 'overflow' ? readStripePriceId(env.STRIPE_AVA_OVERFLOW_MINUTE_PRICE_ID) : '';
+}
+
 /** Starter's once-only first-month coupon from env. */
 export function avaFirstMonthCouponId(planKey: AvaPlanKey, env: NodeJS.ProcessEnv = process.env) {
   const name = AVA_PLANS[planKey].couponEnv;
@@ -45,6 +50,7 @@ export async function startAvaPlanCheckout(input: {
       origin: input.origin,
       planKey: input.planKey,
       priceId: avaPlanPriceId(input.planKey),
+      overagePriceId: avaOveragePriceId(input.planKey),
       firstMonthCouponId: avaFirstMonthCouponId(input.planKey),
       qualificationId: input.qualificationId,
       prefillToken: input.prefillToken,
