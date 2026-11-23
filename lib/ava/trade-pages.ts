@@ -1519,7 +1519,7 @@ export const AVA_GUIDES: AvaGuide[] = [
         a: 'Yes. Call (256) 952-4935 and Ava answers as a made-up HVAC company, or talk to her in your browser on the demo page. Nothing books a real truck.',
       },
     ],
-    related: ['ai-receptionist-for-hvac-and-plumbing-in-alabama', 'ai-answering-service-birmingham-al', 'ai-answering-service-cullman-al', 'after-hours-answering-service'],
+    related: ['ai-receptionist-for-hvac-and-plumbing-in-alabama', 'ai-answering-service-albertville-guntersville-al', 'ai-answering-service-anniston-oxford-al', 'ai-answering-service-cullman-al'],
     areaServed: ['Gadsden', 'Rainbow City', 'Attalla', 'Southside', 'Alabama', 'United States'],
   },
   {
@@ -1613,7 +1613,7 @@ export const AVA_GUIDES: AvaGuide[] = [
         a: 'Yes. Your carrier forwards calls to Ava. Forward every call, or only the ones you miss or can’t take while busy, so she covers overflow and after hours.',
       },
     ],
-    related: ['ai-receptionist-for-hvac-and-plumbing-in-alabama', 'ai-answering-service-huntsville-al', 'ai-answering-service-gadsden-al', 'after-hours-answering-service'],
+    related: ['ai-receptionist-for-hvac-and-plumbing-in-alabama', 'ai-answering-service-huntsville-al', 'ai-answering-service-decatur-al', 'ai-answering-service-albertville-guntersville-al', 'ai-answering-service-for-contractors-alabama'],
     areaServed: ['Cullman', 'Hanceville', 'Good Hope', 'Vinemont', 'Cullman County', 'Alabama', 'United States'],
   },
   {
@@ -1660,16 +1660,319 @@ export const AVA_GUIDES: AvaGuide[] = [
         a: 'Once your hours are set up in your Desk, she offers open windows and books the visit on the call. Until then she takes the details and emails you the lead so you can call back.',
       },
     ],
-    related: ['ai-receptionist-for-hvac-and-plumbing-in-alabama', 'ai-answering-service-cullman-al', 'ai-answering-service-birmingham-al', 'after-hours-answering-service'],
+    related: ['ai-receptionist-for-hvac-and-plumbing-in-alabama', 'ai-answering-service-cullman-al', 'ai-answering-service-decatur-al', 'ai-answering-service-birmingham-al'],
     areaServed: ['Huntsville', 'Madison', 'Harvest', 'Hampton Cove', 'Madison County', 'Alabama', 'United States'],
+  },  {
+    slug: 'ai-answering-service-decatur-al',
+    kind: 'guide',
+    navLabel: 'Decatur, AL',
+    blurb: 'An AI receptionist for Decatur and Morgan County home-service shops.',
+    title: 'AI Answering Service in Decatur, AL',
+    metaTitle: 'AI Receptionist & Answering Service in Decatur, AL',
+    description:
+      'AI answering service for Decatur, Hartselle and Morgan County HVAC, plumbing, roofing and electrical shops. Ava emails you each lead. From $25/mo.',
+    eyebrow: 'Decatur, Alabama',
+    h1: 'AI answering service for Decatur shops',
+    directAnswer:
+      'Executive Receptionist is run by Cole Collins in Hanceville, in Cullman County, just south of Morgan County. HVAC, plumbing, roofing, and electrical shops in Decatur, Hartselle, Priceville, Trinity, and the rest of Morgan County keep their number and forward missed or after-hours calls to Ava. She says she is an AI receptionist, takes the name, callback number, address, and what is wrong, and emails you the lead. Plans are the same statewide: Overflow $25 a month, Starter $79 (first month $1), Growth $197, Pro $397, Elite $789. Demo line: (256) 952-4935.',
+    audience: 'Decatur and Morgan County home-service shops',
+    lede: 'Keep your 256 number, forward the calls you can’t take, and get every lead by email. Setup is done by phone and email. We do not claim a Decatur office or a list of local customers.',
+    pain: 'A lot of Morgan County shops are one to three trucks, and the owner answers the phone between jobs. When a call comes in while he is under a house in Hartselle or on a roof in Priceville, it goes to voicemail, and the caller tries the next listing.',
+    calls: [
+      'No-heat and no-cool calls after hours',
+      'Leaks, backups, and water-heater failures',
+      'Roof leaks after a storm line moves through the Tennessee Valley',
+      'Breakers tripping, outages, and panel questions',
+      'Overflow while the owner is on a job',
+    ],
+    qualification: ['Name and callback number', 'Address and town (Decatur, Hartselle, Priceville, Trinity…)', 'What they need', 'How urgent it is', 'Best callback time'],
+    roiTitle: 'Price a missed Decatur call with your own numbers',
+    roiBody: `${exampleSentence({ missedPerWeek: 5, oneIn: 4, jobValue: 350, jobLabel: 'job' })} The $350 is an example, not a Decatur average.`,
+    faqs: [
+      {
+        q: 'Do you have an office in Decatur?',
+        a: 'No. Executive Receptionist is run by Cole Collins from Hanceville, Alabama, in Cullman County. Setup is done by phone and email.',
+      },
+      {
+        q: 'Is there a local rate for Morgan County?',
+        a: 'No. The same five plans apply statewide: Overflow $25 (60 minutes, then $1/min after 60), Starter $79 a month (100 minutes, first month $1), Growth $197, Pro $397, Elite $789. Month to month.',
+      },
+      {
+        q: 'Which Decatur trades is it set up for?',
+        a: 'HVAC, plumbing, roofing, electrical, and other home-service shops. Cole writes the greeting and intake questions for your trade, such as no-heat versus no-cool, an active leak, storm damage, or a breaker that keeps tripping.',
+      },
+      {
+        q: 'Can I hear it before I pay?',
+        a: 'Yes. Call (256) 952-4935 and Ava answers as Porchlight Heating & Air, a made-up HVAC company, or talk to her in your browser on the demo page.',
+      },
+    ],
+    related: ['ai-answering-service-huntsville-al', 'ai-answering-service-cullman-al', 'ai-answering-service-for-contractors-alabama', 'after-hours-answering-service'],
+    areaServed: ['Decatur', 'Hartselle', 'Priceville', 'Trinity', 'Morgan County', 'Alabama', 'United States'],
+  },
+  {
+    slug: 'ai-answering-service-albertville-guntersville-al',
+    kind: 'guide',
+    navLabel: 'Albertville & Guntersville, AL',
+    blurb: 'An AI receptionist for Marshall County shops in Albertville, Guntersville, Boaz, and Arab.',
+    title: 'AI Answering Service in Albertville and Guntersville, AL',
+    metaTitle: 'AI Receptionist for Albertville & Guntersville, AL',
+    description:
+      'AI answering service for Albertville, Guntersville, Boaz and Arab shops. Forward missed and after-hours calls; Ava emails you the lead. From $25/mo.',
+    eyebrow: 'Marshall County, Alabama',
+    h1: 'AI answering service for Albertville and Guntersville shops',
+    directAnswer:
+      'Executive Receptionist is run by Cole Collins in Hanceville, in Cullman County, next door to Marshall County. Shops in Albertville, Guntersville, Boaz, Arab, and the rest of Marshall County keep their number and forward missed or after-hours calls to Ava. She says she is an AI receptionist, takes the details, and emails you the lead. Plans are the same statewide: Overflow $25 a month, Starter $79 (first month $1), Growth $197, Pro $397, Elite $789. Demo line: (256) 952-4935.',
+    audience: 'Marshall County home-service shops',
+    lede: 'Same setup as anywhere in Alabama: keep your number, forward the calls you can’t take, and get every lead by email. No Marshall County office is claimed; setup is by phone and email.',
+    pain: 'Sand Mountain and lake shops cover a lot of road. Between Boaz, Albertville, Arab, and the lake houses around Guntersville, the owner is often driving or on a job when the phone rings, and lake-house owners calling from out of town will not wait on voicemail.',
+    calls: [
+      'No-heat and no-cool calls, including lake houses',
+      'Leaks, backups, septic and water-heater calls',
+      'Roof and storm-damage calls',
+      'Electrical outages and generator questions',
+      'After-hours and weekend overflow',
+    ],
+    qualification: ['Name and callback number', 'Address and town (Albertville, Guntersville, Boaz, Arab…)', 'Whether it is a full-time home or a lake house', 'What they need and how urgent it is', 'Best callback time'],
+    roiTitle: 'Price a missed Marshall County call with your own numbers',
+    roiBody: `${exampleSentence({ missedPerWeek: 5, oneIn: 4, jobValue: 350, jobLabel: 'job' })} The $350 is an example, not a Marshall County average.`,
+    faqs: [
+      {
+        q: 'Do you have an office in Albertville or Guntersville?',
+        a: 'No. Executive Receptionist is run by Cole Collins from Hanceville, Alabama. Setup is done by phone and email.',
+      },
+      {
+        q: 'Can Ava ask whether a call is for a lake house?',
+        a: 'Yes. Her intake questions are the ones you approve. A common one around Guntersville is whether the caller is at the property or calling from out of town, so you know whether someone can let the tech in.',
+      },
+      {
+        q: 'What does it cost?',
+        a: 'The same five plans apply statewide: Overflow $25 (60 minutes, then $1/min after 60), Starter $79 a month (100 minutes, first month $1), Growth $197, Pro $397, Elite $789. Month to month, cancel anytime.',
+      },
+      {
+        q: 'Can I keep my number?',
+        a: 'Yes. Your carrier forwards the calls you choose (all calls, missed calls, or after-hours) to Ava. Your customers keep calling the number they already have.',
+      },
+    ],
+    related: ['ai-answering-service-gadsden-al', 'ai-answering-service-cullman-al', 'ai-answering-service-for-septic', 'ai-answering-service-for-contractors-alabama'],
+    areaServed: ['Albertville', 'Guntersville', 'Boaz', 'Arab', 'Marshall County', 'Alabama', 'United States'],
+  },
+  {
+    slug: 'ai-answering-service-anniston-oxford-al',
+    kind: 'guide',
+    navLabel: 'Anniston & Oxford, AL',
+    blurb: 'An AI receptionist for Calhoun County shops in Anniston, Oxford, Jacksonville, and Weaver.',
+    title: 'AI Answering Service in Anniston and Oxford, AL',
+    metaTitle: 'AI Receptionist for Anniston & Oxford, AL Shops',
+    description:
+      'AI answering service for Anniston, Oxford, Jacksonville and Calhoun County HVAC, plumbing, roofing and electrical shops. Ava emails each lead. From $25/mo.',
+    eyebrow: 'Calhoun County, Alabama',
+    h1: 'AI answering service for Anniston and Oxford shops',
+    directAnswer:
+      'Executive Receptionist is run by Cole Collins in Hanceville, Alabama. HVAC, plumbing, roofing, and electrical shops in Anniston, Oxford, Jacksonville, Weaver, and the rest of Calhoun County keep their number and forward missed or after-hours calls to Ava. She says she is an AI receptionist, takes the name, callback number, address, and what is wrong, and emails you the lead. Plans are the same statewide: Overflow $25 a month, Starter $79 (first month $1), Growth $197, Pro $397, Elite $789. Demo line: (256) 952-4935.',
+    audience: 'Calhoun County home-service shops',
+    lede: 'Keep your number, forward the calls you can’t take, and get every lead by email. Setup is done by phone and email. We do not claim a Calhoun County office or local customers.',
+    pain: 'Most Calhoun County shops run lean. When the crew is on a job in Oxford and the owner is quoting in Jacksonville, the shop line rolls to voicemail, and a caller with no heat calls the next name on the list.',
+    calls: [
+      'No-heat and no-cool calls after hours',
+      'Leaks, backups, and water-heater failures',
+      'Roof and storm-damage calls',
+      'Electrical outages and panel questions',
+      'Overflow while the owner is on a job',
+    ],
+    qualification: ['Name and callback number', 'Address and town (Anniston, Oxford, Jacksonville, Weaver…)', 'What they need', 'How urgent it is', 'Best callback time'],
+    roiTitle: 'Price a missed Calhoun County call with your own numbers',
+    roiBody: `${exampleSentence({ missedPerWeek: 5, oneIn: 4, jobValue: 350, jobLabel: 'job' })} The $350 is an example, not an Anniston average.`,
+    faqs: [
+      {
+        q: 'Do you have an office in Anniston or Oxford?',
+        a: 'No. Executive Receptionist is run by Cole Collins from Hanceville, Alabama. Setup is done by phone and email.',
+      },
+      {
+        q: 'Which trades is it set up for?',
+        a: 'HVAC, plumbing, roofing, electrical, and other home-service shops. Cole writes the greeting and intake questions for your trade, and every call is emailed to you as a lead.',
+      },
+      {
+        q: 'What does it cost?',
+        a: 'The same five plans apply statewide: Overflow $25 (60 minutes, then $1/min after 60), Starter $79 a month (100 minutes, first month $1), Growth $197, Pro $397, Elite $789. Month to month.',
+      },
+      {
+        q: 'Does Ava pretend to be a person?',
+        a: 'No. She says she is an AI receptionist for your shop, asks the questions you approved, and emails you the details so you can call back.',
+      },
+    ],
+    related: ['ai-answering-service-gadsden-al', 'ai-answering-service-birmingham-al', 'ai-answering-service-for-contractors-alabama', 'after-hours-answering-service'],
+    areaServed: ['Anniston', 'Oxford', 'Jacksonville', 'Weaver', 'Calhoun County', 'Alabama', 'United States'],
+  },
+  {
+    slug: 'ai-answering-service-for-roofers-alabama',
+    kind: 'guide',
+    navLabel: 'Alabama roofers',
+    blurb: 'Storm-day call intake for Alabama roofing companies: leaks, tarps, inspections, and insurance questions.',
+    title: 'AI Answering Service for Alabama Roofers',
+    metaTitle: 'AI Receptionist for Alabama Roofing Companies',
+    description:
+      'An AI answering service for Alabama roofers. Ava takes storm-day calls, asks about active leaks and insurance, and emails you each lead. From $25/mo.',
+    eyebrow: 'Alabama roofing companies',
+    h1: 'AI answering service for Alabama roofers',
+    directAnswer:
+      'Executive Receptionist gives Alabama roofing companies an AI receptionist named Ava. After a storm, when every line is ringing, she answers the calls you forward, asks whether water is coming in right now, whether there is visible damage, and whether the homeowner has filed an insurance claim, then emails you the lead with the address. She does not promise inspections, quote prices you have not approved, or give insurance advice. Plans: Overflow $25 a month, Starter $79 (first month $1), Growth $197, Pro $397, Elite $789. It is run by Cole Collins in Hanceville, Alabama.',
+    audience: 'Alabama roofing and storm-restoration companies',
+    lede: 'Storm days are when roofers miss the most calls, because the whole crew is on roofs. Forward the overflow to Ava and sort the active leaks from the “can someone look at it next week” calls in your inbox.',
+    pain: 'After a line of storms crosses North Alabama, a roofer can get more calls in an afternoon than in a normal week. The owner is on a ladder, the office line is a cell phone, and the homeowner who reaches a person first usually books that company.',
+    calls: [
+      'Active leaks and “water coming through the ceiling” calls',
+      'Hail and wind damage inspection requests',
+      'Tarp requests after a storm',
+      'Insurance claim questions (Ava takes details, gives no advice)',
+      'Replacement estimate requests',
+    ],
+    qualification: [
+      'Name, callback number, and property address',
+      'Is water coming in right now?',
+      'What they can see: missing shingles, a tree on the roof, ceiling stains',
+      'Whether a claim has been filed (yes, no, not sure)',
+      'Best time to inspect',
+    ],
+    roiTitle: 'Price a missed storm-day call with your own numbers',
+    roiBody: `${exampleSentence({ missedPerWeek: 8, oneIn: 5, jobValue: 900, jobLabel: 'repair' })} The numbers are an example, not an Alabama roofing average. A full replacement is worth more; use your own figures.`,
+    faqs: [
+      {
+        q: 'Will Ava promise a free inspection?',
+        a: 'Only if you tell her to. She uses the offer and wording you approve, and otherwise says someone from your company will call back to schedule.',
+      },
+      {
+        q: 'Does she give insurance advice?',
+        a: 'No. She records whether the homeowner has filed a claim and anything they volunteer, and passes it to you. She does not advise on coverage or claims.',
+      },
+      {
+        q: 'What happens if a storm week uses up my minutes?',
+        a: 'Ava keeps answering. Overflow bills $1 a minute after its 60 included minutes. Starter and up have no metered overage; if you keep going past your minutes, Cole reaches out about moving up a plan.',
+      },
+      {
+        q: 'Is there a roofing call script I can use?',
+        a: 'Yes. The free roofing storm call script at /templates/roofing-storm-call-script lists the intake questions and urgent rules, and you can use it with your own office staff too.',
+      },
+    ],
+    related: ['ai-answering-service-for-roofers', 'emergency-call-answering', 'ai-answering-service-for-contractors-alabama', 'ai-answering-service-huntsville-al'],
+    areaServed: ['Cullman', 'Huntsville', 'Gadsden', 'Birmingham', 'Decatur', 'Alabama', 'United States'],
+  },
+  {
+    slug: 'ai-answering-service-for-contractors-alabama',
+    kind: 'guide',
+    navLabel: 'Alabama contractors',
+    blurb: 'One page for Alabama trades: which shops it fits, the towns we have pages for, and the published prices.',
+    title: 'AI Answering Service for Alabama Contractors',
+    metaTitle: 'AI Receptionist for Alabama Contractors and Trades',
+    description:
+      'An AI answering service for Alabama HVAC, plumbing, roofing, electrical and septic contractors. Keep your number; Ava emails you each lead. From $25/mo.',
+    eyebrow: 'Alabama trades',
+    h1: 'AI answering service for Alabama contractors',
+    directAnswer:
+      'Executive Receptionist is an AI answering service for Alabama contractors, run by Cole Collins in Hanceville, Alabama. HVAC, plumbing, roofing, electrical, septic, garage door, and other home-service shops keep their existing number and forward missed, busy, or after-hours calls to Ava. She says she is an AI receptionist, asks the questions you approve for your trade, and emails you the lead. Published plans, month to month: Overflow $25 (60 minutes, then $1 a minute), Starter $79 (100 minutes, first month $1), Growth $197 (300), Pro $397 (1,200), Elite $789 (2,000). Demo line: (256) 952-4935.',
+    audience: 'Alabama home-service contractors',
+    lede: 'Most Alabama trade shops do not need a call center. They need the calls they miss while working to turn into leads instead of voicemails. That is the whole job.',
+    pain: 'An Alabama contractor’s busiest hours are the hours nobody is at a desk: the first hot week of summer, the first freeze, and the day after a storm. Calls that roll to voicemail on those days often go to whoever picks up next.',
+    calls: [
+      'HVAC: no heat, no cool, and maintenance calls',
+      'Plumbing and septic: leaks, backups, water heaters, pumping',
+      'Roofing: leaks and storm damage',
+      'Electrical: outages, breakers, panels, generators',
+      'Garage doors, pest control, tree service, and other home services',
+    ],
+    qualification: ['Name and callback number', 'Address and town', 'What they need, in your trade’s words', 'How urgent it is, using your rules', 'Best callback time'],
+    roiTitle: 'Price a missed call with your own numbers',
+    roiBody: `${exampleSentence({ missedPerWeek: 5, oneIn: 4, jobValue: 350, jobLabel: 'job' })} The $350 is an example. Use the missed-call calculator with your own average job.`,
+    faqs: [
+      {
+        q: 'Which Alabama towns have their own page?',
+        a: 'Cullman, Huntsville, Decatur, Gadsden, Albertville and Guntersville, Anniston and Oxford, and Birmingham. The service and prices are the same anywhere in Alabama.',
+      },
+      {
+        q: 'Is Executive Receptionist an Alabama company?',
+        a: 'It is operated by Cole Collins in Hanceville, in Cullman County, Alabama. There are no other local offices; setup is done by phone and email.',
+      },
+      {
+        q: 'Does Ava book jobs?',
+        a: 'Once your available windows are set up in your Desk, she can offer them and book the visit on the call. Until then she takes the details and emails you the lead.',
+      },
+      {
+        q: 'Do I sign a contract?',
+        a: 'No. Plans are month to month and you can cancel anytime. Starter is the only plan with a $1 first month.',
+      },
+    ],
+    related: [
+      'ai-receptionist-for-hvac-and-plumbing-in-alabama',
+      'ai-answering-service-for-roofers-alabama',
+      'ai-answering-service-cullman-al',
+      'ai-answering-service-decatur-al',
+      'ai-answering-service-albertville-guntersville-al',
+      'ai-answering-service-anniston-oxford-al',
+    ],
+    areaServed: ['Cullman', 'Huntsville', 'Decatur', 'Gadsden', 'Albertville', 'Guntersville', 'Anniston', 'Oxford', 'Birmingham', 'Alabama', 'United States'],
+  },
+  {
+    slug: 'ai-receptionist-vs-voicemail',
+    kind: 'comparison',
+    navLabel: 'Vs voicemail',
+    blurb: 'What happens to a caller who reaches voicemail, and what changes when an AI receptionist answers instead.',
+    title: 'AI Receptionist vs Voicemail for a Small Shop',
+    metaTitle: 'AI Receptionist vs Voicemail: What Changes for a Shop',
+    description:
+      'Voicemail vs an AI receptionist for a small service business: what the caller hears, what you get back, and what it costs. Plans from $25/mo.',
+    eyebrow: 'AI receptionist vs. voicemail',
+    h1: 'AI receptionist vs. voicemail: what changes for a small shop',
+    directAnswer:
+      'Voicemail is already included in your phone plan, but it leaves the caller to decide whether to talk, and you get whatever they remember to say. An AI receptionist like Executive Receptionist’s Ava answers the call, asks the questions you approve (name, callback number, address, what they need, how urgent), and emails you a written lead. It costs money: Overflow is $25 a month and Starter is $79 a month (first month $1). Whether it is worth it depends on how many calls you miss and what a job is worth to you, so use your own numbers.',
+    audience: 'owners deciding whether voicemail is good enough',
+    lede: 'Voicemail is not wrong. For a shop that misses a call or two a week, it may be enough. This page lays out the difference so you can decide with your own numbers.',
+    pain: 'The problem with voicemail is not the message; it is the callers who hang up without leaving one and call the next shop. You never find out how many there were, because they never left a message.',
+    calls: [
+      'Calls that come in while you are on a job',
+      'Nights, weekends, and holidays',
+      'Callers who would hang up rather than leave a message',
+      'Calls where you need an address before you call back',
+      'Busy days when several calls come in at once',
+    ],
+    qualification: ['Name and callback number', 'Address', 'What they need', 'How urgent it is', 'Best callback time'],
+    roiTitle: 'Decide with your own numbers, not a made-up percentage',
+    roiBody: `${exampleSentence({ missedPerWeek: 4, oneIn: 4, jobValue: 300, jobLabel: 'job' })} If your numbers are much smaller, voicemail may be the right answer. The calculator lets you try yours.`,
+    columns: [
+      {
+        title: 'Voicemail',
+        body: 'Included in your phone plan. The caller decides whether to leave a message, and how much to say. Nobody asks for the address or how urgent it is. Callers who hang up leave no trace.',
+      },
+      {
+        title: 'Missed-call text back',
+        body: 'Sends the caller a text after a missed call. Useful, but the caller still has to reply, and texting features depend on carrier registration. Executive Receptionist’s texting stays off until its 10DLC registration is approved.',
+      },
+      {
+        title: 'Executive Receptionist (Ava)',
+        body: 'Answers the forwarded call, says she is an AI receptionist, asks your questions, and emails you a written lead. Costs $25 to $789 a month depending on minutes. She will sometimes get a call wrong; you review leads and adjust the rules.',
+      },
+    ],
+    faqs: [
+      {
+        q: 'Is voicemail ever the better choice?',
+        a: 'Yes. If you rarely miss calls, or most callers are existing customers who will leave a message, voicemail costs nothing extra. An AI receptionist makes sense when missed calls are new customers who will just call someone else.',
+      },
+      {
+        q: 'Can I use both?',
+        a: 'Yes. Many shops forward only missed or after-hours calls to Ava and keep answering the rest themselves. You choose which calls your carrier forwards.',
+      },
+      {
+        q: 'What does the caller hear?',
+        a: 'Ava greets them with your business name, says she is an AI receptionist, and asks the questions you approved. You can hear exactly how she sounds by calling the demo line at (256) 952-4935.',
+      },
+    ],
+    related: ['ai-receptionist-vs-answering-service', 'missed-call-cost-calculator', 'after-hours-answering-service'],
   },
 ];
 
 
 const guideBySlug = new Map(AVA_GUIDES.map((guide) => [guide.slug, guide]));
 
-if (AVA_GUIDES.length !== 32 || guideBySlug.size !== 32) {
-  throw new Error(`Expected 32 unique Executive Receptionist guides, found ${AVA_GUIDES.length} rows and ${guideBySlug.size} slugs.`);
+if (AVA_GUIDES.length !== 38 || guideBySlug.size !== 38) {
+  throw new Error(`Expected 38 unique Executive Receptionist guides, found ${AVA_GUIDES.length} rows and ${guideBySlug.size} slugs.`);
 }
 
 for (const guide of AVA_GUIDES) {
