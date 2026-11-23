@@ -5,6 +5,7 @@ import { breadcrumbNode, executiveReceptionistOrganization, faqNode, jsonLdGraph
 import { AVA_FACTS, COMPETITORS, PRICES_CHECKED_LABEL } from '@/lib/er/competitors';
 import { requestHost } from '@/lib/seo/request-host';
 import { FpgCompareHub } from '@/components/fpg/CompareHub';
+import { ER_ICON_METADATA, ER_OG_IMAGE, ER_OG_IMAGE_ALT } from '@/lib/er/page-meta';
 import { EXECUTIVE_RECEPTIONIST_ORIGIN, isExecutiveReceptionistHost } from '@/lib/site-url';
 
 export const dynamic = 'force-dynamic';
@@ -45,7 +46,8 @@ export async function generateMetadata(): Promise<Metadata> {
     title: { absolute: title },
     description,
     alternates: { canonical },
-    openGraph: { images: ['/og-default.png'], title, description, url: canonical, siteName: 'Executive Receptionist', type: 'website' },
+    ...ER_ICON_METADATA,
+    openGraph: { images: [{ url: ER_OG_IMAGE, width: 1200, height: 630, alt: ER_OG_IMAGE_ALT }], title, description, url: canonical, siteName: 'Executive Receptionist', type: 'website' },
   };
 }
 

@@ -6,6 +6,7 @@ import { SisterSites } from '@/components/seo/SisterSites';
 import { AVA_DEMO_LINE } from '@/lib/ava/demo-line';
 import { AVA_OFFER } from '@/lib/ava/pricing';
 import { ER_NAV, erFooterColumns } from '@/lib/er/site-links';
+import { ErLogoMark } from '@/components/er/ErLogoMark';
 import styles from './er-site.module.css';
 
 /** Demo line above the fold on every Executive Receptionist template. */
@@ -27,9 +28,7 @@ export function ErSiteHeader() {
     <header className={styles.header}>
       <div className={styles.headerInner}>
         <Link href="/" className={styles.logo}>
-          <span aria-hidden="true" className={styles.logoMark}>
-            A
-          </span>
+          <ErLogoMark className={styles.logoMark} />
           Executive Receptionist
         </Link>
         <nav aria-label="Main" className={styles.nav}>

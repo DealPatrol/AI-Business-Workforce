@@ -25,7 +25,7 @@
 .header { position: sticky; top: 0; z-index: 20; background: rgba(255, 255, 255, 0.86); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
 .headerInner { width: min(1160px, calc(100% - 40px)); margin: 0 auto; display: flex; align-items: center; gap: 28px; min-height: 68px; }
 .logo { display: inline-flex; align-items: center; gap: 10px; font-family: var(--serif); font-size: 21px; font-weight: 600; text-decoration: none; margin: 0; }
-.logoMark { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 999px; background: var(--ink); color: var(--cream); font-size: 16px; }
+.logoMark { display: block; width: 52px; height: auto; flex: none; }
 .navLinks { display: flex; gap: 22px; margin-left: auto; font-size: 14px; }
 .navLinks a { text-decoration: none; color: var(--ink-soft); }
 .navLinks a:hover { color: var(--copper); }
@@ -207,7 +207,7 @@
 @media (max-width: 700px) {
   .page .mobileBar { display: flex; position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 30; justify-content: center; align-items: center; min-height: 52px; border-radius: 999px; background: var(--ink); color: #fff; text-decoration: none; font-weight: 500; box-shadow: 0 10px 30px rgba(28, 20, 14, 0.3); }
 }
-@media (max-width: 480px) { .logo { font-size: 17px; white-space: nowrap; } .logoMark { width: 26px; height: 26px; font-size: 14px; } .headerInner { gap: 12px; } }
+@media (max-width: 480px) { .logo { font-size: 17px; white-space: nowrap; } .logoMark { width: 44px; } .headerInner { gap: 12px; } }
 
 .sisterSites { flex: 1 1 100%; margin-top: 8px; }
 .sisterSites h2 { font-size: 15px; margin: 0 0 8px; color: var(--ink, inherit); }

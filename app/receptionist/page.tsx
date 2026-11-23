@@ -4,6 +4,7 @@ import { avaPlanOfferNodes, executiveReceptionistOrganization, faqNode } from '@
 import { ER_HOME_FAQS } from '@/lib/ava/er-home-content';
 import { getErDemoNiche } from '@/lib/er-demos';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
+import { ER_ICON_METADATA, ER_OG_IMAGE, ER_OG_IMAGE_ALT } from '@/lib/er/page-meta';
 import { EXECUTIVE_RECEPTIONIST_ORIGIN } from '@/lib/site-url';
 
 const seo = pageSeo('/receptionist');
@@ -39,14 +40,16 @@ export async function generateMetadata(): Promise<Metadata> {
     title: metadataTitle(seo),
     description,
     alternates: { canonical },
-    openGraph: { images: ['/og-default.png'],
+    ...ER_ICON_METADATA,
+    openGraph: {
+      images: [{ url: ER_OG_IMAGE, width: 1200, height: 630, alt: ER_OG_IMAGE_ALT }],
       title,
       description,
       url: canonical,
       siteName: 'Executive Receptionist',
       type: 'website',
     },
-    twitter: { images: ['/og-default.png'], card: 'summary_large_image', title, description },
+    twitter: { images: [ER_OG_IMAGE], card: 'summary_large_image', title, description },
   };
 }
 

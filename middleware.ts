@@ -110,9 +110,35 @@ function wwwExecutiveReceptionistRedirect(request: NextRequest) {
   return NextResponse.redirect(destination, EXECUTIVE_RECEPTIONIST_WWW_REDIRECT_STATUS);
 }
 
+
+/** Shared icon and default OG paths serve the owl brand on executivereceptionist.com only. */
+const ER_ASSET_REWRITES: Record<string, string> = {
+  '/favicon.ico': '/er/favicon.ico',
+  '/icon': '/er/icon-512.png',
+  '/icon.png': '/er/icon-512.png',
+  '/apple-icon': '/er/apple-touch-icon.png',
+  '/apple-icon.png': '/er/apple-touch-icon.png',
+  '/apple-touch-icon.png': '/er/apple-touch-icon.png',
+  '/icon-192.png': '/er/icon-192.png',
+  '/icon-512.png': '/er/icon-512.png',
+  '/og-default.png': '/er/og-default.png',
+};
+
+function executiveReceptionistAssetRewrite(request: NextRequest) {
+  if (!isExecutiveReceptionistHost(requestHost(request))) return null;
+  const dest = ER_ASSET_REWRITES[request.nextUrl.pathname];
+  if (!dest) return null;
+  const url = request.nextUrl.clone();
+  url.pathname = dest;
+  return NextResponse.rewrite(url);
+}
+
 export async function middleware(request: NextRequest) {
   const wwwRedirect = wwwExecutiveReceptionistRedirect(request);
   if (wwwRedirect) return wwwRedirect;
+
+  const erAssets = executiveReceptionistAssetRewrite(request);
+  if (erAssets) return erAssets;
 
   const redirected = legacyHostRedirect(request);
   if (redirected) return redirected;
@@ -166,6 +192,19 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // The page matcher skips paths with a dot. These two still need the www → apex redirect.
-  matcher: ['/((?!_next/|.*\\..*).*)', '/robots.txt', '/sitemap.xml'],
+  // The page matcher skips paths with a dot. robots, sitemap, and ER icon/OG paths still need the www → apex redirect (and ER asset rewrites).
+  matcher: [
+    '/((?!_next/|.*\\..*).*)',
+    '/robots.txt',
+    '/sitemap.xml',
+    '/favicon.ico',
+    '/icon',
+    '/icon.png',
+    '/apple-icon',
+    '/apple-icon.png',
+    '/apple-touch-icon.png',
+    '/icon-192.png',
+    '/icon-512.png',
+    '/og-default.png',
+  ],
 };
