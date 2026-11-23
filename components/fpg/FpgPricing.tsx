@@ -58,7 +58,7 @@ export function FpgPricingTop() {
         <span className={fpg.kicker}>Sister brand</span>
         <h2 className={fpg.h2}>Executive Receptionist plans</h2>
         <p className={fpg.body}>
-          The AI receptionist is a separate product with its own site, <a href={ER_HOME}>executivereceptionist.com</a>. Its four plans are also listed
+          The AI receptionist is a separate product with its own site, <a href={ER_HOME}>executivereceptionist.com</a>. Its five plans are also listed
           below: Starter $79/mo (100 minutes, first month $1), Growth $197/mo (300), Pro $397/mo (1,200)
           and Elite $789/mo (2,000).
         </p>

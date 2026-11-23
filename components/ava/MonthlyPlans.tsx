@@ -21,7 +21,7 @@ export function PlanCheckoutButton({
   );
 }
 
-/** The four published monthly plans. Pro is the featured plan. */
+/** The five published monthly plans (Overflow first, cheapest). Pro is the featured plan. */
 export function MonthlyPlans({ heading = true, includes = true }: { heading?: boolean; includes?: boolean }) {
   return (
     <div className={styles.wrap} id="plans">
@@ -30,8 +30,9 @@ export function MonthlyPlans({ heading = true, includes = true }: { heading?: bo
           <p className={styles.kicker}>Pricing · month to month</p>
           <h2>Pick your minutes. Ava answers every call.</h2>
           <p>
-            Every plan includes the same receptionist. Plans differ by how many minutes of calls Ava answers each month.
-            Starter&rsquo;s first month is {AVA_PLANS.starter.firstMonthLabel}.
+            Plans differ by how many minutes of calls Ava answers each month. Overflow starts at {AVA_PLANS.overflow.monthlyLabel}/month
+            for {AVA_PLANS.overflow.minutesLabel}, then {AVA_PLANS.overflow.overageLabel}. Starter&rsquo;s first month is{' '}
+            {AVA_PLANS.starter.firstMonthLabel}.
           </p>
         </div>
       ) : null}
@@ -60,7 +61,9 @@ export function MonthlyPlans({ heading = true, includes = true }: { heading?: bo
               <p className={styles.terms}>
                 {plan.firstMonthLabel
                   ? `${plan.firstMonthLabel} today for your first month, then ${plan.monthlyLabel}/month. Renews automatically. Cancel anytime.`
-                  : `${plan.monthlyLabel} today, then ${plan.monthlyLabel}/month. Renews monthly. Cancel anytime.`}
+                  : plan.overageLabel
+                    ? `${plan.monthlyLabel} today, then ${plan.monthlyLabel}/month. ${plan.minutesLabel} included, ${plan.overageLabel}, billed on your next invoice. Cancel anytime.`
+                    : `${plan.monthlyLabel} today, then ${plan.monthlyLabel}/month. Renews monthly. Cancel anytime.`}
               </p>
               <TalkToAvaButton plan={key} />
             </article>
@@ -69,12 +72,15 @@ export function MonthlyPlans({ heading = true, includes = true }: { heading?: bo
       </div>
       {includes ? (
         <div className={styles.includes}>
-          <h3>Every plan includes</h3>
+          <h3>Starter, Growth, Pro and Elite include</h3>
           <ul>
             {AVA_PLAN_INCLUDES.map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ul>
+          <p className={styles.note}>
+            Overflow includes 24/7 answering, the caller&rsquo;s details, and an emailed summary of every call. {AVA_OFFER.overflowLine}
+          </p>
           <p className={styles.note}>{AVA_OFFER.overageNote}</p>
           <p className={styles.note}>
             Booking needs your hours set up in your Desk first. Until then, Ava takes the details and you call the customer back.

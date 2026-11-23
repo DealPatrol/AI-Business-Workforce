@@ -1,7 +1,7 @@
 export const AVA_HOME_FAQS = [
   {
     q: 'How much does Executive Receptionist cost?',
-    a: 'Four monthly plans: Starter $79 (100 minutes, first month $1), Growth $197 (300 minutes), Pro $397 (1,200 minutes, best value), Elite $789 (2,000 minutes). Month to month, cancel anytime. No free plan or trial.',
+    a: 'Five monthly plans: Overflow $25 (60 minutes, then $1/min after 60), Starter $79 (100 minutes, first month $1), Growth $197 (300 minutes), Pro $397 (1,200 minutes, best value), Elite $789 (2,000 minutes). Month to month, cancel anytime. No free plan or trial.',
   },
   {
     q: 'Can I hear Executive Receptionist before I pay?',

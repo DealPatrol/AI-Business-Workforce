@@ -15,7 +15,11 @@ export function avaOfferNodes(pageUrl: string) {
       priceCurrency: 'USD',
       availability: 'https://schema.org/InStock',
       url: pageUrl,
-      description: plan.firstMonthLabel ? `${plan.description} ${AVA_OFFER.starterIntro}` : plan.description,
+      description: plan.firstMonthLabel
+        ? `${plan.description} ${AVA_OFFER.starterIntro}`
+        : plan.overageLabel
+          ? `${plan.description} ${plan.minutesLabel} included, ${plan.overageLabel}.`
+          : plan.description,
       priceSpecification: {
         '@type': 'UnitPriceSpecification',
         price: (plan.monthlyCents / 100).toFixed(2),
@@ -105,7 +109,7 @@ export function executiveReceptionistOrganization(extraAreaServed: Array<{ '@typ
     founder: FOUNDER,
     brand: BRANDS,
     description:
-      'Executive Receptionist is an AI phone receptionist, named Ava, for HVAC, plumbing, and other small businesses. Four monthly plans from $79 (Starter first month $1) to $789.',
+      'Executive Receptionist is an AI phone receptionist, named Ava, for HVAC, plumbing, and other small businesses. Five monthly plans from $25 (Overflow, 60 minutes) to $789.',
     areaServed: [
       ...extraAreaServed,
       { '@type': 'State', name: 'Alabama' },

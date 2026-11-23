@@ -138,7 +138,7 @@ export const EXECUTIVE_FAQS = [
   },
   {
     q: 'What does it cost?',
-    a: 'Plans from $79 a month; Starter’s first month is $1. Setup is done for you, by phone and email.',
+    a: 'Plans from $25 a month; Starter’s first month is $1. Setup is done for you, by phone and email.',
   },
   {
     q: 'Can I hear a demo for my kind of shop?',

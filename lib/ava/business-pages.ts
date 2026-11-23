@@ -312,7 +312,8 @@ export const FORBIDDEN_BUSINESS_COPY = [
   /transfer/i,
   /hand ?off/i,
   /\bpilot\b/i,
-  /\$25/,
+  // Retired $25-per-booked-job offer. ($25/mo Overflow plan, added Nov 23, 2026, is allowed.)
+  /\$25 (a |per |for each )?(booked )?job/i,
   /\$297/,
   /hipaa/i,
   /complian/i,

@@ -62,7 +62,7 @@ const rows = [
     `4×6 ${row.fourBySixLabel} · 6×9 ${row.sixByNineLabel}`,
   ]),
   ['Custom quantity', 'Minimum 100 cards, computed on the postcards page', 'Setup plus per card'],
-  ['Executive Receptionist', 'Four monthly plans: 100, 300, 1,200 or 2,000 minutes. Starter first month $1.', '$79 to $789/month'],
+  ['Executive Receptionist', 'Five monthly plans: 60, 100, 300, 1,200 or 2,000 minutes. Overflow $1/min after 60. Starter first month $1.', '$25 to $789/month'],
   ['Lead Finder', 'Signed-in Maps search and approved drafts', 'No separate public price'],
   ['Lead Scout', 'Public listing search. Does not contact anyone.', 'No separate public price'],
   ['Writing agents', 'Drafts on the page. Nothing is sent.', 'No separate public price'],

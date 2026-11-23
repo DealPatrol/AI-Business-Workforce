@@ -74,7 +74,7 @@ export default function MissedCallPage() {
         </p>
         <p>
           Want the call answered, not just a later callback text? <Link href="https://executivereceptionist.com/">Executive Receptionist</Link>{' '}
-          answers with a voice receptionist and emails you the summary. Pricing: plans from $79 a month; Starter’s first
+          answers with a voice receptionist and emails you the summary. Pricing: plans from $25 a month; Starter’s first
           month is $1.
         </p>
         <section className={styles.faq}>

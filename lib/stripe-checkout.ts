@@ -56,6 +56,8 @@ type AvaCheckoutInput = {
   origin: string;
   planKey: AvaPlanKey;
   priceId?: string;
+  /** Optional metered overage price (Overflow only). Metered prices take no quantity. */
+  overagePriceId?: string;
   /** Once-only coupon that makes the first month $1 (Starter only). */
   firstMonthCouponId?: string;
   qualificationId?: string;
@@ -154,7 +156,8 @@ export function readStripeCouponId(value: string | undefined) {
 
 /**
  * Monthly plan checkout. Starter gets the once-only first-month coupon ($79 - $78 = $1 today, then $79/mo).
- * Growth, Pro and Elite charge the full monthly price today. No trial on any plan.
+ * Overflow, Growth, Pro and Elite charge the full monthly price today. No trial on any plan.
+ * Overflow also discloses its $1/min overage after 60 minutes in the Checkout submit text.
  */
 export function buildAvaCheckoutParams(input: AvaCheckoutInput) {
   const plan = AVA_PLANS[input.planKey];
@@ -178,8 +181,12 @@ export function buildAvaCheckoutParams(input: AvaCheckoutInput) {
   params.set('branding_settings[display_name]', AVA_CHECKOUT_DISPLAY_NAME);
   params.set('line_items[0][price]', input.priceId);
   params.set('line_items[0][quantity]', '1');
+  if (plan.overageCentsPerMinute != null && input.overagePriceId) {
+    params.set('line_items[1][price]', input.overagePriceId);
+  }
   if (introCoupon) params.set('discounts[0][coupon]', introCoupon);
-  const renewal = `${plan.monthlyLabel}/month, renews automatically each month. ${plan.minutesLabel} included per month. Cancel anytime.`;
+  const overage = plan.overageLabel ? ` ${plan.overageLabel}, billed on your next invoice.` : '';
+  const renewal = `${plan.monthlyLabel}/month, renews automatically each month. ${plan.minutesLabel} included per month.${overage} Cancel anytime.`;
   params.set(
     'custom_text[submit][message]',
     plan.firstMonthLabel ? `Today: ${plan.firstMonthLabel} for your first month. Then ${renewal}` : `Today: ${plan.monthlyLabel} for your first month. Then ${renewal}`,
@@ -191,6 +198,7 @@ export function buildAvaCheckoutParams(input: AvaCheckoutInput) {
     included_minutes: String(plan.minutes),
     monthly_cents: String(plan.monthlyCents),
   };
+  if (plan.overageCentsPerMinute != null) meta.overage_cents = String(plan.overageCentsPerMinute);
   if (input.qualificationId) meta.qualification_id = input.qualificationId;
   for (const [key, value] of Object.entries(meta)) {
     params.set(`metadata[${key}]`, value);

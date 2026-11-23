@@ -35,7 +35,7 @@ export const AVA_FACTS = {
     { name: 'Elite', price: '$789/month', includes: '2,000 minutes, priority setup' },
   ],
   billing: 'Flat monthly plan by included minutes. Month to month.',
-  overage: 'No per-minute overage. Past your minutes Ava keeps answering and we reach out about a bigger plan.',
+  overage: 'Overflow ($25, 60 minutes) bills $1/min after 60. Starter and up have no per-minute overage. Past your minutes Ava keeps answering and we reach out about a bigger plan.',
   trial: 'Starter is $1 for the first month. Call the demo line any time.',
   rows: [
     ['Answers 24/7', 'Yes, on the calls you forward'],
@@ -109,7 +109,7 @@ export const COMPETITORS: Competitor[] = [
     theyWin: ['A real person answers every call.', 'Live website chat plans.', 'Long track record as a staffed service.'],
     avaWins: [
       'A fraction of the per-minute price: Ava Growth is about $0.66 a minute included.',
-      'No per-minute overage charge.',
+      'No per-minute overage charge on Starter and up.',
       'Nights, weekends and holidays at the same flat monthly price.',
     ],
     sourceUrl: 'https://www.ruby.com/plans-and-pricing/',

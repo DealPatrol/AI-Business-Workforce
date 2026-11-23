@@ -538,7 +538,7 @@ function PersonalizedDemoContent({ prospect }: { prospect: Prospect }) {
             <Calendar size={16} /> {AVA_PILOT_OFFER.ctaPrimary}
           </a>
           <Link className="demo-btn secondary" href="/pricing#plans">
-            See all four plans <ArrowRight size={16} />
+            See all five plans <ArrowRight size={16} />
           </Link>
         </div>
       </section>

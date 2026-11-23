@@ -68,7 +68,7 @@ export function AnsweringCostCalculator() {
         <p className={styles.note}>That is more than Elite’s 2,000 minutes. Call (256) 595-3354 to talk it through.</p>
       ) : null}
       <p className={styles.note}>
-        Your inputs, not an industry average. Ava has no per-minute overage: past your minutes she keeps answering and we reach out about a
+        Your inputs, not an industry average. Starter and up have no per-minute overage (Overflow bills $1/min after 60): past your minutes she keeps answering and we reach out about a
         bigger plan.
       </p>
     </div>

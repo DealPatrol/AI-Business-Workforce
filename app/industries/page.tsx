@@ -30,7 +30,7 @@ export default function IndustriesPage() {
           <h1>An AI receptionist set up for your kind of shop.</h1>
           <p className={s.lede}>
             Every page lists the calls Ava takes for that trade and the questions she asks before she emails you the lead. Same plans and
-            prices on every page, from $79 a month.
+            prices on every page, from $25 a month.
           </p>
           <div className={s.actions}>
             <a className={s.btnDark} href={AVA_DEMO_LINE.href}>

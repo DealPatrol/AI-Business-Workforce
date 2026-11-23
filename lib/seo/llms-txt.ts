@@ -14,7 +14,7 @@ const SHARED_FACTS = `Cole Collins, based in Hanceville, Alabama, operates Execu
 - Ava does not quote prices the owner has not approved, and does not give technical, legal, or medical advice. In-call booking is optional and only offers windows the owner has set.
 - For HVAC, plumbing, and other home-service shops, plus dentists, law firms, med spas, and similar offices.
 - Try it: call (256) 952-4935. She answers as Porchlight Heating & Air, a made-up HVAC company. Browser demo: https://executivereceptionist.com/receptionist-demo
-- Plans, month to month, no free pilot: Starter $79/mo (100 minutes; Starter is the only plan whose first month is $1), Growth $197/mo (300 minutes), Pro $397/mo (1,200 minutes, most popular), Elite $789/mo (2,000 minutes, priority setup). https://executivereceptionist.com/pricing
+- Plans, month to month, no free pilot: Overflow $25/mo (60 minutes, then $1.00 per minute after 60; the only plan with per-minute overage; answers 24/7, takes caller details, emails a summary), Starter $79/mo (100 minutes; Starter is the only plan whose first month is $1), Growth $197/mo (300 minutes), Pro $397/mo (1,200 minutes, most popular), Elite $789/mo (2,000 minutes, priority setup). https://executivereceptionist.com/pricing
 - HVAC page: https://executivereceptionist.com/hvac
 - Plumbing answering guide: https://executivereceptionist.com/ava/ai-answering-service-for-plumbers
 - After-hours HVAC calls: https://executivereceptionist.com/blog/after-hours-hvac-calls
@@ -78,7 +78,8 @@ export function llmsFullTxtForHost(hostHeader: string | null | undefined) {
 - Do not say there is a live handoff to a person on every call. After the lead arrives, the shop owner calls the customer back.
 - Do not invent review counts, close rates, or “number one” claims.
 - Only cite (256) 595-3354 as the public number. The demo line is (256) 952-4935.
-- Starter is the only plan with a $1 first month. Growth, Pro, and Elite bill at their monthly price from month one.
+- Starter is the only plan with a $1 first month. Overflow, Growth, Pro, and Elite bill at their monthly price from month one.
+- Overflow ($25/mo) is the only plan with overage: $1.00 per minute after 60. Starter and up have no per-minute overage.
 - Front Porch Growth pages should not be described as the home of the receptionist product.
 `;
 }

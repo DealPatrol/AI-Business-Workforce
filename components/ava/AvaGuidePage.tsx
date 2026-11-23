@@ -221,7 +221,7 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
             <article>
               <small>01</small>
               <h3>One flat monthly price</h3>
-              <p>Plans include minutes, from 100 to 2,000 a month. No per-minute overage: past your minutes Ava keeps answering and we reach out about a bigger plan.</p>
+              <p>Plans include minutes, from 60 to 2,000 a month. Overflow ($25, 60 minutes) bills $1/min after 60. On Starter and up there is no per-minute overage: past your minutes Ava keeps answering and we reach out about a bigger plan.</p>
             </article>
             <article>
               <small>02</small>
@@ -300,7 +300,7 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
       <section className="pricing" id="pricing">
         <div className="section-title">
           <span className="kicker">PRICING</span>
-          <h2>Four monthly plans. $0 setup.</h2>
+          <h2>Five monthly plans. $0 setup.</h2>
           <p>
             Checkout is Stripe. Starter&apos;s first month is $1; every other plan bills its monthly price from the first
             month. Included minutes reset each month. Past your minutes, Ava keeps answering and we reach out about a
@@ -364,7 +364,7 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
         <p>
           The sample call is a landscaping estimate. You can also call the demo line at {AVA_DEMO_LINE.display},
           where she answers as {AVA_DEMO_LINE.answersAs}. Checkout opens Stripe for the plan you pick. Plans run
-          from $79 to $789 a month.
+          from $25 to $789 a month.
         </p>
         <div>
           <Link className="sales-btn light" href={liveHref}>

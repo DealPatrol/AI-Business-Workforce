@@ -19,7 +19,7 @@ export const COMPARISON_FACTS: ComparisonFact[] = [
     name: 'Front Porch Growth',
     category: 'This site',
     publishedPrice:
-      'Executive Receptionist is four monthly plans: $79 (100 minutes, first month $1), $197 (300), $397 (1,200) and $789 (2,000). YardMailer postcards are a $127 setup, charged once per customer, plus $3.54 per 4×6 card or $4.95 per 6×9 card. ReputationFlow, a separate site Cole operates, publishes a free starter and Professional at $20/month.',
+      'Executive Receptionist is five monthly plans: $25 (60 minutes, then $1/min after 60), $79 (100 minutes, first month $1), $197 (300), $397 (1,200) and $789 (2,000). YardMailer postcards are a $127 setup, charged once per customer, plus $3.54 per 4×6 card or $4.95 per 6×9 card. ReputationFlow, a separate site Cole operates, publishes a free starter and Professional at $20/month.',
     terms: 'Executive Receptionist prices are the Stripe plans on this site, month to month. ReputationFlow says Professional is billed monthly and can be canceled in the Stripe customer portal, with no setup fee.',
     whatTheyPublish:
       'Executive Receptionist answers forwarded calls and emails the lead. If the owner turns booking on, it books visits into open windows on the owner’s desk calendar; it does not sync with outside calendar apps. Postcards mail only after you approve the concept, audience, and costs. Lead Scout searches public listings and does not contact them. The writing agents draft text on the page and do not send it.',
@@ -91,7 +91,7 @@ export const COMPARISON_FACTS: ComparisonFact[] = [
     terms:
       'The same page says the service is month-to-month, with no long-term contract, and that new clients get a 30-day money-back guarantee. Add-on prices, such as appointment booking at $1.50, are listed separately.',
     whatTheyPublish:
-      'People answer the calls. Executive Receptionist is software on monthly plans from $79 (100 minutes) to $789 (2,000 minutes), and it emails you the lead instead of transferring to a live receptionist.',
+      'People answer the calls. Executive Receptionist is software on monthly plans from $25 (60 minutes) to $789 (2,000 minutes), and it emails you the lead instead of transferring to a live receptionist.',
     sourceLabel: 'smith.ai/pricing/receptionists',
     sourceUrl: 'https://smith.ai/pricing/receptionists',
   },

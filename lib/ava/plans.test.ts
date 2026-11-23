@@ -9,17 +9,27 @@ import { buildAvaCheckoutParams } from '@/lib/stripe-checkout';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
 describe('monthly plans', () => {
-  it('publishes four plans from $79 to $789', () => {
-    assert.deepEqual(AVA_PLAN_KEYS, ['starter', 'growth', 'pro', 'elite']);
+  it('publishes five plans from $25 to $789, Overflow first', () => {
+    assert.deepEqual(AVA_PLAN_KEYS, ['overflow', 'starter', 'growth', 'pro', 'elite']);
     assert.deepEqual(
       AVA_PLAN_KEYS.map((k) => [AVA_PLANS[k].monthlyCents, AVA_PLANS[k].minutes]),
-      [[7900, 100], [19700, 300], [39700, 1200], [78900, 2000]],
+      [[2500, 60], [7900, 100], [19700, 300], [39700, 1200], [78900, 2000]],
     );
+  });
+
+  it('Overflow is the only plan with overage: $1/min after 60', () => {
+    assert.equal(AVA_PLANS.overflow.overageCentsPerMinute, 100);
+    assert.equal(AVA_PLANS.overflow.overageLabel, '$1/min after 60');
+    for (const key of ['starter', 'growth', 'pro', 'elite'] as const) assert.equal(AVA_PLANS[key].overageCentsPerMinute, null);
+    const copy = AVA_PLANS.overflow.features.join(' ') + ' ' + AVA_PLANS.overflow.description;
+    for (const re of [/book/i, /\bsms\b/i, /text/i, /transfer/i, /calendar/i, /in-person/i, /\$59/]) {
+      assert.equal(re.test(copy), false, `Overflow copy matches ${re}`);
+    }
   });
 
   it('gives only Starter a $1 first month', () => {
     assert.equal(AVA_PLANS.starter.firstMonthCents, 100);
-    for (const key of ['growth', 'pro', 'elite'] as const) assert.equal(AVA_PLANS[key].firstMonthCents, null);
+    for (const key of ['overflow', 'growth', 'pro', 'elite'] as const) assert.equal(AVA_PLANS[key].firstMonthCents, null);
   });
 
   it('features Pro, with the lowest price per minute', () => {
@@ -64,7 +74,26 @@ describe('plan checkout', () => {
     assert.throws(() => buildAvaCheckoutParams({ origin, planKey: 'starter', priceId: 'price_starter' }));
   });
 
-  for (const planKey of ['growth', 'pro', 'elite'] as const) {
+  it('Overflow charges $25 today, no coupon, and discloses $1/min after 60', () => {
+    const p = buildAvaCheckoutParams({ origin, planKey: 'overflow', priceId: 'price_overflow', firstMonthCouponId: 'coupon1' });
+    assert.equal(p.get('discounts[0][coupon]'), null);
+    assert.equal(p.get('line_items[0][price]'), 'price_overflow');
+    assert.equal(p.get('line_items[1][price]'), null);
+    assert.equal(p.get('metadata[plan]'), 'overflow');
+    assert.equal(p.get('metadata[included_minutes]'), '60');
+    assert.equal(p.get('subscription_data[metadata][overage_cents]'), '100');
+    assert.match(p.get('custom_text[submit][message]') || '', /\$1\/min after 60/);
+  });
+
+  it('Overflow adds the metered overage price only when one is configured', () => {
+    const p = buildAvaCheckoutParams({ origin, planKey: 'overflow', priceId: 'price_overflow', overagePriceId: 'price_meter' });
+    assert.equal(p.get('line_items[1][price]'), 'price_meter');
+    assert.equal(p.get('line_items[1][quantity]'), null);
+    const s = buildAvaCheckoutParams({ origin, planKey: 'growth', priceId: 'price_growth', overagePriceId: 'price_meter' });
+    assert.equal(s.get('line_items[1][price]'), null);
+  });
+
+  for (const planKey of ['overflow', 'growth', 'pro', 'elite'] as const) {
     it(`${planKey} charges full price: never a coupon, even if one is passed`, () => {
       const p = buildAvaCheckoutParams({ origin, planKey, priceId: `price_${planKey}`, firstMonthCouponId: 'coupon1' });
       assert.equal(p.get('discounts[0][coupon]'), null);

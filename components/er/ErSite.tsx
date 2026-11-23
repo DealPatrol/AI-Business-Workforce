@@ -131,7 +131,7 @@ export function ErCloser({ heading = 'Hear her, then put her on your line.' }: {
           </a>
           <Link className={styles.closerCard} href="/pricing">
             <strong>See pricing</strong>
-            Four flat monthly plans, $79 to $789.
+            Five monthly plans, $25 to $789.
           </Link>
           <Link className={styles.closerCard} href="/start">
             <strong>Start for $1</strong>

@@ -5,7 +5,7 @@
  *   scripts/publish-check                       # env + Stripe webhook + demo tools + smoke tests on production
  *   scripts/publish-check --only=env            # one section: env | stripe | tools | smoke
  *   scripts/publish-check --url=https://…       # smoke-test another host (e.g. the preview URL)
- *   scripts/publish-check --checkout            # also start Checkout for all four plans, check the amount due today, expire them
+ *   scripts/publish-check --checkout            # also start Checkout for all five plans, check the amount due today, expire them
  *   scripts/publish-check --retarget-tools      # point the demo booking tools at the production URL (writes!)
  *
  * Reads tokens from the shell env only and never prints a secret value. Env vars it uses:
@@ -179,8 +179,8 @@ async function smoke() {
     else ok(`${path} 200`);
   }
   const pricing = await get('/pricing');
-  const missingPrices = ['$79', '$197', '$397', '$789', '100 minutes', '300 minutes', '1,200 minutes', '2,000 minutes'].filter((t) => !pricing.text.includes(t));
-  missingPrices.length ? bad(`/pricing is missing ${missingPrices.join(', ')}`) : ok('/pricing shows all four plans');
+  const missingPrices = ['$25', '60 minutes', '$1/min after 60', '$79', '$197', '$397', '$789', '100 minutes', '300 minutes', '1,200 minutes', '2,000 minutes'].filter((t) => !pricing.text.includes(t));
+  missingPrices.length ? bad(`/pricing is missing ${missingPrices.join(', ')}`) : ok('/pricing shows all five plans');
   const talkButtons = (pricing.text.match(/Talk to Ava/g) || []).length;
   talkButtons >= 4 ? ok(`/pricing shows Talk to Ava under the plans (${talkButtons})`) : bad(`/pricing shows ${talkButtons} Talk to Ava buttons (want 4)`);
   const greeting = await get('/voices/ava-greeting.mp3');
@@ -228,7 +228,7 @@ async function smoke() {
 
   if (!args.checkout) return warn('Checkout not exercised (add --checkout; needs a Stripe key here to expire the sessions).');
   if (!stripeKey()) return bad('--checkout needs STRIPE_SECRET_KEY/STRIPE_WORKSPACE_SECRET_KEY so the test sessions can be expired.');
-  const dueToday = { starter: 100, growth: 19700, pro: 39700, elite: 78900 };
+  const dueToday = { overflow: 2500, starter: 100, growth: 19700, pro: 39700, elite: 78900 };
   for (const plan of Object.keys(dueToday)) {
     const r = await get('/api/checkout', target, {
       method: 'POST',

@@ -32,7 +32,7 @@ const PAGES = {
   '/start': {
     title: 'Ava AI Receptionist: Home Services and Online Stores',
     description:
-      'Ava answers calls for home-service shops and online stores, handles routine questions, and passes the rest to you. From $79/mo, first month $1.',
+      'Ava answers calls for home-service shops and online stores, handles routine questions, and passes the rest to you. From $25/mo.',
     titleMode: 'absolute',
     receptionist: true,
   },
@@ -43,16 +43,16 @@ const PAGES = {
     receptionist: false,
   },
   '/ava': {
-    title: 'AI Receptionist for Home Services, Plans from $79/mo',
+    title: 'AI Receptionist for Home Services, Plans from $25/mo',
     description:
-      'AI Receptionist for HVAC and plumbing. It takes the job details and emails you a summary. From $79/mo, first month $1.',
+      'AI Receptionist for HVAC and plumbing. It takes the job details and emails you a summary. From $25/mo.',
     titleMode: 'absolute',
     receptionist: true,
   },
   '/receptionist': {
     title: 'AI Receptionist for HVAC and Plumbing',
     description:
-      'AI Receptionist for HVAC and plumbing. It answers 24/7, takes the job details, and emails you a summary. From $79/mo, first month $1.',
+      'AI Receptionist for HVAC and plumbing. It answers 24/7, takes the job details, and emails you a summary. From $25/mo.',
     titleMode: 'absolute',
     receptionist: true,
   },
@@ -66,63 +66,63 @@ const PAGES = {
   '/hvac': {
     title: 'AI Receptionist for HVAC Companies | Executive Receptionist',
     description:
-      'Ava answers HVAC calls 24/7: no heat, no AC, after-hours emergencies, and emails you every lead. From $79/mo, first month $1.',
+      'Ava answers HVAC calls 24/7: no heat, no AC, after-hours emergencies, and emails you every lead. From $25/mo.',
     titleMode: 'absolute',
     receptionist: true,
   },
   '/business': {
     title: 'AI Receptionist for Any Business | Executive Receptionist',
     description:
-      'Ava answers every call 24/7, takes the name, number and reason, flags urgent calls, and emails you. From $79/mo, first month $1.',
+      'Ava answers every call 24/7, takes the name, number and reason, flags urgent calls, and emails you. From $25/mo.',
     titleMode: 'absolute',
     receptionist: true,
   },
   '/dental': {
     title: 'AI Receptionist for Dental Offices | Executive Receptionist',
     description:
-      'Ava answers the calls your front desk misses, flags patients in pain as urgent, and emails you every call. From $79/mo, first month $1.',
+      'Ava answers the calls your front desk misses, flags patients in pain as urgent, and emails you every call. From $25/mo.',
     titleMode: 'absolute',
     receptionist: true,
   },
   '/law': {
     title: 'AI Receptionist for Law Firms | Executive Receptionist',
     description:
-      'Ava answers while you are in court, takes the name, number and matter, flags urgent calls, and emails you. From $79/mo, first month $1.',
+      'Ava answers while you are in court, takes the name, number and matter, flags urgent calls, and emails you. From $25/mo.',
     titleMode: 'absolute',
     receptionist: true,
   },
   '/salon': {
     title: 'AI Receptionist for Salons | Executive Receptionist',
     description:
-      'Ava answers while your hands are full, takes the name, number and service wanted, and emails you. From $79/mo, first month $1.',
+      'Ava answers while your hands are full, takes the name, number and service wanted, and emails you. From $25/mo.',
     titleMode: 'absolute',
     receptionist: true,
   },
   '/auto-repair': {
     title: 'AI Receptionist for Auto Repair Shops',
     description:
-      'Ava answers while you are in the bays, takes the vehicle and the problem, flags breakdowns, and emails you. From $79/mo, first month $1.',
+      'Ava answers while you are in the bays, takes the vehicle and the problem, flags breakdowns, and emails you. From $25/mo.',
     titleMode: 'absolute',
     receptionist: true,
   },
   '/med-spa': {
     title: 'AI Receptionist for Med Spas | Executive Receptionist',
     description:
-      'Ava answers consult and pricing calls while you are with clients, flags urgent ones, and emails you. From $79/mo, first month $1.',
+      'Ava answers consult and pricing calls while you are with clients, flags urgent ones, and emails you. From $25/mo.',
     titleMode: 'absolute',
     receptionist: true,
   },
   '/real-estate': {
     title: 'AI Receptionist for Real Estate Agents',
     description:
-      'Ava answers buyer and seller calls while you are at a showing, flags urgent ones, and emails you every call. From $79/mo, first month $1.',
+      'Ava answers buyer and seller calls while you are at a showing, flags urgent ones, and emails you every call. From $25/mo.',
     titleMode: 'absolute',
     receptionist: true,
   },
   '/pricing': {
     title: 'AI Receptionist & Postcard Pricing | Front Porch Growth',
     description:
-      'AI receptionist plans from $79 to $789 a month (Starter’s first month $1), plus YardMailer postcards: $127 setup, then $3.54 a card.',
+      'AI receptionist plans from $25 to $789 a month (Starter’s first month $1), plus YardMailer postcards: $127 setup, then $3.54 a card.',
     titleMode: 'absolute',
     receptionist: false,
   },
@@ -252,7 +252,7 @@ const PAGES = {
   '/onboarding/ava': {
     title: 'AI Receptionist setup',
     description:
-      'Tell us about your business so Executive Receptionist can be set up. It answers calls and emails you the lead. From $79/mo, first month $1.',
+      'Tell us about your business so Executive Receptionist can be set up. It answers calls and emails you the lead. From $25/mo.',
     titleMode: 'absolute',
     receptionist: true,
   },

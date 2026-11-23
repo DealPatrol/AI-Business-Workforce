@@ -134,7 +134,8 @@
 .compare .us { background: var(--cream); color: var(--ink); font-weight: 500; }
 
 /* Pricing */
-.plans { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; align-items: stretch; }
+.plans { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; align-items: stretch; }
+@media (max-width: 1240px) { .plans { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 1040px) { .plans { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 560px) { .plans { grid-template-columns: 1fr; } }
 .plan, .planFeatured { display: flex; flex-direction: column; gap: 6px; padding: 24px; border-radius: 24px; background: #fff; border: 1px solid var(--line); }

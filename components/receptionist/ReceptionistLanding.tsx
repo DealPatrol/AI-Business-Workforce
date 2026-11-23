@@ -29,7 +29,7 @@ const defaultHero = {
 const storeTrustPoints = [
   'Prices published below',
   'Starter: first month $1, then $79/mo',
-  'Same four monthly plans as every business',
+  'Same five monthly plans as every business',
   'Try the live demo before you pay',
 ];
 
