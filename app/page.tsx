@@ -17,7 +17,7 @@ const description = seo.description;
 const HOME_FAQS = [
   {
     q: 'What is Front Porch Growth?',
-    a: 'Front Porch Growth is a set of marketing tools for home-service shops: YardMailer postcards, Google Business Profile setup, a free SEO and AI-visibility grader, Lead Scout, and review-request tools. Cole Collins built it in Hanceville, Alabama.',
+    a: 'Front Porch Growth is a set of marketing tools for home-service shops: done-for-you AI Search Visibility (roofing first), YardMailer postcards, Google Business Profile setup, a free SEO and AI-visibility grader, Lead Scout, and review-request tools. Cole Collins built it in Hanceville, Alabama.',
   },
   {
     q: 'Where is the AI receptionist?',
@@ -33,7 +33,7 @@ const HOME_FAQS = [
   },
   {
     q: 'Do you guarantee Google or AI-search rankings?',
-    a: 'No. The grader and the checklist tell you what is missing. They do not promise a position in Google or in ChatGPT answers.',
+    a: 'No. The free grader and checklist tell you what is missing; they do not promise a position in Google or in ChatGPT answers. The done-for-you AI Search Visibility plans carry a measured citation-share target instead of a ranking promise, explained on that page.',
   },
   {
     q: 'How do review requests work?',
@@ -76,6 +76,11 @@ const orgJsonLd = {
 };
 
 const TOOLS = [
+  {
+    href: '/ai-search-visibility',
+    title: 'AI Search Visibility',
+    detail: 'Get recommended by ChatGPT, Google AI Overviews and Perplexity. Roofing first. Start with a free Competitor Gap Report.',
+  },
   {
     href: '/postcards',
     title: 'YardMailer postcards',

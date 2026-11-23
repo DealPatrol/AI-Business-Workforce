@@ -228,6 +228,13 @@ const PAGES = {
     titleMode: 'absolute',
     receptionist: false,
   },
+  '/ai-search-visibility': {
+    title: 'AI Search Visibility for Roofers | Front Porch Growth',
+    description:
+      'Get your roofing company recommended in ChatGPT, Google AI Overviews and Perplexity. Free Competitor Gap Report, $497 Sprint, plans from $1,500/mo.',
+    titleMode: 'absolute',
+    receptionist: false,
+  },
   '/google-profile': {
     title: 'Google Business Profile setup, $99 | Front Porch Growth',
     description:

@@ -21,6 +21,7 @@ const FRONT_PORCH_PATHS = [
   '/missed-call',
   '/google-profile',
   '/ai-visibility',
+  '/ai-search-visibility',
   '/privacy',
   '/about',
   '/sms',
