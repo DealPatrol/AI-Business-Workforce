@@ -58,6 +58,7 @@ export function ReceptionistLanding({ niche }: Props) {
           '@type': 'Product',
           name: 'Executive Receptionist - Online Store',
           description: 'AI phone receptionist for online stores: order status, shipping, returns, and sizing calls.',
+          image: 'https://executivereceptionist.com/er/og-default.png',
           brand: { '@type': 'Brand', name: 'Executive Receptionist' },
           offers: avaPlanOfferNodes('/receptionist/ecommerce#pricing'),
         },

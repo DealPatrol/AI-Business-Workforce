@@ -141,6 +141,7 @@ export function avaProductNode(input: { name: string; description: string; url: 
     '@type': 'Product',
     name: input.name,
     description: input.description,
+    image: `${EXECUTIVE_RECEPTIONIST_ORIGIN}/er/og-default.png`,
     brand: { '@type': 'Brand', name: 'Executive Receptionist' },
     url: input.url,
     offers: avaOfferNodes(input.url),
