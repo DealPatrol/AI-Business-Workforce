@@ -22,6 +22,7 @@ import {
 } from '@/lib/seo/pages';
 import { TRADE_PAGES } from '@/lib/trades/pages';
 import { FPG_PAGE_SEO } from '@/lib/fpg/seo';
+import { FPG_AEO_PAGES } from '@/lib/fpg/aeo-pages';
 import { ER_DEMO_NICHES } from '@/lib/er-demos';
 
 export type ResolvedSeo = {
@@ -79,6 +80,9 @@ export function resolveRouteSeo(route: string, companyNames: string[]): Resolved
     return AVA_GUIDES.map((guide) => absolute(`/ava/${guide.slug}`, guide.metaTitle, guide.description, true));
   }
 
+  if (route === '/ai-search-visibility/[slug]') {
+    return FPG_AEO_PAGES.map((page) => absolute(`/ai-search-visibility/${page.slug}`, page.title, page.description, false));
+  }
   if (route === '/blog/[slug]') {
     return BLOG_POSTS.map((post) => absolute(`/blog/${post.slug}`, post.metaTitle, post.description, false));
   }

@@ -4,6 +4,7 @@ import { SuiteShell } from '@/components/suite/SuiteShell';
 import styles from '@/components/visibility/visibility.module.css';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 import { absoluteSiteUrl } from '@/lib/site-url';
+import { FPG_AEO_PAGES } from '@/lib/fpg/aeo-pages';
 
 const PATH = '/ai-search-visibility';
 const seo = pageSeo(PATH);
@@ -330,6 +331,21 @@ export default function AiSearchVisibilityPage() {
               <b>Nothing goes live without your OK.</b> You approve every draft.
             </li>
           </ul>
+        </section>
+
+        <section className={styles.section} aria-labelledby="guides-title">
+          <span className={styles.eyebrow}>GUIDES</span>
+          <h2 id="guides-title">By trade, town and question</h2>
+          <div className={styles.cards}>
+            {FPG_AEO_PAGES.map((guide) => (
+              <article key={guide.slug} className={styles.card}>
+                <h3>
+                  <Link href={`/ai-search-visibility/${guide.slug}`}>{guide.h1}</Link>
+                </h3>
+                <p>{guide.description}</p>
+              </article>
+            ))}
+          </div>
         </section>
 
         <section className={styles.section} aria-labelledby="faq-title">
