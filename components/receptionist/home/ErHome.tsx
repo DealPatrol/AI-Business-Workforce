@@ -19,6 +19,7 @@ import { liveWidgetEnabled, realFaceEnabled } from '@/lib/live-receptionist/conf
 import styles from './er-home.module.css';
 import { SisterSites } from '@/components/seo/SisterSites';
 import { ErDemoBar, ErFooterColumns } from '@/components/er/ErSite';
+import { ErLogoMark } from '@/components/er/ErLogoMark';
 import { ER_NAV } from '@/lib/er/site-links';
 
 // Transfers are left off the home page list: no live-handoff claims in marketing copy.
@@ -41,9 +42,7 @@ export function ErHome({ niche }: { niche?: ErDemoNiche }) {
       <header className={styles.header}>
         <div className={styles.headerInner}>
           <Link href="/" className={styles.logo}>
-            <span aria-hidden="true" className={styles.logoMark}>
-              A
-            </span>
+            <ErLogoMark className={styles.logoMark} />
             Executive Receptionist
           </Link>
           <nav aria-label="Main" className={styles.navLinks}>

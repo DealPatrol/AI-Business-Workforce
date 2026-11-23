@@ -24,7 +24,7 @@
 .header { position: sticky; top: 0; z-index: 30; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
 .headerInner { width: min(1160px, calc(100% - 40px)); margin: 0 auto; display: flex; align-items: center; gap: 22px; min-height: 64px; flex-wrap: wrap; }
 .logo { display: inline-flex; align-items: center; gap: 10px; font-family: Georgia, 'Times New Roman', serif; font-size: 20px; font-weight: 600; text-decoration: none; }
-.logoMark { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 999px; background: var(--ink); color: var(--cream); font-size: 15px; }
+.logoMark { display: block; width: 52px; height: auto; flex: none; }
 .nav { display: flex; flex-wrap: wrap; gap: 4px 18px; margin-left: auto; font-size: 14px; }
 .nav a { text-decoration: none; color: var(--ink-soft); padding: 6px 0; }
 .nav a:hover { color: var(--copper); }
@@ -100,4 +100,6 @@ a.card:hover { border-color: var(--copper); }
 @media (max-width: 720px) {
   .nav { order: 3; width: 100%; margin-left: 0; gap: 4px 14px; }
   .headerCta { margin-left: auto; }
+  .logo { font-size: 18px; white-space: nowrap; }
+  .logoMark { width: 44px; }
 }

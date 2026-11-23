@@ -98,7 +98,7 @@ export function executiveReceptionistOrganization(extraAreaServed: Array<{ '@typ
     alternateName: 'Ava by Executive Receptionist',
     legalName: LEGAL_NAME,
     url: `${EXECUTIVE_RECEPTIONIST_ORIGIN}/`,
-    logo: `${EXECUTIVE_RECEPTIONIST_ORIGIN}/brand-logo.png`,
+    logo: `${EXECUTIVE_RECEPTIONIST_ORIGIN}/er/brand-logo.png`,
     email: AVA_OFFER.contactEmail,
     telephone: TELEPHONE,
     address: BUSINESS_ADDRESS,

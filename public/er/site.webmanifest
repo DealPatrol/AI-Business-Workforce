@@ -1,0 +1,15 @@
+{
+  "name": "Executive Receptionist",
+  "short_name": "ER",
+  "description": "An AI receptionist that answers every call.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "browser",
+  "background_color": "#FAF6F0",
+  "theme_color": "#2B1D16",
+  "icons": [
+    { "src": "/er/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/er/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/er/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
