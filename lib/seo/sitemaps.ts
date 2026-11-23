@@ -9,6 +9,7 @@ import { MERGED_AVA_GUIDES } from '@/lib/seo/receptionist-home';
 import { absoluteUrl, isExecutiveReceptionistHost, publicIndexOrigin } from '@/lib/site-url';
 import { TRADE_PAGES } from '@/lib/trades/pages';
 import { FPG_EXTRA_INDEX_PATHS } from '@/lib/fpg/seo';
+import { FPG_AEO_PAGES } from '@/lib/fpg/aeo-pages';
 
 type ChangeFrequency = NonNullable<MetadataRoute.Sitemap[number]['changeFrequency']>;
 
@@ -85,6 +86,7 @@ export function frontPorchGrowthSitemap(origin: string, now: Date): MetadataRout
     entry(origin, '/google-profile', now, 'weekly', 0.8),
     entry(origin, '/ai-visibility', now, 'weekly', 0.85),
     entry(origin, '/ai-search-visibility', now, 'weekly', 0.85),
+    ...FPG_AEO_PAGES.map((page) => entry(origin, `/ai-search-visibility/${page.slug}`, now, 'monthly', 0.8)),
     entry(origin, '/privacy', now, 'yearly', 0.3),
     entry(origin, '/about', now, 'monthly', 0.5),
     entry(origin, '/sms', now, 'yearly', 0.3),
