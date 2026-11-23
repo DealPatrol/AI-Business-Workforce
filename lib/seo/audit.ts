@@ -21,6 +21,7 @@ import {
   type SeoSpec,
 } from '@/lib/seo/pages';
 import { TRADE_PAGES } from '@/lib/trades/pages';
+import { FPG_PAGE_SEO } from '@/lib/fpg/seo';
 import { ER_DEMO_NICHES } from '@/lib/er-demos';
 
 export type ResolvedSeo = {
@@ -71,6 +72,8 @@ export function companyNamesFromProspects(root = process.cwd()) {
 
 export function resolveRouteSeo(route: string, companyNames: string[]): ResolvedSeo[] {
   if (isStaticSeoPath(route)) return [fromSpec(route, pageSeo(route))];
+  const fpgSeo = FPG_PAGE_SEO[route];
+  if (fpgSeo) return [absolute(route, fpgSeo.title, fpgSeo.description, false)];
 
   if (route === '/ava/[slug]') {
     return AVA_GUIDES.map((guide) => absolute(`/ava/${guide.slug}`, guide.metaTitle, guide.description, true));

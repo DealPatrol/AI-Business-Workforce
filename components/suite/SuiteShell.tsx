@@ -1,19 +1,14 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import styles from './suite.module.css';
+import fpg from '@/components/fpg/fpg.module.css';
 import { SisterSites } from '@/components/seo/SisterSites';
+import { FPG_NAV, FPG_PUBLIC_PHONE, FPG_PUBLIC_PHONE_HREF, fpgFooterColumns } from '@/lib/fpg/site';
 
-const NAV = [
-  { href: '/postcards', label: 'Postcards' },
-  { href: '/google-profile', label: 'Google profile' },
-  { href: '/ai-visibility', label: 'AI Visibility' },
-  { href: '/lead-scout', label: 'Leads' },
-  { href: 'https://executivereceptionist.com/', label: 'AI receptionist' },
-  { href: '/pricing', label: 'Pricing' },
-  { href: '/login?next=/desk', label: 'Sign in' },
-];
+const SIGN_IN = { href: '/login?next=/desk', label: 'Sign in' };
 
 export function SuiteShell({ children }: { children: ReactNode }) {
+  const columns = fpgFooterColumns();
   return (
     <div className={styles.page}>
       <nav className={styles.nav} aria-label="Primary">
@@ -28,30 +23,36 @@ export function SuiteShell({ children }: { children: ReactNode }) {
           />
         </Link>
         <div className={styles.navLinks}>
-          {NAV.map((item) => (
+          {FPG_NAV.map((item) => (
             <Link key={item.href} href={item.href}>
               {item.label}
             </Link>
           ))}
+          <Link href={SIGN_IN.href}>{SIGN_IN.label}</Link>
         </div>
-        <Link className={styles.navCta} href="/postcards">
-          See postcards
+        <Link className={styles.navCta} href="/ai-visibility">
+          Grade my site free
         </Link>
       </nav>
       {children}
       <footer className={styles.footer}>
-        <p>Front Porch Growth · Cole · colecollins763@gmail.com</p>
-        <nav>
-          <Link href="/missed-call">Missed-Call Text-Back</Link>
-          <Link href="/google-profile">Google Profile Setup</Link>
-          <Link href="/ai-visibility">Free SEO &amp; AI Visibility Grader</Link>
-          <Link href="/pricing">Pricing</Link>
-          <Link href="/terms">Terms</Link>
-          <Link href="/privacy">Privacy</Link>
-          <Link href="/sms">SMS terms</Link>
-          <Link href="/sms-consent">SMS consent</Link>
-          <Link href="/about">About</Link>
-        </nav>
+        <div className={fpg.footCols}>
+          {columns.map((column) => (
+            <div key={column.title}>
+              <h2>{column.title}</h2>
+              <ul>
+                {column.links.map((link) => (
+                  <li key={`${column.title}-${link.href}`}>
+                    <Link href={link.href}>{link.label}</Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <p className={fpg.footMeta}>
+          Front Porch Growth · Hanceville, Alabama · <a href={FPG_PUBLIC_PHONE_HREF}>{FPG_PUBLIC_PHONE}</a> · colecollins763@gmail.com
+        </p>
         <SisterSites selfUrl="https://frontporchgrowth.com" clusters={['home-services', 'reviews']} className={styles.sisterSites} />
       </footer>
     </div>
