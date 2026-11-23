@@ -1,3 +1,4 @@
+import { ErDemoBar } from '@/components/er/ErSite';
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { AVA_OFFER, AVA_PLANS } from '@/lib/ava/pricing';
@@ -117,6 +118,7 @@ export function OfferPricingLayout({
 
   return (
     <div className={`${styles.wrap} ${isPage ? styles.pageWrap : styles.sectionWrap}`}>
+      {renderTopbar ? <ErDemoBar /> : null}
       {renderTopbar ? (
         <header className={styles.topbar}>
           <Link className={styles.brand} href="/">

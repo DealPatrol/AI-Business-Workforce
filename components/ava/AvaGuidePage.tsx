@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ArrowRight, Check, PhoneCall, Sparkles } from 'lucide-react';
 import { AvaFooter } from '@/components/ava/AvaFooter';
+import { ErTopBars } from '@/components/er/ErSite';
 import { AvaPlanCards } from '@/components/ava/AvaPlanCards';
 import { JsonLd } from '@/components/ava/JsonLd';
 import { MissedCallCalculator } from '@/components/ava/MissedCallCalculator';
@@ -12,9 +13,13 @@ import {
   avaProductNode,
   avaServiceNode,
   executiveReceptionistOrganization,
+  AVA_SETUP_STEPS,
+  breadcrumbNode,
   faqNode,
+  howToNode,
   jsonLdGraph,
 } from '@/lib/ava/structured-data';
+import { COMPETITORS } from '@/lib/er/competitors';
 import { avaGuidePath } from '@/lib/seo/receptionist-home';
 import { executiveReceptionistUrl } from '@/lib/site-url';
 
@@ -137,27 +142,18 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
       url: pageUrl,
     }),
     faqNode(guide.faqs),
+    breadcrumbNode([
+      ['Home', '/'],
+      [guide.kind === 'trade' ? 'Industries' : 'Ava', guide.kind === 'trade' ? '/industries' : '/ava'],
+      [guide.navLabel, `/ava/${guide.slug}`],
+    ]),
+    howToNode(`How to set up Executive Receptionist for ${guide.audience}`),
   ]);
 
   return (
     <main className="ava-sales">
       <JsonLd data={graph} />
-      <nav className="ava-nav">
-        <Link className="ava-brand" href={homeHref}>
-          <span>
-            <Sparkles size={17} />
-          </span>{' '}
-          Executive Receptionist
-        </Link>
-        <div>
-          <Link href="#pricing">Pricing</Link>
-          <Link href={liveHref}>Try the demo</Link>
-          <Link href="/ava/missed-call-cost-calculator">Calculator</Link>
-        </div>
-        <TrackedCheckoutLink className="nav-cta" href="/api/checkout?plan=starter" plan="starter">
-          Start for $1
-        </TrackedCheckoutLink>
-      </nav>
+      <ErTopBars />
 
       <section className="sales-hero">
         <div className="hero-copy">
@@ -215,6 +211,32 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
         </div>
       </section>
 
+      {guide.kind === 'trade' ? (
+        <section className="comparison">
+          <div className="section-title">
+            <span className="kicker">WHY SHOPS SWITCH</span>
+            <h2>Three reasons {guide.audience} use Ava instead of a traditional answering service.</h2>
+          </div>
+          <div className="comparison-grid">
+            <article>
+              <small>01</small>
+              <h3>One flat monthly price</h3>
+              <p>Plans include minutes, from 100 to 2,000 a month. No per-minute overage: past your minutes Ava keeps answering and we reach out about a bigger plan.</p>
+            </article>
+            <article>
+              <small>02</small>
+              <h3>Questions written for your trade</h3>
+              <p>Your greeting, intake questions and urgent rules are written from your website and notes, so the lead email has what you need to call back.</p>
+            </article>
+            <article>
+              <small>03</small>
+              <h3>The same answer at 2 AM</h3>
+              <p>Ava answers the calls you forward nights, weekends and mid-job, says she is an AI receptionist, and emails you a summary of every call.</p>
+            </article>
+          </div>
+        </section>
+      ) : null}
+
       <GuideExtra guide={guide} />
       <CityNotes guide={guide} />
 
@@ -256,6 +278,23 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
             ))}
           </ul>
         ) : null}
+      </section>
+
+      <section className="how-section" id="setup">
+        <div className="section-title">
+          <span className="kicker">SETUP</span>
+          <h2>Live on your line in three steps.</h2>
+          <p>Keep your number. Setup is included on every plan.</p>
+        </div>
+        <div className="steps-grid">
+          {AVA_SETUP_STEPS.map((step, index) => (
+            <article key={step.name}>
+              <span>0{index + 1}</span>
+              <h3>{step.name}</h3>
+              <p>{step.text}</p>
+            </article>
+          ))}
+        </div>
       </section>
 
       <section className="pricing" id="pricing">
@@ -306,6 +345,16 @@ export function AvaGuidePage({ guide, homeHref }: { guide: AvaGuide; homeHref: s
               </article>
             );
           })}
+          {COMPETITORS.slice(0, 3).map((c) => (
+            <article key={c.slug}>
+              <span>Compare</span>
+              <h3>Ava vs {c.name}</h3>
+              <p>{c.oneLine}</p>
+              <Link href={`/compare/${c.slug}`}>
+                See the comparison <ArrowRight size={16} />
+              </Link>
+            </article>
+          ))}
         </div>
       </section>
 

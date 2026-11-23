@@ -46,7 +46,7 @@ export function missedCallTrade(value: string | undefined): MissedCallTrade {
 
 const MISSED_CALL_SEO: Record<MissedCallTrade, { title: string; description: string }> = {
   hvac: {
-    title: 'AI Receptionist for Missed HVAC Calls',
+    title: 'After-Hours AI Receptionist for HVAC Missed Calls',
     description:
       'AI Receptionist answers missed HVAC calls and emails you the lead. From $79/mo, first month $1.',
   },

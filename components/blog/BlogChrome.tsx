@@ -1,3 +1,4 @@
+import { ErDemoBar, ErLinkColumns } from '@/components/er/ErSite';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import type { BlogSite } from '@/lib/blog';
@@ -7,6 +8,7 @@ export function BlogChrome({ site, children }: { site: BlogSite; children: React
   const er = site === 'er';
   return (
     <div className="blog-page">
+      {er ? <ErDemoBar /> : null}
       <nav className="blog-nav" aria-label="Main">
         <Link className="blog-brand" href="/">
           {er ? 'Executive Receptionist' : 'Front Porch Growth'}
@@ -27,6 +29,7 @@ export function BlogChrome({ site, children }: { site: BlogSite; children: React
         </div>
       </nav>
       {children}
+      {er ? <ErLinkColumns /> : null}
       <footer className="blog-footer">
         <p>
           <Link href="/">Home</Link>

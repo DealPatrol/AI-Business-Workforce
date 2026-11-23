@@ -95,7 +95,6 @@ export const AVA_PLAN_INCLUDES = [
   'Takes the caller’s name, callback number, address, and what the job is',
   'Emails you a summary of every call',
   'Switches to Spanish when the caller does',
-  'Can transfer urgent calls to your phone, if you give her a number',
   'Books visits into your Desk calendar once your hours are set up there',
   'Your Desk: every call, lead, and booking in one place',
   'Month to month. Cancel anytime.',

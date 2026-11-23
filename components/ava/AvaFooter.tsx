@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Sparkles } from 'lucide-react';
 import { SisterSites } from '@/components/seo/SisterSites';
+import { ErFooterColumns } from '@/components/er/ErSite';
 
 export function AvaFooter({ homeHref = '/' }: { homeHref?: string }) {
   return (
@@ -12,6 +13,7 @@ export function AvaFooter({ homeHref = '/' }: { homeHref?: string }) {
         Executive Receptionist
       </Link>
       <p>Operated by Cole Collins DBA Executive Receptionist, Hanceville, AL.</p>
+      <ErFooterColumns className="er-footer-cols" />
       <nav className="footer-links" aria-label="Executive Receptionist">
         <Link href={homeHref}>Home</Link>
         <Link href="/pricing">Pricing</Link>

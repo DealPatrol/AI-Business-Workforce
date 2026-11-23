@@ -72,7 +72,7 @@ const COMPARE = [
   ['How the bill is counted', 'Per minute, per call, or per caller, with overage fees', 'One flat monthly price for your plan’s minutes. No per-minute overage charges'],
   ['Running past your minutes', 'Overage billed per minute or per call', 'Ava keeps answering. We reach out about moving you up a plan'],
   ['Booking during the call', 'Often through a connected calendar or scheduling app', 'Once you set your hours in the Desk and turn booking on, Ava books into your Desk calendar during the call. Optional'],
-  ['Emergencies and “get me a person”', 'Varies by plan', 'Ava can transfer the call to your phone, if you give her a number'],
+  ['Emergencies and “get me a person”', 'Varies by plan', 'Ava flags it urgent at the top of the emailed summary so you can call back first'],
   ['Spanish-speaking callers', 'Varies by plan', 'Ava switches to Spanish when the caller does'],
   ['Hear it before you pay', 'Often a sales demo first', 'Six sample calls, a call-in line, and a browser demo on this page'],
   ['Getting started', 'Free trial, then a monthly plan', 'Starter’s first month is $1, then $79/month'],

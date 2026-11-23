@@ -1,4 +1,5 @@
-import { BLOG_POSTS, type BlogPost, type BlogSite } from '@/lib/blog/posts';
+import type { BlogPost, BlogSite } from '@/lib/blog/posts';
+import { BLOG_POSTS } from '@/lib/blog/all-posts';
 import { absoluteUrl, EXECUTIVE_RECEPTIONIST_ORIGIN, isExecutiveReceptionistHost } from '@/lib/site-url';
 
 export { BLOG_POSTS };

@@ -111,7 +111,11 @@ describe('host sitemaps', () => {
       assert.ok(paths.includes(path), path);
     }
     assert.equal(paths.includes('/blog/is-my-business-in-chatgpt'), false);
-    for (const path of ['/postcards', '/receptionist', '/agents', '/compare', '/trades/plumbers', '/missed-call']) {
+    // /compare on executivereceptionist.com is the Ava comparison hub (a different page from FPG's /compare).
+    for (const path of ['/compare', '/compare/ava-vs-smith-ai', '/industries', '/tools', '/tools/call-forwarding-codes', '/templates']) {
+      assert.ok(paths.includes(path), path);
+    }
+    for (const path of ['/postcards', '/receptionist', '/agents', '/trades/plumbers', '/missed-call']) {
       assert.equal(paths.includes(path), false, path);
     }
     assert.equal(robotsForHost('www.executivereceptionist.com').sitemap, `${EXECUTIVE_RECEPTIONIST_ORIGIN}/sitemap.xml`);
