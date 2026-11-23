@@ -1,14 +1,16 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { SuiteShell } from '@/components/suite/SuiteShell';
-import { SisterSites } from '@/components/seo/SisterSites';
-import styles from '@/components/suite/home.module.css';
 import { InvoicingWaitlistForm } from '@/components/suite/InvoicingWaitlistForm';
 import avaStyles from '@/components/ava-home/ava-home.module.css';
 import { DESK_TOOLS } from '@/lib/desk-tools';
 import { frontPorchLocalBusiness, faqNode } from '@/lib/ava/structured-data';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 import { FRONT_PORCH_GROWTH_ORIGIN } from '@/lib/site-url';
+import fpg from '@/components/fpg/fpg.module.css';
+import { ClosingCards } from '@/components/fpg/Blocks';
+import { FPG_COMPARE_CHECKED_LABEL } from '@/lib/fpg/competitors';
+import { ER_HOME, FPG_FREE_TOOLS, FPG_PUBLIC_PHONE, FPG_PUBLIC_PHONE_HREF, FPG_SERVICES, fpgIndustries } from '@/lib/fpg/site';
 
 const seo = pageSeo('/');
 const title = renderedTitle(seo);
@@ -38,6 +40,14 @@ const HOME_FAQS = [
   {
     q: 'How do review requests work?',
     a: 'ReputationFlow gives you a link and a QR code so customers can leave an honest public review. The free tool is at tryreputationflow.com. Front Porch Growth also has a Reputation page that explains the paid option.',
+  },
+  {
+    q: 'How do I get started?',
+    a: 'Pick one service. Grade your site free, request a free AI Competitor Gap Report, order a postcard run from 100 cards, or book the $99 Google profile setup. Nothing is mailed, published or charged on a plan until you approve it.',
+  },
+  {
+    q: 'How do your prices compare?',
+    a: 'The compare pages put each service next to a named alternative, such as Local SEO Bot, BrightLocal, PostcardMania, USPS EDDM, AEO Engine, Otterly.ai and NiceJob, using prices from their own pages and saying where the other option is the better pick.',
   },
 ] as const;
 
@@ -75,166 +85,278 @@ const orgJsonLd = {
   ],
 };
 
-const TOOLS = [
+const REASONS = [
   {
-    href: '/ai-search-visibility',
-    title: 'AI Search Visibility',
-    detail: 'Get recommended by ChatGPT, Google AI Overviews and Perplexity. Roofing first. Start with a free Competitor Gap Report.',
+    title: 'Every price is published',
+    detail: 'Postcards, the Google profile setup, AI search plans and review tools all show their price before you talk to anyone. No retainer quote to decode.',
   },
   {
-    href: '/postcards',
-    title: 'YardMailer postcards',
-    detail: 'Each card shows a homeowner a concept for their own property, with a QR code to request an estimate. You approve the design and the cost first.',
+    title: 'You approve before anything goes out',
+    detail: 'Postcards mail only after you approve the design, the streets and the cost. Pages and profile changes go live only with your OK.',
   },
   {
-    href: '/google-profile',
-    title: 'Google Business Profile setup',
-    detail: 'A $99 setup to get the shop’s profile in shape: categories, photos, and the details people search for.',
-  },
-  {
-    href: '/ai-visibility',
-    title: 'Free SEO and AI visibility grader',
-    detail: 'See what a search engine or an AI assistant can already read about the shop. No ranking promises.',
-  },
-  {
-    href: '/reputation',
-    title: 'Review requests',
-    detail: 'A link and a QR code so a finished job can turn into an honest public review. The free tool is also on ReputationFlow.',
-  },
-  {
-    href: '/lead-scout',
-    title: 'Lead Scout',
-    detail: 'Search public Google listings by trade and city. It does not email or text anyone.',
-  },
-  {
-    href: '/missed-call',
-    title: 'Missed-call text-back',
-    detail: 'A waitlist for texting a caller back after a missed ring, once messaging is approved and the owner opts in.',
+    title: 'No ranking promises, real logs instead',
+    detail: 'Nobody can promise a spot on Google or in ChatGPT. You get the checks, the logged answers and what changed, so you can rerun them yourself.',
   },
 ];
 
+const STEPS = [
+  { title: 'Start free', detail: 'Grade your site, or ask for the free AI Competitor Gap Report. No card.' },
+  { title: 'Pick one service', detail: 'A postcard run, a $99 Google profile fix, review requests, or an AI search plan.' },
+  { title: 'Approve the work', detail: 'See the card, the profile changes or the pages before they go out.' },
+  { title: 'See what happened', detail: 'QR estimate requests, review links and the AI search log show the results in plain words.' },
+];
+
+const COMPARE_ROWS = [
+  { need: 'Google Business Profile', us: '$99 once, done for you', them: 'Local SEO Bot $99/mo per location · BrightLocal from $41/mo billed monthly', href: '/compare/front-porch-growth-vs-local-seo-bot' },
+  { need: 'Postcards', us: '$3.54–$4.95 per card, postage included, + $127 setup once', them: 'PostcardMania prints from $0.12 a card, postage quoted separately · USPS EDDM postage $0.260 a piece, you print and drop off', href: '/compare/yardmailer-vs-postcardmania' },
+  { need: 'AI search visibility', us: 'Free Gap Report · $497 Sprint · from $1,500/mo', them: 'AEO Engine from $1,597/mo with a 90-day term · Otterly.ai tracking from €29/mo, you do the fixes', href: '/compare/front-porch-growth-vs-aeo-engine' },
+  { need: 'Review requests', us: 'Free starter or $20/mo (ReputationFlow)', them: 'NiceJob $95 or $135/mo', href: '/compare/front-porch-growth-vs-nicejob' },
+];
+
 export default function SuiteHomePage() {
+  const industries = fpgIndustries();
   return (
     <SuiteShell>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd).replace(/</g, '\\u003c') }} />
-
-      <section className={styles.hero} id="start">
-        <div>
-          <span className={styles.eyebrow}>Front Porch Growth · Hanceville, Alabama</span>
-          <h1>Local growth tools for the shop that’s already booked tomorrow.</h1>
-          <p className={styles.lede}>
-            Postcards, Google profiles, review requests, and a free visibility grader — built for HVAC, plumbing, lawn
-            care, and the rest of the trades. The AI receptionist Ava lives on the sister site, Executive Receptionist.
+      <div className={fpg.wrap}>
+        <section className={fpg.hero} id="start">
+          <span className={fpg.eyebrow}>Front Porch Growth · Marketing for home-service shops</span>
+          <h1>Get found, and get picked, by the homeowners near you.</h1>
+          <p className={fpg.lede}>
+            Postcards that show a homeowner a project for their own house, a Google profile set up right, honest review requests, and AI search work
+            so ChatGPT and Google’s AI can name your shop. Published prices, and nothing goes out until you approve it.
           </p>
-          <div className={styles.actions}>
-            <Link className={styles.primary} href="/postcards">
-              See YardMailer postcards
+          <div className={fpg.actions}>
+            <Link className={fpg.primary} href="/ai-visibility">
+              Grade my site free
             </Link>
-            <Link className={styles.secondary} href="/ai-visibility">
-              Grade your site free
+            <Link className={fpg.secondary} href="/ai-search-visibility">
+              Get a free AI Gap Report
+            </Link>
+            <Link className={fpg.secondary} href="/pricing">
+              See prices
             </Link>
           </div>
-          <p className={styles.fine}>
-            Need someone to answer the phone? <Link href="https://executivereceptionist.com/">Meet Ava at Executive Receptionist</Link>.
-            Starter there is $79 a month, and Starter is the only plan whose first month is $1.
+          <p className={fpg.fine}>
+            Questions first? Call <a href={FPG_PUBLIC_PHONE_HREF}>{FPG_PUBLIC_PHONE}</a>. Need the phone answered instead? That is our sister brand,{' '}
+            <a href={ER_HOME}>Executive Receptionist</a>.
           </p>
-        </div>
-      </section>
+        </section>
 
-      <section className={styles.band} id="tools">
-        <span className={styles.kicker}>What you can use today</span>
-        <h2 className={styles.h2}>Marketing that stays on this site.</h2>
-        <ul className={avaStyles.tiles}>
-          {TOOLS.map((tool) => (
-            <li key={tool.href}>
-              <Link className={avaStyles.tile} href={tool.href}>
-                <h3>{tool.title}</h3>
-                <p>{tool.detail}</p>
-              </Link>
+        <section className={fpg.section} id="why">
+          <span className={fpg.kicker}>Why shops switch from an agency retainer</span>
+          <h2 className={fpg.h2}>Three things you can check before you pay.</h2>
+          <ul className={fpg.grid3}>
+            {REASONS.map((reason, index) => (
+              <li className={fpg.card} key={reason.title}>
+                <span className={fpg.num}>{index + 1}</span>
+                <h3>{reason.title}</h3>
+                <p>{reason.detail}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className={fpg.section} id="what-you-get">
+          <span className={fpg.kicker}>What lands on your desk</span>
+          <h2 className={fpg.h2}>See the work before you buy it.</h2>
+          <p className={fpg.body}>Samples below use made-up businesses and numbers, so you can see the format of what you would get.</p>
+          <ul className={fpg.grid3}>
+            <li className={fpg.sample}>
+              <span className={fpg.tag}>Sample postcard</span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/postcard-yard.png" alt="Sample YardMailer concept: the same front yard now and after the project" width={512} height={512} style={{ width: '100%', height: 'auto', borderRadius: 12 }} loading="lazy" />
+              <p className={fpg.fine}>A concept for that home, plus a QR code to an estimate-request page.</p>
             </li>
-          ))}
-        </ul>
-      </section>
+            <li className={fpg.sample}>
+              <span className={fpg.tag}>Sample AI Gap Report · made-up data</span>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Check</th>
+                    <th>You</th>
+                    <th>Named roofer</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>Pages on site</td><td>18</td><td>240</td></tr>
+                  <tr><td>Town pages</td><td>0</td><td>12</td></tr>
+                  <tr><td>Cost page</td><td>No</td><td>Yes</td></tr>
+                  <tr><td>Insurance-claim guide</td><td>No</td><td>Yes</td></tr>
+                  <tr><td>Named in AI answers</td><td>0 of 8</td><td>5 of 8</td></tr>
+                </tbody>
+              </table>
+              <p className={fpg.fine}>Five biggest gaps on one page, free. <Link href="/ai-search-visibility">How it works</Link>.</p>
+            </li>
+            <li className={fpg.sample}>
+              <span className={fpg.tag}>Sample Google profile checklist</span>
+              <ul className={fpg.list}>
+                <li>Primary category matches the trade</li>
+                <li>Services listed with short descriptions</li>
+                <li>Service area instead of a home address</li>
+                <li>Real job photos uploaded</li>
+                <li>Review link and QR code ready to share</li>
+              </ul>
+              <p className={fpg.fine}>Done once for $99. <Link href="/google-profile">What is included</Link>.</p>
+            </li>
+          </ul>
+        </section>
 
-      <section className={styles.band} id="receptionist">
-        <span className={styles.kicker}>Sister product</span>
-        <h2 className={styles.h2}>Ava answers the calls this shop would otherwise miss.</h2>
-        <p className={styles.body}>
-          Executive Receptionist is the AI receptionist brand. Ava tells callers she is AI, takes the job details, and
-          emails you the lead. She only answers inbound calls. Plans are month to month, with no free pilot.
-        </p>
-        <div className={styles.actions}>
-          <a className={styles.primary} href="https://executivereceptionist.com/">
-            Go to Executive Receptionist
-          </a>
-          <a className={styles.secondary} href="https://executivereceptionist.com/hvac">
-            Ava for HVAC shops
-          </a>
-        </div>
-      </section>
-
-      <section className={styles.band} id="desk">
-        <span className={styles.kicker}>Your desk</span>
-        <h2 className={styles.h2}>Leads, campaigns, and writing tools in one place.</h2>
-        <p className={styles.body}>
-          Sign in to your desk to open the Front Porch Growth tools you already use. Buying a postcard campaign or
-          grading a site does not always need an account first.
-        </p>
-        <ul className={avaStyles.tiles}>
-          {DESK_TOOLS.map((tool) => (
-            <li key={tool.key} id={tool.key === 'invoices' ? 'invoicing' : undefined}>
-              {tool.key === 'invoices' ? (
-                <div className={avaStyles.tile}>
-                  <h3>{tool.name}</h3>
-                  <p>{tool.what}</p>
-                  <InvoicingWaitlistForm />
-                </div>
-              ) : (
-                <Link className={avaStyles.tile} href={tool.href}>
-                  <h3>{tool.name}</h3>
-                  <p>{tool.what}</p>
-                  <span className={`${avaStyles.tileMeta} ${tool.status === 'live' ? avaStyles.tileMetaLive : ''}`}>
-                    {tool.status === 'waitlist' ? 'Waitlist' : tool.signedIn ? 'In your desk' : 'Open'}
-                  </span>
+        <section className={fpg.section} id="services">
+          <span className={fpg.kicker}>Services</span>
+          <h2 className={fpg.h2}>Pick the one that fixes your slowest week.</h2>
+          <ul className={fpg.grid3}>
+            {FPG_SERVICES.map((service) => (
+              <li key={service.href}>
+                <Link className={fpg.card} href={service.href}>
+                  <h3>{service.label}</h3>
+                  <p>{service.detail}</p>
+                  <span className={fpg.price}>{service.price}</span>
                 </Link>
-              )}
-            </li>
-          ))}
-        </ul>
-        <div className={styles.actions}>
-          <Link className={styles.secondary} href="/login?next=/desk">
-            Sign in to your desk
-          </Link>
-        </div>
-      </section>
+              </li>
+            ))}
+          </ul>
+        </section>
 
-      <section className={styles.wideFaq} id="faq">
-        <span className={styles.kicker}>Straight answers</span>
-        <h2>Before you pick a tool.</h2>
-        {HOME_FAQS.map((faq) => (
-          <details key={faq.q}>
-            <summary>{faq.q}</summary>
-            <p>{faq.a}</p>
-          </details>
-        ))}
-      </section>
+        <section className={fpg.section} id="compare">
+          <span className={fpg.kicker}>Compared</span>
+          <h2 className={fpg.h2}>Front Porch Growth next to the usual options.</h2>
+          <div className={fpg.tableWrap}>
+            <table className={fpg.table}>
+              <thead>
+                <tr>
+                  <th scope="col">What you need</th>
+                  <th scope="col">Front Porch Growth</th>
+                  <th scope="col">Published alternatives</th>
+                </tr>
+              </thead>
+              <tbody>
+                {COMPARE_ROWS.map((row) => (
+                  <tr key={row.need}>
+                    <td>
+                      <Link href={row.href}>{row.need}</Link>
+                    </td>
+                    <td>{row.us}</td>
+                    <td>{row.them}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className={fpg.fine}>
+            Alternative prices from each company’s own pricing page, checked {FPG_COMPARE_CHECKED_LABEL}. <Link href="/compare">See every comparison</Link>, including where the
+            other option is the better pick.
+          </p>
+        </section>
 
-      <section className={styles.band}>
-        <SisterSites selfUrl="https://frontporchgrowth.com" clusters={['home-services', 'reviews']} />
-      </section>
+        <section className={fpg.section} id="how">
+          <span className={fpg.kicker}>How it works</span>
+          <h2 className={fpg.h2}>Four steps, and you approve each one.</h2>
+          <ol className={fpg.grid3} style={{ listStyle: 'none' }}>
+            {STEPS.map((step, index) => (
+              <li className={fpg.card} key={step.title}>
+                <span className={fpg.num}>{index + 1}</span>
+                <h3>{step.title}</h3>
+                <p>{step.detail}</p>
+              </li>
+            ))}
+          </ol>
+        </section>
 
-      <section className={styles.closing}>
-        <span className={styles.kicker}>Start with what you need</span>
-        <h2>Mail a route, fix the profile, or put Ava on the phone.</h2>
-        <div className={styles.actions}>
-          <Link className={styles.primary} href="/postcards">
-            See postcards
-          </Link>
-          <Link className={styles.secondary} href="/ai-visibility">
-            Grade your site free
-          </Link>
-        </div>
-      </section>
+        <section className={fpg.section} id="industries">
+          <span className={fpg.kicker}>Industries</span>
+          <h2 className={fpg.h2}>Built around your trade.</h2>
+          <ul className={fpg.linkList}>
+            {industries.map((item) => (
+              <li key={item.href}>
+                <Link href={item.href}>{item.label}</Link>
+              </li>
+            ))}
+          </ul>
+          <p className={fpg.fine}>
+            <Link href="/trades">All industries</Link>
+          </p>
+        </section>
+
+        <section className={fpg.section} id="tools">
+          <span className={fpg.kicker}>Free tools</span>
+          <h2 className={fpg.h2}>Free, no card, nothing sent.</h2>
+          <ul className={fpg.grid3}>
+            {FPG_FREE_TOOLS.map((tool) => (
+              <li key={tool.href}>
+                <Link className={fpg.card} href={tool.href}>
+                  <h3>{tool.label}</h3>
+                  <p>{tool.detail}</p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className={fpg.section} id="desk">
+          <span className={fpg.kicker}>Your desk</span>
+          <h2 className={fpg.h2}>Leads, campaigns, and writing tools in one place.</h2>
+          <p className={fpg.body}>
+            Sign in to your desk to open the Front Porch Growth tools you already use. Buying a postcard campaign or grading a site does not always
+            need an account first.
+          </p>
+          <ul className={avaStyles.tiles}>
+            {DESK_TOOLS.map((tool) => (
+              <li key={tool.key} id={tool.key === 'invoices' ? 'invoicing' : undefined}>
+                {tool.key === 'invoices' ? (
+                  <div className={avaStyles.tile}>
+                    <h3>{tool.name}</h3>
+                    <p>{tool.what}</p>
+                    <InvoicingWaitlistForm />
+                  </div>
+                ) : (
+                  <Link className={avaStyles.tile} href={tool.href}>
+                    <h3>{tool.name}</h3>
+                    <p>{tool.what}</p>
+                    <span className={`${avaStyles.tileMeta} ${tool.status === 'live' ? avaStyles.tileMetaLive : ''}`}>
+                      {tool.status === 'waitlist' ? 'Waitlist' : tool.signedIn ? 'In your desk' : 'Open'}
+                    </span>
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ul>
+          <div className={fpg.actions}>
+            <Link className={fpg.secondary} href="/login?next=/desk">
+              Sign in to your desk
+            </Link>
+          </div>
+        </section>
+
+        <section className={fpg.section} id="faq">
+          <span className={fpg.kicker}>Straight answers</span>
+          <h2 className={fpg.h2}>Before you pick a service.</h2>
+          <div className={fpg.faq}>
+            {HOME_FAQS.map((faq) => (
+              <details key={faq.q}>
+                <summary>{faq.q}</summary>
+                <p>{faq.a}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+
+        <section className={fpg.section} id="receptionist">
+          <span className={fpg.kicker}>Sister brand</span>
+          <h2 className={fpg.h2}>Missing calls? That is Executive Receptionist.</h2>
+          <p className={fpg.body}>
+            The AI receptionist, Ava, has her own site with her own plans and demo. Front Porch Growth links there instead of repeating it here.
+          </p>
+          <div className={fpg.actions}>
+            <a className={fpg.secondary} href={ER_HOME}>
+              Go to Executive Receptionist
+            </a>
+          </div>
+        </section>
+
+        <ClosingCards heading="Start free, or start with one service." />
+      </div>
     </SuiteShell>
   );
 }

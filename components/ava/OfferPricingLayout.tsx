@@ -16,7 +16,6 @@ const FEATURE_GROUPS: Array<{
       { feature: 'Emails you a summary of the call', value: 'Included', included: true },
       { feature: 'Greeting and questions written for your trade', value: 'Included', included: true },
       { feature: 'Built first for HVAC and plumbing shops', value: 'Included', included: true },
-      { feature: 'In-person setup in Gadsden, Alabama', value: 'Included', included: true },
     ],
   },
   {

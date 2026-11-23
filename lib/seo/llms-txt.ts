@@ -1,5 +1,6 @@
 import { isExecutiveReceptionistHost } from '@/lib/site-url';
 import { SISTER_SITES } from '@/lib/seo/sister-sites';
+import { fpgLlmsSection } from '@/lib/fpg/llms';
 
 const SHARED_FACTS = `Cole Collins, based in Hanceville, Alabama, operates Executive Receptionist and Front Porch Growth as sister brands, plus other small sites listed at the end of this file. Phone (256) 595-3354. Demo line for the AI receptionist: (256) 952-4935. Inbound only: Ava does not make cold calls or send cold texts.
 
@@ -53,8 +54,10 @@ function contact() {
 }
 
 export function llmsTxtForHost(hostHeader: string | null | undefined) {
-  const intro = isExecutiveReceptionistHost(hostHeader) ? ER_INTRO : FPG_INTRO;
-  return `${intro}\n${SHARED_FACTS}\n${sisterList()}\n${contact()}`;
+  const er = isExecutiveReceptionistHost(hostHeader);
+  const intro = er ? ER_INTRO : FPG_INTRO;
+  const fpgPages = er ? '' : `${fpgLlmsSection()}\n`;
+  return `${intro}\n${SHARED_FACTS}\n${fpgPages}${sisterList()}\n${contact()}`;
 }
 
 export function llmsFullTxtForHost(hostHeader: string | null | undefined) {

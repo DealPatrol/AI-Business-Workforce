@@ -5,6 +5,15 @@ import styles from '@/components/suite/suite.module.css';
 import { COMPARISON_AS_OF, COMPARISON_FACTS, COMPARISON_SOURCES } from '@/lib/comparison/facts';
 import { faqNode, jsonLdGraph } from '@/lib/ava/structured-data';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
+import { FpgCompareHub } from '@/components/fpg/CompareHub';
+import { requestHost } from '@/lib/seo/request-host';
+import { isExecutiveReceptionistHost } from '@/lib/site-url';
+
+export const dynamic = 'force-dynamic';
+
+const FPG_COMPARE_TITLE = 'Compare Front Porch Growth: Postcards, SEO, Reviews';
+const FPG_COMPARE_DESCRIPTION =
+  'Front Porch Growth next to Local SEO Bot, BrightLocal, PostcardMania, USPS EDDM, AEO Engine, Otterly.ai and NiceJob. Prices from each vendor’s page.';
 
 const seo = pageSeo('/compare');
 const title = renderedTitle(seo);
@@ -21,14 +30,30 @@ const FAQS = [
   },
 ] as const;
 
-export const metadata: Metadata = {
+const SHARED_METADATA: Metadata = {
   title: metadataTitle(seo),
   description,
   alternates: { canonical: '/compare' },
   openGraph: { images: ['/og-default.png'], title, description, url: '/compare', siteName: 'Front Porch Growth', type: 'website' },
 };
 
-export default function ComparePage() {
+/** frontporchgrowth.com (and previews) get the Front Porch Growth compare hub; executivereceptionist.com keeps the shared page. */
+export async function generateMetadata(): Promise<Metadata> {
+  if (isExecutiveReceptionistHost(await requestHost())) return SHARED_METADATA;
+  return {
+    title: { absolute: FPG_COMPARE_TITLE },
+    description: FPG_COMPARE_DESCRIPTION,
+    alternates: { canonical: '/compare' },
+    openGraph: { images: ['/og-default.png'], title: FPG_COMPARE_TITLE, description: FPG_COMPARE_DESCRIPTION, url: '/compare', siteName: 'Front Porch Growth', type: 'website' },
+  };
+}
+
+export default async function ComparePage() {
+  if (!isExecutiveReceptionistHost(await requestHost())) return <FpgCompareHub />;
+  return <SharedComparePage />;
+}
+
+function SharedComparePage() {
   const structured = jsonLdGraph([faqNode([...FAQS])]);
   return (
     <SuiteShell>
