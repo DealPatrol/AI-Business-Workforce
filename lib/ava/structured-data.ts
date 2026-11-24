@@ -88,7 +88,7 @@ export function frontPorchLocalBusiness(extraAreaServed: Array<{ '@type': string
     ...frontPorchOrganization(),
     '@type': ['Organization', 'LocalBusiness', 'ProfessionalService'],
     description:
-      'Front Porch Growth sells marketing services for home-service businesses: YardMailer postcard campaigns, Google Business Profile setup, and free writing tools. Its sister brand, Executive Receptionist, is an AI phone receptionist named Ava.',
+      'Front Porch Growth sells marketing services for home-service businesses: AI search visibility (AEO) for local trades, YardMailer postcard campaigns, Google Business Profile setup, and free writing tools. Its sister brand, Executive Receptionist, is an AI phone receptionist named Ava.',
     areaServed,
   };
 }
