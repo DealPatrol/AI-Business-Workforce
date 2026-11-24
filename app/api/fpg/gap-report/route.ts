@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
         from: 'Front Porch Growth <onboarding@resend.dev>',
         to: [NOTIFICATION_EMAIL],
         reply_to: fields.email,
-        subject: `Gap Report request — ${fields.business}`,
+        subject: `${fields.interest.startsWith('Google profile care') ? 'Google profile care request' : 'Gap Report request'} — ${fields.business}`,
         html: `<div style="font-family:Arial,sans-serif;max-width:680px;margin:auto;color:#17211b"><h1>New AI Visibility Gap Report request</h1><table style="border-collapse:collapse;width:100%">${htmlRows}</table></div>`,
       }),
     });

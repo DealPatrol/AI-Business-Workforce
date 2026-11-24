@@ -15,7 +15,7 @@ const FAQS = [
   { q: 'What do you need from me?', a: 'Manager access to your Google Business Profile (or help claiming it), 5 to 15 job photos, your service area, and the services you want to be found for.' },
   { q: 'How long does it take?', a: 'Most profiles are done within 3 business days of getting access and photos. Google sometimes holds edits for review, which can add a few days.' },
   { q: 'Do you guarantee a ranking?', a: 'No. Nobody can honestly promise a map ranking. A complete, accurate profile with the right categories and photos is the foundation Google looks at.' },
-  { q: 'Is this a subscription?', a: 'No. It is $99 one time.' },
+  { q: 'Is this a subscription?', a: 'The setup is not. It is $99 one time. If you want the profile kept current afterward, monthly Profile Care is optional: $99 or $179 a month, month to month.' },
   { q: 'Does a Google profile help with ChatGPT and other AI assistants?', a: 'It helps most with Google: map results and Google’s AI answers read your profile. ChatGPT and other assistants lean more on directories and review sites, so a profile is one piece. The free AI visibility grader checks both.' },
   { q: 'Will you put keywords in my business name?', a: 'No. Google’s guidelines say the name must match your real-world business name, and stuffed names can get a profile suspended.' },
 ] as const;
@@ -87,6 +87,13 @@ export default function GoogleProfilePage() {
             </a>
           </article>
         </div>
+        <h2>Keep it current after setup</h2>
+        <p>
+          A profile goes stale fast: holiday hours, new services, unanswered reviews. Optional monthly{' '}
+          <Link href="/google-profile/management">Google profile care</Link> is $99 a month (4 posts, details kept current, drafted
+          review replies) or $179 a month (8 posts, every review answered, photo uploads). Pair it with an AI receptionist in an{' '}
+          <a href="https://executivereceptionist.com/receptionist/packages">Executive Receptionist bundle</a> from $159 a month.
+        </p>
         <h2>Common Google profile mistakes we fix</h2>
         <ul>
           {MISTAKES.map((item) => (

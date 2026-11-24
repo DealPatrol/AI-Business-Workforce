@@ -32,6 +32,7 @@ const SHARED_FACTS = `Cole Collins, based in Hanceville, Alabama, operates Execu
 - YardMailer postcards show a homeowner a concept for their own property, with a QR code to request an estimate. The shop approves the design, audience, and cost before anything is mailed. Pricing: https://frontporchgrowth.com/pricing
 - Receptionist product pages live only on executivereceptionist.com. Front Porch Growth links there instead of republishing that sales copy.
 - Free grader: https://frontporchgrowth.com/ai-visibility (no ranking guarantees)
+- Google Business Profile: setup $99 one time (https://frontporchgrowth.com/google-profile); monthly management $99/mo Profile Care or $179/mo Profile Care Plus (https://frontporchgrowth.com/google-profile/management); bundles with the Executive Receptionist AI receptionist from $159/mo.
 - AI Search Visibility (done for you, for HVAC, plumbing, electrical and roofing shops in Alabama): https://frontporchgrowth.com/ai-search-visibility (free Gap Report, $497 Citation Sprint, plans $1,500 / $2,750 / $4,500 a month with a written 90-day target, or Pay When Named; covers Google Business Profile, directories, reviews, local groups, answer pages and tracking)
 - Google Business Profile setup: https://frontporchgrowth.com/google-profile
 - Reputation / review requests: https://frontporchgrowth.com/reputation and https://tryreputationflow.com/
