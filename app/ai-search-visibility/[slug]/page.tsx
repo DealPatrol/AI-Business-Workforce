@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { SuiteShell } from '@/components/suite/SuiteShell';
 import styles from '@/components/visibility/visibility.module.css';
+import { GapReportForm } from '@/components/visibility/GapReportForm';
+import { MoneyQuestionBuilder } from '@/components/visibility/MoneyQuestionBuilder';
 import { frontPorchLocalBusiness } from '@/lib/ava/structured-data';
 import { AEO_CHECKED_LABEL, FPG_AEO_PAGES, getFpgAeoPage } from '@/lib/fpg/aeo-pages';
 import { FPG_PUBLIC_PHONE } from '@/lib/fpg/site';
@@ -96,6 +98,24 @@ function jsonLd(slug: string) {
         '@id': `${url}#faq`,
         mainEntity: page.faqs.map((faq) => ({ '@type': 'Question', name: faq.q, acceptedAnswer: { '@type': 'Answer', text: faq.a } })),
       },
+      ...(page.howTo
+        ? [
+            {
+              '@type': 'HowTo',
+              '@id': `${url}#howto`,
+              name: page.howTo.name,
+              totalTime: page.howTo.totalTime,
+              estimatedCost: { '@type': 'MonetaryAmount', currency: 'USD', value: 0 },
+              step: page.howTo.steps.map((step, index) => ({
+                '@type': 'HowToStep',
+                position: index + 1,
+                name: step.name,
+                text: step.text,
+                url: `${url}#step-${index + 1}`,
+              })),
+            },
+          ]
+        : []),
       breadcrumbNode([
         { name: 'Home', path: '/' },
         { name: 'AI search visibility', path: HUB },
@@ -134,7 +154,7 @@ export default async function AiSearchVisibilityGuidePage({ params }: Props) {
         </section>
 
         <section className={styles.section} aria-labelledby="checks-title">
-          <span className={styles.eyebrow}>WHAT WE SAW</span>
+          <span className={styles.eyebrow}>{page.checksEyebrow ?? 'WHAT WE SAW'}</span>
           <h2 id="checks-title">{page.checksTitle}</h2>
           <ul className={styles.wont}>
             {page.checks.map((item) => (
@@ -152,6 +172,32 @@ export default async function AiSearchVisibilityGuidePage({ params }: Props) {
             ))}
           </ul>
         </section>
+
+        {page.howTo ? (
+          <section className={styles.section} aria-labelledby="howto-title">
+            <span className={styles.eyebrow}>STEP BY STEP</span>
+            <h2 id="howto-title">{page.howTo.name}</h2>
+            <ol className={styles.wont}>
+              {page.howTo.steps.map((step, index) => (
+                <li key={step.name} id={`step-${index + 1}`}>
+                  <b>
+                    {index + 1}. {step.name}.
+                  </b>{' '}
+                  {step.text}
+                </li>
+              ))}
+            </ol>
+          </section>
+        ) : null}
+
+        {page.questionBuilder ? (
+          <section className={styles.section} aria-labelledby="builder-title">
+            <span className={styles.eyebrow}>FREE TOOL</span>
+            <h2 id="builder-title">Build your money questions</h2>
+            <p className={styles.sectionLede}>Pick your trade and towns. Copy the questions, then paste each one into a fresh chat in ChatGPT, Perplexity and Google.</p>
+            <MoneyQuestionBuilder />
+          </section>
+        ) : null}
 
         <section className={styles.section} aria-labelledby="work-title">
           <span className={styles.eyebrow}>WHAT WE DO</span>
@@ -203,6 +249,15 @@ export default async function AiSearchVisibilityGuidePage({ params }: Props) {
               <Link href={HUB}>AI search visibility plans and guarantee</Link>
             </li>
           </ul>
+        </section>
+
+        <section className={styles.section} aria-labelledby="gap-form-title" id="gap-report">
+          <span className={styles.eyebrow}>FREE GAP REPORT</span>
+          <h2 id="gap-form-title">Want us to run the check for you?</h2>
+          <p className={styles.sectionLede}>
+            We ask 8 questions your customers ask, show who AI names instead of you, compare your profile, reviews and listings with theirs, and list the 5 fixes that matter most. Free.
+          </p>
+          <GapReportForm source={page.navLabel} />
         </section>
 
         <section className={styles.closing} aria-labelledby="closing-title">
