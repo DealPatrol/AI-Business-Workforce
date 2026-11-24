@@ -22,6 +22,12 @@ export type FpgAeoPage = {
   faqs: Array<{ q: string; a: string }>;
   sources: FpgAeoSource[];
   related: string[];
+  /** Eyebrow over the checks list. Defaults to WHAT WE SAW; use another label when the list is advice, not observations. */
+  checksEyebrow?: string;
+  /** Numbered steps, rendered on the page and published as HowTo JSON-LD. */
+  howTo?: { name: string; totalTime: string; steps: Array<{ name: string; text: string }> };
+  /** Show the free money-question builder on this page. */
+  questionBuilder?: boolean;
 };
 
 export const AEO_CHECKED_LABEL = 'November 2026';
@@ -38,6 +44,22 @@ const SOURCES = {
   ftc: {
     label: 'FTC rule on consumer reviews and testimonials (Federal Register, Aug 22, 2024)',
     url: 'https://www.federalregister.gov/documents/2024/08/22/2024-18519/trade-regulation-rule-on-the-use-of-consumer-reviews-and-testimonials',
+  },
+  openaiSearch: {
+    label: 'OpenAI Help Center, “Searching the web with ChatGPT” (read Nov 24, 2026)',
+    url: 'https://help.openai.com/en/articles/9237897-chatgpt-search',
+  },
+  openaiBots: {
+    label: 'OpenAI, “Overview of OpenAI crawlers” (OAI-SearchBot and GPTBot; read Nov 24, 2026)',
+    url: 'https://platform.openai.com/docs/bots',
+  },
+  googleAiFeatures: {
+    label: 'Google Search Central, “AI features and your website” (read Nov 24, 2026)',
+    url: 'https://developers.google.com/search/docs/appearance/ai-features',
+  },
+  aecb: {
+    label: 'Alabama Board of Electrical Contractors (license lookup and rules)',
+    url: 'https://aecb.alabama.gov/',
   },
 } satisfies Record<string, FpgAeoSource>;
 
@@ -355,6 +377,174 @@ export const FPG_AEO_PAGES: FpgAeoPage[] = [
     ],
     sources: [SOURCES.pew, SOURCES.brightlocal],
     related: ['cost', 'hvac', 'gadsden-al'],
+  },
+  {
+    slug: 'check-if-ai-recommends-you',
+    navLabel: 'Check if AI names you',
+    title: 'How to Check if ChatGPT Recommends Your Local Shop',
+    description:
+      'A free 20-minute test: ask ChatGPT, Perplexity and Google the questions your customers ask, log who is named, and read the sources it cites.',
+    eyebrow: 'FREE SELF-CHECK · HOW TO',
+    h1: 'How to check if ChatGPT recommends your local shop',
+    directAnswer:
+      'Ask the AI the way a customer would, without your business name: “who is the best plumber in Cullman AL?” Use a fresh chat each time, ask each question at least twice, and run the same questions in ChatGPT, Perplexity and Google. Write down every business named and every site cited. If you are not named, the cited sites show you where to start. It takes about 20 minutes and costs nothing.',
+    serviceName: 'AI search visibility self-check for local trades',
+    areaServed: ['Alabama'],
+    checksEyebrow: 'BEFORE YOU START',
+    checksTitle: 'Rules that keep the test honest',
+    checks: [
+      'Do not type your own business name in the question. That tests whether AI knows you, not whether it would pick you.',
+      'Start a new chat for every question, and try once in a private window, so earlier chats do not steer the answer.',
+      'Put the town in the question. AI tools may use your location, so run it from your service area if you can.',
+      'Save the full answer and the links under it. One run is one sample; answers change from run to run.',
+    ],
+    questionsTitle: 'Question types to include',
+    questions: [
+      'The recommendation question: “who is the best {trade} in {town}?”',
+      'The emergency question: “who can fix {problem} in {town} today?”',
+      'The cost question: “how much does {job} cost in {town}?”',
+      'The brand question, asked last: “what do you know about {your business}?”',
+    ],
+    howTo: {
+      name: 'How to check if ChatGPT recommends your local shop',
+      totalTime: 'PT20M',
+      steps: [
+        { name: 'Write 5 customer questions', text: 'Use the builder on this page or write them yourself: the trade, the town, and the problem the way a homeowner says it. Keep the exact wording so you can repeat it next month.' },
+        { name: 'Ask each one in a fresh chat', text: 'Open a new chat in ChatGPT for each question. Ask each one twice. If ChatGPT offers web search, use it, and note whether the answer showed sources.' },
+        { name: 'Repeat in Perplexity and Google', text: 'Ask the same questions in Perplexity and in Google. Note when Google shows no AI Overview, and keep each tool’s results separate.' },
+        { name: 'Log names and sources', text: 'For each run, write the businesses named in order, whether you were named, how you were described, and the sites linked under the answer.' },
+        { name: 'Ask the brand question', text: 'Last, ask what the tool knows about your business by name. Check the phone number, the towns and the services. Wrong details here usually come from an old listing.' },
+        { name: 'Fix the sources, then re-check monthly', text: 'Claim or correct your listing on the sites that were cited, complete your Google Business Profile, and re-run the same questions on the same day next month.' },
+      ],
+    },
+    questionBuilder: true,
+    sections: [
+      { title: 'Read the citations first', body: 'The links under an answer show where the tool looked: directories, review sites, local news, license records or a competitor’s pages. If you are missing from those sites, that is the first fix.' },
+      { title: 'Let the AI crawlers in', body: 'OpenAI says site owners allow its OAI-SearchBot crawler in robots.txt to appear in ChatGPT search results. If your robots.txt blocks it, ChatGPT search may not read your pages. Check yours, or run our free grader.' },
+      { title: 'Google is its own check', body: 'Google says there are no additional requirements or special optimizations to appear in AI Overviews or AI Mode; normal SEO best practices apply. So the same profile, listings and clear pages do double duty.' },
+      { title: 'When to get help', body: 'If you want the questions run on 4 tools every month, logged with screenshots, and the fixes done for you, that is what our paid plans are. The free Gap Report shows what we would fix first.' },
+    ],
+    faqs: [
+      {
+        q: 'How many times should I ask each question?',
+        a: 'At least twice per tool, in fresh chats. AI answers change from run to run, so one answer can be a lucky or unlucky draw. The pattern across runs matters more than any single answer.',
+      },
+      {
+        q: 'Why does ChatGPT name a business that closed or has the wrong number?',
+        a: 'The answer is built from what the cited sites say. If a directory or old listing is wrong, the answer can be wrong. Correct the listing at the source and check again later.',
+      },
+      {
+        q: 'Is the question builder an AI tool?',
+        a: 'No. It fills your trade and towns into question patterns we use in our own checks. It runs in your browser and sends nothing anywhere. You paste the questions into the AI tools yourself.',
+      },
+      NO_PROMISE,
+      NOT_AFFILIATED,
+    ],
+    sources: [SOURCES.openaiSearch, SOURCES.openaiBots, SOURCES.googleAiFeatures, SOURCES.brightlocal],
+    related: ['cullman-al', 'aeo-vs-seo', 'cost'],
+  },
+  {
+    slug: 'cullman-al',
+    navLabel: 'Cullman, AL',
+    title: 'AI Search Visibility in Cullman, AL for Local Trades',
+    description:
+      'Who AI names when Cullman County homeowners ask for HVAC, plumbing, roofing or electrical help, and what local shops can fix. From Hanceville.',
+    eyebrow: 'AI SEARCH VISIBILITY · CULLMAN COUNTY',
+    h1: 'AI search visibility for Cullman trades',
+    directAnswer:
+      'When someone in Cullman, Hanceville, Good Hope or Vinemont asks ChatGPT or Google’s AI for a contractor, the answer usually names two or three shops. In our November 2026 Cullman checks, the roofing answer cited a local newspaper’s “Best of” awards, a BBB profile, state license records and Google ratings, and the HVAC answer left out several well-reviewed shops, including some running ads. Front Porch Growth is based in Hanceville and helps Cullman County shops fix what AI reads.',
+    serviceName: 'AI search visibility for Cullman County trades',
+    areaServed: ['Cullman', 'Hanceville', 'Good Hope', 'Vinemont', 'Holly Pond', 'Cullman County'],
+    checksTitle: 'What our Cullman checks showed (November 2026)',
+    checks: [
+      '“Best HVAC company Cullman AL”: the answer named three shops. Several well-reviewed Cullman HVAC companies in the listings behind it, including some running ads, were not named.',
+      '“Best roofing company Cullman AL” (November 23, 2026): the answer named three roofers and cited a local newspaper’s “Best of” awards, a BBB profile, a state license-records site and Google rating counts.',
+      'In that roofing answer, a roofer with a 5.0 rating and an active license was named next to one with 430 ratings, so review count alone was not the only way in.',
+      'These are dated single runs. Answers change, which is why we log every check.',
+    ],
+    questionsTitle: 'Cullman County money questions we track',
+    questions: [
+      'best HVAC company Cullman AL',
+      'emergency plumber Hanceville AL',
+      'roof repair after storm Cullman',
+      'electrician near Good Hope AL',
+      'septic tank pumping Cullman County',
+      'AC repair open Saturday Cullman',
+      'metal roof installer Vinemont',
+      'water heater replacement cost Cullman',
+    ],
+    sections: [
+      { title: 'Local sources AI already quotes', body: 'Local “Best of” lists, the Cullman Area Chamber of Commerce directory, BBB, and state license records. We make sure each one has your correct name, phone and services. We cannot promise any award.' },
+      { title: 'Town pages that are really local', body: 'Pages for the towns you serve, such as Cullman, Hanceville, Good Hope and Holly Pond, with your real hours, service area and price ranges, not one page copied with the town name swapped.' },
+      { title: 'One shop per trade per town', body: 'On Recommended and Market Leader we take one shop per trade in Cullman, so we never work for your direct competitor here.' },
+      { title: 'We are down the road', body: 'Front Porch Growth is run by Cole Collins from Hanceville. Setup is by phone, email and screen share, and a Cullman County shop can meet in person if it helps.' },
+    ],
+    faqs: [
+      {
+        q: 'Are you actually in Cullman County?',
+        a: 'Yes. Front Porch Growth is run by Cole Collins from Hanceville, Alabama, in Cullman County. Most work happens by phone, email and screen share.',
+      },
+      {
+        q: 'What does the free Gap Report cover for a Cullman shop?',
+        a: 'Who AI names for 8 questions your Cullman County customers ask, how your Google profile, reviews and listings compare with the shop it names, and the 5 fixes that matter most. It is free and yours to keep.',
+      },
+      NO_PROMISE,
+      NOT_AFFILIATED,
+    ],
+    sources: [SOURCES.brightlocal, SOURCES.pew],
+    related: ['hvac', 'roofing', 'check-if-ai-recommends-you'],
+  },
+  {
+    slug: 'electrical',
+    navLabel: 'Electricians',
+    title: 'AI Search Visibility for Alabama Electricians',
+    description:
+      'How Alabama electricians can get named when homeowners ask AI for an electrician: license details, listings, panel and generator pages, and prices.',
+    eyebrow: 'AI SEARCH VISIBILITY · ELECTRICAL · ALABAMA',
+    h1: 'AI search visibility for Alabama electricians',
+    directAnswer:
+      'When a homeowner asks AI for an electrician, the answer names a few contractors and leans on what it can verify: Google Business Profiles, review counts across sites, directory listings, license information and pages that say what the shop does in which towns. Alabama electrical contractors are licensed by the Alabama Board of Electrical Contractors, so a consistent license number and business name help. Front Porch Growth fixes those inputs and logs whether AI names you.',
+    serviceName: 'AI search visibility for electricians',
+    areaServed: ['Cullman', 'Huntsville', 'Gadsden', 'Birmingham', 'Alabama'],
+    checksEyebrow: 'WHERE AI LOOKS',
+    checksTitle: 'What AI tools can read about an electrician',
+    checks: [
+      'Your Google Business Profile: categories, services such as panel upgrades and generator installs, hours, and the towns you serve.',
+      'License details: the name on your Alabama license should match the name on your profile, website and listings.',
+      'Reviews on more than one site. In our Gadsden checks (November 2026), electrical questions got two or three names, like every other trade we checked.',
+      'Pages on your own site that answer one question each, such as panel upgrade cost or whole-home generator installs, in plain words.',
+    ],
+    questionsTitle: 'Money questions we track for electricians',
+    questions: [
+      'best electrician {town}',
+      'emergency electrician {town}',
+      'electrical panel upgrade cost {town}',
+      'whole home generator installer {town}',
+      'EV charger installation {town}',
+      'licensed electrician near {town}',
+      'outlet not working, who do I call {town}',
+      'electrical inspection for home sale {town}',
+    ],
+    sections: [
+      { title: 'One name everywhere', body: 'The same business name, phone and address on your license record, Google profile, BBB, Angi, Nextdoor, Apple Maps and Bing Places, so AI does not see two businesses.' },
+      { title: 'Answer-first service pages', body: 'Pages like “panel upgrade cost in Huntsville” and “generator install in Cullman County”, each opening with a short answer and marked up with Electrician and FAQ schema.' },
+      { title: 'Storm and outage readiness', body: 'On Market Leader, after a storm that knocks out power we publish a short, factual page for the towns you serve: safety first, what to check, and how to reach you.' },
+      { title: 'Honest review flow', body: 'A text-after-every-job kit and replies to every review. We never write, buy or filter reviews; the FTC banned fake reviews in 2024.' },
+    ],
+    faqs: [
+      {
+        q: 'Does my license number help AI name me?',
+        a: 'We cannot promise that. It does help AI and customers confirm who you are when your license, profile and website use the same business name, and our roofing check showed AI citing license records.',
+      },
+      {
+        q: 'Do you work with my competitor?',
+        a: 'On Recommended and Market Leader we take one electrician per town, so we never work for your direct competitor there.',
+      },
+      NO_PROMISE,
+      NOT_AFFILIATED,
+    ],
+    sources: [SOURCES.aecb, SOURCES.brightlocal, SOURCES.ftc],
+    related: ['hvac', 'cullman-al', 'check-if-ai-recommends-you'],
   },
 ];
 

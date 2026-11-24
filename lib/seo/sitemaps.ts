@@ -111,10 +111,17 @@ export function executiveReceptionistSitemap(origin: string, now: Date): Metadat
   ];
 }
 
+/**
+ * Front Porch Growth's sitemap <lastmod>. It used to be the request time, so every URL looked
+ * changed on every crawl and search engines learn to ignore lastmod that always moves.
+ * Bump this date when Front Porch Growth pages change.
+ */
+export const FPG_CONTENT_UPDATED = new Date('2026-11-24T12:00:00.000Z');
+
 export function sitemapForHost(hostHeader: string | null | undefined, now = new Date()): MetadataRoute.Sitemap {
   const origin = publicIndexOrigin(hostHeader);
   if (isExecutiveReceptionistHost(hostHeader)) return executiveReceptionistSitemap(origin, now);
-  return frontPorchGrowthSitemap(origin, now);
+  return frontPorchGrowthSitemap(origin, FPG_CONTENT_UPDATED);
 }
 
 const ROBOT_ALLOW = ['/', '/prospector/unsubscribe'];

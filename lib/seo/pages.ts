@@ -23,9 +23,9 @@ export const ROOT_SEO: SeoSpec = {
 
 const PAGES = {
   '/': {
-    title: 'Local Growth for Home-Service Shops | Front Porch Growth',
+    title: 'Local Growth & AI Search for Trades | Front Porch Growth',
     description:
-      'YardMailer postcards, Google profile setup, and a free AI visibility grader. The AI receptionist Ava lives at Executive Receptionist.',
+      'AI search visibility for Alabama trades, YardMailer postcards, Google profile setup, and a free AI visibility grader. From Hanceville, AL.',
     titleMode: 'absolute',
     receptionist: false,
   },
