@@ -74,6 +74,8 @@ export function erFooterColumns(): { heading: string; links: ErLink[] }[] {
         { href: '/', label: 'Home' },
         { href: '/ava', label: 'Meet Ava' },
         { href: '/pricing', label: 'Pricing' },
+        { href: '/receptionist/packages', label: 'Packages: Ava + Google profile' },
+        { href: '/receptionist/book-a-demo', label: 'Book a demo' },
         { href: '/receptionist-demo', label: 'Demo' },
         { href: '/about', label: 'About' },
         { href: '/privacy', label: 'Privacy' },

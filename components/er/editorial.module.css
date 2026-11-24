@@ -1,0 +1,406 @@
+/* Paper / ink / brass editorial theme for Executive Receptionist sales pages. */
+.page {
+  --paper: #f5efe3;
+  --paper-deep: #ebe2d0;
+  --ink: #1c1a17;
+  --ink-soft: #4a443b;
+  --brass: #a8792a;
+  --brass-deep: #7c5717;
+  --rule: #d6c9ad;
+  min-height: 100vh;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--er-sans, 'Segoe UI', system-ui, sans-serif);
+  line-height: 1.55;
+}
+
+.wrap {
+  width: min(1080px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+.masthead {
+  border-bottom: 1px solid var(--rule);
+}
+
+.mastheadInner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 0;
+}
+
+.brand {
+  font-family: var(--er-serif, Georgia, serif);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+}
+
+.mastNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  font-size: 15px;
+}
+
+.mastNav a {
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+
+.mastNav a:hover,
+.mastNav a:focus-visible {
+  color: var(--brass-deep);
+  text-decoration: underline;
+}
+
+.hero {
+  padding: 56px 0 28px;
+}
+
+.kicker {
+  margin: 0 0 14px;
+  color: var(--brass-deep);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.hero h1,
+.section h2 {
+  font-family: var(--er-serif, Georgia, serif);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+
+.hero h1 {
+  margin: 0;
+  max-width: 20ch;
+  font-size: clamp(40px, 6.4vw, 72px);
+  line-height: 1.02;
+}
+
+.hero h1 em {
+  color: var(--brass-deep);
+  font-style: italic;
+}
+
+.answer {
+  margin: 22px 0 0;
+  max-width: 70ch;
+  padding: 18px 22px;
+  border-left: 3px solid var(--brass);
+  background: var(--paper-deep);
+  font-size: 18px;
+}
+
+.ctaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.btnInk,
+.btnBrass,
+.btnGhost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 20px;
+  border-radius: 2px;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid var(--ink);
+}
+
+.btnInk {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.btnBrass {
+  background: var(--brass);
+  border-color: var(--brass-deep);
+  color: #fffaf0;
+}
+
+.btnGhost {
+  background: transparent;
+  color: var(--ink);
+}
+
+.btnInk:focus-visible,
+.btnBrass:focus-visible,
+.btnGhost:focus-visible,
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: 3px solid var(--brass);
+  outline-offset: 2px;
+}
+
+.section {
+  padding: 44px 0;
+  border-top: 1px solid var(--rule);
+}
+
+.section h2 {
+  margin: 0 0 10px;
+  font-size: clamp(30px, 4vw, 44px);
+  line-height: 1.08;
+}
+
+.section > .wrap > p,
+.lead {
+  max-width: 68ch;
+  color: var(--ink-soft);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+  margin-top: 22px;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px;
+  background: #fbf7ee;
+  border: 1px solid var(--rule);
+}
+
+.cardFeatured {
+  border: 2px solid var(--brass);
+  box-shadow: 6px 6px 0 var(--paper-deep);
+}
+
+.card h3 {
+  margin: 0;
+  font-family: var(--er-serif, Georgia, serif);
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.badge {
+  align-self: flex-start;
+  padding: 3px 9px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.price {
+  margin: 4px 0 0;
+  font-family: var(--er-serif, Georgia, serif);
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.price small {
+  font-family: var(--er-sans, sans-serif);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+
+.strike {
+  color: var(--ink-soft);
+  text-decoration: line-through;
+}
+
+.note {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.list {
+  margin: 6px 0 12px;
+  padding-left: 18px;
+}
+
+.list li {
+  margin: 4px 0;
+}
+
+.card .btnInk,
+.card .btnBrass,
+.card .btnGhost {
+  margin-top: auto;
+}
+
+.table {
+  width: 100%;
+  margin-top: 18px;
+  border-collapse: collapse;
+  background: #fbf7ee;
+}
+
+.table th,
+.table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+
+.table th {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--brass-deep);
+}
+
+.tableScroll {
+  overflow-x: auto;
+}
+
+.proposal {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border: 1px dashed var(--brass);
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.faq details {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.faq summary {
+  cursor: pointer;
+  font-family: var(--er-serif, Georgia, serif);
+  font-size: 21px;
+  font-weight: 600;
+}
+
+.faq p {
+  margin: 10px 0 0;
+  max-width: 72ch;
+  color: var(--ink-soft);
+}
+
+.form {
+  display: grid;
+  gap: 14px;
+  margin-top: 20px;
+  padding: 24px;
+  background: #fbf7ee;
+  border: 1px solid var(--rule);
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.field input,
+.field select,
+.field textarea {
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid #b9aa8a;
+  border-radius: 2px;
+  background: #fffdf8;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 400;
+}
+
+.field textarea {
+  min-height: 90px;
+}
+
+.result {
+  padding: 18px 20px;
+  border-left: 3px solid var(--brass);
+  background: var(--paper-deep);
+}
+
+.result h3 {
+  margin: 0 0 6px;
+  font-family: var(--er-serif, Georgia, serif);
+  font-size: 26px;
+}
+
+.error {
+  color: #8a1f11;
+  font-weight: 600;
+}
+
+.honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.footer {
+  padding: 36px 0 56px;
+  border-top: 1px solid var(--rule);
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.footer a {
+  color: var(--brass-deep);
+}
+
+.steps {
+  counter-reset: step;
+  display: grid;
+  gap: 12px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.steps li {
+  counter-increment: step;
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+.steps li::before {
+  content: counter(step);
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--brass);
+  color: var(--brass-deep);
+  font-family: var(--er-serif, Georgia, serif);
+  font-size: 20px;
+  font-weight: 600;
+}

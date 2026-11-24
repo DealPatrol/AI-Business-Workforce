@@ -56,6 +56,20 @@ const PAGES = {
     titleMode: 'absolute',
     receptionist: true,
   },
+  '/receptionist/packages': {
+    title: 'AI Receptionist + Google Profile Packages, From $25/mo',
+    description:
+      'Ava AI receptionist plans from $25/mo, Google Business Profile care from $99/mo, and bundles from $159/mo with setup included. Alabama trades and beyond.',
+    titleMode: 'absolute',
+    receptionist: true,
+  },
+  '/receptionist/book-a-demo': {
+    title: 'Book an AI Receptionist Demo | Executive Receptionist',
+    description:
+      'Find your Ava plan in 30 seconds with your own call numbers, then book a free 15-minute demo with Cole Collins. No card needed.',
+    titleMode: 'absolute',
+    receptionist: true,
+  },
   '/receptionist-demo': {
     title: 'Try the AI Receptionist Demo',
     description:
