@@ -250,9 +250,9 @@ const PAGES = {
     receptionist: false,
   },
   '/ai-search-visibility': {
-    title: 'AI Search Visibility for Alabama Trades | Front Porch Growth',
+    title: 'AI Search Visibility Agency | Front Porch Growth',
     description:
-      'Get your HVAC, plumbing, electrical or roofing shop named in ChatGPT, Google AI Overviews and Perplexity. Free Gap Report, $497 Sprint, from $1,500/mo.',
+      'Get named in ChatGPT, Google AI Overviews and Perplexity: trades, dental, med spa, law, B2B. Free Gap Report. From $1,497/mo with a +30% guarantee.',
     titleMode: 'absolute',
     receptionist: false,
   },
