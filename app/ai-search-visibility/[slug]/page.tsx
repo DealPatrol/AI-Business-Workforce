@@ -81,9 +81,9 @@ function jsonLd(slug: string) {
           { '@type': 'Offer', name: 'AI Visibility Gap Report', price: 0, priceCurrency: 'USD' },
           { '@type': 'Offer', name: 'Citation Sprint', price: 497, priceCurrency: 'USD' },
           ...[
-            ['Found', 1500],
-            ['Recommended', 2750],
-            ['Market Leader', 4500],
+            ['Found', 1497],
+            ['Recommended', 2997],
+            ['Market Leader', 4997],
           ].map(([name, price]) => ({
             '@type': 'Offer',
             name,
@@ -211,8 +211,8 @@ export default async function AiSearchVisibilityGuidePage({ params }: Props) {
             ))}
           </div>
           <p className={styles.sectionLede}>
-            Published prices: free Gap Report, $497 Citation Sprint, Found $1,500/mo, Recommended $2,750/mo, Market Leader $4,500/mo, or Pay
-            When Named. <Link href={`${HUB}#pricing`}>See every plan</Link>.
+            Published prices: free Gap Report, $497 Citation Sprint, Found $1,497/mo, Recommended $2,997/mo, Market Leader $4,997/mo, or Pay
+            When Named. Monthly plans carry a +30% AI visibility guarantee and a report every Friday. <Link href={`${HUB}#pricing`}>See every plan</Link>.
           </p>
         </section>
 
