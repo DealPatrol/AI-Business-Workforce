@@ -8,10 +8,12 @@ import {
   DESK_CALENDAR_LINE,
   INDUSTRY_PAGE_SLUGS,
   businessPageDetails,
+  businessPageFaqs,
   type BusinessPage,
 } from '@/lib/ava/business-pages';
 import { AVA_OFFER } from '@/lib/ava/pricing';
 import { getErDemoNiche } from '@/lib/er-demos';
+import { faqNode } from '@/lib/ava/structured-data';
 import { EXECUTIVE_RECEPTIONIST_ORIGIN } from '@/lib/site-url';
 import '@/app/hvac/hvac.css';
 
@@ -54,6 +56,7 @@ function structuredData(page: BusinessPage, title: string, description: string) 
           { '@type': 'ListItem', position: 2, name: page.audience, item: url },
         ],
       },
+      { '@id': `${url}#faq`, url, ...faqNode(businessPageFaqs(page)) },
     ],
   };
 }
@@ -139,6 +142,18 @@ export function BusinessLanding({ page, title, description }: { page: BusinessPa
               </a>
             </p>
           </blockquote>
+        ))}
+      </section>
+
+      <section className="hvac-how" id="faq" aria-labelledby="faq-title">
+        <h2 id="faq-title">Questions {page.slug === 'business' ? 'owners' : page.audience.toLowerCase()} ask about Ava</h2>
+        {businessPageFaqs(page).map((faq) => (
+          <details key={faq.q}>
+            <summary>
+              <b>{faq.q}</b>
+            </summary>
+            <p>{faq.a}</p>
+          </details>
         ))}
       </section>
 
