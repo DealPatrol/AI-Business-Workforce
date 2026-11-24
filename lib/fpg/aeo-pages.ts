@@ -61,10 +61,18 @@ const SOURCES = {
     label: 'Alabama Board of Electrical Contractors (license lookup and rules)',
     url: 'https://aecb.alabama.gov/',
   },
+  hhsNewVision: {
+    label: 'HHS Office for Civil Rights, settlement with New Vision Dental over patient information in online review replies',
+    url: 'https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/agreements/new-vision/index.html',
+  },
+  alRule72: {
+    label: 'Alabama Rules of Professional Conduct, Rule 7.2 (Advertising), as amended effective Jan 1, 2026',
+    url: 'https://judicial.alabama.gov/docs/library/rules/cond7_2.pdf',
+  },
 } satisfies Record<string, FpgAeoSource>;
 
 const PRICES =
-  'Front Porch Growth’s published prices: a free Competitor Gap Report, a $497 Citation Sprint (one time, credited to month one if you start a plan within 30 days), Found at $1,500 a month, Recommended at $2,750, and Market Leader at $4,500, or Pay When Named on Found and Recommended.';
+  'Front Porch Growth’s published prices: a free Competitor Gap Report, a $497 Citation Sprint (one time, credited to month one if you start a plan within 30 days), Found at $1,497 a month, Recommended at $2,997, and Market Leader at $4,997, each with a +30% AI visibility guarantee, or Pay When Named on Found and Recommended.';
 
 const NOT_AFFILIATED = {
   q: 'Are you affiliated with OpenAI, Google or Perplexity?',
@@ -73,7 +81,7 @@ const NOT_AFFILIATED = {
 
 const NO_PROMISE = {
   q: 'Can you guarantee AI will name my shop?',
-  a: 'No one can. AI answers change from one run to the next. Monthly plans come with a written day-90 target measured on your own money questions, with the full log shared, and Pay When Named lets you skip the monthly bill until you are named.',
+  a: 'No one can promise a single AI answer; they change from one run to the next. Monthly plans guarantee a measured number instead: +30% AI citation share on your own money questions (or +30% AI and organic traffic) by day 90, with a weekly report. Miss it and we work free up to 90 more days, then refund your last month. Pay When Named lets you skip the monthly bill until you are named.',
 };
 
 export const FPG_AEO_PAGES: FpgAeoPage[] = [
@@ -290,12 +298,12 @@ export const FPG_AEO_PAGES: FpgAeoPage[] = [
     eyebrow: 'AI SEARCH OPTIMIZATION · COST',
     h1: 'How much does AI search optimization cost for a local shop?',
     directAnswer:
-      'The first steps are free if you do them yourself: complete your Google Business Profile, make your name, address and phone match on every listing, ask every customer for a review, and add a page that answers your most common cost question. Paying someone makes sense when you want it done and measured every month. Front Porch Growth’s published prices: a free Gap Report, a $497 one-time Citation Sprint, Found at $1,500 a month, Recommended at $2,750 and Market Leader at $4,500, or Pay When Named on Found and Recommended.',
+      'The first steps are free if you do them yourself: complete your Google Business Profile, make your name, address and phone match on every listing, ask every customer for a review, and add a page that answers your most common cost question. Paying someone makes sense when you want it done and measured every month. Front Porch Growth’s published prices: a free Gap Report, a $497 one-time Citation Sprint, Found at $1,497 a month, Recommended at $2,997 and Market Leader at $4,997, or Pay When Named on Found and Recommended.',
     serviceName: 'AI search optimization (AEO) for local trades',
     areaServed: ['Alabama'],
     checksTitle: 'What drives the cost',
     checks: [
-      'How many questions are tracked, and how often they are re-checked (30 a month on Found, 120 a week on Market Leader).',
+      'How many questions are tracked, and how often they are re-checked (60 a week on Found, 200 a week on Market Leader).',
       'How many answer-first pages are written each month (4, 8 or 16 on our plans).',
       'How many listings need fixing, and how many towns or service lines you cover.',
       'Whether reviews, local groups and authority placements are included or left to you.',
@@ -311,9 +319,10 @@ export const FPG_AEO_PAGES: FpgAeoPage[] = [
     ],
     sections: [
       { title: 'Citation Sprint, $497 one time', body: '25 customer questions on 4 AI tools, run twice each, a baseline report, 1 answer-first page, schema on 2 pages, and a fix list. Credited to month one if you start a plan within 30 days.' },
-      { title: 'Found, $1,500 a month', body: 'One shop, one metro plus nearby towns: 30 questions checked monthly, 4 pages a month, up to 15 listing fixes, Google profile managed, monthly report.' },
-      { title: 'Recommended, $2,750 a month', body: '2–4 towns or 2 service lines: 60 questions twice a month, 8 pages, up to 30 listing fixes, reviews and authority placements, one shop per trade per town.' },
-      { title: 'Pay When Named', body: '$497 setup, then nothing monthly until you are named on 3 of your 10 money questions in our logged checks. Then Found is $1,750 or Recommended $3,000, 3-month minimum.' },
+      { title: 'Found, $1,497 a month', body: 'One location, one metro plus nearby towns: 60 questions checked weekly, 4 pages a month turned into Google posts, video scripts and LinkedIn posts, up to 15 listing fixes, a report every Friday, and a +30% guarantee.' },
+      { title: 'Recommended, $2,997 a month', body: '2–4 towns or 2 service lines: 120 questions weekly, 8 pages, up to 30 listing fixes, YouTube and LinkedIn publishing, an authority placement a month, one business per field per town.' },
+      { title: 'Market Leader, $4,997 a month', body: 'Multi-location, regional or high-ticket: 200 questions weekly plus hand checks on named AI tools, 16 pages a month, 3 authority placements a month, one business per field per region.' },
+      { title: 'Pay When Named', body: '$497 setup, then nothing monthly until you are named on 3 of your 10 money questions in our logged checks. Then Found is $1,797 or Recommended $3,497, 3-month minimum.' },
     ],
     faqs: [
       {
@@ -545,6 +554,214 @@ export const FPG_AEO_PAGES: FpgAeoPage[] = [
     ],
     sources: [SOURCES.aecb, SOURCES.brightlocal, SOURCES.ftc],
     related: ['hvac', 'cullman-al', 'check-if-ai-recommends-you'],
+  },
+  {
+    slug: 'dental',
+    navLabel: 'Dentists',
+    title: 'AI Search Visibility for Dentists | Get Named by AI',
+    description:
+      'Who AI names when patients ask for the best dentist in town, why great practices get left out, and the HIPAA-safe fixes that help. Checked Nov 2026.',
+    eyebrow: 'AI SEARCH VISIBILITY · DENTAL',
+    h1: 'AI search visibility for dental practices',
+    directAnswer:
+      'When a patient asks ChatGPT or Google’s AI “who is the best dentist in town?” or “who does implants near me?”, the answer usually names two to five practices. In our November 2026 checks in Alabama, Tennessee and South Carolina, practices with 5.0 ratings and hundreds of reviews sat in the map results behind the answer but were not named. The practices AI named tended to have dedicated service pages and third-party mentions. Front Porch Growth fixes what AI reads, with HIPAA-safe review replies and no outcome promises.',
+    serviceName: 'AI search visibility for dental practices',
+    areaServed: ['Alabama', 'United States'],
+    checksTitle: 'What our dental checks showed (November 24, 2026)',
+    checks: [
+      '“Best dentist in Gadsden AL”: the answer named two practices. A 4.9-rated practice with more than 200 reviews, second in the map results, was not named.',
+      '“Best cosmetic dentist Huntsville AL”: the answer named three practices. A 5.0-rated practice with more than 200 reviews was not named.',
+      '“Best dentist Knoxville TN”: the answer named five practices. A practice with more than 1,300 reviews at 4.9 was not named.',
+      '“Best dentist Chattanooga TN dental implants”: an oral surgeon with nearly 1,000 reviews was in the map results but not in the answer.',
+      'These are dated single runs with an AI search tool. Answers change, which is why we track the same questions every week.',
+    ],
+    questionsTitle: 'Dental money questions we track',
+    questions: [
+      'best dentist in {town}',
+      'best dentist for dental implants in {town}',
+      'emergency dentist {town} open now',
+      'dentist accepting new patients in {town}',
+      'Invisalign dentist {town}',
+      'how much are dental implants in {town}',
+      'sedation dentist {town} for anxious patients',
+      'dentist near {neighborhood} that takes my insurance',
+    ],
+    sections: [
+      { title: 'Service pages AI can quote', body: 'Implants, Invisalign, emergency, cosmetic, sedation and new-patient pages that open with a direct answer, typical price ranges your office confirms, and the dentist’s credentials.' },
+      { title: 'HIPAA-safe review replies', body: 'Replies never confirm someone is a patient or mention treatment. A federal regulator has settled with a dental practice over review replies that disclosed patient information.' },
+      { title: 'Directories AI trusts for dentists', body: 'Google Business Profile, Healthgrades, Zocdoc, the ADA Find-a-Dentist directory, Yelp, Apple Maps and Bing Places, with the same name, phone and services everywhere.' },
+      { title: 'No outcome promises', body: 'No “painless,” “guaranteed” or “best dentist” claims unless it is a named, dated award. Specialist terms only for recognized specialists. Your office approves every page.' },
+    ],
+    faqs: [
+      {
+        q: 'Do you need access to patient records?',
+        a: 'No. We never need or handle patient information. Review requests go out from your own systems, and review replies are written so they never confirm someone is a patient.',
+      },
+      {
+        q: 'What is guaranteed for a dental practice?',
+        a: 'A visibility number, not patients. You pick +30% AI citation share on your money questions or +30% AI and organic traffic by day 90. Miss it and we work free for up to 90 more days, then refund your last month.',
+      },
+      NO_PROMISE,
+      NOT_AFFILIATED,
+    ],
+    sources: [SOURCES.hhsNewVision, SOURCES.ftc, SOURCES.googleAiFeatures],
+    related: ['med-spa', 'cost', 'check-if-ai-recommends-you'],
+  },
+  {
+    slug: 'med-spa',
+    navLabel: 'Med spas',
+    title: 'AI Search Visibility for Med Spas | Get Named by AI',
+    description:
+      'Who AI names for “best med spa” and “best Botox” in your town, why 5.0-rated spas get skipped, and the fixes that help. Our checks, November 2026.',
+    eyebrow: 'AI SEARCH VISIBILITY · MED SPA',
+    h1: 'AI search visibility for med spas',
+    directAnswer:
+      'When someone asks an AI tool “best med spa near me” or “where should I get Botox in town?”, the answer usually names two or three spas and cites a few sources. In our November 2026 checks in Huntsville, Chattanooga, Tulsa and Boise, spas rated 4.9 to 5.0 with 150 to 480 reviews were at or near the top of the map results but left out of the answer. Front Porch Growth builds treatment pages, provider credentials and profiles AI can trust, without outcome promises.',
+    serviceName: 'AI search visibility for med spas',
+    areaServed: ['Alabama', 'United States'],
+    checksTitle: 'What our med spa checks showed (November 24, 2026)',
+    checks: [
+      '“Best med spa Huntsville AL”: the answer named three spas. Two 5.0-rated spas in the map results behind it were not named.',
+      '“Best med spa Chattanooga TN”: the spa listed first in the map results, rated 5.0 with more than 350 reviews, was not in the answer.',
+      '“Best med spa Tulsa OK”: the answer named only two spas. Three spas rated 4.9 to 5.0 were not named.',
+      '“Best med spa Gadsden AL botox”: the answer named two local spas and put one clearly first.',
+      'These are dated single runs with an AI search tool. Answers change, which is why we track the same questions every week.',
+    ],
+    questionsTitle: 'Med spa money questions we track',
+    questions: [
+      'best med spa in {town}',
+      'best place for Botox in {town}',
+      'best lip filler {town}',
+      'laser hair removal {town}',
+      'how much is Botox per unit in {town}',
+      'who are the injectors at {spa}',
+      'medical weight loss clinic {town}',
+      'HydraFacial near {neighborhood}',
+    ],
+    sections: [
+      { title: 'One page per treatment', body: 'Botox, fillers, laser, microneedling and facials, each with a direct answer, a “starting at” price your spa confirms, downtime, who performs it, and a short FAQ.' },
+      { title: 'Provider credentials up front', body: 'Who injects, their license (RN, NP, PA or MD) and supervision where your state requires it, in plain words and in structured data.' },
+      { title: 'Sources AI leans on', body: 'Google Business Profile, RealSelf, manufacturer provider finders, local “best of” lists and your own site, kept consistent and complete.' },
+      { title: 'Claims that stay clean', body: '“Results vary” language, no permanent or guaranteed results, drug claims within approved uses, and before-and-after photos only with written consent on file.' },
+    ],
+    faqs: [
+      {
+        q: 'Will you post on Reddit or Instagram for us?',
+        a: 'We draft helpful answers and posts; you publish them from your own, disclosed accounts. We never create fake accounts or post as customers.',
+      },
+      {
+        q: 'What is guaranteed for a med spa?',
+        a: 'A visibility number, not bookings. You pick +30% AI citation share on your money questions or +30% AI and organic traffic by day 90. Miss it and we work free for up to 90 more days, then refund your last month.',
+      },
+      NO_PROMISE,
+      NOT_AFFILIATED,
+    ],
+    sources: [SOURCES.ftc, SOURCES.hhsNewVision, SOURCES.googleAiFeatures],
+    related: ['dental', 'cost', 'check-if-ai-recommends-you'],
+  },
+  {
+    slug: 'law-firms',
+    navLabel: 'Law firms',
+    title: 'AI Search Visibility for Law Firms in Alabama',
+    description:
+      'Who AI names for “best injury lawyer” and “best divorce lawyer” in Alabama towns, why strong firms get left out, and fixes built to the 2026 ad rules.',
+    eyebrow: 'AI SEARCH VISIBILITY · LAW FIRMS',
+    h1: 'AI search visibility for law firms',
+    directAnswer:
+      'When someone asks an AI tool “who is the best personal injury lawyer in Gadsden?” or “best divorce lawyer in Huntsville,” the answer names three to five firms. In our November 2026 checks, firms rated 4.6 to 4.9 with 150 to 200 reviews were in the map results but not named, and the divorce firm listed first in the map results was left out too. Front Porch Growth builds educational, answer-first pages and consistent profiles AI can trust, written to Alabama’s lawyer-advertising rules as rewritten on January 1, 2026, with no promised results.',
+    serviceName: 'AI search visibility for law firms',
+    areaServed: ['Alabama', 'United States'],
+    checksTitle: 'What our law firm checks showed (November 24, 2026)',
+    checks: [
+      '“Best personal injury lawyer Gadsden AL”: the answer named three firms. Three other local firms rated 4.6 to 4.9 in the map results were not named.',
+      '“Best divorce lawyer Huntsville AL”: the answer named five firms. The firm listed first in the map results was not one of them.',
+      '“Best personal injury lawyer Huntsville AL”: a firm whose site came up in the sources was not named in the answer.',
+      '“Best car accident lawyer Omaha NE”: three firms rated 4.5 to 4.9 in the map results were not named.',
+      'These are dated single runs with an AI search tool. Answers change, which is why we track the same questions every week.',
+    ],
+    questionsTitle: 'Law firm money questions we track',
+    questions: [
+      'best personal injury lawyer in {town}',
+      'car accident lawyer {town}',
+      'best divorce lawyer {town}',
+      'child custody lawyer {town}',
+      'DUI lawyer {town}',
+      'what to do after a car accident in Alabama',
+      'how long do I have to file an injury claim in Alabama',
+      'is {firm} a good law firm',
+    ],
+    sections: [
+      { title: 'Educational pages, not hype', body: 'Practice-area and town pages that answer real questions (deadlines, costs, what happens next) with sources, written so your own counsel can approve them quickly.' },
+      { title: 'Built to the 2026 Alabama rules', body: 'No promised results; verifiable results only, by case type; testimonials only from real clients; office location stated; no “specialist” claims unless certified. We keep a dated copy of everything we publish for your records.' },
+      { title: 'Profiles AI checks for lawyers', body: 'Google Business Profile, Avvo, Justia, Martindale, the State Bar directory and your attorney bios, with one consistent firm name and structured data.' },
+      { title: 'Confidential review replies', body: 'Replies never confirm someone is a client or discuss a matter. Every reply points to a private phone call.' },
+    ],
+    faqs: [
+      {
+        q: 'Does Alabama still require the lawyer-advertising disclaimer?',
+        a: 'Alabama’s rewritten rules, effective January 1, 2026, dropped the old general disclaimer but kept specific disclosure, record-keeping and solicitation rules. Your own counsel should confirm what applies to your firm; we build to those rules and you approve every page.',
+      },
+      {
+        q: 'What is guaranteed for a law firm?',
+        a: 'A visibility number, never cases or results. You pick +30% AI citation share on your money questions or +30% AI and organic traffic by day 90. Miss it and we work free for up to 90 more days, then refund your last month.',
+      },
+      NO_PROMISE,
+      NOT_AFFILIATED,
+    ],
+    sources: [SOURCES.alRule72, SOURCES.googleAiFeatures, SOURCES.openaiSearch],
+    related: ['gadsden-al', 'cost', 'check-if-ai-recommends-you'],
+  },
+  {
+    slug: 'b2b',
+    navLabel: 'B2B firms',
+    title: 'AI Search Visibility for B2B Firms and Software',
+    description:
+      'How B2B buyers use AI shortlists, who gets named for “best IT company” or “best CPA firm,” and how to get on the list. Our checks, November 2026.',
+    eyebrow: 'AI SEARCH VISIBILITY · B2B',
+    h1: 'AI search visibility for B2B firms',
+    directAnswer:
+      'B2B buyers now ask AI tools for a shortlist (“best IT company for a small business in Huntsville,” “best CPA firm for contractors,” “alternatives to X software”) before they request a quote or a demo. The answer usually names three or four companies. In our November 2026 checks, local CPA and IT firms listed in the map results, and well-known software challengers, were left off those shortlists. Front Porch Growth builds the comparison pages, profiles and entity data AI uses to build them.',
+    serviceName: 'AI search visibility for B2B firms and software companies',
+    areaServed: ['Alabama', 'United States'],
+    checksTitle: 'What our B2B checks showed (November 24, 2026)',
+    checks: [
+      '“Best CPA firm small business Huntsville AL”: the answer named three firms. Two other CPA firms in the map results were not named, one of them with FAQ structured data already on its site.',
+      '“Best IT support company Huntsville AL”: an IT firm ranked third on a third-party local list was not named in the answer.',
+      '“Best field service management software for a small plumbing or HVAC business”: the answer named four products; several established competitors were not on the list.',
+      '“Best dental practice management software for small practices”: the answer named four products and left out other well-funded vendors.',
+      'These are dated single runs with an AI search tool. Answers change, which is why we track the same questions every week.',
+    ],
+    questionsTitle: 'B2B questions we track',
+    questions: [
+      'best {category} for small business in {town}',
+      'best {category} for {industry}',
+      '{product} alternatives',
+      '{product} vs {competitor}',
+      'how much does {category} cost',
+      'is {company} good',
+      'best {category} software for {team size}',
+      'who are the top {category} firms in {state}',
+    ],
+    sections: [
+      { title: 'Comparison and alternatives pages', body: 'Fair, sourced “X vs Y,” “alternatives to X” and “best X for Y” pages with a check date on every competitor claim, because shortlist answers often lean on them.' },
+      { title: 'Profiles buyers and AI read', body: 'Clutch, G2, Capterra, LinkedIn and your Google profile, complete and consistent, with real customer reviews only.' },
+      { title: 'Entity data', body: 'Organization and service structured data, a consistent name and description everywhere, and a Wikidata entry where you qualify, so AI describes what you do correctly.' },
+      { title: 'LinkedIn and video', body: 'Each answer page becomes a LinkedIn post and a short video script for your team to publish, so the same answer shows up wherever buyers look.' },
+    ],
+    faqs: [
+      {
+        q: 'Is there an add-on for B2B?',
+        a: 'Yes. The B2B pack adds 4 comparison or alternatives pages a month, review-profile optimization and LinkedIn drafts on top of any plan. Ask for current pricing when you request the free Gap Report.',
+      },
+      {
+        q: 'What is guaranteed for a B2B firm?',
+        a: 'A visibility number, not pipeline. You pick +30% AI citation share on your shortlist questions or +30% AI and organic traffic by day 90. Miss it and we work free for up to 90 more days, then refund your last month.',
+      },
+      NO_PROMISE,
+      NOT_AFFILIATED,
+    ],
+    sources: [SOURCES.pew, SOURCES.googleAiFeatures, SOURCES.openaiSearch],
+    related: ['aeo-vs-seo', 'cost', 'check-if-ai-recommends-you'],
   },
 ];
 

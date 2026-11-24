@@ -6,9 +6,9 @@ export function fpgPriceRowsData(): Row[] {
   return [
     { product: 'AI Competitor Gap Report', href: '/ai-search-visibility', what: 'Who AI names in your town, and your 5 biggest gaps', price: 'Free', billing: 'No card' },
     { product: 'AI Citation Sprint', href: '/ai-search-visibility', what: 'Baseline citation report, 1 answer-first page, schema on 2 pages', price: '$497', billing: 'One time; credited to month one if you start a plan within 30 days' },
-    { product: 'AI Search Visibility: Found', href: '/ai-search-visibility', what: 'One roofer, one metro plus nearby towns', price: '$1,500/mo', billing: 'Monthly' },
-    { product: 'AI Search Visibility: Recommended', href: '/ai-search-visibility', what: '2–4 cities, one roofer per city', price: '$2,750/mo', billing: 'Monthly' },
-    { product: 'AI Search Visibility: Market Leader', href: '/ai-search-visibility', what: 'Multi-location or a whole region', price: '$4,500/mo', billing: 'Monthly' },
+    { product: 'AI Search Visibility: Found', href: '/ai-search-visibility', what: 'One location, one metro; weekly checks and Friday report; +30% guarantee', price: '$1,497/mo', billing: 'Monthly' },
+    { product: 'AI Search Visibility: Recommended', href: '/ai-search-visibility', what: '2–4 towns, one business per field per town; YouTube and LinkedIn', price: '$2,997/mo', billing: 'Monthly' },
+    { product: 'AI Search Visibility: Market Leader', href: '/ai-search-visibility', what: 'Multi-location, regional or high-ticket; 16 pages a month', price: '$4,997/mo', billing: 'Monthly' },
     { product: 'YardMailer setup', href: '/postcards', what: 'Charged once per customer', price: POSTCARD_SETUP_LABEL, billing: 'One time' },
     { product: 'YardMailer 4×6 card', href: '/postcards', what: 'Printing, postage and mailing included', price: POSTCARD_SIZES['4x6'].unitLabel, billing: 'Per card, from 100 cards' },
     { product: 'YardMailer 6×9 card', href: '/postcards', what: 'Printing, postage and mailing included', price: POSTCARD_SIZES['6x9'].unitLabel, billing: 'Per card, from 100 cards' },
