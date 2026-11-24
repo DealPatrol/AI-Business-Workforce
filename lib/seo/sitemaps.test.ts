@@ -86,7 +86,7 @@ describe('host sitemaps', () => {
     const published = frontPorchGrowthSitemap(FRONT_PORCH, new Date('2026-11-08T00:00:00.000Z')).map((item) => item.url);
     assert.deepEqual(published.map(pathOf), FRONT_PORCH_PATHS);
     assert.equal(published.length, FRONT_PORCH_PATHS.length);
-    for (const path of ['/receptionist', '/ava', '/hvac', '/start', '/receptionist-demo', '/receptionist/missed-calls']) {
+    for (const path of ['/receptionist', '/ava', '/hvac', '/gadsden', '/start', '/receptionist-demo', '/receptionist/missed-calls']) {
       assert.equal(published.map(pathOf).includes(path), false, path);
     }
     for (const path of ['/leads/thanks', '/leads/more', '/leads/hot/thanks']) {
@@ -110,7 +110,7 @@ describe('host sitemaps', () => {
     assert.deepEqual(locations, urls('www.executivereceptionist.com'));
     assert.ok(locations.every((url) => url.startsWith(`${EXECUTIVE_RECEPTIONIST_ORIGIN}/`)));
     assert.deepEqual(paths.slice(0, EXECUTIVE_RECEPTIONIST_INDEX.length), EXECUTIVE_RECEPTIONIST_INDEX.map((page) => page.path));
-    for (const path of ['/', '/pricing', '/receptionist-demo', '/privacy', '/terms', '/ava', '/hvac', '/receptionist/missed-calls']) {
+    for (const path of ['/', '/pricing', '/receptionist-demo', '/privacy', '/terms', '/ava', '/hvac', '/gadsden', '/receptionist/missed-calls']) {
       assert.ok(paths.includes(path), path);
     }
     for (const slug of indexedAvaGuideSlugs()) assert.ok(paths.includes(`/ava/${slug}`));
@@ -179,6 +179,7 @@ describe('receptionist home redirects', () => {
     assert.equal(receptionistHomePath('/receptionist'), '/');
     assert.equal(receptionistHomePath('/receptionist/missed-calls'), '/receptionist/missed-calls');
     assert.equal(receptionistHomePath('/hvac/'), '/hvac');
+    assert.equal(receptionistHomePath('/gadsden'), '/gadsden');
     for (const path of ['/start', '/receptionist-demo', '/business', '/dental', '/law', '/salon', '/auto-repair', '/med-spa', '/real-estate']) {
       assert.equal(receptionistHomePath(path), path);
     }
