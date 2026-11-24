@@ -114,7 +114,7 @@ export default function PackagesPage() {
             <h2>One bill for the listing and the phone.</h2>
             <p>
               Each bundle includes the {GBP_SETUP.priceLabel} Google profile setup at no charge, then a flat monthly price that is
-              less than buying the two separately. Bundles start after a short setup call, so the button books that call.
+              less than buying the two separately. Start online with a card, or book a short demo first.
             </p>
             <div className={styles.grid}>
               {GBP_BUNDLES.map((b) => {
@@ -142,8 +142,11 @@ export default function PackagesPage() {
                       ))}
                       <li>Google profile setup included</li>
                     </ul>
-                    <Link className={styles.btnInk} href={`/receptionist/book-a-demo?package=${encodeURIComponent(b.label)}`}>
-                      Book a demo for {b.label}
+                    <TrackedCheckoutLink className={styles.btnInk} href={`/api/checkout?offer=bundle&plan=${b.key}`} plan={b.key}>
+                      Start {b.label}
+                    </TrackedCheckoutLink>
+                    <Link className={styles.note} href={`/receptionist/book-a-demo?package=${encodeURIComponent(b.label)}`}>
+                      Or book a demo first
                     </Link>
                   </article>
                 );
@@ -235,9 +238,10 @@ export default function PackagesPage() {
                         <li key={f}>{f}</li>
                       ))}
                     </ul>
-                    <Link className={styles.btnInk} href={`/receptionist/book-a-demo?package=${encodeURIComponent(care.label)}`}>
+                    <TrackedCheckoutLink className={styles.btnInk} href={`/api/checkout?offer=gbp&plan=${key.toLowerCase()}`} plan={key}>
                       Start {care.label}
-                    </Link>
+                    </TrackedCheckoutLink>
+                    <p className={styles.note}>First invoice includes the $99 one-time setup.</p>
                   </article>
                 );
               })}

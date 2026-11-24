@@ -3,17 +3,19 @@ import { AVA_PLANS, type AvaPlanKey } from '@/lib/ava/pricing';
 /**
  * Google Business Profile (GBP) care add-on and Ava + GBP bundles.
  *
- * PROPOSED PRICES (added Nov 24, 2026, pending Cole's confirmation). The one-time $99 Google
- * profile setup is a live Stripe link on frontporchgrowth.com/google-profile. The monthly
- * care tiers and bundle prices below are new and have no Stripe price yet, so every CTA on
- * these packages is a demo/setup request, never a checkout. Change the numbers here only;
- * the packages page, JSON-LD and tests all read from this file.
+ * Prices approved by Cole on Nov 24, 2026 and sold through Stripe Checkout (live Workspace account,
+ * the same account as the Ava plans). Price IDs live in Vercel env vars, like the Ava plans:
+ * STRIPE_GBP_CARE_PRICE_ID, STRIPE_GBP_CARE_PLUS_PRICE_ID, STRIPE_GBP_SETUP_PRICE_ID (the existing
+ * one-time $99 setup price), STRIPE_BUNDLE_ANSWERED_FOUND_PRICE_ID, STRIPE_BUNDLE_BOOKED_FOUND_PRICE_ID,
+ * STRIPE_BUNDLE_FRONT_OF_MAP_PRICE_ID. Lookup keys: er_profile_care_monthly_99,
+ * er_profile_care_plus_monthly_179, er_answered_found_monthly_159, er_booked_found_monthly_259,
+ * er_front_of_map_monthly_499. Change a price in Stripe and here together.
  *
  * Benchmarks read Nov 24, 2026 on the providers' own pricing pages (done-for-you, one location):
  * BeeListed $149/mo, GBizPro $89 Essentials / $179 Managed, LocalPanda $199/mo,
- * L3ad Solutions $150 / $300. The proposals sit at or under the low end of that range.
+ * L3ad Solutions $150 / $300.
  */
-export const GBP_PRICES_ARE_PROPOSED = true;
+export const GBP_PRICES_ARE_PROPOSED = false;
 
 /** Existing one-time setup (live Stripe link on frontporchgrowth.com/google-profile). */
 export const GBP_SETUP = {
@@ -21,6 +23,7 @@ export const GBP_SETUP = {
   priceCents: 9900,
   priceLabel: '$99 one time',
   href: 'https://frontporchgrowth.com/google-profile',
+  priceEnv: 'STRIPE_GBP_SETUP_PRICE_ID',
 } as const;
 
 export type GbpCareKey = 'care' | 'carePlus';
@@ -29,6 +32,7 @@ export const GBP_CARE = {
   care: {
     key: 'care',
     label: 'Profile Care',
+    priceEnv: 'STRIPE_GBP_CARE_PRICE_ID',
     monthlyCents: 9900,
     monthlyLabel: '$99/mo',
     features: [
@@ -42,6 +46,7 @@ export const GBP_CARE = {
   carePlus: {
     key: 'carePlus',
     label: 'Profile Care Plus',
+    priceEnv: 'STRIPE_GBP_CARE_PLUS_PRICE_ID',
     monthlyCents: 17900,
     monthlyLabel: '$179/mo',
     features: [
@@ -66,6 +71,7 @@ export type GbpBundle = {
   badge: string;
   bestFor: string;
   setupWaived: boolean;
+  priceEnv: string;
 };
 
 function bundle(input: Omit<GbpBundle, 'separateCents'>): GbpBundle {
@@ -76,6 +82,7 @@ function bundle(input: Omit<GbpBundle, 'separateCents'>): GbpBundle {
 export const GBP_BUNDLES: GbpBundle[] = [
   bundle({
     key: 'local-starter',
+    priceEnv: 'STRIPE_BUNDLE_ANSWERED_FOUND_PRICE_ID',
     label: 'Answered & Found',
     plan: 'starter',
     care: 'care',
@@ -86,6 +93,7 @@ export const GBP_BUNDLES: GbpBundle[] = [
   }),
   bundle({
     key: 'local-growth',
+    priceEnv: 'STRIPE_BUNDLE_BOOKED_FOUND_PRICE_ID',
     label: 'Booked & Found',
     plan: 'growth',
     care: 'care',
@@ -96,6 +104,7 @@ export const GBP_BUNDLES: GbpBundle[] = [
   }),
   bundle({
     key: 'local-pro',
+    priceEnv: 'STRIPE_BUNDLE_FRONT_OF_MAP_PRICE_ID',
     label: 'Front of the Map',
     plan: 'pro',
     care: 'carePlus',
@@ -114,4 +123,16 @@ export function usd(cents: number) {
 /** Monthly saving against buying the Ava plan and the care tier separately. */
 export function bundleMonthlySavingsLabel(b: GbpBundle) {
   return usd(b.separateCents - b.monthlyCents);
+}
+
+export function gbpCareKeyFromParam(value: string): GbpCareKey | null {
+  const v = value.trim().toLowerCase();
+  if (v === 'care') return 'care';
+  if (v === 'careplus' || v === 'care-plus') return 'carePlus';
+  return null;
+}
+
+export function gbpBundleFromParam(value: string): GbpBundle | null {
+  const v = value.trim().toLowerCase();
+  return GBP_BUNDLES.find((b) => b.key === v) ?? null;
 }
