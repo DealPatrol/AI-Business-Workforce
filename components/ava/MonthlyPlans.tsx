@@ -83,7 +83,7 @@ export function MonthlyPlans({ heading = true, includes = true }: { heading?: bo
           </p>
           <p className={styles.note}>{AVA_OFFER.overageNote}</p>
           <p className={styles.note}>
-            Booking needs your hours set up in your Desk first. Until then, Ava takes the details and you call the customer back.
+            Ava takes the details and emails them to you right after the call, so you can call the customer back and schedule the job.
           </p>
         </div>
       ) : null}

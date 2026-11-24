@@ -79,8 +79,8 @@ const ROI_EXAMPLE = exampleSentence({ missedPerWeek: 8, oneIn: 4, jobValue: 350,
 
 const FAQS = [
   {
-    q: 'Does Ava book the HVAC visit?',
-    a: 'Yes, once your hours are set in the Desk and booking is on. She offers real open windows and books one into your Desk calendar during the call. Until then she takes the details and emails you the lead so your office can call back and book it.',
+    q: 'Does Ava schedule the HVAC visit?',
+    a: 'No. Ava takes the name, number, address, the problem, and when the caller would like someone out, flags anything urgent, and emails you the lead right after the call so your office can call back and schedule it. She never promises an arrival time.',
   },
   {
     q: 'What happens on an after-hours no-heat or gas call?',
@@ -154,8 +154,8 @@ export default function HvacPage() {
         <h1>Never miss another no-heat call.</h1>
         <p className="hvac-lede">
           When the furnace quits at 9 PM, homeowners call the next company on the list if nobody picks up. Ava, your
-          AI receptionist, answers every call day or night, captures the job details, and emails you every lead. Once your
-          calendar is set up in the Desk, she books routine visits into your Desk calendar during the call.
+          AI receptionist, answers every call day or night, captures the job details, flags emergencies, and emails you
+          every lead right after the call, so your office can call back and schedule the job.
         </p>
         <div className="hvac-cta-row">
           <PlanCheckoutButton plan="starter" className="hvac-btn hvac-btn-primary">
@@ -187,9 +187,9 @@ export default function HvacPage() {
         </div>
         <ul>
           <li>
-            <Check size={18} /> <span><b>Tune-ups and routine work:</b> once your hours are set in the Desk and booking is on,
-            Ava offers real open windows and books one into your Desk calendar during the call. Until then, she takes
-            the details so your office can call back.</span>
+            <Check size={18} /> <span><b>Tune-ups and routine work:</b> Ava takes the caller&apos;s name, number, address,
+            and what they need, plus when they&apos;d like someone out, and emails it to you so your office can call back
+            and schedule it.</span>
           </li>
           <li>
             <Check size={18} /> <span><b>Pricing questions:</b> gives only the service-call fee you set and never makes up a
@@ -265,7 +265,7 @@ export default function HvacPage() {
         <div>
           <h2>Talk to a real person</h2>
           <p>
-            I&apos;m Cole Collins. Call or text me at <a href={AVA_OFFER.contactPhoneHref}>{AVA_OFFER.contactPhoneDisplay}</a>{' '}
+            I&apos;m Cole Collins. Call me at <a href={AVA_OFFER.contactPhoneHref}>{AVA_OFFER.contactPhoneDisplay}</a>{' '}
             and I&apos;ll set Ava up on your line, or leave your info here and I&apos;ll call you back.
           </p>
           <a className="hvac-btn hvac-btn-primary" href={DEMO_LINK} target="_blank" rel="noopener noreferrer">

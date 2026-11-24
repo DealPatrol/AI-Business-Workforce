@@ -44,12 +44,12 @@ export default function HvacContactForm() {
           setStatus('idle');
           return;
         }
-        throw new Error(result.error || 'Could not send. Call or text 256-595-3354.');
+        throw new Error(result.error || 'Could not send. Call 256-595-3354.');
       }
       setStatus('sent');
       form.reset();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not send. Call or text 256-595-3354.');
+      setError(err instanceof Error ? err.message : 'Could not send. Call 256-595-3354.');
       setStatus('idle');
     }
   }

@@ -1,7 +1,9 @@
 /**
  * "Never Miss + Get Found": Ava plus done-for-you Google Business Profile work for
- * Gadsden / Etowah County home-service trades. Proposed Nov 24, 2026; prices need Cole's
- * approval and Stripe prices do not exist yet, so the page has no checkout buttons.
+ * Gadsden / Etowah County home-service trades. Approved by Cole Nov 24, 2026. Live Stripe prices
+ * (Workspace account) by lookup key: er_get_found_starter_monthly_297 + er_get_found_starter_setup_197,
+ * er_never_miss_get_found_monthly_497 + er_done_for_you_setup_297, er_full_shop_get_found_monthly_997.
+ * The page is not wired to checkout yet; Cole invoices after the call.
  *
  * Copy rules: Ava answers 24/7, takes the caller's details, flags emergencies and emails a
  * summary. No texting, live transfer, calendar sync, appointment booking or in-person setup
