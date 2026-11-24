@@ -1175,8 +1175,8 @@ export const AVA_GUIDES: AvaGuide[] = [
         a: 'Once your hours are set up in your Desk, she can offer open times and put the visit on your Desk calendar. Until then she captures the lead and emails it to you. She never invents a price or promises an arrival time you have not offered.',
       },
     ],
-    related: ['ai-answering-service-for-hvac', 'ai-answering-service-for-plumbers', 'best-ai-receptionist-for-hvac-companies', 'ai-answering-service-cullman-al', 'ai-answering-service-huntsville-al', 'ai-answering-service-gadsden-al', 'ai-answering-service-birmingham-al'],
-    areaServed: ['Gadsden', 'Birmingham', 'Huntsville', 'Cullman', 'Decatur', 'Hanceville', 'Alabama', 'United States'],
+    related: ['ai-answering-service-for-hvac', 'ai-answering-service-for-plumbers', 'best-ai-receptionist-for-hvac-companies', 'ai-answering-service-cullman-al', 'ai-answering-service-huntsville-al', 'ai-answering-service-gadsden-al', 'ai-answering-service-birmingham-al', 'ai-answering-service-tuscaloosa-al', 'ai-answering-service-montgomery-al', 'ai-answering-service-florence-muscle-shoals-al'],
+    areaServed: ['Gadsden', 'Birmingham', 'Huntsville', 'Cullman', 'Decatur', 'Hanceville', 'Tuscaloosa', 'Montgomery', 'Florence', 'Muscle Shoals', 'Alabama', 'United States'],
     cityNotes: [
       {
         city: 'Gadsden',
@@ -1197,6 +1197,18 @@ export const AVA_GUIDES: AvaGuide[] = [
       {
         city: 'Decatur',
         body: 'Decatur and Morgan County shops can forward missed and after-hours HVAC or plumbing calls. The lead arrives by email. There is no separate Decatur plan or setup fee.',
+      },
+      {
+        city: 'Tuscaloosa',
+        body: 'Tuscaloosa, Northport and Tuscaloosa County shops keep their 205 number and forward the calls they cannot take. Same plans and demo line as the rest of Alabama.',
+      },
+      {
+        city: 'Montgomery',
+        body: 'Montgomery, Prattville, Millbrook and Wetumpka shops can forward overflow and after-hours calls from their 334 number. No River Region office is claimed; setup is by phone and email.',
+      },
+      {
+        city: 'Florence & Muscle Shoals',
+        body: 'Shoals-area shops in Florence, Muscle Shoals, Sheffield and Tuscumbia use the same five plans. Add Google profile care in a bundle from $159 a month.',
       },
     ],
   },
@@ -1804,6 +1816,147 @@ export const AVA_GUIDES: AvaGuide[] = [
     areaServed: ['Anniston', 'Oxford', 'Jacksonville', 'Weaver', 'Calhoun County', 'Alabama', 'United States'],
   },
   {
+    slug: 'ai-answering-service-tuscaloosa-al',
+    kind: 'guide',
+    navLabel: 'Tuscaloosa, AL',
+    blurb: 'An AI receptionist for Tuscaloosa and Northport home-service shops.',
+    title: 'AI Answering Service in Tuscaloosa, AL',
+    metaTitle: 'AI Receptionist & Answering Service in Tuscaloosa, AL',
+    description:
+      'AI answering service for Tuscaloosa and Tuscaloosa County HVAC, plumbing, roofing and electrical shops. Ava emails you each lead. From $25/mo.',
+    eyebrow: 'Tuscaloosa, Alabama',
+    h1: 'AI answering service for Tuscaloosa shops',
+    directAnswer:
+      'Executive Receptionist is run by Cole Collins in Hanceville, Alabama. HVAC, plumbing, roofing, and electrical shops in Tuscaloosa, Northport, Cottondale, Coker, the rest of Tuscaloosa County keep their 205 number and forward missed or after-hours calls to Ava. She says she is an AI receptionist, takes the name, callback number, address, and what is wrong, and emails you the lead. Plans are the same statewide: Overflow $25 a month, Starter $79 (first month $1), Growth $197, Pro $397, Elite $789. Add Google Business Profile care in a bundle from $159 a month. Demo line: (256) 952-4935.',
+    audience: 'Tuscaloosa and Tuscaloosa County home-service shops',
+    lede: 'Keep your 205 number, forward the calls you can’t take, and get every lead by email. Setup is done by phone and email. We do not claim a Tuscaloosa office or a list of local customers.',
+    pain: 'Plenty of Tuscaloosa County shops run one to three trucks, and the owner answers the phone between jobs. When a call comes in while he is in a crawlspace in Northport or on a roof in Cottondale, it goes to voicemail, and the caller tries the next listing.',
+    calls: [
+      'No-heat and no-cool calls after hours',
+      'Leaks, backups, and water-heater failures',
+      'Roof leaks and tarp calls after a storm line moves through West Alabama',
+      'Breakers tripping, outages, and panel questions',
+      'Overflow while the owner is on a job',
+    ],
+    qualification: ['Name and callback number', 'Address and town (Tuscaloosa, Northport, Cottondale…)', 'What they need', 'How urgent it is', 'Best callback time'],
+    roiTitle: 'Price a missed Tuscaloosa call with your own numbers',
+    roiBody: `${exampleSentence({ missedPerWeek: 5, oneIn: 4, jobValue: 350, jobLabel: 'job' })} The $350 is an example, not a Tuscaloosa average.`,
+    faqs: [
+      {
+        q: 'Do you have an office in Tuscaloosa?',
+        a: 'No. Executive Receptionist is run by Cole Collins from Hanceville, Alabama, in Cullman County. Setup is done by phone and email.',
+      },
+      {
+        q: 'Is there a local rate for Tuscaloosa County?',
+        a: 'No. The same five plans apply statewide: Overflow $25 (60 minutes, then $1/min after 60), Starter $79 a month (100 minutes, first month $1), Growth $197, Pro $397, Elite $789. Month to month.',
+      },
+      {
+        q: 'Can you also keep my Google Business Profile up to date?',
+        a: 'Yes. Profile Care is $99 a month and Profile Care Plus is $179 a month. Bundled with Ava they start at $159 a month with the $99 profile setup included. See executivereceptionist.com/receptionist/packages.',
+      },
+      {
+        q: 'Can I hear it before I pay?',
+        a: 'Yes. Call (256) 952-4935 and Ava answers as Porchlight Heating & Air, a made-up HVAC company, or book a 15-minute demo at executivereceptionist.com/receptionist/book-a-demo.',
+      },
+    ],
+    related: ['ai-answering-service-birmingham-al', 'ai-answering-service-for-contractors-alabama', 'ai-receptionist-for-hvac-and-plumbing-in-alabama', 'after-hours-answering-service'],
+    areaServed: ['Tuscaloosa', 'Northport', 'Cottondale', 'Coker', 'Tuscaloosa County', 'Alabama', 'United States'],
+  },
+  {
+    slug: 'ai-answering-service-montgomery-al',
+    kind: 'guide',
+    navLabel: 'Montgomery, AL',
+    blurb: 'An AI receptionist for Montgomery, Prattville and River Region shops.',
+    title: 'AI Answering Service in Montgomery, AL',
+    metaTitle: 'AI Receptionist & Answering Service in Montgomery, AL',
+    description:
+      'AI answering service for Montgomery and the River Region HVAC, plumbing, roofing and electrical shops. Ava emails you each lead. From $25/mo.',
+    eyebrow: 'Montgomery, Alabama',
+    h1: 'AI answering service for Montgomery shops',
+    directAnswer:
+      'Executive Receptionist is run by Cole Collins in Hanceville, Alabama. HVAC, plumbing, roofing, and electrical shops in Montgomery, Prattville, Millbrook, Wetumpka, Pike Road keep their 334 number and forward missed or after-hours calls to Ava. She says she is an AI receptionist, takes the name, callback number, address, and what is wrong, and emails you the lead. Plans are the same statewide: Overflow $25 a month, Starter $79 (first month $1), Growth $197, Pro $397, Elite $789. Add Google Business Profile care in a bundle from $159 a month. Demo line: (256) 952-4935.',
+    audience: 'Montgomery and the River Region home-service shops',
+    lede: 'Keep your 334 number, forward the calls you can’t take, and get every lead by email. Setup is done by phone and email. We do not claim a Montgomery office or a list of local customers.',
+    pain: 'Many River Region shops are small crews where the owner runs the jobs and the phone. A call that comes in while he is on a service call in Prattville or Pike Road goes to voicemail, and the caller often dials the next shop on the map.',
+    calls: [
+      'No-heat and no-cool calls after hours',
+      'Leaks, backups, and water-heater failures',
+      'Roof leaks and storm-damage calls after severe weather crosses Central Alabama',
+      'Breakers tripping, outages, and panel questions',
+      'Overflow while the owner is on a job',
+    ],
+    qualification: ['Name and callback number', 'Address and town (Montgomery, Prattville, Millbrook…)', 'What they need', 'How urgent it is', 'Best callback time'],
+    roiTitle: 'Price a missed Montgomery call with your own numbers',
+    roiBody: `${exampleSentence({ missedPerWeek: 5, oneIn: 4, jobValue: 350, jobLabel: 'job' })} The $350 is an example, not a Montgomery average.`,
+    faqs: [
+      {
+        q: 'Do you have an office in Montgomery?',
+        a: 'No. Executive Receptionist is run by Cole Collins from Hanceville, Alabama, in Cullman County. Setup is done by phone and email.',
+      },
+      {
+        q: 'Is there a local rate for the River Region?',
+        a: 'No. The same five plans apply statewide: Overflow $25 (60 minutes, then $1/min after 60), Starter $79 a month (100 minutes, first month $1), Growth $197, Pro $397, Elite $789. Month to month.',
+      },
+      {
+        q: 'Can you also keep my Google Business Profile up to date?',
+        a: 'Yes. Profile Care is $99 a month and Profile Care Plus is $179 a month. Bundled with Ava they start at $159 a month with the $99 profile setup included. See executivereceptionist.com/receptionist/packages.',
+      },
+      {
+        q: 'Can I hear it before I pay?',
+        a: 'Yes. Call (256) 952-4935 and Ava answers as Porchlight Heating & Air, a made-up HVAC company, or book a 15-minute demo at executivereceptionist.com/receptionist/book-a-demo.',
+      },
+    ],
+    related: ['ai-answering-service-birmingham-al', 'ai-answering-service-for-contractors-alabama', 'ai-receptionist-for-hvac-and-plumbing-in-alabama', 'after-hours-answering-service'],
+    areaServed: ['Montgomery', 'Prattville', 'Millbrook', 'Wetumpka', 'Pike Road', 'Montgomery County', 'Alabama', 'United States'],
+  },
+  {
+    slug: 'ai-answering-service-florence-muscle-shoals-al',
+    kind: 'guide',
+    navLabel: 'Florence & Muscle Shoals, AL',
+    blurb: 'An AI receptionist for Shoals-area home-service shops.',
+    title: 'AI Answering Service in Florence, AL',
+    metaTitle: 'AI Receptionist & Answering Service in Florence, AL',
+    description:
+      'AI answering service for Florence and the Shoals HVAC, plumbing, roofing and electrical shops. Ava emails you each lead. From $25/mo.',
+    eyebrow: 'Florence, Alabama',
+    h1: 'AI answering service for Florence shops',
+    directAnswer:
+      'Executive Receptionist is run by Cole Collins in Hanceville, Alabama. HVAC, plumbing, roofing, and electrical shops in Florence, Muscle Shoals, Sheffield, Tuscumbia, the rest of Lauderdale and Colbert counties keep their 256 number and forward missed or after-hours calls to Ava. She says she is an AI receptionist, takes the name, callback number, address, and what is wrong, and emails you the lead. Plans are the same statewide: Overflow $25 a month, Starter $79 (first month $1), Growth $197, Pro $397, Elite $789. Add Google Business Profile care in a bundle from $159 a month. Demo line: (256) 952-4935.',
+    audience: 'Florence and the Shoals home-service shops',
+    lede: 'Keep your 256 number, forward the calls you can’t take, and get every lead by email. Setup is done by phone and email. We do not claim a Florence office or a list of local customers.',
+    pain: 'A lot of Shoals shops are one to three trucks, and the owner answers the phone between jobs. When a call comes in while he is under a house in Sheffield or on a roof in Tuscumbia, it goes to voicemail, and the caller tries the next listing.',
+    calls: [
+      'No-heat and no-cool calls after hours',
+      'Leaks, backups, and water-heater failures',
+      'Roof leaks after a storm line moves through the Tennessee Valley',
+      'Breakers tripping, outages, and panel questions',
+      'Overflow while the owner is on a job',
+    ],
+    qualification: ['Name and callback number', 'Address and town (Florence, Muscle Shoals, Sheffield…)', 'What they need', 'How urgent it is', 'Best callback time'],
+    roiTitle: 'Price a missed Florence call with your own numbers',
+    roiBody: `${exampleSentence({ missedPerWeek: 5, oneIn: 4, jobValue: 350, jobLabel: 'job' })} The $350 is an example, not a Florence average.`,
+    faqs: [
+      {
+        q: 'Do you have an office in Florence?',
+        a: 'No. Executive Receptionist is run by Cole Collins from Hanceville, Alabama, in Cullman County. Setup is done by phone and email.',
+      },
+      {
+        q: 'Is there a local rate for the Shoals?',
+        a: 'No. The same five plans apply statewide: Overflow $25 (60 minutes, then $1/min after 60), Starter $79 a month (100 minutes, first month $1), Growth $197, Pro $397, Elite $789. Month to month.',
+      },
+      {
+        q: 'Can you also keep my Google Business Profile up to date?',
+        a: 'Yes. Profile Care is $99 a month and Profile Care Plus is $179 a month. Bundled with Ava they start at $159 a month with the $99 profile setup included. See executivereceptionist.com/receptionist/packages.',
+      },
+      {
+        q: 'Can I hear it before I pay?',
+        a: 'Yes. Call (256) 952-4935 and Ava answers as Porchlight Heating & Air, a made-up HVAC company, or book a 15-minute demo at executivereceptionist.com/receptionist/book-a-demo.',
+      },
+    ],
+    related: ['ai-answering-service-decatur-al', 'ai-answering-service-huntsville-al', 'ai-answering-service-for-contractors-alabama', 'after-hours-answering-service'],
+    areaServed: ['Florence', 'Muscle Shoals', 'Sheffield', 'Tuscumbia', 'Lauderdale County', 'Colbert County', 'Alabama', 'United States'],
+  },
+  {
     slug: 'ai-answering-service-for-roofers-alabama',
     kind: 'guide',
     navLabel: 'Alabama roofers',
@@ -1971,8 +2124,8 @@ export const AVA_GUIDES: AvaGuide[] = [
 
 const guideBySlug = new Map(AVA_GUIDES.map((guide) => [guide.slug, guide]));
 
-if (AVA_GUIDES.length !== 38 || guideBySlug.size !== 38) {
-  throw new Error(`Expected 38 unique Executive Receptionist guides, found ${AVA_GUIDES.length} rows and ${guideBySlug.size} slugs.`);
+if (AVA_GUIDES.length !== 41 || guideBySlug.size !== 41) {
+  throw new Error(`Expected 41 unique Executive Receptionist guides, found ${AVA_GUIDES.length} rows and ${guideBySlug.size} slugs.`);
 }
 
 for (const guide of AVA_GUIDES) {

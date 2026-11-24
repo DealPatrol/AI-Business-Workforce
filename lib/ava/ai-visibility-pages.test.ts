@@ -30,8 +30,8 @@ function guideText(slug: (typeof QUESTION_SLUGS)[number]) {
 
 describe('AI visibility question pages', () => {
   it('includes the four question-style pages, each with a direct answer, pricing, and FAQs', () => {
-    assert.equal(AVA_GUIDES.length, 38);
-    assert.equal(avaGuideSlugs().length, 38);
+    assert.equal(AVA_GUIDES.length, 41);
+    assert.equal(avaGuideSlugs().length, 41);
     for (const slug of QUESTION_SLUGS) {
       const guide = getAvaGuide(slug);
       assert.ok(guide, slug);

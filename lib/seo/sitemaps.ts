@@ -41,6 +41,8 @@ export const EXECUTIVE_RECEPTIONIST_INDEX: IndexEntry[] = [
   { path: '/med-spa', changeFrequency: 'weekly', priority: 0.85 },
   { path: '/real-estate', changeFrequency: 'weekly', priority: 0.85 },
   { path: '/receptionist/missed-calls', changeFrequency: 'weekly', priority: 0.9 },
+  { path: '/receptionist/packages', changeFrequency: 'weekly', priority: 0.9 },
+  { path: '/receptionist/book-a-demo', changeFrequency: 'weekly', priority: 0.85 },
   { path: '/industries', changeFrequency: 'weekly', priority: 0.85 },
   { path: '/compare', changeFrequency: 'monthly', priority: 0.85 },
   { path: '/tools', changeFrequency: 'monthly', priority: 0.8 },
