@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { TrackedCheckoutLink } from '@/components/analytics/TrackedCheckoutLink';
 import { SuiteShell } from '@/components/suite/SuiteShell';
 import { ProfileCareForm } from '@/components/fpg/ProfileCareForm';
 import styles from '@/components/er/editorial.module.css';
@@ -36,7 +37,7 @@ const FAQS = [
   },
   {
     q: 'Do I need the $99 setup first?',
-    a: `Yes, unless your profile is already complete. Setup is ${GBP_SETUP.priceLabel}: categories, services, description, photos, hours and a review QR code. Bundles with the Executive Receptionist AI receptionist include the setup.`,
+    a: `Setup is ${GBP_SETUP.priceLabel} and is charged with your first month: categories, services, description, photos, hours and a review QR code. Already paid for setup? Email hello@frontporchgrowth.com before you start and we will start you without it. Bundles with the Executive Receptionist AI receptionist include the setup.`,
   },
   {
     q: 'Who owns the profile?',
@@ -82,13 +83,27 @@ const structured = jsonLdGraph([
   faqNode(FAQS),
 ]);
 
-export default function GoogleProfileManagementPage() {
+type PageProps = { searchParams: Promise<{ checkout?: string | string[] }> };
+
+export default async function GoogleProfileManagementPage({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const checkout = Array.isArray(params.checkout) ? params.checkout[0] : params.checkout;
   return (
     <SuiteShell>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structured).replace(/</g, '\\u003c') }} />
       <div className={styles.page} style={{ minHeight: 0 }}>
         <section className={styles.hero}>
           <div className={styles.wrap}>
+            {checkout === 'success' ? (
+              <p className={styles.answer} role="status">
+                Payment received. Thank you. Cole will email you within one business day to get manager access to your Google
+                profile and start setup.
+              </p>
+            ) : checkout === 'unavailable' ? (
+              <p className={styles.answer} role="status">
+                Online checkout is not available right now. Send the form below or email hello@frontporchgrowth.com.
+              </p>
+            ) : null}
             <p className={styles.kicker}>Google Business Profile · Monthly care</p>
             <h1>
               Your Google listing, <em>kept alive</em> every week.
@@ -125,9 +140,10 @@ export default function GoogleProfileManagementPage() {
                         <li key={f}>{f}</li>
                       ))}
                     </ul>
-                    <a className={styles.btnInk} href="#start">
+                    <TrackedCheckoutLink className={styles.btnInk} href={`/api/checkout?offer=gbp&plan=${key.toLowerCase()}`} plan={key}>
                       Start {care.label}
-                    </a>
+                    </TrackedCheckoutLink>
+                    <p className={styles.note}>Today: {usd(care.monthlyCents + GBP_SETUP.priceCents)} ($99 setup + first month).</p>
                   </article>
                 );
               })}
@@ -222,7 +238,8 @@ export default function GoogleProfileManagementPage() {
         <section className={styles.section} id="start">
           <div className={styles.wrap}>
             <p className={styles.kicker}>Start</p>
-            <h2>Send your profile. Cole takes it from there.</h2>
+            <h2>Questions first? Send your profile.</h2>
+            <p>Ready now? Use a Start button above to check out with a card. Want Cole to look first? Send this and he replies by email.</p>
             <ProfileCareForm source="google-profile/management" />
           </div>
         </section>

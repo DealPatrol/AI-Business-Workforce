@@ -43,7 +43,7 @@ describe('demo qualifier', () => {
 
 describe('GBP bundles', () => {
   it('cost less than buying the plan and care tier separately', () => {
-    assert.equal(GBP_PRICES_ARE_PROPOSED, true);
+    assert.equal(GBP_PRICES_ARE_PROPOSED, false);
     for (const b of GBP_BUNDLES) {
       assert.equal(b.separateCents, AVA_PLANS[b.plan].monthlyCents + GBP_CARE[b.care].monthlyCents);
       assert.ok(b.monthlyCents < b.separateCents, b.key);

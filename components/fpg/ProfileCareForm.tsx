@@ -123,7 +123,7 @@ export function ProfileCareForm({ source }: { source: string }) {
           {state === 'sending' ? 'Sending…' : 'Request profile care'}
         </button>
       </div>
-      <p className={styles.note}>No card now. Cole confirms the plan and sends the billing link by email.</p>
+      <p className={styles.note}>No card needed for this form. Cole replies by email.</p>
     </form>
   );
 }

@@ -16,6 +16,8 @@ import {
   type AvaPlanKey,
 } from '@/lib/stripe-checkout';
 import { startAvaPlanCheckout } from '@/lib/ava/plan-checkout';
+import { buildGbpBundleCheckoutParams, buildGbpCareCheckoutParams, startGbpCheckout } from '@/lib/ava/gbp-checkout';
+import { gbpBundleFromParam, gbpCareKeyFromParam } from '@/lib/ava/gbp-packages';
 
 function sanitizeQualificationId(value: unknown) {
   const id = String(value || '').trim();
@@ -191,6 +193,24 @@ export async function POST(req: NextRequest) {
         return checkoutError(req, result.error || 'Could not start postcard checkout.', 500, '/founding?checkout=error');
       }
       return checkoutResult(req, result.url);
+    }
+
+    if (offer === 'gbp' || offer === 'bundle') {
+      const origin = req.nextUrl.origin;
+      const careKey = offer === 'gbp' ? gbpCareKeyFromParam(planKey) : null;
+      const bundle = offer === 'bundle' ? gbpBundleFromParam(planKey) : null;
+      const fallback = offer === 'gbp' ? '/google-profile/management?checkout=unavailable#start' : '/receptionist/packages?checkout=unavailable#bundles';
+      if (!careKey && !bundle) return checkoutError(req, 'Unknown package.', 400, fallback);
+      const result = await startGbpCheckout(() =>
+        careKey ? buildGbpCareCheckoutParams({ origin, careKey }) : buildGbpBundleCheckoutParams({ origin, bundle: bundle! }),
+      );
+      if ('error' in result) return checkoutError(req, result.error || 'Could not start checkout.', result.status ?? 500, fallback);
+      try {
+        await track('checkout-started', { plan: careKey || bundle!.key, product: offer === 'gbp' ? 'gbp' : 'ava' }, { headers: req.headers });
+      } catch (error) {
+        console.error('Google profile checkout-started analytics failed', error);
+      }
+      return checkoutResult(req, result.url!);
     }
 
     const avaPlan = normalizeAvaPlan(planKey);
