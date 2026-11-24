@@ -33,6 +33,7 @@ export const EXECUTIVE_RECEPTIONIST_INDEX: IndexEntry[] = [
   { path: '/pricing', changeFrequency: 'monthly', priority: 0.8 },
   { path: '/ava', changeFrequency: 'weekly', priority: 0.95 },
   { path: '/hvac', changeFrequency: 'weekly', priority: 0.9 },
+  { path: '/gadsden', changeFrequency: 'weekly', priority: 0.85 },
   { path: '/business', changeFrequency: 'weekly', priority: 0.9 },
   { path: '/dental', changeFrequency: 'weekly', priority: 0.85 },
   { path: '/law', changeFrequency: 'weekly', priority: 0.85 },

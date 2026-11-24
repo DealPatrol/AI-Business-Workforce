@@ -16,6 +16,7 @@ export const MERGED_AVA_GUIDES: Record<string, string> = {
 const RECEPTIONIST_EXACT_PATHS = new Set([
   '/ava',
   '/hvac',
+  '/gadsden',
   '/receptionist-demo',
   '/start',
   '/business',

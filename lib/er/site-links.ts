@@ -19,6 +19,7 @@ export const ER_NAV: ErLink[] = [
 /** Stand-alone vertical pages (their own templates). */
 export const ER_VERTICAL_PAGES: ErLink[] = [
   { href: '/hvac', label: 'HVAC', blurb: 'No-cool and no-heat calls, after hours and mid-repair.' },
+  { href: '/gadsden', label: 'Gadsden trades + Google profile', blurb: 'Ava plus done-for-you Google profile work for Gadsden-area shops.' },
   { href: '/dental', label: 'Dental offices', blurb: 'New-patient and appointment calls while the front desk is busy.' },
   { href: '/law', label: 'Law firms', blurb: 'Intake calls that come in while you are in court or with a client.' },
   { href: '/salon', label: 'Salons', blurb: 'Booking and hours questions while your hands are full.' },

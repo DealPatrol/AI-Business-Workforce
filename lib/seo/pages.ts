@@ -84,6 +84,13 @@ const PAGES = {
     titleMode: 'absolute',
     receptionist: true,
   },
+  '/gadsden': {
+    title: 'AI Receptionist + Google Profile for Gadsden Trades',
+    description:
+      'Ava answers your calls 24/7 and we run your Google profile: 3 posts a week, review replies, AI search checks. For Gadsden-area trades, month to month.',
+    titleMode: 'absolute',
+    receptionist: true,
+  },
   '/business': {
     title: 'AI Receptionist for Any Business | Executive Receptionist',
     description:
