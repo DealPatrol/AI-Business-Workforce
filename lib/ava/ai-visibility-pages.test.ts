@@ -58,12 +58,12 @@ describe('AI visibility question pages', () => {
     const guide = getAvaGuide('ai-receptionist-for-hvac-and-plumbing-in-alabama');
     assert.ok(guide);
     const text = guideText('ai-receptionist-for-hvac-and-plumbing-in-alabama');
-    for (const city of ['Gadsden', 'Birmingham', 'Huntsville', 'Cullman', 'Decatur']) {
+    for (const city of ['Gadsden', 'Birmingham', 'Huntsville', 'Cullman', 'Decatur', 'Tuscaloosa', 'Montgomery', 'Florence']) {
       assert.match(text, new RegExp(city));
     }
     assert.match(text, /Hanceville/);
     assert.doesNotMatch(text, /\b\d+\s+(customers|reviews|shops|clients)\b/i);
-    assert.equal(guide.cityNotes?.length, 5);
+    assert.equal(guide.cityNotes?.length, 8);
   });
 
   it('keeps the cost comparison factual and unsourced competitor prices out', () => {

@@ -20,6 +20,7 @@ const FRONT_PORCH_PATHS = [
   '/terms',
   '/missed-call',
   '/google-profile',
+  '/google-profile/management',
   '/ai-visibility',
   '/ai-search-visibility',
   '/ai-search-visibility/hvac',

@@ -4,7 +4,6 @@ import { FormEvent, useMemo, useState } from 'react';
 import { AVA_PLANS } from '@/lib/ava/pricing';
 import { GBP_BUNDLES, GBP_CARE, usd } from '@/lib/ava/gbp-packages';
 import { qualify, type GbpState } from '@/lib/ava/demo-qualifier';
-import { formatUsd } from '@/lib/ava/missed-call-math';
 import styles from './editorial.module.css';
 
 const CONTACT_EMAIL = 'colecollins763@gmail.com';
@@ -127,9 +126,7 @@ export function DemoQualifier({ initialPackage, bookingUrl }: { initialPackage?:
         <div className={styles.result} aria-live="polite">
           <h3>Your fit: {result.bundle ? `${result.bundle.label} bundle` : `Ava ${AVA_PLANS[result.plan].label}`}</h3>
           <p style={{ margin: 0 }}>{result.summary}</p>
-          <p className={styles.note} style={{ marginTop: 8 }}>
-            Missed calls in your numbers: about {formatUsd(result.monthlyExample)} a month.
-          </p>
+
         </div>
       </div>
 

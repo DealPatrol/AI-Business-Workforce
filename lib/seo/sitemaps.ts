@@ -86,6 +86,7 @@ export function frontPorchGrowthSitemap(origin: string, now: Date): MetadataRout
     entry(origin, '/terms', now, 'yearly', 0.3),
     entry(origin, '/missed-call', now, 'weekly', 0.8),
     entry(origin, '/google-profile', now, 'weekly', 0.8),
+    entry(origin, '/google-profile/management', now, 'weekly', 0.85),
     entry(origin, '/ai-visibility', now, 'weekly', 0.85),
     entry(origin, '/ai-search-visibility', now, 'weekly', 0.85),
     ...FPG_AEO_PAGES.map((page) => entry(origin, `/ai-search-visibility/${page.slug}`, now, 'monthly', 0.8)),

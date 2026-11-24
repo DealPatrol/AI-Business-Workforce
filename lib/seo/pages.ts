@@ -249,6 +249,13 @@ const PAGES = {
     titleMode: 'absolute',
     receptionist: false,
   },
+  '/google-profile/management': {
+    title: 'Google Business Profile Management for Trades, $99/mo',
+    description:
+      'Weekly Google Business Profile management for Alabama trades: posts, hours, review replies and a monthly report. $99 or $179 a month, month to month.',
+    titleMode: 'absolute',
+    receptionist: false,
+  },
   '/google-profile': {
     title: 'Google Business Profile setup, $99 | Front Porch Growth',
     description:
