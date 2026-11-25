@@ -80,7 +80,7 @@ const PAGES = {
   '/hvac': {
     title: 'AI Receptionist for HVAC Companies | Executive Receptionist',
     description:
-      'Ava answers HVAC calls 24/7: no heat, no AC, after-hours emergencies, and emails you every lead. From $25/mo.',
+      'HVAC virtual receptionist and 24/7 answering service: Ava answers no-heat, no-AC, and after-hours calls and emails you every lead. From $25/mo.',
     titleMode: 'absolute',
     receptionist: true,
   },

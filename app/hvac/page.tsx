@@ -79,6 +79,14 @@ const ROI_EXAMPLE = exampleSentence({ missedPerWeek: 8, oneIn: 4, jobValue: 350,
 
 const FAQS = [
   {
+    q: 'Is Ava an HVAC answering service or a virtual receptionist?',
+    a: 'Ava is an AI receptionist that does the answering-service job around the clock. She picks up every call day or night, asks your HVAC intake questions, flags no-heat, no-AC, and gas calls as urgent, and emails you the lead right after the call so your office can call the customer back and schedule the job.',
+  },
+  {
+    q: 'How is Ava different from sending HVAC calls to voicemail?',
+    a: 'Many callers with a broken furnace or AC hang up on voicemail and call the next company. Ava answers instead, gets the name, number, address, and what the system is doing, and emails you a complete lead, so you call back knowing the job instead of playing phone tag.',
+  },
+  {
     q: 'Does Ava schedule the HVAC visit?',
     a: 'No. Ava takes the name, number, address, the problem, and when the caller would like someone out, flags anything urgent, and emails you the lead right after the call so your office can call back and schedule it. She never promises an arrival time.',
   },
@@ -150,8 +158,8 @@ export default function HvacPage() {
       </nav>
 
       <section className="hvac-hero">
-        <p className="hvac-eyebrow">AI receptionist for heating &amp; air companies</p>
-        <h1>Never miss another no-heat call.</h1>
+        <p className="hvac-eyebrow">HVAC virtual receptionist &amp; 24/7 answering service</p>
+        <h1>AI receptionist for HVAC companies. Never miss another no-heat call.</h1>
         <p className="hvac-lede">
           When the furnace quits at 9 PM, homeowners call the next company on the list if nobody picks up. Ava, your
           AI receptionist, answers every call day or night, captures the job details, flags emergencies, and emails you
