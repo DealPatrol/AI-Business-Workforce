@@ -352,6 +352,12 @@ const PAGES = {
     titleMode: 'template',
     receptionist: false,
   },
+  '/dashboard/aerial-leads': {
+    title: 'Aerial postcard leads',
+    description: ROOT_DESCRIPTION,
+    titleMode: 'template',
+    receptionist: false,
+  },
   '/dashboard/prospector/settings': {
     title: 'Lead Finder settings',
     description: ROOT_DESCRIPTION,

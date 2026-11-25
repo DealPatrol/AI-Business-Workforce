@@ -52,6 +52,18 @@ For a real campaign, use the same SQL shape as the seed: create one `campaigns` 
 
 The app records page-open activity for valid recipient pages and deduplicates repeated opens from the same request source within 30 minutes. This is useful response activity, but it can include link-preview bots as well as homeowner QR scans.
 
+## Aerial postcard leads
+
+`/dashboard/aerial-leads` (signed-in, noindex) finds homes whose driveway got noticeably dirtier between the last two public aerial flights, then drafts a before-and-after postcard for a client's pressure-washing offer. Pilot area: Cullman County, AL. Apply `supabase/migrations/20261125120000_aerial_leads.sql` first.
+
+- Imagery (free, public domain): current = USDA FPAC NAIP (`apps.geo.fpac.usda.gov/.../naip/conus_naip/ImageServer`, Alabama 2025, 30 cm); prior = NAIP 2023 (`imagery.geoplatform.gov/iipp/rest/services/NAIP/NAIP2023_CONUS/ImageServer`, 60 cm).
+- Owners and mailing addresses (free): Cullman County tax parcels (`al25portal.kcsgis.com/.../Mapping/Cullman_Parcels/FeatureServer/0`); building footprints from `Cullman_Viewer/MapServer/109`.
+- Scoring (`lib/aerial-leads/scoring.ts`, no paid model): registers the two flights, finds the paved slab in each homeowner parcel (outside building footprints, never lawn, never shadow; NIR rejects tree shade), and scores % stained (0-100) and % darker than the prior flight. Default rule from the reel: 30% stained AND 40% darker; both are adjustable per scan.
+- Price: driveway sq ft x rate (default $0.30), rounded to $5.
+- Card: 4x6 with bleed. Front = real aerial crop + "Your driveway could look like new". Back = cleaned preview with a badge ("Digital preview" for the free simulation, "AI preview" only when `AERIAL_LEADS_AI_PREVIEW=1` and `OPENAI_API_KEY` are set), price, phone, QR. The right side of the back stays clear for Lob's address block.
+- Mail: every card needs **Approve** first, then **Send Lob test** creates a Lob TEST postcard (free, never printed). Live Lob keys are refused in code.
+- Operator CLI for a pilot run (writes private `leads.json` with owner names, plus card PNGs): `node --experimental-strip-types --experimental-loader ./scripts/ava-security-test-loader.mjs scripts/aerial-leads/cullman-pilot.ts --bbox='[-86.8485,34.1672,-86.8415,34.1728]' --out=/tmp/aerial-pilot`. `--fixture` refreshes the masked dashboard sample in `lib/aerial-leads/fixtures` and `public/aerial-leads/cullman-pilot`.
+
 ## Lead Finder
 
 Lead Finder is Cole's operator tool for finding local buyers, drafting cold email, and sending it from his own domain. It lives at `/dashboard/prospector` (sign in with the same Supabase user as the campaign inbox). `/leads` is the public lead-list sales page (1,000 leads for $20), with `/leads/thanks` and `/leads/more` as post-checkout offer pages.
