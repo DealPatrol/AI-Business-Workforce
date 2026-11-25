@@ -132,16 +132,26 @@ export function transferToNumberTool(rules: TransferRule[], opts: { mode?: Trans
   };
 }
 
+/**
+ * Callers hate phone AIs that won't let them reach a person. Ava agrees on the first ask, collects only
+ * name, number and reason, reads them back in one sentence, and transfers as soon as the caller says yes.
+ * Tested on the ElevenLabs TEST copy agent_6101m88bvq4beqvr4amvrm9xb225 (Nov 24, 2026).
+ */
+export const FIRST_ASK_RULES = `Transfer on the FIRST request for a person. Do not ask why they want a person before agreeing, do not offer to help them yourself instead, and never make them ask twice. Say something like "Sure, I'll get you to someone. Can I get your name first?"
+Before an office transfer you need only three things: the caller's name, best callback number, and a few words on what it's about. Ask one short question for each, skipping anything they already gave. If they refuse one, skip it and transfer anyway. For an emergency transfer, also get the address and the problem.
+Then read it all back in ONE sentence and wait for a yes: "Just so the team has it: [name], callback [number digit by digit], calling about [reason]. Is that right?" If they correct something, fix it and confirm once more. As soon as they say yes, call transfer_to_number in that same turn.`;
+
 /** Prompt section that makes the transfer warm, and says exactly what to do when nobody takes the call. */
 export function liveTransferPromptSection(rules: TransferRule[], opts: { mode?: TransferMode; paging?: boolean; callbacks?: boolean } = {}) {
   if (rules.length === 0) return '';
   const who = rules
-    .map((r) => `- ${r.label} (${r.phone}): ${transferCondition(r, rules.length === 1)}`)
+    // Labels only: the number lives in the tool config, so Ava can never read the owner's phone to a caller.
+    .map((r) => `- ${r.label}: ${transferCondition(r, rules.length === 1)}`)
     .join('\n');
   const screened = opts.mode === 'screened';
   const fallback = [
     'If transfer_to_number returns status success, the caller has been handed off: do not page, do not book a callback, and do not say it failed.',
-    'If the transfer fails, nobody answers, or the tool says the call was not accepted, come back to the caller, say honestly that nobody could pick up, apologize briefly, and do not try the same number again.',
+    'If the transfer fails, nobody answers, or the tool says the call was not accepted, come back to the caller, say honestly that nobody could pick up right now, apologize briefly, tell them their name, number and message have been passed to the team, and do not try the same number again.',
     opts.paging
       ? 'Only if it was an emergency transfer, call page_on_call (reason transfer_unanswered) and tell the caller you have paged the on-call team only after it says Paged. Never promise an arrival time. For a non-emergency transfer (a person, the owner, billing, warranty or a complaint) never call page_on_call.'
       : '',
@@ -154,14 +164,14 @@ export function liveTransferPromptSection(rules: TransferRule[], opts: { mode?: 
   return `LIVE TRANSFER (warm: brief the person first)
 Numbers you may connect to:
 ${who}
-Before any transfer you must already have the caller's name and callback number (read back), and the address and issue if it is a service problem.${
+${FIRST_ASK_RULES}${
     screened
-      ? ' First call prepare_transfer with those details and a one-sentence summary. Only if it returns ok, call transfer_to_number.'
+      ? '\nAfter the yes, first call prepare_transfer with those details and a one-sentence summary. Only if it returns ok, call transfer_to_number.'
       : ''
   }
 When you call transfer_to_number:
-- client_message: one short line to the caller, like "Please hold for just a moment while I get someone on the line."
-- agent_message: ONE sentence for the person who answers, in this order: "Ava from Executive Receptionist with a transferred call: [emergency or routine] [issue] for [caller name], callback [number read as digits], at [address]." Add one short fact that matters (for example "elderly parent at home" or "water on the floor"). No greetings, no filler, never more than 40 words.
+- client_message: one short line to the caller, like "Thanks. Please hold for just a moment while I get someone on the line."
+- agent_message: ONE sentence for the person who answers, in this order: "Ava from Executive Receptionist with a transferred call: [caller name], callback [number read as digits], calling about [reason or issue][, at address for service calls]." For an emergency, start the reason with "emergency" and add one short fact that matters (for example "elderly parent at home" or "water on the floor"). No greetings, no filler, never more than 40 words.
 ${fallback}
 Transfer only when the caller wants to talk to someone right now or has an emergency. If they ask to be called back later, do not transfer${opts.callbacks ? ': use book_callback' : ''}.
 Never say you are transferring unless you are calling transfer_to_number right now. Never transfer spam, sales calls or wrong numbers.`;
