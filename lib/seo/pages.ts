@@ -99,16 +99,16 @@ const PAGES = {
     receptionist: true,
   },
   '/dental': {
-    title: 'AI Receptionist for Dental Offices | Executive Receptionist',
+    title: 'AI Receptionist & Answering Service for Dentists',
     description:
       'Ava answers the calls your front desk misses, flags patients in pain as urgent, and emails you every call. From $25/mo.',
     titleMode: 'absolute',
     receptionist: true,
   },
   '/law': {
-    title: 'AI Receptionist for Law Firms | Executive Receptionist',
+    title: 'AI Receptionist & After-Hours Answering for Law Firms',
     description:
-      'Ava answers while you are in court, takes the name, number and matter, flags urgent calls, and emails you. From $25/mo.',
+      'Ava answers your firm’s calls 24/7, in court or after hours, takes the name, number and matter, flags urgent calls, and emails you. From $25/mo.',
     titleMode: 'absolute',
     receptionist: true,
   },

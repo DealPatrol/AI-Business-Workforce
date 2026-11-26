@@ -7,11 +7,15 @@
  * languages, compliance claims (HIPAA, bar rules), or pilot pricing to these pages.
  */
 
+import { AVA_OFFER, AVA_PLANS, AVA_PLAN_KEYS } from '@/lib/ava/pricing';
+
 export type BusinessPageSlug = 'business' | 'dental' | 'law' | 'salon' | 'auto-repair' | 'med-spa' | 'real-estate';
 
 export type BusinessCall = { title: string; caller: string; ava: string };
 
 export type OwnerVoice = { quote: string; who: string; href: string };
+
+export type BusinessFaq = { q: string; a: string };
 
 export type BusinessPage = {
   slug: BusinessPageSlug;
@@ -26,6 +30,8 @@ export type BusinessPage = {
   calls: BusinessCall[];
   details: string[];
   voices: OwnerVoice[];
+  /** Page-specific questions, shown before the shared ones. Same copy rules as the rest of the page. */
+  faqs?: BusinessFaq[];
 };
 
 export const DESK_CALENDAR_LINE = (noun: 'visits' | 'appointments') =>
@@ -115,6 +121,20 @@ export const BUSINESS_PAGES: Record<BusinessPageSlug, BusinessPage> = {
         href: 'https://www.reddit.com/r/Dentists/comments/1x3ychd/how_do_dental_clinics_handle_missed_calls_when/',
       },
     ],
+    faqs: [
+      {
+        q: 'Is Ava an answering service for dentists?',
+        a: 'Yes. Ava answers the calls your front desk can’t get to, plus nights, weekends and holidays. She takes the caller’s name, number and reason for calling and emails your office the details right after the call.',
+      },
+      {
+        q: 'What does Ava do when a patient in pain calls after hours?',
+        a: 'She marks the call urgent and takes a name and callback number so your team sees it first. She never gives medical advice. If you give her after-hours instructions, she reads those to the caller.',
+      },
+      {
+        q: 'Will Ava answer questions about insurance or new-patient openings?',
+        a: 'Only with what you tell her. Give her the answers you want callers to hear about insurance and new patients. She will not guess.',
+      },
+    ],
   },
   law: {
     slug: 'law',
@@ -151,6 +171,24 @@ export const BUSINESS_PAGES: Record<BusinessPageSlug, BusinessPage> = {
         quote: 'There are situations where I miss a call from a legitimate lead for one reason or another, and by the time I call back they’ve moved on.',
         who: 'Solo attorney on r/LawFirm',
         href: 'https://www.reddit.com/r/LawFirm/comments/wsjhfb/answering_service_for_solo_attorney_low_call/',
+      },
+    ],
+    faqs: [
+      {
+        q: 'Is Ava an after-hours answering service for law firms?',
+        a: 'Yes. Ava answers your firm’s line 24/7, including nights, weekends and holidays. Instead of reaching voicemail, the caller talks to Ava, and you get an email with their name, number and what the matter is about right after the call ends.',
+      },
+      {
+        q: 'Does Ava give legal advice or say whether you will take the case?',
+        a: 'No. She takes the caller’s name, number and a short description of the matter. She does not give legal advice, quote fees, or tell the caller whether the firm will take the case. You decide who to call back.',
+      },
+      {
+        q: 'How does Ava handle urgent calls from clients?',
+        a: 'You decide which calls count as urgent, for example an existing client with a hearing coming up or someone who was just served papers. Ava marks those calls urgent so they are the first thing you see.',
+      },
+      {
+        q: 'Does Ava work with case management software or run conflict checks?',
+        a: 'No. Ava handles phone calls only. She does not connect to case management software or run conflict checks.',
       },
     ],
   },
@@ -301,6 +339,26 @@ export const INDUSTRY_PAGE_SLUGS = BUSINESS_PAGE_SLUGS.filter((slug) => slug !==
 
 export function businessPageDetails(page: BusinessPage) {
   return [...COMMON_DETAILS, ...page.details];
+}
+
+/** Questions every business page answers. Prices come from AVA_PLANS so they stay in sync with /pricing. */
+export const COMMON_BUSINESS_FAQS: BusinessFaq[] = [
+  {
+    q: 'How much does Ava cost?',
+    a: `There are five monthly plans: ${AVA_PLAN_KEYS.map((key) => `${AVA_PLANS[key].label} ${AVA_PLANS[key].monthlyLabel} (${AVA_PLANS[key].minutesLabel})`).join(', ')}. ${AVA_OFFER.starterIntro} ${AVA_OFFER.overflowLine}`,
+  },
+  {
+    q: 'Do I keep my business number?',
+    a: 'Yes. You forward your line to Ava (after hours, when you are busy, or all the time), so callers still dial the number they already have.',
+  },
+  {
+    q: 'What do I get after each call?',
+    a: 'An email with the caller’s name, callback number and the reason for the call, right after the call ends. Urgent calls are flagged so you see them first.',
+  },
+];
+
+export function businessPageFaqs(page: BusinessPage): BusinessFaq[] {
+  return [...(page.faqs ?? []), ...COMMON_BUSINESS_FAQS];
 }
 
 /** Words the receptionist copy rule forbids on these pages. Checked by business-pages.test.ts. */
