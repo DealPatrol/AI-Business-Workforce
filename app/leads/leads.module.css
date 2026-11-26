@@ -1,6 +1,6 @@
 .eyebrow {
   display: inline-block;
-  color: #2e8b57;
+  color: #4E5E52;
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -39,7 +39,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-  background: #205c39;
+  background: #E84630;
   color: #fff;
   text-decoration: none;
   font-weight: 800;
@@ -52,9 +52,9 @@
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-  border: 1px solid #205c39;
+  border: 1px solid #4E5E52;
   background: #fff;
-  color: #205c39;
+  color: #4E5E52;
   text-decoration: none;
   font-weight: 780;
   padding: 15px 20px;
@@ -63,7 +63,7 @@
 
 .fine {
   margin: 12px 0 0;
-  color: #6a756c;
+  color: #4E5E52;
   font-size: 14px;
   line-height: 1.5;
 }
@@ -136,8 +136,8 @@
   margin-bottom: 8px;
   padding: 4px 10px;
   border-radius: 999px;
-  background: #fff4d6;
-  color: #7a5a00;
+  background: #EEF2EE;
+  color: #4E5E52;
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.06em;
@@ -149,7 +149,7 @@
   padding: 4px 10px;
   border-radius: 999px;
   background: #eef6f0;
-  color: #205c39;
+  color: #4E5E52;
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.04em;
@@ -173,7 +173,7 @@
 }
 
 .offerFeatured {
-  border: 2px solid #205c39;
+  border: 2px solid #4E5E52;
 }
 
 .offer h3 {
@@ -189,13 +189,13 @@
 .price {
   font-size: 32px;
   font-weight: 800;
-  color: #17201a;
+  color: #1E2620;
 }
 
 .price small {
   font-size: 15px;
   font-weight: 600;
-  color: #6a756c;
+  color: #4E5E52;
 }
 
 .offer .cta,
@@ -215,12 +215,12 @@
 }
 
 .faq details {
-  border-top: 1px solid #e0e6e0;
+  border-top: 1px solid #E6E2D6;
   padding: 14px 0;
 }
 
 .faq details:last-child {
-  border-bottom: 1px solid #e0e6e0;
+  border-bottom: 1px solid #E6E2D6;
 }
 
 .faq summary {
@@ -234,13 +234,13 @@
 }
 
 .compliance {
-  color: #6a756c;
+  color: #4E5E52;
   font-size: 14px;
   line-height: 1.5;
 }
 
 .skip {
-  color: #5b675e;
+  color: #4E5E52;
   font-size: 15px;
   font-weight: 650;
 }
@@ -273,7 +273,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #205c39;
+  background: #4E5E52;
   color: #fff;
   font-weight: 800;
   font-size: 15px;

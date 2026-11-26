@@ -1,10 +1,10 @@
 .main {
   --green: #1f4d34;
-  --green-2: #205c39;
-  --green-3: #2e8b57;
-  --ink: #17201a;
+  --green-2: #4E5E52;
+  --green-3: #4E5E52;
+  --ink: #1E2620;
   --muted: #4c574f;
-  --line: #dfe4df;
+  --line: #D6DDD7;
   --cream: #fbf7ee;
   --orange: #d9822b;
   --orange-ink: #9a4d0c;
@@ -16,7 +16,7 @@
   margin: 10px 0 14px;
   font: 500 clamp(30px, 4.2vw, 44px) / 1.08 Georgia, serif;
   letter-spacing: -0.02em;
-  color: #14201a;
+  color: #1E2620;
 }
 
 .main h3 {
@@ -41,13 +41,13 @@
   font-weight: 800;
   letter-spacing: 0.12em;
   color: var(--green-2);
-  background: #eef5ef;
+  background: #EEF2EE;
   border-radius: 999px;
   padding: 6px 10px;
 }
 
 .eyebrowLight {
-  color: #fff1ce;
+  color: #EEF2EE;
   background: rgba(255, 255, 255, 0.1);
 }
 
@@ -73,7 +73,7 @@
   margin: 14px 0 16px;
   font: 500 clamp(38px, 5.4vw, 58px) / 1.03 Georgia, serif;
   letter-spacing: -0.03em;
-  color: #14201a;
+  color: #1E2620;
 }
 
 .lede {
@@ -127,7 +127,7 @@
 }
 
 .secondary:hover {
-  background: #eef5ef;
+  background: #EEF2EE;
 }
 
 .fine {
@@ -155,7 +155,7 @@
   padding: 26px 22px 20px;
   border-radius: 18px;
   background: linear-gradient(160deg, #1f4d34, #163a27);
-  color: #eef5ef;
+  color: #EEF2EE;
   box-shadow: 0 24px 60px rgba(23, 32, 26, 0.18);
 }
 
@@ -228,7 +228,7 @@
   gap: 10px;
   padding: 11px 12px;
   border-radius: 10px;
-  background: #f4f8f4;
+  background: #F7F5EF;
   color: var(--ink);
   font-size: 14px;
 }
@@ -368,7 +368,7 @@
 }
 
 .loading {
-  background: #eef5ef;
+  background: #EEF2EE;
   color: var(--green-2);
 }
 
@@ -483,7 +483,7 @@
 .good {
   padding: 12px 14px;
   border-radius: 12px;
-  background: #eef5ef;
+  background: #EEF2EE;
   color: var(--green-2);
   font-weight: 700;
 }
@@ -535,7 +535,7 @@
 .facts div {
   padding: 10px 12px;
   border-radius: 10px;
-  background: #f7f8f5;
+  background: #F7F5EF;
   min-width: 0;
 }
 
@@ -767,7 +767,7 @@
   padding: 40px;
   border-radius: 22px;
   background: var(--green);
-  color: #eef5ef;
+  color: #EEF2EE;
 }
 
 .honest h2 {
@@ -867,7 +867,7 @@
   margin-left: 6px;
   padding: 3px 8px;
   border-radius: 999px;
-  background: #fff1ce;
+  background: #EEF2EE;
   color: var(--orange-ink);
   font-size: 12px;
   font-weight: 800;

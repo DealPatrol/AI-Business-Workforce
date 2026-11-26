@@ -1,10 +1,10 @@
 .page {
-  --ink: #14201a;
+  --ink: #1E2620;
   --muted: #4c574f;
-  --line: #d9e3da;
-  --green: #205c39;
-  --mint: #eef5ef;
-  --gold: #f2c14e;
+  --line: #D6DDD7;
+  --green: #4E5E52;
+  --mint: #EEF2EE;
+  --gold: #8CAE93;
   background: #fbfaf6;
   color: var(--ink);
   font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;

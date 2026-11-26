@@ -10,7 +10,7 @@
 /* Call Ava card */
 .callCard {
   border-radius: 22px;
-  background: #14201a;
+  background: #1E2620;
   color: #f4f1e8;
   padding: 28px;
   box-shadow: 0 30px 70px rgba(20, 32, 26, 0.22);
@@ -54,7 +54,7 @@
   font-size: 16px;
   text-decoration: none;
 }
-.callPrimary { background: #f2c14e; color: #14201a; }
+.callPrimary { background: #E84630; color: #FFFFFF; }
 .callSecondary { border: 1px solid rgba(255, 255, 255, 0.28); color: #fff; }
 .callFine {
   margin: 16px 0 0 !important;
@@ -76,7 +76,7 @@
   grid-template-columns: 1.1fr 0.9fr;
   gap: 28px;
   margin-top: 26px;
-  border: 1px solid #d9e3da;
+  border: 1px solid #D6DDD7;
   border-radius: 22px;
   background: #fff;
   padding: 30px;
@@ -93,23 +93,23 @@
   justify-content: space-between;
   align-items: baseline;
   gap: 16px;
-  border-bottom: 1px dashed #d9e3da;
+  border-bottom: 1px dashed #D6DDD7;
   padding-bottom: 10px;
   font-size: 16px;
-  color: #34403a;
+  color: #4E5E52;
 }
 .priceRows b {
   font: 600 24px/1 Georgia, serif;
-  color: #14201a;
+  color: #1E2620;
   white-space: nowrap;
 }
 .guarantee {
   border-radius: 16px;
-  background: #eef5ef;
+  background: #EEF2EE;
   padding: 22px;
-  color: #205c39;
+  color: #4E5E52;
 }
-.guarantee h3 { margin: 0 0 8px; font: 600 22px/1.2 Georgia, serif; color: #14201a; }
+.guarantee h3 { margin: 0 0 8px; font: 600 22px/1.2 Georgia, serif; color: #1E2620; }
 .guarantee p { margin: 0 0 16px; line-height: 1.55; }
 .compareNote {
   margin: 18px 0 0;
@@ -131,17 +131,17 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  border: 1px solid #d9e3da;
+  border: 1px solid #D6DDD7;
   border-radius: 18px;
   background: #fff;
   padding: 20px;
 }
-.sampleHead h3 { margin: 6px 0 0; font: 600 20px/1.2 Georgia, serif; color: #14201a; }
+.sampleHead h3 { margin: 6px 0 0; font: 600 20px/1.2 Georgia, serif; color: #1E2620; }
 .sampleTag {
   display: inline-block;
   border-radius: 999px;
-  background: #eef5ef;
-  color: #205c39;
+  background: #EEF2EE;
+  color: #4E5E52;
   padding: 4px 10px;
   font-size: 11.5px;
   font-weight: 800;
@@ -150,10 +150,10 @@
 }
 .sample p { margin: 0; color: #4c574f; font-size: 14.5px; line-height: 1.5; }
 .sample audio { width: 100%; }
-.sample details summary { cursor: pointer; font-weight: 700; color: #205c39; font-size: 14px; }
-.transcript { margin: 10px 0 0; padding-left: 18px; font-size: 13.5px; color: #34403a; line-height: 1.5; }
+.sample details summary { cursor: pointer; font-weight: 700; color: #4E5E52; font-size: 14px; }
+.transcript { margin: 10px 0 0; padding-left: 18px; font-size: 13.5px; color: #4E5E52; line-height: 1.5; }
 .transcript li { margin-bottom: 6px; }
-.sampleTalk { margin-top: auto; font-weight: 800; color: #14201a; font-size: 14.5px; }
+.sampleTalk { margin-top: auto; font-weight: 800; color: #1E2620; font-size: 14.5px; }
 
 /* Desk tiles */
 .tiles {
@@ -169,18 +169,18 @@
   flex-direction: column;
   gap: 8px;
   height: 100%;
-  border: 1px solid #d9e3da;
+  border: 1px solid #D6DDD7;
   border-radius: 16px;
   background: #fff;
   padding: 18px;
   text-decoration: none;
   color: inherit;
 }
-.tile:hover { border-color: #205c39; }
-.tile h3 { margin: 0; font-size: 16.5px; color: #14201a; }
+.tile:hover { border-color: #4E5E52; }
+.tile h3 { margin: 0; font-size: 16.5px; color: #1E2620; }
 .tile p { margin: 0; color: #4c574f; font-size: 14px; line-height: 1.5; }
 .tileMeta { margin-top: auto; font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #6b776f; }
-.tileMetaLive { color: #205c39; }
+.tileMetaLive { color: #4E5E52; }
 
 .ecomBand {
   display: grid;
@@ -191,7 +191,7 @@
   background: #f4efe2;
   padding: 32px;
 }
-.ecomList { margin: 14px 0 0; padding-left: 20px; color: #34403a; line-height: 1.7; }
+.ecomList { margin: 14px 0 0; padding-left: 20px; color: #4E5E52; line-height: 1.7; }
 
 @media (max-width: 960px) {
   .samples { grid-template-columns: repeat(2, minmax(0, 1fr)); }

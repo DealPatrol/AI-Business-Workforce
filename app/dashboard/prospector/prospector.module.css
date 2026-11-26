@@ -3,7 +3,7 @@
   display: grid;
   grid-template-columns: 230px 1fr;
   background: #f3f6f1;
-  color: #17201a;
+  color: #1E2620;
 }
 
 .sidebar {
@@ -11,7 +11,7 @@
   padding: 26px 18px;
   display: flex;
   flex-direction: column;
-  background: #10281c;
+  background: #1E2620;
   color: #dce7df;
 }
 
@@ -32,7 +32,7 @@
   display: grid;
   place-items: center;
   border-radius: 8px;
-  background: #2e754e;
+  background: #4E5E52;
 }
 
 .sidebar nav {
@@ -51,7 +51,7 @@
 
 .sidebar nav a:hover,
 .active {
-  background: #1d3d2b;
+  background: #1E2620;
   color: white;
 }
 
@@ -83,7 +83,7 @@
 }
 
 .eyebrow {
-  color: #2e8b57;
+  color: #4E5E52;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -98,7 +98,7 @@
 .lede,
 .quiet {
   margin: 0;
-  color: #667068;
+  color: #4E5E52;
   line-height: 1.5;
 }
 
@@ -121,7 +121,7 @@
   border: 1px solid #d5ddd4;
   border-radius: 8px;
   background: white;
-  color: #17201a;
+  color: #1E2620;
   font: inherit;
 }
 
@@ -146,7 +146,7 @@
 }
 
 .primary {
-  background: #205c39;
+  background: #E84630;
   color: white;
 }
 
@@ -204,7 +204,7 @@
 
 .stats small {
   display: block;
-  color: #7d877f;
+  color: #4E5E52;
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -247,7 +247,7 @@
 
 .target {
   padding: 12px 0;
-  border-top: 1px solid #edf0ec;
+  border-top: 1px solid #EEF2EE;
 }
 
 .targetHead {
@@ -258,14 +258,14 @@
 }
 
 .fit {
-  color: #2e8b57;
+  color: #4E5E52;
   font-size: 12px;
   font-weight: 800;
 }
 
 .reason {
   margin: 6px 0;
-  color: #667068;
+  color: #4E5E52;
   font-size: 13px;
   font-weight: 500;
 }
@@ -315,7 +315,7 @@
 .main th,
 .main td {
   padding: 10px 8px;
-  border-bottom: 1px solid #edf0ec;
+  border-bottom: 1px solid #EEF2EE;
   text-align: left;
   vertical-align: top;
 }
@@ -349,7 +349,7 @@
 }
 
 .call {
-  background: #fff4d8;
+  background: #EEF2EE;
   color: #7a5b12;
 }
 
@@ -374,7 +374,7 @@
 .draft {
   margin-top: 14px;
   padding-top: 12px;
-  border-top: 1px solid #edf0ec;
+  border-top: 1px solid #EEF2EE;
 }
 
 .log {

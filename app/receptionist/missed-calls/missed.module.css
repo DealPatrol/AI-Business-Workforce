@@ -23,7 +23,7 @@
 .bar a:focus-visible,
 .cta:focus-visible,
 .text:focus-visible {
-  outline: 3px solid #f2c14e;
+  outline: 3px solid #8CAE93;
   outline-offset: 3px;
 }
 
@@ -35,7 +35,7 @@
 
 .stamp {
   margin: 0 0 14px;
-  color: #f2c14e;
+  color: #8CAE93;
   font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -82,7 +82,7 @@
   margin-top: 16px;
   padding: 16px 20px;
   border-radius: 10px;
-  background: #f2c14e;
+  background: #E84630;
   color: #1c140c;
   font-weight: 800;
   text-decoration: none;
@@ -134,7 +134,7 @@
 }
 
 .text {
-  color: #f2c14e;
+  color: #8CAE93;
 }
 
 @media (max-width: 640px) {

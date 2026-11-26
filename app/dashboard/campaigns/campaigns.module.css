@@ -10,7 +10,7 @@
   padding: 27px 19px;
   display: flex;
   flex-direction: column;
-  background: #10281c;
+  background: #1E2620;
   color: #dce7df;
 }
 
@@ -32,7 +32,7 @@
   display: grid;
   place-items: center;
   border-radius: 8px;
-  background: #2e754e;
+  background: #4E5E52;
 }
 
 .brand b {
@@ -55,7 +55,7 @@
 
 .sidebar nav a:hover,
 .sidebar nav .active {
-  background: #1d3d2b;
+  background: #1E2620;
   color: white;
 }
 
@@ -81,7 +81,7 @@
 
 .main > header span,
 .panelHeading span {
-  color: #2e8b57;
+  color: #4E5E52;
   font-size: 9px;
   font-weight: 900;
   letter-spacing: 0.12em;
@@ -121,13 +121,13 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  border: 1px solid #dce3dc;
+  border: 1px solid #D6DDD7;
   border-radius: 11px;
   background: white;
 }
 
 .stats svg {
-  color: #2e8b57;
+  color: #4E5E52;
 }
 
 .stats span {
@@ -135,7 +135,7 @@
 }
 
 .stats small {
-  color: #849087;
+  color: #4E5E52;
   font-size: 8px;
   font-weight: 850;
   letter-spacing: 0.07em;
@@ -154,7 +154,7 @@
 
 .panel {
   overflow: hidden;
-  border: 1px solid #dce3dc;
+  border: 1px solid #D6DDD7;
   border-radius: 12px;
   background: white;
 }
@@ -178,8 +178,8 @@
   display: grid;
   place-items: center;
   border-radius: 99px;
-  background: #e8f3ea;
-  color: #286442;
+  background: #EEF2EE;
+  color: #4E5E52;
   font-size: 11px;
 }
 
@@ -191,8 +191,8 @@
   justify-content: center;
   flex-direction: column;
   gap: 8px;
-  border-top: 1px solid #edf0ec;
-  color: #78827a;
+  border-top: 1px solid #EEF2EE;
+  color: #4E5E52;
   text-align: center;
 }
 
@@ -210,7 +210,7 @@
 .lead,
 .recipient {
   padding: 19px 24px;
-  border-top: 1px solid #edf0ec;
+  border-top: 1px solid #EEF2EE;
 }
 
 .leadTop {
@@ -235,8 +235,8 @@
   display: inline-block;
   padding: 4px 7px;
   border-radius: 99px;
-  background: #e8f5ec;
-  color: #287147;
+  background: #EEF2EE;
+  color: #4E5E52;
   font-size: 8px;
   font-weight: 850;
   text-transform: uppercase;
@@ -259,8 +259,8 @@
 .contact a {
   padding: 7px 9px;
   border-radius: 6px;
-  background: #edf5ef;
-  color: #286442;
+  background: #EEF2EE;
+  color: #4E5E52;
   text-decoration: none;
   font-size: 10px;
   font-weight: 750;
@@ -301,7 +301,7 @@
 }
 
 .activity b {
-  color: #205c39;
+  color: #4E5E52;
   font-size: 21px;
 }
 
@@ -315,7 +315,7 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  color: #286442;
+  color: #4E5E52;
   font-size: 10px;
   font-weight: 800;
 }
