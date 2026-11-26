@@ -22,7 +22,7 @@ const description = seo.description;
 const EXECUTIVE_PRICING_TITLE = 'AI Receptionist Pricing | Executive Receptionist';
 const FPG_PRICING_TITLE = 'Front Porch Growth Pricing: Postcards, SEO & AI Search';
 const FPG_PRICING_DESCRIPTION =
-  'Published prices: YardMailer postcards ($127 setup, $3.54 a card), $99 Google profile setup, AI search plans from $1,500/mo, and review tools.';
+  'Published prices: YardMailer postcards ($127 setup, $3.54 a card), $99 Google profile setup, AI search plans from $1,997/mo, and review tools.';
 
 export const dynamic = 'force-dynamic';
 

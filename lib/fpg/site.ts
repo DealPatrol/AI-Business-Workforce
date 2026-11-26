@@ -18,7 +18,7 @@ export const FPG_SERVICES: Array<FpgLink & { price: string }> = [
   {
     href: '/ai-search-visibility',
     label: 'AI Search Visibility',
-    price: 'Free Gap Report · $497 Sprint · from $1,497/mo',
+    price: 'Free Gap Report · $497 Sprint · from $1,997/mo',
     detail: 'Done-for-you work so ChatGPT, Google AI Overviews and Perplexity can find and cite your shop. Roofing first.',
   },
   {

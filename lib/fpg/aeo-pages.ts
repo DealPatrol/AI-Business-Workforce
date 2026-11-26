@@ -3,6 +3,12 @@
  * Rules (TRUST): every fact is ours, published, or sourced; observations are dated and anonymous;
  * no client results are claimed. Titles <= 60 chars, descriptions <= 155 (checked by npm test).
  */
+import {
+  AEO_PRICES_SENTENCE,
+  GUARANTEE_REGULATED,
+  NO_PROMISE_TRADES,
+} from '@/lib/fpg/aeo-offer';
+
 export type FpgAeoSource = { label: string; url: string };
 export type FpgAeoPage = {
   slug: string;
@@ -71,18 +77,14 @@ const SOURCES = {
   },
 } satisfies Record<string, FpgAeoSource>;
 
-const PRICES =
-  'Front Porch Growth’s published prices: a free Competitor Gap Report, a $497 Citation Sprint (one time, credited to month one if you start a plan within 30 days), Found at $1,497 a month, Recommended at $2,997, and Market Leader at $4,997, each with a +30% AI visibility guarantee, or Pay When Named on Found and Recommended.';
+const PRICES = AEO_PRICES_SENTENCE;
 
 const NOT_AFFILIATED = {
   q: 'Are you affiliated with OpenAI, Google or Perplexity?',
   a: 'No. ChatGPT, Google AI Overviews and Perplexity are trademarks of their owners. We test how their public answers describe local businesses; we do not have special access.',
 };
 
-const NO_PROMISE = {
-  q: 'Can you guarantee AI will name my shop?',
-  a: 'No one can promise a single AI answer; they change from one run to the next. Monthly plans guarantee a measured number instead: +30% AI citation share on your own money questions (or +30% AI and organic traffic) by day 90, with a weekly report. Miss it and we work free up to 90 more days, then refund your last month. Pay When Named lets you skip the monthly bill until you are named.',
-};
+const NO_PROMISE = NO_PROMISE_TRADES;
 
 export const FPG_AEO_PAGES: FpgAeoPage[] = [
   {
@@ -298,7 +300,7 @@ export const FPG_AEO_PAGES: FpgAeoPage[] = [
     eyebrow: 'AI SEARCH OPTIMIZATION · COST',
     h1: 'How much does AI search optimization cost for a local shop?',
     directAnswer:
-      'The first steps are free if you do them yourself: complete your Google Business Profile, make your name, address and phone match on every listing, ask every customer for a review, and add a page that answers your most common cost question. Paying someone makes sense when you want it done and measured every month. Front Porch Growth’s published prices: a free Gap Report, a $497 one-time Citation Sprint, Found at $1,497 a month, Recommended at $2,997 and Market Leader at $4,997, or Pay When Named on Found and Recommended.',
+      'The first steps are free if you do them yourself: complete your Google Business Profile, make your name, address and phone match on every listing, ask every customer for a review, and add a page that answers your most common cost question. Paying someone makes sense when you want it done and measured every month. Front Porch Growth’s published prices: a free Gap Report, a $497 one-time Citation Sprint (credited to the setup fee if you start a plan within 30 days), Found at $1,997 a month plus $750 setup (90-day first term), Recommended at $3,497 a month plus $1,250 setup (90-day first term), Market Leader from $6,997 a month plus $2,500 setup (6-month first term), or Pay When Named ($497 setup, then $2,297 or $3,797 a month once named).',
     serviceName: 'AI search optimization (AEO) for local trades',
     areaServed: ['Alabama'],
     checksTitle: 'What drives the cost',
@@ -318,11 +320,11 @@ export const FPG_AEO_PAGES: FpgAeoPage[] = [
       'Run our free AI visibility grader on your site',
     ],
     sections: [
-      { title: 'Citation Sprint, $497 one time', body: '25 customer questions on 4 AI tools, run twice each, a baseline report, 1 answer-first page, schema on 2 pages, and a fix list. Credited to month one if you start a plan within 30 days.' },
-      { title: 'Found, $1,497 a month', body: 'One location, one metro plus nearby towns: 60 questions checked weekly, 4 pages a month turned into Google posts, video scripts and LinkedIn posts, up to 15 listing fixes, a report every Friday, and a +30% guarantee.' },
-      { title: 'Recommended, $2,997 a month', body: '2–4 towns or 2 service lines: 120 questions weekly, 8 pages, up to 30 listing fixes, YouTube and LinkedIn publishing, an authority placement a month, one business per field per town.' },
-      { title: 'Market Leader, $4,997 a month', body: 'Multi-location, regional or high-ticket: 200 questions weekly plus hand checks on named AI tools, 16 pages a month, 3 authority placements a month, one business per field per region.' },
-      { title: 'Pay When Named', body: '$497 setup, then nothing monthly until you are named on 3 of your 10 money questions in our logged checks. Then Found is $1,797 or Recommended $3,497, 3-month minimum.' },
+      { title: 'Citation Sprint, $497 one time', body: '25 customer questions on 4 AI tools, run twice each, a baseline report, 1 answer-first page, schema on 2 pages, and a fix list. Credited to the setup fee if you start a plan within 30 days.' },
+      { title: 'Found, $1,997 a month plus $750 setup', body: 'One location, one metro plus nearby towns: 60 questions checked weekly, 4 pages a month turned into Google posts, video scripts and LinkedIn posts, up to 15 listing fixes, a report every Friday, a 90-day first term, and a visibility guarantee (named in 3 of 10 money questions by day 90).' },
+      { title: 'Recommended, $3,497 a month plus $1,250 setup', body: '2–4 towns or 2 service lines: 120 questions weekly, 8 pages, up to 30 listing fixes, YouTube and LinkedIn publishing, an authority placement a month, one business per field per town, a 90-day first term, and a visibility guarantee (named in 4 of 10 money questions by day 90).' },
+      { title: 'Market Leader, from $6,997 a month plus $2,500 setup', body: 'Multi-location, regional or high-ticket: 200 questions weekly plus hand checks on named AI tools, 16 pages a month, 3 authority placements a month, one business per field per region, a 6-month first term, and a visibility guarantee (named in 5 of 10 money questions per market by day 90). Extra locations +$1,500/mo.' },
+      { title: 'Pay When Named', body: '$497 setup, then nothing monthly until you are named on 3 of your 10 money questions in our logged checks for two consecutive weekly runs. Then Found is $2,297 or Recommended $3,797, 3-month minimum.' },
     ],
     faqs: [
       {
@@ -331,7 +333,7 @@ export const FPG_AEO_PAGES: FpgAeoPage[] = [
       },
       {
         q: 'Is there a monthly contract?',
-        a: 'Monthly plans have a 90-day first term because the written target is measured at day 90, then month to month with 30 days’ notice.',
+        a: 'Found and Recommended have a 90-day first term because the written target is measured at day 90, then month to month with 30 days’ notice. Market Leader has a 6-month first term, then month to month. Setup can be waived with a longer term or if you prepay.',
       },
       NO_PROMISE,
       NOT_AFFILIATED,
@@ -599,7 +601,7 @@ export const FPG_AEO_PAGES: FpgAeoPage[] = [
       },
       {
         q: 'What is guaranteed for a dental practice?',
-        a: 'A visibility number, not patients. You pick +30% AI citation share on your money questions or +30% AI and organic traffic by day 90. Miss it and we work free for up to 90 more days, then refund your last month.',
+        a: 'Visibility and deliverables only, not patients. ' + GUARANTEE_REGULATED,
       },
       NO_PROMISE,
       NOT_AFFILIATED,
@@ -651,7 +653,7 @@ export const FPG_AEO_PAGES: FpgAeoPage[] = [
       },
       {
         q: 'What is guaranteed for a med spa?',
-        a: 'A visibility number, not bookings. You pick +30% AI citation share on your money questions or +30% AI and organic traffic by day 90. Miss it and we work free for up to 90 more days, then refund your last month.',
+        a: 'Visibility and deliverables only, not bookings. ' + GUARANTEE_REGULATED,
       },
       NO_PROMISE,
       NOT_AFFILIATED,
@@ -703,7 +705,7 @@ export const FPG_AEO_PAGES: FpgAeoPage[] = [
       },
       {
         q: 'What is guaranteed for a law firm?',
-        a: 'A visibility number, never cases or results. You pick +30% AI citation share on your money questions or +30% AI and organic traffic by day 90. Miss it and we work free for up to 90 more days, then refund your last month.',
+        a: 'Visibility and deliverables only, never cases or results. ' + GUARANTEE_REGULATED,
       },
       NO_PROMISE,
       NOT_AFFILIATED,
@@ -755,7 +757,7 @@ export const FPG_AEO_PAGES: FpgAeoPage[] = [
       },
       {
         q: 'What is guaranteed for a B2B firm?',
-        a: 'A visibility number, not pipeline. You pick +30% AI citation share on your shortlist questions or +30% AI and organic traffic by day 90. Miss it and we work free for up to 90 more days, then refund your last month.',
+        a: 'Visibility and deliverables only, not pipeline. ' + GUARANTEE_REGULATED,
       },
       NO_PROMISE,
       NOT_AFFILIATED,

@@ -5,6 +5,18 @@ import styles from '@/components/visibility/visibility.module.css';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 import { absoluteSiteUrl } from '@/lib/site-url';
 import { FPG_AEO_PAGES } from '@/lib/fpg/aeo-pages';
+import {
+  CITATION_SPRINT_PAYMENT_URL,
+  GUARANTEE_BODY,
+  GUARANTEE_FAQ,
+  GUARANTEE_HEADLINE,
+  GUARANTEE_LINE_FOUND,
+  GUARANTEE_LINE_MARKET_LEADER,
+  GUARANTEE_LINE_RECOMMENDED,
+  PWN_BODY,
+  SETUP_WAIVERS,
+  SPRINT_CREDIT_LINE,
+} from '@/lib/fpg/aeo-offer';
 
 const PATH = '/ai-search-visibility';
 const seo = pageSeo(PATH);
@@ -58,13 +70,11 @@ type Tier = {
   who: string;
   limits: string[];
   features: string[];
+  setup?: string;
   guarantee?: string;
   cta: { label: string; href: string };
   featured?: boolean;
 };
-
-const GUARANTEE_LINE =
-  'Guarantee: +30% AI citation share on your money questions (or +30% AI and organic traffic) by day 90. Miss it and we work free, then refund your last month.';
 
 const TIERS: Tier[] = [
   {
@@ -74,38 +84,41 @@ const TIERS: Tier[] = [
     who: 'A paid first step, delivered in 10 business days.',
     limits: ['25 customer questions × 4 AI tools, 2 runs each', '1 answer-first page for your biggest gap'],
     features: ['Baseline report with the full log', 'Schema on your homepage and 1 service page', 'Google Business Profile and listings fix list', '30-minute walkthrough'],
-    guarantee: '100% credited to your first month if you start a plan within 30 days.',
-    cta: { label: 'Ask about the Sprint', href: mailto('AI Citation Sprint ($497)') },
+    guarantee: SPRINT_CREDIT_LINE,
+    cta: { label: 'Pay $497 for the Sprint', href: CITATION_SPRINT_PAYMENT_URL },
   },
   {
     name: 'Found',
-    price: '1,497',
+    price: '1,997',
     unit: '/mo',
     who: 'One location, one metro plus nearby towns.',
     limits: ['60 questions incl. 10 money questions, checked every week', '4 answer-first pages a month, each turned into an FAQ, Google post, short video script and LinkedIn post', 'Up to 15 listing fixes a month'],
     features: ['Google Business Profile managed, weekly posts', 'Schema, entity and sameAs setup so AI knows exactly who you are', 'Review flow with a 6+ a month target', 'Plain-English report every Friday'],
-    guarantee: GUARANTEE_LINE,
+    setup: 'Plus $750 setup · 90-day first term, then month to month',
+    guarantee: GUARANTEE_LINE_FOUND,
     cta: { label: 'Ask about Found', href: mailto('Found plan: AI search visibility') },
   },
   {
     name: 'Recommended',
-    price: '2,997',
+    price: '3,497',
     unit: '/mo',
     who: 'Competitive metros, 2–4 towns or 2 service lines.',
-    limits: ['120 questions incl. 15 money questions, checked every week', '8 answer-first pages a month, each multiplied the same way', 'Up to 30 listing fixes a month'],
+    limits: ['120 questions incl. 10 money questions (of 15 tracked), checked every week', '8 answer-first pages a month, each multiplied the same way', 'Up to 30 listing fixes a month'],
     features: ['Everything in Found', 'Publishing on your own YouTube and LinkedIn', 'Wikidata entry where you qualify', '1 local authority placement a month', '10+ reviews a month target', 'Monthly call; one business per field per town'],
-    guarantee: GUARANTEE_LINE,
+    setup: 'Plus $1,250 setup · 90-day first term, then month to month',
+    guarantee: GUARANTEE_LINE_RECOMMENDED,
     cta: { label: 'Ask about Recommended', href: mailto('Recommended plan: AI search visibility') },
     featured: true,
   },
   {
     name: 'Market Leader',
-    price: '4,997',
+    price: '6,997+',
     unit: '/mo',
     who: 'Multi-location, regional, or high-ticket (injury law, implants, B2B).',
-    limits: ['200 questions incl. 20 money questions, weekly, plus monthly hand checks on 4 named AI tools', '16 answer-first pages a month', '8 competitors tracked'],
-    features: ['Everything in Recommended', 'Weather and event pages within 48 hours', 'Quarterly local data study', '3 authority placements a month', 'Quarterly strategy session; one business per field per region'],
-    guarantee: GUARANTEE_LINE,
+    limits: ['200 questions incl. 10 money questions per market (of 20 tracked), weekly, plus monthly hand checks on named AI tools', '16 answer-first pages a month', '8 competitors tracked'],
+    features: ['Everything in Recommended', 'Weather and event pages within 48 hours', 'Quarterly local data study', '3 authority placements a month', 'Quarterly strategy session; one business per field per region', 'Extra locations +$1,500/mo'],
+    setup: 'Plus $2,500 setup · 6-month first term, then month to month',
+    guarantee: GUARANTEE_LINE_MARKET_LEADER,
     cta: { label: 'Ask about Market Leader', href: mailto('Market Leader plan: AI search visibility') },
   },
 ];
@@ -136,15 +149,15 @@ const FAQS = [
   },
   {
     q: 'What exactly is guaranteed?',
-    a: 'Not rankings. At onboarding you pick one target. Option 1: your AI citation share on the money questions we agree in writing rises 30% from your week-1 baseline (at least 5 points; if you start at zero, named on 3 of 10). Option 2: your AI-referred plus organic traffic rises 30%, if you have Google Analytics or Search Console and enough traffic to measure. Either way it is measured by day 90, the same way every week. Miss it and we keep doing the full monthly work free for up to 90 more days; still short, we refund your last paid month. You give us Google Business Profile and site access and approve drafts within 5 business days. It covers visibility only, never calls, cases, patients or revenue.',
+    a: GUARANTEE_FAQ,
   },
   {
     q: 'Can I pay only once AI names me?',
-    a: 'Yes, on Found and Recommended. With Pay When Named you pay the $497 setup, then nothing monthly until you are named on 3 of your 10 money questions in our logged checks. After that, Found is $1,797 a month and Recommended is $3,497, with a 3-month minimum. If it has not happened by day 90, you owe nothing more and keep everything we built. We take a few of these a month.',
+    a: `Yes, on Found and Recommended. ${PWN_BODY}`,
   },
   {
     q: 'Do you promise #1 in ChatGPT or Google?',
-    a: 'No. AI answers change from one run to the next and nobody controls them. We promise the measured number above, with the full log shared with you, and we never promise a ranking, traffic or revenue.',
+    a: 'No. AI answers change from one run to the next and nobody controls them. We promise the visibility number above, with the full log shared with you, and we never promise a ranking, calls, cases, patients or revenue. Full terms are in your agreement.',
   },
   {
     q: 'Which businesses do you work with?',
@@ -195,10 +208,10 @@ function jsonLd() {
           ...TIERS.map((tier) => ({
             '@type': 'Offer',
             name: tier.name,
-            price: Number(tier.price.replace(',', '')),
+            price: Number(tier.price.replace(/[^0-9]/g, '')),
             priceCurrency: 'USD',
             ...(tier.unit === '/mo'
-              ? { priceSpecification: { '@type': 'UnitPriceSpecification', price: Number(tier.price.replace(',', '')), priceCurrency: 'USD', unitText: 'MONTH' } }
+              ? { priceSpecification: { '@type': 'UnitPriceSpecification', price: Number(tier.price.replace(/[^0-9]/g, '')), priceCurrency: 'USD', unitText: 'MONTH' } }
               : {}),
           })),
         ],
@@ -212,11 +225,20 @@ function jsonLd() {
   };
 }
 
-export default function AiSearchVisibilityPage() {
+type PageProps = { searchParams: Promise<{ paid?: string | string[] }> };
+
+export default async function AiSearchVisibilityPage({ searchParams }: PageProps) {
+  const paid = (await searchParams).paid;
+  const justPaidSprint = paid === 'sprint' || (Array.isArray(paid) && paid.includes('sprint'));
   return (
     <SuiteShell>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd()).replace(/</g, '\\u003c') }} />
       <main className={styles.main}>
+        {justPaidSprint ? (
+          <p className={styles.fine} role="status">
+            Thanks — your Citation Sprint payment went through. Cole will follow up shortly to collect access and start the 10-business-day work.
+          </p>
+        ) : null}
         <section className={styles.hero} aria-labelledby="hero-title">
           <div>
             <span className={styles.eyebrow}>AI SEARCH VISIBILITY · TRADES · DENTAL · MED SPA · LAW · B2B</span>
@@ -235,7 +257,7 @@ export default function AiSearchVisibilityPage() {
               </a>
             </div>
             <p className={styles.fine}>
-              Free report, no card. Monthly plans: +30% AI visibility in 90 days or we work free, then refund. A plain report every Friday.
+              Free report, no card. Monthly plans: named in your money questions by day 90, or we work free, then refund. A plain report every Friday.
             </p>
           </div>
         </section>
@@ -321,8 +343,8 @@ export default function AiSearchVisibilityPage() {
           <span className={styles.eyebrow}>PLANS</span>
           <h2 id="pricing-title">Fixed scope, published prices</h2>
           <p className={styles.sectionLede}>
-            Monthly plans have a 90-day first term (the guarantee needs it), then month to month with 30 days’ notice. Billed upfront each
-            month. You own every page, schema and listing we create.
+            Found and Recommended have a 90-day first term, then month to month with 30 days’ notice. Market Leader has a 6-month first
+            term. Billed upfront each month. You own every page, schema and listing we create.
           </p>
           <div className={styles.tiers}>
             {TIERS.map((tier) => (
@@ -334,6 +356,7 @@ export default function AiSearchVisibilityPage() {
                   <b>${tier.price}</b>
                   {tier.unit === '/mo' ? '/mo' : <span> {tier.unit}</span>}
                 </p>
+                {tier.setup ? <p className={styles.fine}>{tier.setup}</p> : null}
                 <h4>Scope</h4>
                 <ul className={styles.limits}>
                   {tier.limits.map((limit) => (
@@ -356,16 +379,12 @@ export default function AiSearchVisibilityPage() {
           <article className={styles.card} style={{ marginTop: 24 }} aria-labelledby="pay-when-named">
             <h3 id="pay-when-named">Pay When Named</h3>
             <p>
-              Prefer to pay for results? On Found or Recommended, pay the $497 setup, then nothing monthly until you are named on 3 of
-              your 10 money questions in our logged checks. Then it is $1,797 a month (Found) or $3,497 (Recommended), 3-month minimum.
-              Not named by day 90? You owe nothing more. Limited spots each month.{' '}
+              Prefer to pay for results? {PWN_BODY}{' '}
               <a href={mailto('Pay When Named: AI search visibility')}>Ask about Pay When Named</a>.
             </p>
           </article>
           <p className={styles.fine}>
-            “Citation share” is the share of money-question runs where you are named in the answer or your site is cited. The target is
-            30% above your week-1 baseline (at least 5 points; named on 3 of 10 if you start at zero), measured as the average of days
-            76–90. Plans are not open for online checkout yet; email{' '}
+            {SETUP_WAIVERS} The Citation Sprint can be paid online. Monthly plans are set up by email at{' '}
             <a href={mailto('AI search visibility plans')}>{CONTACT}</a>.
           </p>
         </section>
@@ -373,11 +392,10 @@ export default function AiSearchVisibilityPage() {
         <section className={styles.honest} aria-labelledby="honest-title">
           <div>
             <span className={styles.eyebrowLight}>THE GUARANTEE, PLAINLY</span>
-            <h2 id="honest-title">+30% in 90 days, measured your way</h2>
+            <h2 id="honest-title">{GUARANTEE_HEADLINE}</h2>
             <p>
-              Pick AI citation share on your money questions or AI-referred plus organic traffic. Miss +30% by day 90 and we keep doing the
-              full monthly work free for up to 90 more days. Still short, we refund your last paid month. Or choose Pay When Named and skip
-              the monthly bill until you are named. Every run is logged with the date, method and answer.
+              {GUARANTEE_BODY} Or choose Pay When Named and skip the monthly bill until you are named. Every run is logged with the date,
+              method and answer.
             </p>
           </div>
           <ul className={styles.wont}>

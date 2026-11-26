@@ -35,7 +35,7 @@ const HOME_FAQS = [
   },
   {
     q: 'Do you guarantee Google or AI-search rankings?',
-    a: 'No. The free grader and checklist tell you what is missing; they do not promise a position in Google or in ChatGPT answers. The done-for-you AI Search Visibility plans carry a measured citation-share target instead of a ranking promise, explained on that page.',
+    a: 'No. The free grader and checklist tell you what is missing; they do not promise a position in Google or in ChatGPT answers. The done-for-you AI Search Visibility plans carry a measured visibility guarantee (named in your money questions by day 90), explained on that page.',
   },
   {
     q: 'How do review requests work?',
@@ -110,7 +110,7 @@ const STEPS = [
 const COMPARE_ROWS = [
   { need: 'Google Business Profile', us: '$99 once, done for you', them: 'Local SEO Bot $99/mo per location · BrightLocal from $41/mo billed monthly', href: '/compare/front-porch-growth-vs-local-seo-bot' },
   { need: 'Postcards', us: '$3.54–$4.95 per card, postage included, + $127 setup once', them: 'PostcardMania prints from $0.12 a card, postage quoted separately · USPS EDDM postage $0.260 a piece, you print and drop off', href: '/compare/yardmailer-vs-postcardmania' },
-  { need: 'AI search visibility', us: 'Free Gap Report · $497 Sprint · from $1,497/mo', them: 'AEO Engine from $1,597/mo with a 90-day term · Otterly.ai tracking from €29/mo, you do the fixes', href: '/compare/front-porch-growth-vs-aeo-engine' },
+  { need: 'AI search visibility', us: 'Free Gap Report · $497 Sprint · from $1,997/mo', them: 'AEO Engine from $1,597/mo with a 90-day term · Otterly.ai tracking from €29/mo, you do the fixes', href: '/compare/front-porch-growth-vs-aeo-engine' },
   { need: 'Review requests', us: 'Free starter or $20/mo (ReputationFlow)', them: 'NiceJob $95 or $135/mo', href: '/compare/front-porch-growth-vs-nicejob' },
 ];
 
