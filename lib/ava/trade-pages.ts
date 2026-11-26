@@ -1,5 +1,7 @@
 import { exampleSentence } from '@/lib/ava/missed-call-math';
 import { BLS_RECEPTIONIST, GOOGLE_NEARBY_SEARCH } from '@/lib/ava/sources';
+import { AVA_DEMO_LINE } from '@/lib/ava/demo-line';
+import { AVA_PLANS } from '@/lib/ava/pricing';
 
 export type GuideKind = 'trade' | 'guide' | 'comparison' | 'calculator';
 
@@ -51,6 +53,16 @@ const nearbySource: GuideSource = {
   href: GOOGLE_NEARBY_SEARCH.url,
   text: `${GOOGLE_NEARBY_SEARCH.name} (${GOOGLE_NEARBY_SEARCH.period}). ${GOOGLE_NEARBY_SEARCH.summary}`,
 };
+
+/** One plan sentence built from AVA_PLANS so trade-page answers never drift from the price list. */
+const PLAN_SENTENCE = `Plans start at Overflow ${AVA_PLANS.overflow.monthlyLabel} a month (${AVA_PLANS.overflow.minutesLabel}, then ${AVA_PLANS.overflow.overageLabel}) and Starter ${AVA_PLANS.starter.monthlyLabel} a month (${AVA_PLANS.starter.minutesLabel}, first month ${AVA_PLANS.starter.firstMonthLabel}); Growth is ${AVA_PLANS.growth.monthlyLabel}, Pro ${AVA_PLANS.pro.monthlyLabel}, and Elite ${AVA_PLANS.elite.monthlyLabel}. Month to month.`;
+
+function costFaq(trade: string): GuideFaq {
+  return {
+    q: `How much does an AI answering service for ${trade} cost?`,
+    a: `${PLAN_SENTENCE} The plans differ by included minutes, not by trade, so you pay the same published price as any other shop. Hear Ava first on the demo line at ${AVA_DEMO_LINE.display}.`,
+  };
+}
 
 function trade(input: Omit<AvaGuide, 'kind'> & { kind?: 'trade' }): AvaGuide {
   return { ...input, kind: 'trade' };
@@ -352,9 +364,10 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for Pest Control',
     metaTitle: 'AI Receptionist & Answering Service for Pest Control',
     description:
-      'AI Receptionist answers pest-control calls and emails you the lead. She does not recommend pesticides. From $25/mo.',
+      'AI receptionist and answering service for pest control: Ava answers 24/7, asks what they saw and where, and emails you the lead. From $25/mo.',
     eyebrow: 'AI answering service for pest control',
-    h1: 'Get the “there are wasps in the wall” call while you are under another house.',
+    h1: 'AI receptionist and answering service for pest control companies',
+    directAnswer: `Executive Receptionist (Ava) is an AI receptionist for pest control companies. She answers the calls you forward 24/7, asks what the caller saw, where, and whether children or pets live there, then emails you the lead with the name, callback number, and address. She does not recommend pesticides or promise a treatment. ${PLAN_SENTENCE} Demo line: ${AVA_DEMO_LINE.display}.`,
     audience: 'pest control companies',
     lede:
       'People call pest control when something is in the kitchen or the eaves, and they want a person today. Executive Receptionist asks what they saw, which room, and whether children or pets live there, then emails you. She does not name a chemical or promise an extermination.',
@@ -389,6 +402,11 @@ export const AVA_GUIDES: AvaGuide[] = [
         q: 'Can she sell a quarterly plan on the call?',
         a: 'She can describe a plan only with the words you approve, then email you the lead. Closing the agreement stays with you.',
       },
+      {
+        q: 'Is Ava a pest control answering service or an AI receptionist?',
+        a: 'Both words describe the same job here: Ava answers the pest control calls you forward, at any hour, and emails you the details. Unlike a voicemail box, the caller is answered and asked the questions you would ask.',
+      },
+      costFaq('pest control'),
     ],
     related: ['ai-answering-service-for-lawn-care', 'ai-answering-service-for-cleaning', 'ai-receptionist-for-small-business'],
   }),
@@ -399,9 +417,10 @@ export const AVA_GUIDES: AvaGuide[] = [
     title: 'AI Answering Service for Cleaning Companies',
     metaTitle: 'AI Receptionist & Answering Service for Cleaning Companies',
     description:
-      'AI Receptionist answers cleaning-company calls 24/7, takes the job details, and emails you the lead. From $25/mo.',
+      'AI receptionist for cleaning companies: Ava answers 24/7, takes beds, baths, pets and move-out dates, and emails you the lead. From $25/mo.',
     eyebrow: 'AI answering service for cleaning companies',
-    h1: 'Book the walkthrough conversation while your team is in someone else’s house.',
+    h1: 'AI receptionist and answering service for cleaning companies',
+    directAnswer: `Executive Receptionist (Ava) is an AI receptionist for house cleaning and commercial cleaning companies. She answers the calls you forward 24/7, asks beds and baths, pets, and whether it is a recurring, deep, or move-out clean, then emails you the lead. She does not quote a price unless you give her one. ${PLAN_SENTENCE} Demo line: ${AVA_DEMO_LINE.display}.`,
     audience: 'residential and commercial cleaning companies',
     lede:
       'Cleaning quotes fall apart without basics: bedrooms and bathrooms, pets, and whether this is a recurring clean or a move-out. Executive Receptionist asks those questions and emails you a summary. She does not promise a price from a room count.',
@@ -436,6 +455,11 @@ export const AVA_GUIDES: AvaGuide[] = [
         q: 'What if I only want after-hours coverage?',
         a: 'Forward the line to Executive Receptionist when you do not answer, or only outside the hours you work. You do not have to send every call.',
       },
+      {
+        q: 'Is Ava an answering service for cleaning companies or an AI receptionist?',
+        a: 'She does the job of both: she answers the cleaning calls you forward at any hour, collects the details a quote needs, and emails you a summary, so you call back with a price instead of a question.',
+      },
+      costFaq('cleaning companies'),
     ],
     related: ['ai-answering-service-for-painters', 'ai-receptionist-for-small-business', 'missed-call-cost-calculator'],
   }),
@@ -773,11 +797,12 @@ export const AVA_GUIDES: AvaGuide[] = [
     navLabel: 'Fencing',
     blurb: 'Wood, vinyl, and gate estimates with the measurements left for the visit.',
     title: 'AI Answering Service for Fencing Companies',
-    metaTitle: 'AI Receptionist & Answering Service for Fencing Companies',
+    metaTitle: 'AI Receptionist & Answering Service for Fence Companies',
     description:
       'AI Receptionist answers fencing calls 24/7, takes the job details, and emails you the lead. From $25/mo.',
     eyebrow: 'AI answering service for fencing companies',
-    h1: 'Log the fence estimate while the crew is setting posts.',
+    h1: 'AI receptionist and answering service for fence companies',
+    directAnswer: `Executive Receptionist (Ava) is an AI receptionist for fence companies. She answers the calls you forward 24/7, asks wood, vinyl, or chain link, repair or new, and whether they need a gate, then emails you the lead with the address so you can measure. She does not quote per foot unless you approve a price list. ${PLAN_SENTENCE} Demo line: ${AVA_DEMO_LINE.display}.`,
     audience: 'fence contractors',
     lede:
       'Fence leads want a price before they have a measurement. Executive Receptionist’s useful job is to learn wood, vinyl, or chain link, whether they need a gate, and the address — then let you measure.',
@@ -812,6 +837,7 @@ export const AVA_GUIDES: AvaGuide[] = [
         q: 'Utility locates?',
         a: 'She should not tell callers they can dig. Scheduling and locates stay with you.',
       },
+      costFaq('fence companies'),
     ],
     related: ['ai-answering-service-for-landscapers', 'ai-answering-service-for-general-contractors', 'ai-answering-service-for-pool-companies'],
   }),
@@ -919,7 +945,7 @@ export const AVA_GUIDES: AvaGuide[] = [
       },
       {
         q: 'Can Executive Receptionist transfer to a person?',
-        a: 'You can write escalation rules for urgent calls. Live phone provisioning is still finished with Cole after checkout. The product does not buy your phone number automatically.',
+        a: 'Not on the published plans. Ava takes the details, flags urgent calls so you see them first, and emails you the lead so you call back. Phone setup is finished with Cole after checkout.',
       },
       {
         q: 'Which one should a contractor start with?',
