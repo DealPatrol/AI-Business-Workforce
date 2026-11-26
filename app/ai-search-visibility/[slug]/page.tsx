@@ -7,6 +7,7 @@ import { GapReportForm } from '@/components/visibility/GapReportForm';
 import { MoneyQuestionBuilder } from '@/components/visibility/MoneyQuestionBuilder';
 import { frontPorchLocalBusiness } from '@/lib/ava/structured-data';
 import { AEO_CHECKED_LABEL, FPG_AEO_PAGES, getFpgAeoPage } from '@/lib/fpg/aeo-pages';
+import { AEO_PRICES_FOOTER, MONTHLY_OFFERS } from '@/lib/fpg/aeo-offer';
 import { FPG_PUBLIC_PHONE } from '@/lib/fpg/site';
 import { breadcrumbNode } from '@/lib/fpg/seo';
 import { absoluteSiteUrl } from '@/lib/site-url';
@@ -80,11 +81,7 @@ function jsonLd(slug: string) {
         offers: [
           { '@type': 'Offer', name: 'AI Visibility Gap Report', price: 0, priceCurrency: 'USD' },
           { '@type': 'Offer', name: 'Citation Sprint', price: 497, priceCurrency: 'USD' },
-          ...[
-            ['Found', 1497],
-            ['Recommended', 2997],
-            ['Market Leader', 4997],
-          ].map(([name, price]) => ({
+          ...MONTHLY_OFFERS.map(({ name, price }) => ({
             '@type': 'Offer',
             name,
             price,
@@ -211,8 +208,7 @@ export default async function AiSearchVisibilityGuidePage({ params }: Props) {
             ))}
           </div>
           <p className={styles.sectionLede}>
-            Published prices: free Gap Report, $497 Citation Sprint, Found $1,497/mo, Recommended $2,997/mo, Market Leader $4,997/mo, or Pay
-            When Named. Monthly plans carry a +30% AI visibility guarantee and a report every Friday. <Link href={`${HUB}#pricing`}>See every plan</Link>.
+            {AEO_PRICES_FOOTER} <Link href={`${HUB}#pricing`}>See every plan</Link>.
           </p>
         </section>
 

@@ -221,21 +221,21 @@ export const FPG_COMPETITORS: FpgCompetitor[] = [
     group: 'AI search',
     title: 'Front Porch Growth vs AEO Engine for AI Search',
     description:
-      'Local AI search plans from $1,497/mo with a +30% guarantee, next to AEO Engine’s $1,597–$2,997/mo programs. Prices from each company’s page, Nov 2026.',
+      'Local AI search plans from $1,997/mo, next to AEO Engine’s $1,597–$2,997/mo programs. Prices from each company’s page, Nov 2026.',
     h1: 'Front Porch Growth vs AEO Engine',
     fit: 'AEO Engine runs high-volume content, PR and backlink programs for brands. Front Porch Growth’s AI Search Visibility is built for local and B2B service businesses (trades, dentists, med spas, law firms) town by town, and starts with a free Competitor Gap Report.',
     rows: [
       { label: 'First step', us: 'Free Competitor Gap Report; optional $497 Citation Sprint', them: '30-minute strategy call' },
-      { label: 'Monthly plans', us: '$1,497 · $2,997 · $4,997 a month', them: 'Growth $1,597 · Scale $2,997 · Enterprise from $10,000 a month' },
-      { label: 'Term', us: '90-day first term, then month to month with 30 days’ notice', them: '90-day initial term, billed monthly' },
+      { label: 'Monthly plans', us: '$1,997 · $3,497 · from $6,997 a month, plus setup', them: 'Growth $1,597 · Scale $2,997 · Enterprise from $10,000 a month' },
+      { label: 'Term', us: '90-day first term on Found and Recommended; 6 months on Market Leader, then month to month', them: '90-day initial term, billed monthly' },
       { label: 'Focus', us: 'Local and B2B service businesses by field and town; answer pages multiplied into Google posts, video scripts and LinkedIn posts', them: 'Brands; 30–60 articles a month, backlinks, PR campaigns' },
-      { label: 'What is measured', us: 'Citation share on 60–200 questions run every week, with a Friday report showing every answer', them: 'Organic + AI traffic; AI visibility tracking for 150–300 prompts' },
-      { label: 'Promise', us: '+30% AI citation share or +30% AI and organic traffic by day 90 (you pick), or we work free up to 90 days, then refund your last month', them: '30% organic + AI traffic growth in 90 days for qualified clients, or they work free' },
+      { label: 'What is measured', us: 'Whether you are named on 60–200 questions run every week, with a Friday report showing every answer', them: 'Organic + AI traffic; AI visibility tracking for 150–300 prompts' },
+      { label: 'Promise', us: 'Named in 3, 4 or 5 of 10 money questions in ChatGPT or Google AI Overviews by day 90, or we work free up to 90 days, then refund your last month. Visibility only.', them: '30% organic + AI traffic growth in 90 days for qualified clients, or they work free' },
     ],
     costHeading: 'First 90 days, entry plan',
     costMath: [
       'AEO Engine Growth: $1,597 × 3 = $4,791 for the 90-day initial term.',
-      'Front Porch Growth Found: $1,497 × 3 = $4,491, after a free Gap Report. The $497 Sprint is credited to your first month if you start a plan within 30 days.',
+      'Front Porch Growth Found: $1,997 × 3 = $5,991 for the 90-day first term, plus $750 setup (waived with a 6-month term or if you prepay). The $497 Sprint is credited to setup if you start a plan within 30 days.',
     ],
     theyAreBetter: [
       'Much larger content and PR volume, and a white-label program for agencies.',
@@ -255,7 +255,7 @@ export const FPG_COMPETITORS: FpgCompetitor[] = [
       },
       {
         q: 'Do you guarantee a spot in ChatGPT?',
-        a: 'No. AI answers change from run to run. Front Porch Growth sets a measured citation-share target and shares every logged answer.',
+        a: 'No. AI answers change from run to run. Front Porch Growth sets a measured visibility target — named in an agreed set of money questions — and shares every logged answer.',
       },
     ],
   },
@@ -272,7 +272,7 @@ export const FPG_COMPETITORS: FpgCompetitor[] = [
     fit: 'Otterly.ai is monitoring software: it checks prompts across AI engines and reports where you appear. Front Porch Growth does the work that changes what those answers say, for local service businesses.',
     rows: [
       { label: 'What you buy', us: 'Done-for-you pages, schema, listings and reviews flow', them: 'AI search tracking software' },
-      { label: 'Starting price', us: 'Free Gap Report; $497 Sprint; plans from $1,497/mo', them: 'Lite €29/mo (16 prompts); higher plans €189 and €489/mo; excluding tax' },
+      { label: 'Starting price', us: 'Free Gap Report; $497 Sprint; plans from $1,997/mo', them: 'Lite €29/mo (16 prompts); higher plans €189 and €489/mo; excluding tax' },
       { label: 'Who does the fixes', us: 'Front Porch Growth, with your approval', them: 'You or your agency' },
       { label: 'Tracking', us: 'Agreed questions checked monthly to weekly, depending on plan', them: 'Daily tracking; weekly on Premium' },
       { label: 'Free option', us: 'Free SEO & AI visibility grader', them: 'Free trial' },

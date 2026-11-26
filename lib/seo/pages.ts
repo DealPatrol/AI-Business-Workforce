@@ -252,7 +252,7 @@ const PAGES = {
   '/ai-search-visibility': {
     title: 'AI Search Visibility Agency | Front Porch Growth',
     description:
-      'Get named in ChatGPT, Google AI Overviews and Perplexity: trades, dental, med spa, law, B2B. Free Gap Report. From $1,497/mo with a +30% guarantee.',
+      'Get named in ChatGPT, Google AI Overviews and Perplexity: trades, dental, med spa, law, B2B. Free Gap Report. Plans from $1,997/mo.',
     titleMode: 'absolute',
     receptionist: false,
   },
