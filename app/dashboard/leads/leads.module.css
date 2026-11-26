@@ -10,7 +10,7 @@
   padding: 27px 19px;
   display: flex;
   flex-direction: column;
-  background: #10281c;
+  background: #1E2620;
   color: #dce7df;
 }
 
@@ -31,7 +31,7 @@
   display: grid;
   place-items: center;
   border-radius: 8px;
-  background: #2e754e;
+  background: #4E5E52;
 }
 
 .sidebar nav {
@@ -50,7 +50,7 @@
 
 .sidebar nav a:hover,
 .active {
-  background: #1d3d2b;
+  background: #1E2620;
   color: white;
 }
 
@@ -67,7 +67,7 @@
 
 .main > header span,
 .eyebrow {
-  color: #2e8b57;
+  color: #4E5E52;
   font-size: 9px;
   font-weight: 900;
   letter-spacing: 0.12em;
@@ -107,13 +107,13 @@
 
 .stats article {
   padding: 16px;
-  border: 1px solid #dce3dc;
+  border: 1px solid #D6DDD7;
   border-radius: 11px;
   background: white;
 }
 
 .stats small {
-  color: #849087;
+  color: #4E5E52;
   font-size: 8px;
   font-weight: 850;
   letter-spacing: 0.07em;
@@ -194,7 +194,7 @@
 
 .card {
   padding: 16px 18px;
-  border: 1px solid #dce3dc;
+  border: 1px solid #D6DDD7;
   border-radius: 12px;
   background: white;
   color: inherit;
@@ -274,7 +274,7 @@
 
 .panel {
   padding: 20px;
-  border: 1px solid #dce3dc;
+  border: 1px solid #D6DDD7;
   border-radius: 12px;
   background: white;
   display: grid;

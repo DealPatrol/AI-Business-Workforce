@@ -1,4 +1,4 @@
-.page { min-height: 100vh; padding: 32px clamp(16px, 4vw, 48px) 64px; background: #f3f6f1; color: #17201a; }
+.page { min-height: 100vh; padding: 32px clamp(16px, 4vw, 48px) 64px; background: #f3f6f1; color: #1E2620; }
 .header { display: flex; justify-content: space-between; gap: 24px; align-items: flex-start; flex-wrap: wrap; margin-bottom: 24px; }
 .header h1 { margin: 4px 0 8px; font-size: 32px; }
 .eyebrow { margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #3d6b50; }

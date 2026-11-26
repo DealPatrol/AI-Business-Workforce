@@ -8,7 +8,7 @@
 }
 
 .visualtop > small {
-  color: #2e8b57;
+  color: #4E5E52;
   font-size: 8px;
   font-weight: 850;
   letter-spacing: 0.08em;
@@ -40,7 +40,7 @@
 
 .material > span {
   padding: 6px;
-  border: 1px solid #d8ded8;
+  border: 1px solid #D6DDD7;
   border-radius: 5px;
   color: #6f7971;
   font-size: 8px;
@@ -65,12 +65,12 @@
 
 .sendpanel > .button + .button {
   margin-top: 8px;
-  background: #173d28;
+  background: #E84630;
 }
 
 .property-landing {
   min-height: 100vh;
-  background: #f4f6f2;
+  background: #F7F5EF;
 }
 
 .property-landing > nav {
@@ -80,7 +80,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  border-bottom: 1px solid #dfe4df;
+  border-bottom: 1px solid #D6DDD7;
   background: #fff;
   color: #59645c;
   font-size: 11px;
@@ -99,7 +99,7 @@
 }
 
 .property-landing .property-brand {
-  color: #173d28;
+  color: #1E2620;
   font-size: 19px;
   font-weight: 900;
 }
@@ -121,7 +121,7 @@
 }
 
 .property-landing-copy > p {
-  color: #657168;
+  color: #4E5E52;
   line-height: 1.65;
 }
 
@@ -130,7 +130,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  color: #2e754e;
+  color: #4E5E52;
   font-size: 12px;
   font-weight: 800;
 }
@@ -157,7 +157,7 @@
 
 .property-landing-copy li svg {
   width: 16px;
-  color: #2e8b57;
+  color: #4E5E52;
 }
 
 .property-landing-copy > small {
@@ -190,7 +190,7 @@
   z-index: 1;
   padding: 8px 10px;
   border-radius: 5px;
-  background: #173d28;
+  background: #1E2620;
   color: #fff;
   font-size: 8px;
   font-weight: 900;

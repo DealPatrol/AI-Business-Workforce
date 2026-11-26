@@ -51,7 +51,7 @@
 
 .text-messages .visitor {
   align-self: flex-end;
-  background: #1b6d3d;
+  background: #4E5E52;
   color: #fff;
 }
 
@@ -65,7 +65,7 @@
 .text-preview form:not(.checkout-form) button {
   border: 0;
   border-radius: 8px;
-  background: #1b6d3d;
+  background: #E84630;
   color: #fff;
   display: grid;
   place-items: center;
@@ -81,7 +81,7 @@
   border-radius: 9px;
   margin-top: 9px;
   padding: 13px;
-  background: #1b6d3d;
+  background: #E84630;
   color: #fff !important;
   display: flex;
   align-items: center;

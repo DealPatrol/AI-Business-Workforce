@@ -1,7 +1,7 @@
 .page {
   min-height: 100vh;
   background: #f2f5ef;
-  color: #17201a;
+  color: #1E2620;
 }
 
 .nav {
@@ -20,7 +20,7 @@
   display: flex;
   align-items: center;
   gap: 9px;
-  color: #173d28;
+  color: #1E2620;
   text-decoration: none;
   font-weight: 850;
 }
@@ -31,7 +31,7 @@
   display: grid;
   place-items: center;
   border-radius: 9px;
-  background: #173d28;
+  background: #1E2620;
   color: white;
 }
 
@@ -51,7 +51,7 @@
 
 .eyebrow,
 .form > span {
-  color: #2e8b57;
+  color: #4E5E52;
   font-size: 10px;
   font-weight: 900;
   letter-spacing: 0.13em;
@@ -65,7 +65,7 @@
 
 .copy > p {
   max-width: 610px;
-  color: #657168;
+  color: #4E5E52;
   font-size: 16px;
   line-height: 1.65;
 }
@@ -85,7 +85,7 @@
 
 .address > svg {
   flex: none;
-  color: #2e8b57;
+  color: #4E5E52;
 }
 
 .address > span {
@@ -110,7 +110,7 @@
 
 .proof svg {
   width: 16px;
-  color: #2e8b57;
+  color: #4E5E52;
 }
 
 .card {
@@ -162,8 +162,8 @@
   padding: 12px;
   border: 1px solid #d4dcd4;
   border-radius: 8px;
-  background: #fbfcfa;
-  color: #17201a;
+  background: #F7F5EF;
+  color: #1E2620;
   font: inherit;
 }
 
@@ -187,7 +187,7 @@
   gap: 8px;
   border: 0;
   border-radius: 9px;
-  background: #205c39;
+  background: #E84630;
   color: white;
   font-weight: 850;
   cursor: pointer;
@@ -228,7 +228,7 @@
 .success > svg {
   width: 55px;
   height: 55px;
-  color: #2e8b57;
+  color: #4E5E52;
 }
 
 .footer {
@@ -239,7 +239,7 @@
   gap: 20px;
   border-top: 1px solid #dce4db;
   background: white;
-  color: #778179;
+  color: #4E5E52;
   font-size: 10px;
 }
 
@@ -298,7 +298,7 @@
   position: absolute;
   top: 10px;
   left: 10px;
-  background: #173d28;
+  background: #1E2620;
   color: #fff;
   font-size: 8px;
   font-weight: 850;

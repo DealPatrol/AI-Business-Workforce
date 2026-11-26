@@ -2,8 +2,8 @@
   min-height: 100vh;
   background:
     radial-gradient(900px 420px at 100% -10%, rgba(46, 139, 87, 0.16), transparent 60%),
-    #f7f8f5;
-  color: #17201a;
+    #F7F5EF;
+  color: #1E2620;
 }
 
 .nav {
@@ -17,13 +17,13 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 16px 18px;
-  border-bottom: 1px solid #e0e6e0;
-  background: rgba(247, 248, 245, 0.94);
+  border-bottom: 1px solid #E6E2D6;
+  background: rgba(247, 245, 239, 0.94);
   backdrop-filter: blur(12px);
 }
 
 .brand {
-  color: #17201a;
+  color: #1E2620;
   text-decoration: none;
   font-size: 18px;
   font-weight: 780;
@@ -32,7 +32,7 @@
 }
 
 .brand b {
-  color: #2e8b57;
+  color: #4E5E52;
   font-weight: 780;
 }
 
@@ -46,7 +46,7 @@
 
 .navLinks a,
 .footer a {
-  color: #5b675e;
+  color: #4E5E52;
   text-decoration: none;
   font-size: 14px;
   font-weight: 680;
@@ -59,7 +59,7 @@
   justify-content: center;
   gap: 8px;
   border-radius: 9px;
-  background: #205c39;
+  background: #E84630;
   color: #fff;
   text-decoration: none;
   font-weight: 780;
@@ -92,7 +92,7 @@
 .eyebrow,
 .kicker {
   display: inline-block;
-  color: #2e8b57;
+  color: #4E5E52;
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -127,11 +127,11 @@
 
 .priceRow a,
 .priceRow span {
-  border: 1px solid #d7e0d8;
+  border: 1px solid #D6DDD7;
   background: #fff;
   border-radius: 999px;
   padding: 8px 12px;
-  color: #17201a;
+  color: #1E2620;
   font-size: 13px;
   font-weight: 720;
   text-decoration: none;
@@ -163,9 +163,9 @@
   justify-content: center;
   gap: 8px;
   border-radius: 9px;
-  border: 1px solid #205c39;
+  border: 1px solid #4E5E52;
   background: #fff;
-  color: #205c39;
+  color: #4E5E52;
   text-decoration: none;
   font-weight: 780;
   padding: 12px 16px;
@@ -174,13 +174,13 @@
 
 .fine {
   margin: 14px 0 0;
-  color: #6a756c;
+  color: #4E5E52;
   font-size: 14px;
   line-height: 1.5;
 }
 
 .textLink {
-  color: #205c39;
+  color: #4E5E52;
   font-size: 14px;
   font-weight: 750;
   text-decoration: none;
@@ -233,12 +233,12 @@
 }
 
 .faq details {
-  border-top: 1px solid #e0e6e0;
+  border-top: 1px solid #E6E2D6;
   padding: 14px 0;
 }
 
 .faq details:last-child {
-  border-bottom: 1px solid #e0e6e0;
+  border-bottom: 1px solid #E6E2D6;
 }
 
 .faq summary {
@@ -287,7 +287,7 @@
 
 .quiet {
   margin: 0;
-  color: #6a756c;
+  color: #4E5E52;
   font-size: 14px;
   line-height: 1.5;
 }
@@ -303,8 +303,8 @@
   align-self: flex-start;
   margin: 0;
   border-radius: 999px;
-  background: #eef5ef;
-  color: #205c39;
+  background: #EEF2EE;
+  color: #4E5E52;
   padding: 6px 10px;
   font-size: 12px;
   font-weight: 800;
@@ -330,7 +330,7 @@
   border-radius: 8px;
   padding: 12px;
   font: inherit;
-  color: #17201a;
+  color: #1E2620;
   background: #fff;
 }
 
@@ -338,7 +338,7 @@
   border: 0;
   border-radius: 9px;
   padding: 13px 16px;
-  background: #205c39;
+  background: #E84630;
   color: #fff;
   font-weight: 780;
   cursor: pointer;
@@ -364,7 +364,7 @@
 }
 
 .ok {
-  color: #205c39;
+  color: #4E5E52;
 }
 
 .bad {
@@ -425,7 +425,7 @@
   gap: 18px 28px;
   align-items: center;
   padding: 28px 0 40px;
-  border-top: 1px solid #e0e6e0;
+  border-top: 1px solid #E6E2D6;
 }
 
 .footer p {

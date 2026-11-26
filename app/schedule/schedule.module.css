@@ -14,5 +14,5 @@
 .btn:disabled { opacity: 0.6; }
 .ghost { min-height: 44px; border-radius: 999px; border: 1px solid #e6ded3; background: #fff; font: inherit; cursor: pointer; padding: 0 18px; }
 .err { color: #9b1c1c; font-weight: 600; }
-.ok { background: #eef5ef; border-radius: 16px; padding: 16px; }
+.ok { background: #EEF2EE; border-radius: 16px; padding: 16px; }
 .fine { font-size: 12px; color: #5b4f45; }
