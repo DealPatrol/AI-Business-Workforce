@@ -73,6 +73,16 @@ describe('warm transfer', () => {
     assert.match(section, /never more than 40 words/);
   });
 
+  it('prompt transfers on the first ask, after reading back name, number and reason', () => {
+    const section = liveTransferPromptSection(normalizeTransferRules({ transferNumber: '+12055550199' }), { paging: true, callbacks: true });
+    assert.match(section, /FIRST request for a person/);
+    assert.match(section, /never make them ask twice/);
+    assert.match(section, /read it all back in ONE sentence and wait for a yes/);
+    assert.match(section, /name, number and message have been passed/);
+    // The owner's number stays in the tool config, never in the prompt Ava could read aloud.
+    assert.doesNotMatch(section, /2055550199/);
+  });
+
   it('reads phone numbers as digits in the whisper', () => {
     assert.equal(spokenDigits('2565550100'), '2 5 6, 5 5 5, 0 1 0 0');
     const brief = briefingSentence({ businessName: 'Porchlight', callerName: 'Jane Smith', callerPhone: '2565550100', address: '12 Oak St, Cullman', issue: 'no heat', urgent: true });
