@@ -58,6 +58,7 @@ export default async function BookingsDashboardPage() {
           <Link href="/dashboard/leads">Leads</Link>
           <Link className={styles.active} href="/dashboard/bookings">Bookings</Link>
           <Link href="/dashboard/campaigns">Campaign inbox</Link>
+          <Link href="/dashboard/aerial-leads">Aerial leads</Link>
         </nav>
         <div className={styles.logout}>
           <LogoutButton />

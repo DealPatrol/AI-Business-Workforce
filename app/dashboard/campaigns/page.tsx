@@ -128,6 +128,7 @@ export default async function CampaignInboxPage() {
           <Link href="/dashboard/leads">Leads</Link>
           <Link className={styles.active} href="/dashboard/campaigns">Campaign inbox</Link>
           <Link href="/dashboard/prospector">Lead Finder</Link>
+          <Link href="/dashboard/aerial-leads">Aerial leads</Link>
           <Link href="/visual-canvasser">Campaign offer</Link>
         </nav>
         <LogoutButton />

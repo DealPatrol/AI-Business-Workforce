@@ -26,7 +26,7 @@ export async function POST(_request: Request, { params }: { params: Promise<{ id
   if (!row.mailing) return NextResponse.json({ error: 'This parcel has no mailing address on file.' }, { status: 422 });
 
   try {
-    const card = await renderPostcardForRow(row);
+    const card = await renderPostcardForRow(row, { cache: { db: auth.ctx.admin, ownerId: auth.ctx.userId } });
     const sent = await sendTestPostcard({
       to: toLobAddress(row.mailing),
       front: card.front,

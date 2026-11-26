@@ -27,6 +27,7 @@ export default function ProspectorShell({
             Sending settings
           </Link>
           <Link href="/dashboard/campaigns">QR lead inbox</Link>
+          <Link href="/dashboard/aerial-leads">Aerial leads</Link>
         </nav>
         <SignOutButton />
       </aside>
