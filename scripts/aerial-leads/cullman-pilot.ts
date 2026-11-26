@@ -7,8 +7,8 @@
  * Writes, under --out:
  *   leads.json                 every scored parcel (includes owner names + mailing addresses: keep private)
  *   <slug>/current.jpg|prior.jpg|cleaned.jpg|front.png|back.png   per flagged (and --near-miss) lead
- * With --fixture, also writes the masked dashboard sample into the repo
- * (lib/aerial-leads/fixtures/cullman-pilot.json + public/aerial-leads/cullman-pilot/).
+ * With --fixture, also writes a masked, web-sized sample into <out>/fixture/.
+ * It stays on the operator's machine: never commit it (real house numbers and parcel IDs).
  */
 
 import { mkdir, writeFile } from 'node:fs/promises';
@@ -41,7 +41,7 @@ const business: PostcardBusiness = JSON.parse(
     }),
 );
 const price = DEFAULT_PRICE_CONFIG;
-// Default rule is the reel's (30% stained AND 40% darker). Pass --min-darker=15 etc. to tune for a pilot.
+// Default rule: 30% stained AND 15% darker (DEFAULT_THRESHOLDS). Pass --min-darker=40 etc. to tune.
 const thresholds = {
   ...(arg('min-stained') ? { minStainedPct: Number(arg('min-stained')) } : {}),
   ...(arg('min-darker') ? { minDarkerPct: Number(arg('min-darker')) } : {}),
@@ -70,7 +70,7 @@ const misses = all
 const toRender = [...flagged.map((l) => ({ lead: l, kind: 'flagged' as const })), ...misses.map((l) => ({ lead: l, kind: 'near-miss' as const }))];
 
 const fixtureLeads = [];
-const publicDir = path.join(process.cwd(), 'public/aerial-leads/cullman-pilot');
+const publicDir = path.join(out, 'fixture', 'images');
 if (writeFixture) await mkdir(publicDir, { recursive: true });
 
 for (const { lead, kind } of toRender) {
@@ -123,7 +123,7 @@ for (const { lead, kind } of toRender) {
       priceDollars: lead.priceDollars,
       imagery: lead.imagery,
       previewBadge: cleaned.badge,
-      images: Object.fromEntries(Object.entries(files).map(([k, v]) => [k, `/aerial-leads/cullman-pilot/${v}`])),
+      images: Object.fromEntries(Object.entries(files).map(([k, v]) => [k, `images/${v}`])),
     });
   }
 }
@@ -139,6 +139,6 @@ if (writeFixture) {
     totals: { mailable: scans.reduce((n, s) => n + s.mailableParcels, 0), flagged: flagged.length },
     leads: fixtureLeads,
   };
-  await writeFile(path.join(process.cwd(), 'lib/aerial-leads/fixtures/cullman-pilot.json'), JSON.stringify(fixture, null, 2) + '\n');
+  await writeFile(path.join(out, 'fixture', 'sample.json'), JSON.stringify(fixture, null, 2) + '\n');
 }
 console.log(`done: ${flagged.length} flagged, ${misses.length} near-miss rendered`);

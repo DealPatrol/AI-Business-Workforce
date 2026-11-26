@@ -18,7 +18,10 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
   const side = request.nextUrl.searchParams.get('side') === 'back' ? 'back' : 'front';
   try {
-    const card = await renderPostcardForRow(row);
+    const card = await renderPostcardForRow(row, {
+      needCleaned: side === 'back',
+      cache: { db: auth.ctx.admin, ownerId: auth.ctx.userId },
+    });
     return new NextResponse(new Uint8Array(side === 'back' ? card.back : card.front), {
       headers: { 'content-type': 'image/png', 'cache-control': 'private, max-age=600' },
     });

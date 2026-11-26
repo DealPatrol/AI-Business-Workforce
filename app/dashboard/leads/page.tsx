@@ -70,6 +70,7 @@ export default async function LeadsInboxPage({ searchParams }: PageProps) {
           <Link href="/dashboard/bookings">Bookings</Link>
           <Link href="/dashboard/campaigns">Campaign inbox</Link>
           <Link href="/dashboard/prospector">Lead Finder</Link>
+          <Link href="/dashboard/aerial-leads">Aerial leads</Link>
         </nav>
         <div className={styles.logout}>
           <LogoutButton />

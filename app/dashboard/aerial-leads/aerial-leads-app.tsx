@@ -4,32 +4,6 @@ import { useState } from 'react';
 import type { AerialLeadRow } from '@/lib/aerial-leads/store';
 import styles from './aerial-leads.module.css';
 
-export type SampleLead = {
-  kind: 'flagged' | 'near-miss';
-  ownerName: string;
-  street: string;
-  city: string;
-  parcelId: string;
-  driveway: { sqft: number; stainedPct: number; priorStainedPct: number; darkerPct: number };
-  stainScore: number;
-  reasons: string[];
-  priceDollars: number;
-  imagery: { current: string; prior: string };
-  previewBadge: string;
-  images: { current: string; prior: string; cleaned: string; front: string; back: string };
-};
-
-export type SampleFixture = {
-  generatedAt: string;
-  area: string;
-  business: { name: string; phone: string; qrUrl: string };
-  price: { ratePerSqft: number };
-  thresholds?: { minStainedPct: number; minDarkerPct: number } | null;
-  totals: { mailable: number; flagged: number };
-  scans: Array<{ bbox: number[]; mailableParcels: number; flagged: number }>;
-  leads: SampleLead[];
-};
-
 type Defaults = {
   areaId: string;
   areaName: string;
@@ -144,54 +118,16 @@ function LeadCard({ lead, mail }: { lead: AerialLeadRow; mail: { enabled: boolea
   );
 }
 
-function SampleCard({ lead }: { lead: SampleLead }) {
-  return (
-    <article className={styles.lead}>
-      <div className={styles.leadHead}>
-        <div>
-          <h3>{lead.street}, {lead.city}</h3>
-          <p className={styles.muted}>Owner {lead.ownerName} (masked in this sample) · parcel {lead.parcelId}</p>
-        </div>
-        <span className={`${styles.pill} ${lead.kind === 'flagged' ? styles.pill_flagged : styles.pill_rejected}`}>
-          {lead.kind === 'flagged' ? 'Flagged' : 'Near miss'}
-        </span>
-      </div>
-      <div className={styles.metrics}>
-        <Metric label="Stain score" value={`${lead.stainScore}/100`} />
-        <Metric label={`Darker than ${lead.imagery.prior}`} value={`${lead.driveway.darkerPct}%`} />
-        <Metric label="Driveway" value={`${lead.driveway.sqft.toLocaleString('en-US')} sq ft`} />
-        <Metric label="Card price" value={money(lead.priceDollars)} />
-      </div>
-      {lead.kind === 'near-miss' && <p className={styles.muted}>Not flagged: {lead.reasons.join('; ')}</p>}
-      <div className={styles.triple}>
-        {(['prior', 'current', 'cleaned'] as const).map((k) => (
-          <figure key={k}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={lead.images[k]} alt={`${k} aerial`} loading="lazy" />
-            <figcaption>{k === 'prior' ? lead.imagery.prior : k === 'current' ? lead.imagery.current : lead.previewBadge}</figcaption>
-          </figure>
-        ))}
-      </div>
-      <div className={styles.cardPair}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={lead.images.front} alt="Postcard front" loading="lazy" />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={lead.images.back} alt="Postcard back" loading="lazy" />
-      </div>
-    </article>
-  );
-}
-
 export default function AerialLeadsApp({
   canScan,
   leads,
-  sample,
+  aiPreview,
   mail,
   defaults,
 }: {
   canScan: boolean;
   leads: AerialLeadRow[];
-  sample: SampleFixture;
+  aiPreview: boolean;
   mail: { enabled: boolean; reason?: string };
   defaults: Defaults;
 }) {
@@ -287,21 +223,24 @@ export default function AerialLeadsApp({
       <section className={styles.panel}>
         <h2>Flagged homes ({leads.length})</h2>
         {leads.length === 0 ? (
-          <p className={styles.muted}>No saved leads yet. Run a scan above, or see the Cullman pilot sample below.</p>
+          <p className={styles.muted}>No saved leads yet. Run a scan above; homes that pass both thresholds show up here for your review.</p>
         ) : (
           <div className={styles.leadList}>{leads.map((l) => <LeadCard key={l.id} lead={l} mail={mail} />)}</div>
         )}
       </section>
 
       <section className={styles.panel}>
-        <h2>Cullman pilot sample</h2>
-        <p className={styles.muted}>
-          Real public data, rendered {new Date(sample.generatedAt).toLocaleDateString('en-US')}: {sample.totals.mailable} homeowner parcels in {sample.scans.length} Cullman
-          neighborhoods, {sample.totals.flagged} flagged with the pilot rule ({sample.thresholds?.minStainedPct ?? 30}% stained and{' '}
-          {sample.thresholds?.minDarkerPct ?? 40}% darker than the prior flight). The reel&apos;s stricter 40%-darker rule flagged none of them. Sample
-          client: {sample.business.name}.
-        </p>
-        <div className={styles.leadList}>{sample.leads.map((l) => <SampleCard key={l.parcelId} lead={l} />)}</div>
+        <h2>How it works</h2>
+        <ol className={styles.steps}>
+          <li>Pick one neighborhood (under 900 m a side). The scan compares the latest public aerial flight with the one about two years earlier.</li>
+          <li>Each homeowner&apos;s driveway gets a stain score. A home is flagged when it is at least {defaults.minStainedPct}% stained and {defaults.minDarkerPct}% darker than the prior flight (both adjustable above).</li>
+          <li>Owner name and mailing address come from public county parcel records; businesses and incomplete addresses are skipped.</li>
+          <li>
+            Each card shows the real aerial on the front and a cleaned preview on the back
+            {aiPreview ? ' (AI-cleaned, made once per card, then reused)' : ' (free digital preview)'}, with your price, phone, and QR code.
+          </li>
+          <li>Nothing mails until you approve the card, and sending is Lob test mode only: free, never printed or posted.</li>
+        </ol>
       </section>
     </>
   );

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import sample from '@/lib/aerial-leads/fixtures/cullman-pilot.json';
+import { isAiPreviewEnabled } from '@/lib/aerial-leads/ai-preview';
 import { mailStatus } from '@/lib/aerial-leads/mail';
 import { DEFAULT_PRICE_CONFIG } from '@/lib/aerial-leads/pricing';
 import { DEFAULT_THRESHOLDS } from '@/lib/aerial-leads/scoring';
@@ -10,7 +10,7 @@ import { listLeads, type AerialLeadRow } from '@/lib/aerial-leads/store';
 import { metadataTitle, pageSeo } from '@/lib/seo/pages';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
-import AerialLeadsApp, { type SampleFixture } from './aerial-leads-app';
+import AerialLeadsApp from './aerial-leads-app';
 import styles from './aerial-leads.module.css';
 
 export const dynamic = 'force-dynamic';
@@ -54,16 +54,17 @@ export default async function AerialLeadsPage() {
         </div>
         <nav className={styles.nav}>
           <Link href="/desk">Desk</Link>
+          <Link href="/dashboard/leads">Leads</Link>
           <Link href="/dashboard/campaigns">QR lead inbox</Link>
           <Link href="/dashboard/prospector">Lead Finder</Link>
         </nav>
       </header>
-      {!configured && <p className={styles.alert}>Supabase is not configured here, so scans can&apos;t be saved. Showing the Cullman pilot sample.</p>}
+      {!configured && <p className={styles.alert}>Supabase is not configured here, so scans can&apos;t be saved.</p>}
       {loadError && <p className={styles.alert}>{loadError}</p>}
       <AerialLeadsApp
         canScan={configured && !loadError}
         leads={leads}
-        sample={sample as SampleFixture}
+        aiPreview={isAiPreviewEnabled()}
         mail={mail.enabled ? { enabled: true } : { enabled: false, reason: mail.reason }}
         defaults={{
           areaId: CULLMAN_COUNTY_AL.id,

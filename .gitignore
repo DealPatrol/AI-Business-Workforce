@@ -15,3 +15,7 @@ scripts/sales-video/build/
 
 # Private Hot Leads list. Never commit the CSV.
 data/hot-leads-500.csv
+
+# Aerial leads pilot output (real addresses / parcel IDs): never commit
+public/aerial-leads/
+lib/aerial-leads/fixtures/

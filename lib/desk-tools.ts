@@ -45,6 +45,14 @@ export const DESK_TOOLS: readonly DeskTool[] = [
     status: 'live',
   },
   {
+    key: 'aerial-leads',
+    name: 'Aerial postcard leads',
+    what: 'Find homes whose driveway got dirtier between aerial flights, price the wash, and draft a before-and-after postcard. You approve every card.',
+    href: '/dashboard/aerial-leads',
+    signedIn: true,
+    status: 'live',
+  },
+  {
     key: 'qr-inbox',
     name: 'Postcard QR inbox',
     what: 'Homeowners who scanned a card and asked for an estimate.',

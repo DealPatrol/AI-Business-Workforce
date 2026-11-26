@@ -145,3 +145,25 @@ export async function listLeads(db: SupabaseClient, ownerId: string, limit = 100
   if (error) throw new Error(error.message);
   return (data ?? []) as unknown as AerialLeadRow[];
 }
+
+/** Cached AI-cleaned preview (only stored for real model output). */
+export async function getCachedPreview(db: SupabaseClient, ownerId: string, id: string): Promise<{ image: Buffer; model: string } | null> {
+  const { data } = await db
+    .from('aerial_leads')
+    .select('cleaned_preview_jpeg_b64, cleaned_preview_model')
+    .eq('id', id)
+    .eq('owner_id', ownerId)
+    .maybeSingle();
+  const row = data as { cleaned_preview_jpeg_b64: string | null; cleaned_preview_model: string | null } | null;
+  if (!row?.cleaned_preview_jpeg_b64) return null;
+  return { image: Buffer.from(row.cleaned_preview_jpeg_b64, 'base64'), model: row.cleaned_preview_model ?? 'ai' };
+}
+
+export async function saveCachedPreview(db: SupabaseClient, ownerId: string, id: string, image: Buffer, model: string): Promise<void> {
+  const { error } = await db
+    .from('aerial_leads')
+    .update({ cleaned_preview_jpeg_b64: image.toString('base64'), cleaned_preview_model: model, cleaned_preview_at: new Date().toISOString() })
+    .eq('id', id)
+    .eq('owner_id', ownerId);
+  if (error) console.error('aerial-leads could not cache AI preview', error.message);
+}

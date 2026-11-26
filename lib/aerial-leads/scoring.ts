@@ -17,7 +17,7 @@ export type Rgb = Uint8Array; // length = width * height * 3
 export type ScoreThresholds = {
   /** Flag when at least this % of the driveway reads as stained. Default 30. */
   minStainedPct: number;
-  /** ...and the driveway is at least this % darker than in the prior flight. Default 40. */
+  /** ...and the driveway is at least this % darker than in the prior flight. Default 15 (the reel's 40 flagged 0 of 698 Cullman homes once shade was filtered; 15 flagged real stains). */
   minDarkerPct: number;
   /** Ignore surfaces smaller than this (sq ft). Default 150. */
   minDrivewaySqft: number;
@@ -29,7 +29,7 @@ export type ScoreThresholds = {
 
 export const DEFAULT_THRESHOLDS: ScoreThresholds = {
   minStainedPct: 30,
-  minDarkerPct: 40,
+  minDarkerPct: 15,
   minDrivewaySqft: 150,
   maxDrivewaySqft: 4000,
   stainedBelow: 0.72,

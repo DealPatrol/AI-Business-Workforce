@@ -7,7 +7,7 @@ import { formatOwnerName, isEntityOwner, maskOwnerName, parseParcel } from '@/li
 import { cropExtentFor, validateBbox } from '@/lib/aerial-leads/pipeline';
 import { BACK_ADDRESS_ZONE, postcardBackSvg, postcardFrontSvg, type PostcardInput } from '@/lib/aerial-leads/postcard';
 import { estimatePrice, parsePriceConfig } from '@/lib/aerial-leads/pricing';
-import { estimateShift, scoreParcel, shiftRgb, simulateCleaned } from '@/lib/aerial-leads/scoring';
+import { DEFAULT_THRESHOLDS, estimateShift, scoreParcel, shiftRgb, simulateCleaned } from '@/lib/aerial-leads/scoring';
 import { CULLMAN_COUNTY_AL } from '@/lib/aerial-leads/sources';
 
 const W = 60;
@@ -112,9 +112,11 @@ describe('aerial leads scoring', () => {
     paint(prior, 10, 10, 40, 25, CLEAN);
     const now = solid(GRASS);
     paint(now, 10, 10, 40, 25, [150, 150, 146]);
-    const strict = scoreParcel({ now, prior, width: W, height: H, parcelMask: parcel, buildingMask: noBuildings, refs, sqftPerPixel: 1 });
+    // Default rule is 30% stained / 15% darker; the reel's stricter 40% darker rule stays available per scan.
+    assert.equal(DEFAULT_THRESHOLDS.minDarkerPct, 15);
+    const strict = scoreParcel({ now, prior, width: W, height: H, parcelMask: parcel, buildingMask: noBuildings, refs, sqftPerPixel: 1, thresholds: { minDarkerPct: 40 } });
     assert.equal(strict.flagged, false);
-    const loose = scoreParcel({ now, prior, width: W, height: H, parcelMask: parcel, buildingMask: noBuildings, refs, sqftPerPixel: 1, thresholds: { minDarkerPct: 15 } });
+    const loose = scoreParcel({ now, prior, width: W, height: H, parcelMask: parcel, buildingMask: noBuildings, refs, sqftPerPixel: 1 });
     assert.equal(loose.flagged, true);
   });
 

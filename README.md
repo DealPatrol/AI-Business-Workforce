@@ -54,15 +54,15 @@ The app records page-open activity for valid recipient pages and deduplicates re
 
 ## Aerial postcard leads
 
-`/dashboard/aerial-leads` (signed-in, noindex) finds homes whose driveway got noticeably dirtier between the last two public aerial flights, then drafts a before-and-after postcard for a client's pressure-washing offer. Pilot area: Cullman County, AL. Apply `supabase/migrations/20261125120000_aerial_leads.sql` first.
+`/dashboard/aerial-leads` (signed-in, noindex) finds homes whose driveway got noticeably dirtier between the last two public aerial flights, then drafts a before-and-after postcard for a client's pressure-washing offer. Pilot area: Cullman County, AL. Apply `supabase/migrations/20261125120000_aerial_leads.sql` and `20261126120000_aerial_leads_preview_cache.sql` first.
 
 - Imagery (free, public domain): current = USDA FPAC NAIP (`apps.geo.fpac.usda.gov/.../naip/conus_naip/ImageServer`, Alabama 2025, 30 cm); prior = NAIP 2023 (`imagery.geoplatform.gov/iipp/rest/services/NAIP/NAIP2023_CONUS/ImageServer`, 60 cm).
 - Owners and mailing addresses (free): Cullman County tax parcels (`al25portal.kcsgis.com/.../Mapping/Cullman_Parcels/FeatureServer/0`); building footprints from `Cullman_Viewer/MapServer/109`.
-- Scoring (`lib/aerial-leads/scoring.ts`, no paid model): registers the two flights, finds the paved slab in each homeowner parcel (outside building footprints, never lawn, never shadow; NIR rejects tree shade), and scores % stained (0-100) and % darker than the prior flight. Default rule from the reel: 30% stained AND 40% darker; both are adjustable per scan.
+- Scoring (`lib/aerial-leads/scoring.ts`, no paid model): registers the two flights, finds the paved slab in each homeowner parcel (outside building footprints, never lawn, never shadow; NIR rejects tree shade), and scores % stained (0-100) and % darker than the prior flight. Default rule: 30% stained AND 15% darker (the reel's 40%-darker rule flagged 0 of 698 Cullman homes once shade was filtered); both are adjustable per scan.
 - Price: driveway sq ft x rate (default $0.30), rounded to $5.
-- Card: 4x6 with bleed. Front = real aerial crop + "Your driveway could look like new". Back = cleaned preview with a badge ("Digital preview" for the free simulation, "AI preview" only when `AERIAL_LEADS_AI_PREVIEW=1` and `OPENAI_API_KEY` are set), price, phone, QR. The right side of the back stays clear for Lob's address block.
+- Card: 4x6 with bleed. Front = real aerial crop + "Your driveway could look like new". Back = cleaned preview with a badge ("Digital preview" for the free simulation, "AI preview" only when `AERIAL_LEADS_AI_PREVIEW=1` and `OPENAI_API_KEY` are set; the AI image is made once per card and cached on the lead row, and any model error falls back to the digital preview), price, phone, QR. The right side of the back stays clear for Lob's address block.
 - Mail: every card needs **Approve** first, then **Send Lob test** creates a Lob TEST postcard (free, never printed). Live Lob keys are refused in code.
-- Operator CLI for a pilot run (writes private `leads.json` with owner names, plus card PNGs): `node --experimental-strip-types --experimental-loader ./scripts/ava-security-test-loader.mjs scripts/aerial-leads/cullman-pilot.ts --bbox='[-86.8485,34.1672,-86.8415,34.1728]' --out=/tmp/aerial-pilot`. `--fixture` refreshes the masked dashboard sample in `lib/aerial-leads/fixtures` and `public/aerial-leads/cullman-pilot`.
+- Operator CLI for a pilot run (writes private `leads.json` with owner names, plus card PNGs): `node --experimental-strip-types --experimental-loader ./scripts/ava-security-test-loader.mjs scripts/aerial-leads/cullman-pilot.ts --bbox='[-86.8485,34.1672,-86.8415,34.1728]' --out=/tmp/aerial-pilot`. `--fixture` also writes a masked, web-sized sample to `<out>/fixture/`. Keep pilot output out of the repo (it has real house numbers and parcel IDs; `.gitignore` blocks the old sample paths).
 
 ## Lead Finder
 
