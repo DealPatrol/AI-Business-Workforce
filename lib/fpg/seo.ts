@@ -16,6 +16,11 @@ export const FPG_PAGE_SEO: Record<string, FpgPageSeo> = {
     description:
       'Free SEO and AI visibility grader, postcard cost and break-even calculators, Lead Scout and writing agents for home-service shops.',
   },
+  '/free-tools/ai-business-facts-generator': {
+    title: 'AI Business Facts Generator (Free) | Front Porch Growth',
+    description:
+      'Type your business facts once and copy a business-in-brief paragraph, LocalBusiness JSON-LD and a starter llms.txt for AI search. Free, in your browser.',
+  },
   '/free-tools/postcard-cost-calculator': {
     title: 'Postcard Mailing Cost Calculator | Front Porch Growth',
     description:
@@ -64,6 +69,7 @@ export function breadcrumbNode(items: Array<{ name: string; path: string }>) {
 export const FPG_EXTRA_INDEX_PATHS: string[] = [
   '/trades',
   '/free-tools',
+  '/free-tools/ai-business-facts-generator',
   '/free-tools/postcard-cost-calculator',
   '/free-tools/postcard-roi-calculator',
   ...FPG_COMPETITORS.map((c) => `/compare/${c.slug}`),
