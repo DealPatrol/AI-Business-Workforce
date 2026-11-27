@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { BlogBody } from '@/components/blog/BlogBody';
 import { BlogChrome } from '@/components/blog/BlogChrome';
 import { JsonLd } from '@/components/ava/JsonLd';
+import { getBlogFaqs } from '@/lib/blog/faqs';
 import { BLOG_POSTS, blogOrigin, blogPostUrl, blogSlugs, brandForSite, getBlogPost, readingMinutes } from '@/lib/blog';
 import '../blog.css';
 
@@ -45,6 +46,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const url = blogPostUrl(post);
   const origin = blogOrigin(post.site);
   const brand = brandForSite(post.site);
+  const faqs = getBlogFaqs(post.slug);
   const related = BLOG_POSTS.filter((item) => item.slug !== post.slug && item.site === post.site);
   return (
     <BlogChrome site={post.site}>
@@ -75,6 +77,18 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 { '@type': 'ListItem', position: 3, name: post.title, item: url },
               ],
             },
+            ...(faqs.length > 0
+              ? [
+                  {
+                    '@type': 'FAQPage',
+                    mainEntity: faqs.map((faq) => ({
+                      '@type': 'Question',
+                      name: faq.q,
+                      acceptedAnswer: { '@type': 'Answer', text: faq.a },
+                    })),
+                  },
+                ]
+              : []),
           ],
         }}
       />
@@ -88,6 +102,17 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         </p>
         <article className="blog-article">
           <BlogBody blocks={post.blocks} />
+          {faqs.length > 0 ? (
+            <section aria-labelledby="quick-answers">
+              <h2 id="quick-answers">Quick answers</h2>
+              {faqs.map((faq) => (
+                <div key={faq.q}>
+                  <h3>{faq.q}</h3>
+                  <p>{faq.a}</p>
+                </div>
+              ))}
+            </section>
+          ) : null}
         </article>
         <aside className="blog-cta">
           <h2>{post.site === 'er' ? 'Hear Ava answer a no-heat call' : 'See where your business stands'}</h2>
