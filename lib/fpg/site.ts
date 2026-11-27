@@ -8,6 +8,7 @@ import { TRADE_PAGES } from '@/lib/trades/pages';
 
 export const FPG_PUBLIC_PHONE = '(256) 595-3354';
 export const FPG_PUBLIC_PHONE_HREF = 'tel:+12565953354';
+export const FPG_PUBLIC_EMAIL = 'hello@frontporchgrowth.com';
 export const ER_HOME = 'https://executivereceptionist.com/';
 export const ER_PRICING = 'https://executivereceptionist.com/pricing';
 export const ER_COMPARE = 'https://executivereceptionist.com/compare';
@@ -19,7 +20,7 @@ export const FPG_SERVICES: Array<FpgLink & { price: string }> = [
     href: '/ai-search-visibility',
     label: 'AI Search Visibility',
     price: 'Free Gap Report · $497 Sprint · from $1,997/mo',
-    detail: 'Done-for-you work so ChatGPT, Google AI Overviews and Perplexity can find and cite your shop. Roofing first.',
+    detail: 'Done-for-you work so ChatGPT, Google AI Overviews and Perplexity can find and cite your shop. For HVAC, plumbing, electrical, roofing, dental, med spa, law and B2B.',
   },
   {
     href: '/postcards',

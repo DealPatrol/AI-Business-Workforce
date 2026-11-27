@@ -5,6 +5,12 @@
  */
 
 export const CITATION_SPRINT_PAYMENT_URL = 'https://buy.stripe.com/00wfZj2Vg68l05Hbus0Ba0k';
+export const FOUND_PAYMENT_URL = 'https://buy.stripe.com/aFaeVf2Vg1S5g4F4200Ba0l';
+export const RECOMMENDED_PAYMENT_URL = 'https://buy.stripe.com/3cI14p2Vg8gt8CdgOM0Ba0n';
+/** Used when Cole agrees to waive setup (6-month term or prepay). Not a public button. */
+export const FOUND_SETUP_WAIVED_PAYMENT_URL = 'https://buy.stripe.com/9B64gBanIfIVaKleGE0Ba0m';
+export const RECOMMENDED_SETUP_WAIVED_PAYMENT_URL = 'https://buy.stripe.com/dRmfZj1RceER3hT6a80Ba0o';
+export const SPRINT_SETUP_CREDIT_CODE = 'SPRINT-SETUP-CREDIT';
 
 export const AEO_PRICES = {
   sprint: 497,
@@ -82,6 +88,38 @@ export const NO_PROMISE_TRADES = {
   q: 'Can you guarantee AI will name my shop?',
   a: 'No one can promise a single AI answer; they change from one run to the next. Monthly plans promise a visibility number: by day 90 you’re named in at least 3 of your 10 money questions on Found, 4 on Recommended, or 5 on Market Leader (per market) in ChatGPT or Google AI Overviews. If not, we work free for up to 90 more days, then refund your last paid month. This covers visibility only — never calls, leads, cases, patients, bookings or revenue — and we never promise a #1 spot. Full terms are in your agreement. Pay When Named lets you skip the monthly bill until you are named.',
 };
+
+
+function firstQueryValue(value: string | string[] | undefined): string {
+  if (Array.isArray(value)) return (value[0] ?? '').trim();
+  return (value ?? '').trim();
+}
+
+/**
+ * Confirmation copy for Stripe return URLs on /ai-search-visibility.
+ * Handles ?paid=sprint|found|recommended and optional &setup=waived.
+ */
+export function paidThankYouMessage(
+  paid: string | string[] | undefined,
+  setup?: string | string[] | undefined,
+): string | null {
+  const plan = firstQueryValue(paid).toLowerCase();
+  const waived = firstQueryValue(setup).toLowerCase() === 'waived';
+  if (plan === 'sprint') {
+    return 'Thanks — your Citation Sprint payment went through. Cole will email you within one business day to collect access and start the 10-business-day work.';
+  }
+  if (plan === 'found') {
+    return waived
+      ? 'Thanks — your Found plan payment went through, with the setup fee waived. Cole will email you within one business day to start onboarding and agree on your 10 money questions.'
+      : 'Thanks — your Found plan payment went through, including the $750 setup fee. Cole will email you within one business day to start onboarding and agree on your 10 money questions.';
+  }
+  if (plan === 'recommended') {
+    return waived
+      ? 'Thanks — your Recommended plan payment went through, with the setup fee waived. Cole will email you within one business day to start onboarding and agree on your 10 money questions.'
+      : 'Thanks — your Recommended plan payment went through, including the $1,250 setup fee. Cole will email you within one business day to start onboarding and agree on your 10 money questions.';
+  }
+  return null;
+}
 
 export const MONTHLY_OFFERS: Array<{ name: string; price: number }> = [
   { name: 'Found', price: AEO_PRICES.found },

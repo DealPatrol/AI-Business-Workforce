@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import styles from './suite.module.css';
 import fpg from '@/components/fpg/fpg.module.css';
 import { SisterSites } from '@/components/seo/SisterSites';
-import { FPG_NAV, FPG_PUBLIC_PHONE, FPG_PUBLIC_PHONE_HREF, fpgFooterColumns } from '@/lib/fpg/site';
+import { FPG_NAV, FPG_PUBLIC_EMAIL, FPG_PUBLIC_PHONE, FPG_PUBLIC_PHONE_HREF, fpgFooterColumns } from '@/lib/fpg/site';
 
 const SIGN_IN = { href: '/login?next=/desk', label: 'Sign in' };
 
@@ -51,7 +51,7 @@ export function SuiteShell({ children }: { children: ReactNode }) {
           ))}
         </div>
         <p className={fpg.footMeta}>
-          Front Porch Growth · Hanceville, Alabama · <a href={FPG_PUBLIC_PHONE_HREF}>{FPG_PUBLIC_PHONE}</a> · colecollins763@gmail.com
+          Front Porch Growth · Hanceville, Alabama · <a href={FPG_PUBLIC_PHONE_HREF}>{FPG_PUBLIC_PHONE}</a> · <a href={`mailto:${FPG_PUBLIC_EMAIL}`}>{FPG_PUBLIC_EMAIL}</a>
         </p>
         <SisterSites selfUrl="https://frontporchgrowth.com" clusters={['home-services', 'reviews']} className={styles.sisterSites} />
       </footer>

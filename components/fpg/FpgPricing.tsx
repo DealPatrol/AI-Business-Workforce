@@ -1,7 +1,12 @@
 import Link from 'next/link';
 import fpg from '@/components/fpg/fpg.module.css';
 import { fpgPriceRowsData } from '@/lib/fpg/prices';
-import { ER_HOME } from '@/lib/fpg/site';
+import { ER_HOME, FPG_PUBLIC_EMAIL } from '@/lib/fpg/site';
+import {
+  CITATION_SPRINT_PAYMENT_URL,
+  FOUND_PAYMENT_URL,
+  RECOMMENDED_PAYMENT_URL,
+} from '@/lib/fpg/aeo-offer';
 
 export function FpgPricingTop() {
   const rows = fpgPriceRowsData();
@@ -52,6 +57,22 @@ export function FpgPricingTop() {
         <p className={fpg.fine}>
           Not included anywhere on this site: ranking guarantees, review gating, or mail sent without your approval. Missed-call text-back is a{' '}
           <Link href="/missed-call">waitlist</Link>, not a live product.
+        </p>
+        <div className={fpg.actions} style={{ marginTop: 20 }}>
+          <a className={fpg.secondary} href={CITATION_SPRINT_PAYMENT_URL}>
+            Pay $497 for the Citation Sprint
+          </a>
+          <a className={fpg.secondary} href={FOUND_PAYMENT_URL}>
+            Start Found — $1,997/mo
+          </a>
+          <a className={fpg.primary} href={RECOMMENDED_PAYMENT_URL}>
+            Start Recommended — $3,497/mo
+          </a>
+        </div>
+        <p className={fpg.fine}>
+          Found includes a $750 setup fee and Recommended includes a $1,250 setup fee, billed at checkout. Market Leader
+          and Pay When Named are set up by email at <a href={`mailto:${FPG_PUBLIC_EMAIL}`}>{FPG_PUBLIC_EMAIL}</a>. Or{' '}
+          <Link href="/ai-search-visibility#gap-report">request a free Gap Report</Link>.
         </p>
       </section>
       <section className={fpg.section} id="receptionist-plans">
