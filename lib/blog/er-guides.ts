@@ -1,5 +1,6 @@
 import type { BlogBlock, BlogPost } from '@/lib/blog/posts';
 import { PRICES_CHECKED_LABEL } from '@/lib/er/competitors';
+import { rubyPriceRange } from '@/lib/blog/faqs';
 
 const ER = 'https://executivereceptionist.com';
 const cta = (path: string, slug: string) => `${ER}${path}?utm_source=blog&utm_medium=article&utm_campaign=${slug}`;
@@ -23,7 +24,7 @@ export const ER_GUIDE_POSTS: BlogPost[] = [
   post({
     slug: 'smith-ai-pricing',
     title: `Smith.ai Pricing, Explained (Checked ${PRICES_CHECKED_LABEL})`,
-    metaTitle: 'Smith.ai Pricing: AI and Staffed Plans Explained',
+    metaTitle: 'Smith.ai Pricing: AI Plans From $0, Staffed From $300',
     description: `Smith.ai's AI receptionist and staffed receptionist prices, read from smith.ai on ${PRICES_CHECKED_LABEL}, with what a per-call plan costs a busy shop.`,
     tags: ['pricing', 'Smith.ai', 'AI receptionist', 'answering service'],
     ctaLabel: 'Compare Ava vs Smith.ai side by side',
@@ -57,8 +58,8 @@ export const ER_GUIDE_POSTS: BlogPost[] = [
   post({
     slug: 'ruby-receptionist-pricing',
     title: `Ruby Receptionist Pricing (Checked ${PRICES_CHECKED_LABEL})`,
-    metaTitle: 'Ruby Receptionist Pricing: Plans by Minutes',
-    description: `Ruby's live receptionist plans, read from ruby.com on ${PRICES_CHECKED_LABEL}, with what per-minute billing costs and when an AI receptionist fits.`,
+    metaTitle: 'Ruby Receptionist Pricing: Plans, Per-Minute Cost',
+    description: `Ruby Receptionist pricing from ruby.com (checked ${PRICES_CHECKED_LABEL}): ${rubyPriceRange()}, the cost per minute, and a cheaper AI option.`,
     tags: ['pricing', 'Ruby', 'answering service', 'virtual receptionist'],
     ctaLabel: 'Compare Ava vs Ruby side by side',
     ctaUrl: cta('/compare/ava-vs-ruby', 'ruby-receptionist-pricing'),
