@@ -5,17 +5,22 @@ import styles from '@/components/visibility/visibility.module.css';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 import { absoluteSiteUrl } from '@/lib/site-url';
 import { FPG_AEO_PAGES } from '@/lib/fpg/aeo-pages';
+import { GapReportForm } from '@/components/visibility/GapReportForm';
 import {
   CITATION_SPRINT_PAYMENT_URL,
+  FOUND_PAYMENT_URL,
   GUARANTEE_BODY,
   GUARANTEE_FAQ,
   GUARANTEE_HEADLINE,
   GUARANTEE_LINE_FOUND,
   GUARANTEE_LINE_MARKET_LEADER,
   GUARANTEE_LINE_RECOMMENDED,
+  paidThankYouMessage,
   PWN_BODY,
+  RECOMMENDED_PAYMENT_URL,
   SETUP_WAIVERS,
   SPRINT_CREDIT_LINE,
+  SPRINT_SETUP_CREDIT_CODE,
 } from '@/lib/fpg/aeo-offer';
 
 const PATH = '/ai-search-visibility';
@@ -25,11 +30,6 @@ const description = seo.description;
 const CONTACT = 'hello@frontporchgrowth.com';
 const mailto = (subject: string, body?: string) =>
   `mailto:${CONTACT}?subject=${encodeURIComponent(subject)}${body ? `&body=${encodeURIComponent(body)}` : ''}`;
-const REPORT_HREF = mailto(
-  'Competitor Gap Report request',
-  'Business name:\nWebsite:\nCity or towns you serve:\nType of business (HVAC, plumbing, electrical, roofing, dental, med spa, law firm, B2B, other):\nBest phone or email to send the report to:\n',
-);
-
 export const metadata: Metadata = {
   title: metadataTitle(seo),
   description,
@@ -96,7 +96,7 @@ const TIERS: Tier[] = [
     features: ['Google Business Profile managed, weekly posts', 'Schema, entity and sameAs setup so AI knows exactly who you are', 'Review flow with a 6+ a month target', 'Plain-English report every Friday'],
     setup: 'Plus $750 setup · 90-day first term, then month to month',
     guarantee: GUARANTEE_LINE_FOUND,
-    cta: { label: 'Ask about Found', href: mailto('Found plan: AI search visibility') },
+    cta: { label: 'Start Found — $1,997/mo', href: FOUND_PAYMENT_URL },
   },
   {
     name: 'Recommended',
@@ -107,7 +107,7 @@ const TIERS: Tier[] = [
     features: ['Everything in Found', 'Publishing on your own YouTube and LinkedIn', 'Wikidata entry where you qualify', '1 local authority placement a month', '10+ reviews a month target', 'Monthly call; one business per field per town'],
     setup: 'Plus $1,250 setup · 90-day first term, then month to month',
     guarantee: GUARANTEE_LINE_RECOMMENDED,
-    cta: { label: 'Ask about Recommended', href: mailto('Recommended plan: AI search visibility') },
+    cta: { label: 'Start Recommended — $3,497/mo', href: RECOMMENDED_PAYMENT_URL },
     featured: true,
   },
   {
@@ -225,18 +225,18 @@ function jsonLd() {
   };
 }
 
-type PageProps = { searchParams: Promise<{ paid?: string | string[] }> };
+type PageProps = { searchParams: Promise<{ paid?: string | string[]; setup?: string | string[] }> };
 
 export default async function AiSearchVisibilityPage({ searchParams }: PageProps) {
-  const paid = (await searchParams).paid;
-  const justPaidSprint = paid === 'sprint' || (Array.isArray(paid) && paid.includes('sprint'));
+  const params = await searchParams;
+  const thankYou = paidThankYouMessage(params.paid, params.setup);
   return (
     <SuiteShell>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd()).replace(/</g, '\\u003c') }} />
       <main className={styles.main}>
-        {justPaidSprint ? (
-          <p className={styles.fine} role="status">
-            Thanks — your Citation Sprint payment went through. Cole will follow up shortly to collect access and start the 10-business-day work.
+        {thankYou ? (
+          <p className={styles.paidBanner} role="status">
+            {thankYou}
           </p>
         ) : null}
         <section className={styles.hero} aria-labelledby="hero-title">
@@ -249,7 +249,7 @@ export default async function AiSearchVisibilityPage({ searchParams }: PageProps
               site, YouTube and LinkedIn. Alabama first, now nationwide. Start with a free Gap Report that shows who AI names and why.
             </p>
             <div className={styles.actions}>
-              <a className={styles.primary} href={REPORT_HREF}>
+              <a className={styles.primary} href="#gap-report">
                 Request my free Gap Report
               </a>
               <a className={styles.secondary} href="#pricing">
@@ -384,8 +384,11 @@ export default async function AiSearchVisibilityPage({ searchParams }: PageProps
             </p>
           </article>
           <p className={styles.fine}>
-            {SETUP_WAIVERS} The Citation Sprint can be paid online. Monthly plans are set up by email at{' '}
-            <a href={mailto('AI search visibility plans')}>{CONTACT}</a>.
+            {SETUP_WAIVERS} The Citation Sprint, Found and Recommended can be paid online. If you bought the
+            Citation Sprint in the last 30 days, enter promo code {SPRINT_SETUP_CREDIT_CODE} at Found or
+            Recommended checkout to take $497 off setup. Market Leader and Pay When Named are set up by email at{' '}
+            <a href={mailto('AI search visibility plans')}>{CONTACT}</a>, or start with a{' '}
+            <a href="#gap-report">free Gap Report</a>.
           </p>
         </section>
 
@@ -445,11 +448,21 @@ export default async function AiSearchVisibilityPage({ searchParams }: PageProps
           </div>
         </section>
 
+        <section className={styles.section} aria-labelledby="gap-form-title" id="gap-report">
+          <span className={styles.eyebrow}>FREE GAP REPORT</span>
+          <h2 id="gap-form-title">Want us to run the check for you?</h2>
+          <p className={styles.sectionLede}>
+            We ask 10 questions your customers ask, show who AI names instead of you, compare your profile, reviews and
+            listings with theirs, and list the 5 fixes that matter most. Free, no card.
+          </p>
+          <GapReportForm source="AI search visibility" />
+        </section>
+
         <section className={styles.closing} aria-labelledby="closing-title">
           <h2 id="closing-title">See who AI names in your town, and what it would take to add you.</h2>
           <p>Send your business name, website and town. Cole Collins, Front Porch Growth, Hanceville, Alabama.</p>
           <div className={styles.actions}>
-            <a className={styles.primary} href={REPORT_HREF}>
+            <a className={styles.primary} href="#gap-report">
               Request my free Gap Report
             </a>
             <Link className={styles.secondary} href="/ai-visibility">

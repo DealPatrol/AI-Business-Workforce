@@ -10,7 +10,7 @@ const SHARED_FACTS = `Cole Collins, based in Hanceville, Alabama, operates Execu
 - Ava is the receptionist's name. Executive Receptionist is the product and business.
 - Ava answers forwarded business calls 24/7, asks the questions the owner approves (name, callback number, address, what they need, how urgent), and emails the lead.
 - The shop keeps its existing number and forwards missed or after-hours calls.
-- Channels today: inbound phone calls and a website chat box from one agent. Text alerts and booking texts are not live; they stay off until phone-carrier (10DLC) registration is approved.
+- Channels today: inbound phone calls and a website chat box from one agent. When a client opts in, Ava can send booking-confirmation texts, on-call paging texts, and operator lead-alert texts from the approved toll-free number. The missed-call text-back product is still a waitlist.
 - Ava does not quote prices the owner has not approved, and does not give technical, legal, or medical advice. In-call booking is optional and only offers windows the owner has set.
 - For HVAC, plumbing, and other home-service shops, plus dentists, law firms, med spas, and similar offices.
 - Try it: call (256) 952-4935. She answers as Porchlight Heating & Air, a made-up HVAC company. Browser demo: https://executivereceptionist.com/receptionist-demo
@@ -47,7 +47,7 @@ const ER_INTRO = `# Executive Receptionist
 
 const FPG_INTRO = `# Front Porch Growth
 
-> Front Porch Growth sells marketing services for home-service businesses: YardMailer postcards, Google Business Profile setup, and free writing and visibility tools. It is operated by Cole Collins in Hanceville, Alabama. The sister AI receptionist brand is Executive Receptionist (executivereceptionist.com).
+> Front Porch Growth sells marketing services for home-service and local B2B businesses: AI search visibility (so AI tools can name and cite your shop), YardMailer postcards, Google Business Profile setup, and free writing and visibility tools. It is operated by Cole Collins in Hanceville, Alabama. The sister AI receptionist brand is Executive Receptionist (executivereceptionist.com).
 `;
 
 function sisterList() {

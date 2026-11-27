@@ -144,6 +144,20 @@
   font-weight: 700;
 }
 
+.paidBanner {
+  width: min(1120px, calc(100% - 40px));
+  margin: 24px auto 0;
+  padding: 16px 18px;
+  box-sizing: border-box;
+  border-radius: 12px;
+  border: 1px solid #b7d4c2;
+  background: #eef6f0;
+  color: #163a27;
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 650;
+}
+
 .muted {
   color: var(--muted);
 }

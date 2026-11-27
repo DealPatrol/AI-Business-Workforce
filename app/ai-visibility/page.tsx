@@ -5,6 +5,12 @@ import { Grader } from '@/components/visibility/Grader';
 import styles from '@/components/visibility/visibility.module.css';
 import { metadataTitle, pageSeo, renderedTitle } from '@/lib/seo/pages';
 import { absoluteSiteUrl } from '@/lib/site-url';
+import {
+  AEO_PRICE_LABELS,
+  CITATION_SPRINT_PAYMENT_URL,
+  FOUND_PAYMENT_URL,
+  RECOMMENDED_PAYMENT_URL,
+} from '@/lib/fpg/aeo-offer';
 
 const PATH = '/ai-visibility';
 const seo = pageSeo(PATH);
@@ -45,46 +51,8 @@ const STEPS = [
   { n: '4', title: 'We track it', body: 'See the date of each change alongside later search results and inquiries.' },
 ];
 
-type Tier = {
-  name: string;
-  price: number;
-  who: string;
-  limits: string[];
-  features: string[];
-  cta: { label: string; href: string };
-  featured?: boolean;
-};
-
-const TIERS: Tier[] = [
-  {
-    name: 'Starter',
-    price: 49,
-    who: 'One business, one town. See where you stand.',
-    limits: ['1 location', '10 customer questions', '2 AI assistants', 'Checked once a month (20 checks)', 'Search audit of up to 25 pages'],
-    features: ['Combined search + AI report', 'Prioritized fix list', 'Business fact check', 'Change history'],
-    cta: { label: 'Start with the free grade', href: '#grader' },
-  },
-  {
-    name: 'Growth',
-    price: 129,
-    who: 'For businesses ready to fix things and track what works.',
-    limits: ['1 location + 2 nearby towns', '20 customer questions', '3 AI assistants', 'Checked twice a month (120 checks)', 'Search audit of up to 100 pages'],
-    features: ['Everything in Starter', 'Up to 3 competitors tracked', 'Source and citation check', 'Question-to-page matching', 'Google Search Console connection', 'Up to 4 approved improvements a month'],
-    cta: { label: 'Ask about Growth', href: mailto('Growth plan: AI visibility') },
-    featured: true,
-  },
-  {
-    name: 'Agency',
-    price: 299,
-    who: 'Several locations, or an agency with a few clients.',
-    limits: ['Up to 3 locations', '20 questions per location', '3 AI assistants', 'Checked twice a month (360 checks)', 'Search audit of up to 300 pages'],
-    features: ['Everything in Growth', 'Up to 5 competitors per location', 'Report for each location', 'Up to 10 approved improvements a month'],
-    cta: { label: 'Ask about Agency', href: mailto('Agency plan: AI visibility') },
-  },
-];
-
 const ROADMAP = [
-  { stage: 'Included now', items: ['Free website grader and prioritized on-page findings. See individual plans for additional services.'] },
+  { stage: 'Included now', items: ['Free website grader and prioritized on-page findings. Done-for-you AI search plans are on the AI search visibility page.'] },
   { stage: 'Early access', items: ['Google Search Console connection'] },
   { stage: 'Coming soon', items: ['Content drafts written for you (you approve every word)', 'Campaign results and ROI tracking'] },
   { stage: 'Later', items: ['Side-by-side experiments', 'AI crawler monitoring (Agency plan)'] },
@@ -139,13 +107,9 @@ function jsonLd() {
         url,
         areaServed: { '@type': 'Country', name: 'United States' },
         provider: { '@type': 'Organization', name: 'Front Porch Growth', url: absoluteSiteUrl('/'), email: CONTACT, logo: absoluteSiteUrl('/brand-logo.png') },
-        offers: TIERS.map((tier) => ({
-          '@type': 'Offer',
-          name: `${tier.name} (intro pricing)`,
-          price: tier.price,
-          priceCurrency: 'USD',
-          priceSpecification: { '@type': 'UnitPriceSpecification', price: tier.price, priceCurrency: 'USD', unitText: 'MONTH' },
-        })),
+        offers: [
+          { '@type': 'Offer', name: 'Free website grade', price: 0, priceCurrency: 'USD' },
+        ],
       },
       {
         '@type': 'FAQPage',
@@ -312,54 +276,50 @@ export default function AiVisibilityPage() {
         </section>
 
         <section id="pricing" className={styles.section} aria-labelledby="pricing-title">
-          <span className={styles.eyebrow}>INTRO PRICING</span>
-          <h2 id="pricing-title">Simple monthly plans, with clear limits</h2>
+          <span className={styles.eyebrow}>DONE-FOR-YOU PLANS</span>
+          <h2 id="pricing-title">The free grade is the start. Done-for-you work is on published plans.</h2>
           <p className={styles.sectionLede}>
-            Intro pricing for our first businesses while we build this alongside them. These prices and limits are not permanent. If they go
-            up later, we will tell you ahead of time. Month to month, cancel anytime.
+            After you see the grade, you can request a free Gap Report or start a published AI search visibility plan.
+            Found and Recommended can be paid online. Market Leader is set up by email.
           </p>
           <div className={styles.tiers}>
-            {TIERS.map((tier) => (
-              <article key={tier.name} className={`${styles.tier} ${tier.featured ? styles.tierFeatured : ''}`} aria-labelledby={`tier-${tier.name}`}>
-                {tier.featured ? <span className={styles.badge}>Recommended</span> : null}
-                <h3 id={`tier-${tier.name}`}>{tier.name}</h3>
-                <p className={styles.tierWho}>{tier.who}</p>
-                <p className={styles.price}>
-                  <b>${tier.price}</b>/mo <span>intro price</span>
-                </p>
-                <h4>Limits</h4>
-                <ul className={styles.limits}>
-                  {tier.limits.map((limit) => (
-                    <li key={limit}>{limit}</li>
-                  ))}
-                </ul>
-                <h4>Includes</h4>
-                <ul className={styles.features}>
-                  {tier.features.map((feature) => (
-                    <li key={feature}>{feature}</li>
-                  ))}
-                </ul>
-                <a className={tier.featured ? styles.primary : styles.secondary} href={tier.cta.href}>
-                  {tier.cta.label}
-                </a>
-              </article>
-            ))}
-          </div>
-          <div className={styles.setup}>
-            <div>
-              <h3>Want us to set it up with you?</h3>
-              <p>
-                For our first customers we offer a hands-on setup: we go through your report together, pick your questions, fix your
-                business facts, and get your first improvements approved. Pricing depends on how much needs doing.
+            <article className={styles.tier} aria-labelledby="tier-sprint">
+              <h3 id="tier-sprint">Citation Sprint</h3>
+              <p className={styles.tierWho}>A 10-business-day first step: baseline report, schema on two pages, and one answer-first page.</p>
+              <p className={styles.price}>
+                <b>{AEO_PRICE_LABELS.sprint}</b> <span>one time</span>
               </p>
-            </div>
-            <a className={styles.secondary} href={mailto('Hands-on setup: AI visibility')}>
-              Ask about setup
-            </a>
+              <a className={styles.secondary} href={CITATION_SPRINT_PAYMENT_URL}>
+                Pay $497 for the Sprint
+              </a>
+            </article>
+            <article className={styles.tier} aria-labelledby="tier-found">
+              <h3 id="tier-found">Found</h3>
+              <p className={styles.tierWho}>One location, weekly checks, Friday report, 90-day first term.</p>
+              <p className={styles.price}>
+                <b>{AEO_PRICE_LABELS.found}</b>/mo <span>plus $750 setup</span>
+              </p>
+              <a className={styles.secondary} href={FOUND_PAYMENT_URL}>
+                Start Found — $1,997/mo
+              </a>
+            </article>
+            <article className={`${styles.tier} ${styles.tierFeatured}`} aria-labelledby="tier-recommended">
+              <span className={styles.badge}>Most shops</span>
+              <h3 id="tier-recommended">Recommended</h3>
+              <p className={styles.tierWho}>2–4 towns or two service lines, YouTube and LinkedIn, 90-day first term.</p>
+              <p className={styles.price}>
+                <b>{AEO_PRICE_LABELS.recommended}</b>/mo <span>plus $1,250 setup</span>
+              </p>
+              <a className={styles.primary} href={RECOMMENDED_PAYMENT_URL}>
+                Start Recommended — $3,497/mo
+              </a>
+            </article>
           </div>
           <p className={styles.fine}>
-            “Checks” means one question asked to one AI assistant once. Plans are not live for checkout yet; email{' '}
-            <a href={mailto('AI visibility plans')}>{CONTACT}</a> and we will get you started.
+            Market Leader starts at $6,997/mo. Visibility guarantee and full plan details are on the{' '}
+            <Link href="/ai-search-visibility#pricing">AI search visibility</Link> page. Or{' '}
+            <Link href="/ai-search-visibility#gap-report">request a free Gap Report</Link>. Questions:{' '}
+            <a href={mailto('AI search visibility plans')}>{CONTACT}</a>.
           </p>
         </section>
 

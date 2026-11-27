@@ -7,18 +7,18 @@ import { GapReportForm } from '@/components/visibility/GapReportForm';
 import { MoneyQuestionBuilder } from '@/components/visibility/MoneyQuestionBuilder';
 import { frontPorchLocalBusiness } from '@/lib/ava/structured-data';
 import { AEO_CHECKED_LABEL, FPG_AEO_PAGES, getFpgAeoPage } from '@/lib/fpg/aeo-pages';
-import { AEO_PRICES_FOOTER, MONTHLY_OFFERS } from '@/lib/fpg/aeo-offer';
+import {
+  AEO_PRICES_FOOTER,
+  CITATION_SPRINT_PAYMENT_URL,
+  FOUND_PAYMENT_URL,
+  MONTHLY_OFFERS,
+  RECOMMENDED_PAYMENT_URL,
+} from '@/lib/fpg/aeo-offer';
 import { FPG_PUBLIC_PHONE } from '@/lib/fpg/site';
 import { breadcrumbNode } from '@/lib/fpg/seo';
 import { absoluteSiteUrl } from '@/lib/site-url';
 
 const HUB = '/ai-search-visibility';
-const CONTACT = 'hello@frontporchgrowth.com';
-const reportHref = (label: string) =>
-  `mailto:${CONTACT}?subject=${encodeURIComponent(`Competitor Gap Report request (${label})`)}&body=${encodeURIComponent(
-    'Business name:\nWebsite:\nCity or towns you serve:\nTrade (HVAC, plumbing, electrical, roofing, other):\nBest phone or email to send the report to:\n',
-  )}`;
-
 type Props = { params: Promise<{ slug: string }> };
 
 export const dynamicParams = false;
@@ -137,7 +137,7 @@ export default async function AiSearchVisibilityGuidePage({ params }: Props) {
             <h1 id="hero-title">{page.h1}</h1>
             <p className={styles.lede}>{page.directAnswer}</p>
             <div className={styles.actions}>
-              <a className={styles.primary} href={reportHref(page.navLabel)}>
+              <a className={styles.primary} href="#gap-report">
                 Request my free Gap Report
               </a>
               <Link className={styles.secondary} href="/ai-visibility">
@@ -210,6 +210,17 @@ export default async function AiSearchVisibilityGuidePage({ params }: Props) {
           <p className={styles.sectionLede}>
             {AEO_PRICES_FOOTER} <Link href={`${HUB}#pricing`}>See every plan</Link>.
           </p>
+          <div className={styles.actions}>
+            <a className={styles.secondary} href={CITATION_SPRINT_PAYMENT_URL}>
+              Pay $497 for the Sprint
+            </a>
+            <a className={styles.secondary} href={FOUND_PAYMENT_URL}>
+              Start Found — $1,997/mo
+            </a>
+            <a className={styles.secondary} href={RECOMMENDED_PAYMENT_URL}>
+              Start Recommended — $3,497/mo
+            </a>
+          </div>
         </section>
 
         <section className={styles.section} aria-labelledby="faq-title">
@@ -260,7 +271,7 @@ export default async function AiSearchVisibilityGuidePage({ params }: Props) {
           <h2 id="closing-title">See who AI names in your town, and what it would take to add you.</h2>
           <p>Send your business name, website and town. Cole Collins, Front Porch Growth, Hanceville, Alabama. {FPG_PUBLIC_PHONE}.</p>
           <div className={styles.actions}>
-            <a className={styles.primary} href={reportHref(page.navLabel)}>
+            <a className={styles.primary} href="#gap-report">
               Request my free Gap Report
             </a>
             <Link className={styles.secondary} href={HUB}>
