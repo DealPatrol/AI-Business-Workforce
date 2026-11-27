@@ -49,6 +49,7 @@ export const FPG_SERVICES: Array<FpgLink & { price: string }> = [
 
 export const FPG_FREE_TOOLS: FpgLink[] = [
   { href: '/ai-visibility', label: 'SEO & AI visibility grader', detail: 'Score what search engines and AI assistants can read on your site.' },
+  { href: '/free-tools/ai-business-facts-generator', label: 'AI business facts generator', detail: 'One set of facts for AI search: a business-in-brief paragraph, LocalBusiness JSON-LD and a starter llms.txt.' },
   { href: '/free-tools/postcard-cost-calculator', label: 'Postcard campaign cost calculator', detail: 'Exact YardMailer cost for any quantity, next to the do-it-yourself postage line.' },
   { href: '/free-tools/postcard-roi-calculator', label: 'Postcard break-even calculator', detail: 'How many jobs a mailing has to win to pay for itself, using your own numbers.' },
   { href: '/lead-scout', label: 'Lead Scout', detail: 'Search public Google listings by trade and city. It contacts no one.' },

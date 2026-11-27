@@ -128,7 +128,7 @@ export function executiveReceptionistSitemap(origin: string, now: Date = ER_CONT
  * changed on every crawl and search engines learn to ignore lastmod that always moves.
  * Bump this date when Front Porch Growth pages change.
  */
-export const FPG_CONTENT_UPDATED = new Date('2026-11-24T12:00:00.000Z');
+export const FPG_CONTENT_UPDATED = new Date('2026-11-27T12:00:00.000Z');
 
 export function sitemapForHost(hostHeader: string | null | undefined): MetadataRoute.Sitemap {
   const origin = publicIndexOrigin(hostHeader);
