@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { urlsForHost } from '@/lib/seo/public-urls';
 import { hvacMergeTarget, receptionistHomePath } from '@/lib/seo/receptionist-home';
-import { EXECUTIVE_RECEPTIONIST_INDEX, frontPorchGrowthSitemap, indexedAvaGuideSlugs, robotsForHost, sitemapForHost } from '@/lib/seo/sitemaps';
+import { ER_CONTENT_UPDATED, EXECUTIVE_RECEPTIONIST_INDEX, frontPorchGrowthSitemap, indexedAvaGuideSlugs, robotsForHost, sitemapForHost } from '@/lib/seo/sitemaps';
 import { absoluteUrl, EXECUTIVE_RECEPTIONIST_ORIGIN, getSiteUrl } from '@/lib/site-url';
 
 const FRONT_PORCH = 'https://frontporchgrowth.com';
@@ -78,7 +78,7 @@ const FRONT_PORCH_PATHS = [
 ];
 
 function urls(host: string | null) {
-  return sitemapForHost(host, new Date('2026-11-08T00:00:00.000Z')).map((item) => item.url);
+  return sitemapForHost(host).map((item) => item.url);
 }
 
 function pathOf(url: string) {
@@ -192,5 +192,19 @@ describe('receptionist home redirects', () => {
       assert.equal(receptionistHomePath(path), null, path);
     }
     assert.equal(hvacMergeTarget('/hvac'), null);
+  });
+});
+
+describe('Executive Receptionist sitemap lastmod', () => {
+  it('is a stable content date, not the request time', () => {
+    const first = sitemapForHost('executivereceptionist.com');
+    const lastmods = new Set(first.map((entry) => String(entry.lastModified)));
+    assert.equal(lastmods.size, 1);
+    assert.equal(String(first[0].lastModified), String(ER_CONTENT_UPDATED));
+  });
+
+  it('lists the holiday call coverage planner', () => {
+    const paths = sitemapForHost('executivereceptionist.com').map((entry) => new URL(entry.url).pathname);
+    assert.ok(paths.includes('/tools/holiday-call-coverage-planner'));
   });
 });

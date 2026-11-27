@@ -21,6 +21,11 @@ export const ER_TOOLS: ErTool[] = [
     label: 'After-hours greeting generator',
     blurb: 'Write a clear after-hours voicemail greeting for your shop in a minute.',
   },
+  {
+    href: '/tools/holiday-call-coverage-planner',
+    label: 'Holiday call coverage planner',
+    blurb: 'Christmas and New Year’s: holiday greeting, forwarding codes, checklist and notes for whoever answers.',
+  },
 ];
 
 /** Carrier forwarding steps, copied from each carrier's own support page on 2026-11-22. */
