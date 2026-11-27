@@ -50,6 +50,7 @@ export const EXECUTIVE_RECEPTIONIST_INDEX: IndexEntry[] = [
   { path: '/tools/call-forwarding-codes', changeFrequency: 'monthly', priority: 0.75 },
   { path: '/tools/answering-service-cost-calculator', changeFrequency: 'monthly', priority: 0.75 },
   { path: '/tools/after-hours-greeting-generator', changeFrequency: 'monthly', priority: 0.75 },
+  { path: '/tools/holiday-call-coverage-planner', changeFrequency: 'monthly', priority: 0.75 },
   { path: '/templates', changeFrequency: 'monthly', priority: 0.7 },
   { path: '/terms', changeFrequency: 'yearly', priority: 0.3 },
   { path: '/privacy', changeFrequency: 'yearly', priority: 0.3 },
@@ -104,7 +105,14 @@ export function frontPorchGrowthSitemap(origin: string, now: Date): MetadataRout
   ];
 }
 
-export function executiveReceptionistSitemap(origin: string, now: Date): MetadataRoute.Sitemap {
+/**
+ * Executive Receptionist's sitemap <lastmod>. It used to be the request time, so every URL looked
+ * changed on every crawl (the same bug FPG_CONTENT_UPDATED fixed for Front Porch Growth).
+ * Bump this date when Executive Receptionist pages change.
+ */
+export const ER_CONTENT_UPDATED = new Date('2026-11-27T12:00:00.000Z');
+
+export function executiveReceptionistSitemap(origin: string, now: Date = ER_CONTENT_UPDATED): MetadataRoute.Sitemap {
   return [
     ...EXECUTIVE_RECEPTIONIST_INDEX.map((page) => entry(origin, page.path, now, page.changeFrequency, page.priority)),
     ...COMPETITORS.map((c) => entry(origin, `/compare/${c.slug}`, now, 'monthly', 0.8)),
@@ -122,9 +130,9 @@ export function executiveReceptionistSitemap(origin: string, now: Date): Metadat
  */
 export const FPG_CONTENT_UPDATED = new Date('2026-11-24T12:00:00.000Z');
 
-export function sitemapForHost(hostHeader: string | null | undefined, now = new Date()): MetadataRoute.Sitemap {
+export function sitemapForHost(hostHeader: string | null | undefined): MetadataRoute.Sitemap {
   const origin = publicIndexOrigin(hostHeader);
-  if (isExecutiveReceptionistHost(hostHeader)) return executiveReceptionistSitemap(origin, now);
+  if (isExecutiveReceptionistHost(hostHeader)) return executiveReceptionistSitemap(origin, ER_CONTENT_UPDATED);
   return frontPorchGrowthSitemap(origin, FPG_CONTENT_UPDATED);
 }
 

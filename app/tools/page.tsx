@@ -8,7 +8,7 @@ import { ER_TOOLS } from '@/lib/er/tools';
 export const metadata = erMetadata(
   '/tools',
   'Free Phone Tools for Small Shops | Executive Receptionist',
-  'Free tools for home-service shops: missed-call cost calculator, answering service cost calculator, call forwarding codes, greeting generator and call scripts.',
+  'Free tools for home-service shops: missed-call and answering service cost, call forwarding codes, greeting generator, holiday planner and call scripts.',
 );
 
 export default function ToolsPage() {
